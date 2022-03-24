@@ -1,6 +1,6 @@
-# NCurses Music Player Client (Plus Plus)
+# NCurses Music Player Plus Client
 
-Project page - https://rybczak.net/mpcplus/
+Project page - https://github.com/doctorfree/mpcplus
 
 ## mpcplus – featureful ncurses based MPD client inspired by ncmpc
 
@@ -10,7 +10,8 @@ Project page - https://rybczak.net/mpcplus/
 * playlist editor
 * easy to use search engine
 * media library
-* music visualizer
+* integration with cava spectrum visualizer
+* ability to fetch song lyrics from a variety of sources
 * ability to fetch artist info from last.fm
 * new display mode
 * alternative user interface
@@ -56,7 +57,7 @@ Detailed intallation instructions can be found in the `INSTALL` file.
 
 ### Optional features:
 
-Optional features can be enable by specifying them during configure. For
+Optional features can be enabled by specifying them during configure. For
 example, to enable visualizer run `./configure --enable-visualizer`. 
 
 Additional details can be found in the INSTALL file. 

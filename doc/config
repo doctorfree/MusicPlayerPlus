@@ -34,6 +34,7 @@
 ## Needed for tag editor and file operations to work.
 ##
 #mpd_music_dir = ~/music
+mpd_music_dir = /u/audio/Music
 #
 #mpd_crossfade_time = 5
 #
@@ -91,7 +92,7 @@
 ## visualization and audio.
 ##
 #
-#visualizer_sync_interval = 0
+#visualizer_sync_interval = 10
 #
 ##
 ## Note: To enable spectrum frequency visualization you need to compile mpcplus
@@ -107,6 +108,8 @@
 #visualizer_autoscale = no
 #
 #visualizer_look = ●▮
+#visualizer_look = "||"
+#visualizer_look = "+|"
 #
 #visualizer_color = blue, cyan, green, yellow, magenta, red
 #
@@ -123,13 +126,13 @@
 ## and visualizer_in_stereo set, artifacts may be visible on the bottom half of
 ## the visualization.
 #
-#visualizer_spectrum_smooth_look = yes
+#visualizer_spectrum_smooth_look = no
 #
 ## A value between 1 and 5 inclusive. Specifying a larger value makes the
 ## visualizer look at a larger slice of time, which results in less jumpy
 ## visualizer output.
 #
-#visualizer_spectrum_dft_size = 2
+#visualizer_spectrum_dft_size = 5
 #
 #visualizer_spectrum_gain = 10
 #
@@ -337,6 +340,7 @@
 #playlist_show_remaining_time = no
 #
 #playlist_shorten_total_times = no
+playlist_shorten_total_times = yes
 #
 #playlist_separate_albums = no
 #
@@ -344,12 +348,16 @@
 ## Note: Possible display modes: classic, columns.
 ##
 #playlist_display_mode = columns
+playlist_display_mode = columns
 #
 #browser_display_mode = classic
+browser_display_mode = columns
 #
 #search_engine_display_mode = classic
+search_engine_display_mode = columns
 #
 #playlist_editor_display_mode = classic
+playlist_editor_display_mode = columns
 #
 #discard_colors_if_item_is_selected = yes
 #
@@ -362,8 +370,10 @@
 #volume_change_step = 2
 #
 #autocenter_mode = no
+autocenter_mode = yes
 #
 #centered_cursor = no
+centered_cursor = yes
 #
 ##
 ## Note: You can specify third character which will be used to build 'empty'
@@ -378,6 +388,7 @@
 ## Available values: classic, alternative.
 ##
 #user_interface = classic
+user_interface = alternative
 #
 #data_fetching_delay = yes
 #
@@ -411,6 +422,7 @@
 #lyrics_fetchers = azlyrics, genius, musixmatch, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, zeneszoveg, internet
 #
 #follow_now_playing_lyrics = no
+#follow_now_playing_lyrics = yes
 #
 #fetch_lyrics_for_current_song_in_background = no
 #
@@ -443,12 +455,13 @@
 ## media_library, playlist_editor, tag_editor, outputs, visualizer, clock,
 ## lyrics, last_fm.
 ##
-#screen_switcher_mode = playlist, browser
+screen_switcher_mode = media_library, playlist, browser
 #
 ##
 ## Note: You can define startup screen by choosing screen from the list above.
 ##
-#startup_screen = playlist
+startup_screen = playlist
+#startup_screen = media_library
 #
 ##
 ## Note: You can define startup slave screen by choosing screen from the list
@@ -463,6 +476,7 @@
 ##
 #
 #locked_screen_width_part = 50
+locked_screen_width_part = 60
 #
 #ask_for_locked_screen_width_part = yes
 #
@@ -489,6 +503,7 @@
 #display_volume_level = yes
 #
 #display_bitrate = no
+display_bitrate = yes
 #
 #display_remaining_time = no
 #
@@ -544,10 +559,12 @@
 #search_engine_default_search_mode = 1
 #
 #external_editor = nano
+external_editor = vim
 #
 ## Note: set to yes if external editor is a console application.
 ##
 #use_console_editor = yes
+use_console_editor = yes
 #
 ##### colors definitions #####
 ##
@@ -584,12 +601,16 @@
 #empty_tag_color = cyan
 #
 #header_window_color = default
+header_window_color = cyan
 #
 #volume_color = default
+volume_color = red
 #
 #state_line_color = default
+state_line_color = yellow
 #
 #state_flags_color = default:b
+state_flags_color = red
 #
 #main_window_color = yellow
 #
@@ -598,10 +619,12 @@
 #color2 = green
 #
 #progressbar_color = black:b
+progressbar_color = yellow
 #
 #progressbar_elapsed_color = green:b
 #
 #statusbar_color = default
+statusbar_color = cyan
 #
 #statusbar_time_color = default:b
 #
