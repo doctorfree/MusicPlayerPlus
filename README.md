@@ -65,7 +65,7 @@ The simplest way to compile this package is:
 Detailed intallation instructions can be found in the `INSTALL` file. 
 
 ### Documentation
-[**mpcplus cheat sheet**](doc/mpcplus-cheatsheet.html) - Quick mpcplus user interface reference
+[**mpcplus cheat sheet**](doc/cheat-sheet) - Quick mpcplus user interface reference
 
 ### Optional features
 
