@@ -184,7 +184,7 @@ void Status::handleClientError(MPD::ClientError &e)
 {
 	if (!e.clearable())
 		Mpd.Disconnect();
-	Statusbar::printf("ncmpcpp: %1%", e.what());
+	Statusbar::printf("mpcplus: %1%", e.what());
 }
 
 void Status::handleServerError(MPD::ServerError &e)
@@ -522,7 +522,7 @@ void Status::Changes::playerState()
 			break;
 		}
 		case MPD::psStop:
-			windowTitle("ncmpcpp " VERSION);
+			windowTitle("mpcplus " VERSION);
 			if (Progressbar::isUnlocked())
 				Progressbar::draw(0, 0);
 			myPlaylist->reloadRemaining();

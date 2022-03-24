@@ -17,5 +17,5 @@ ltmain.sh
 missing
 **.m4
 **/.deps/
-src/ncmpcpp
+src/mpcplus
 stamp-h1

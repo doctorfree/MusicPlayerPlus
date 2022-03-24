@@ -1,6 +1,6 @@
 ##############################################################
 ## This is the example bindings file. Copy it to            ##
-## $XDG_CONFIG_HOME/ncmpcpp/bindings or ~/.ncmpcpp/bindings ##
+## $XDG_CONFIG_HOME/mpcplus/bindings or ~/.mpcplus/bindings ##
 ## and set up your preferences.                             ##
 ##############################################################
 ##
@@ -30,8 +30,8 @@
 ##    and/or chains are bound to the same key, they will be
 ##    consecutively run until one of them gets fully executed.
 ##
-## 3) When ncmpcpp starts, bindings configuration file is
-##    parsed and then ncmpcpp provides "missing pieces"
+## 3) When mpcplus starts, bindings configuration file is
+##    parsed and then mpcplus provides "missing pieces"
 ##    of default keybindings. If you want to disable some
 ##    bindings, there is a special action called 'dummy'
 ##    for that purpose. Eg. if you want to disable ability
@@ -41,7 +41,7 @@
 ##    def_key "C"
 ##      dummy
 ##
-##    After that ncmpcpp will not bind any default action
+##    After that mpcplus will not bind any default action
 ##    to this key.
 ##
 ## 4) To let you write simple macros, the following special
@@ -49,7 +49,7 @@
 ##
 ##    - push_character "character" - pushes given special
 ##      character into input queue, so it will be immediately
-##      picked by ncmpcpp upon next call to readKey function.
+##      picked by mpcplus upon next call to readKey function.
 ##      Accepted values: mouse, up, down, page_up, page_down,
 ##      home, end, space, enter, insert, delete, left, right,
 ##      tab, ctrl-a, ctrl-b, ..., ctrl-z, ctrl-[, ctrl-\\,
@@ -112,11 +112,11 @@
 ##
 ##    If you execute the above command (which can be done by
 ##    invoking action execute_command, typing 'quit' and pressing
-##    enter), ncmpcpp will stop the player and then quit. Note the
+##    enter), mpcplus will stop the player and then quit. Note the
 ##    presence of word 'deferred' enclosed in square brackets. It
-##    tells ncmpcpp to wait for confirmation (ie. pressing enter)
+##    tells mpcplus to wait for confirmation (ie. pressing enter)
 ##    after you typed quit. Instead of 'deferred', 'immediate'
-##    could be used. Then ncmpcpp will not wait for confirmation
+##    could be used. Then mpcplus will not wait for confirmation
 ##    (enter) and will execute the command the moment it sees it.
 ##
 ##    Note: while command chains are executed, internal environment

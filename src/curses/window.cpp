@@ -1466,7 +1466,7 @@ Window &Window::operator<<(const char *s)
 Window &Window::operator<<(char c)
 {
 	// Might cause problem similar to
-	// https://github.com/arybczak/ncmpcpp/issues/21, enable for testing as the
+	// https://github.com/arybczak/mpcplus/issues/21, enable for testing as the
 	// code in the ticket supposed to be culprit was rewritten.
 	waddnstr(m_window, &c, 1);
 	//wprintw(m_window, "%c", c);

@@ -129,7 +129,7 @@ std::vector<MPD::Song> TagsWindow::getSelectedSongs()
 
 TagEditor::TagEditor() : FParser(0), FParserHelper(0), FParserLegend(0), FParserPreview(0), itsBrowsedDir("/")
 {
-	PatternsFile = Config.ncmpcpp_directory + "patterns.list";
+	PatternsFile = Config.mpcplus_directory + "patterns.list";
 	SetDimensions(0, COLS);
 	
 	Dirs = new NC::Menu< std::pair<std::string, std::string> >(0, MainStartY, LeftColumnWidth, MainHeight, Config.titles_visibility ? "Directories" : "", Config.main_color, NC::Border());

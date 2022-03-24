@@ -100,11 +100,11 @@ int main(int argc, char **argv)
 	if (!configure(argc, argv))
 		return 0;
 	
-	// always execute these commands, even if ncmpcpp use exit function
+	// always execute these commands, even if mpcplus use exit function
 	atexit(do_at_exit);
 	
 	// redirect std::cerr output to the error.log file
-	errorlog.open((Config.ncmpcpp_directory + "error.log").c_str(), std::ios::app);
+	errorlog.open((Config.mpcplus_directory + "error.log").c_str(), std::ios::app);
 	cerr_buffer = std::cerr.rdbuf();
 	std::cerr.rdbuf(errorlog.rdbuf());
 	

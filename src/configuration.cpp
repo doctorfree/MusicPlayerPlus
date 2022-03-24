@@ -74,13 +74,13 @@ void expand_home(std::string &path)
 bool configure(int argc, char **argv)
 {
 	const std::vector<std::string> default_config_paths = {
-		xdg_config_home() + "ncmpcpp/config",
-		"~/.ncmpcpp/config"
+		xdg_config_home() + "mpcplus/config",
+		"~/.mpcplus/config"
 	};
 
 	const std::vector<std::string> default_bindings_paths = {
-		xdg_config_home() + "ncmpcpp/bindings",
-		"~/.ncmpcpp/bindings"
+		xdg_config_home() + "mpcplus/bindings",
+		"~/.mpcplus/bindings"
 	};
 
 	std::vector<std::string> bindings_paths;
@@ -118,7 +118,7 @@ bool configure(int argc, char **argv)
 		}
 		if (vm.count("version"))
 		{
-			std::cout << "ncmpcpp " << VERSION << "\n\n"
+			std::cout << "mpcplus " << VERSION << "\n\n"
 			<< "optional screens compiled-in:\n"
 	#		ifdef HAVE_TAGLIB_H
 			<< " - tag editor\n"
@@ -202,7 +202,7 @@ bool configure(int argc, char **argv)
 		Bindings.generateDefaults();
 
 		// create directories
-		boost::filesystem::create_directories(Config.ncmpcpp_directory);
+		boost::filesystem::create_directories(Config.mpcplus_directory);
 		boost::filesystem::create_directory(Config.lyrics_directory);
 
 		// try to get MPD connection details from environment variables

@@ -213,7 +213,7 @@ bool Configuration::read(const std::vector<std::string> &config_paths, bool igno
 {
 	option_parser p;
 	// keep the same order of variables as in configuration file
-	p.add("ncmpcpp_directory", &ncmpcpp_directory, "~/.config/ncmpcpp/", adjust_directory);
+	p.add("mpcplus_directory", &mpcplus_directory, "~/.config/mpcplus/", adjust_directory);
 	p.add("lyrics_directory", &lyrics_directory, "~/.lyrics/", adjust_directory);
 	p.add<void>("mpd_host", nullptr, "localhost", [](std::string host) {
 			expand_home(host);

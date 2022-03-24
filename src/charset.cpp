@@ -33,7 +33,7 @@ std::locale internalLocale()
 	if (!is_utf && name != "C" && name != "POSIX")
 	{
 		// if current locale does not use unicode, use variant of this
-		// locale with utf8 as ncmpcpp uses utf8 internally and we need
+		// locale with utf8 as mpcplus uses utf8 internally and we need
 		// current locale for sorting, case conversions etc.
 		std::string new_name = std::use_facet<boost::locale::info>(loc).language()
 		                     + "_"

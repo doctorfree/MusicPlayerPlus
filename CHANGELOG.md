@@ -1,3 +1,6 @@
+# mpcplus-0.10 (2022-03-24)
+* Forked and changed name to mpcplus
+
 # ncmpcpp-0.10 (????-??-??)
 * Add the configuration option `mpd_password`.
 * Separate chunks of lyrics with a double newline.

@@ -2,7 +2,7 @@
 # Run this to set up the build system: configure, makefiles, etc.
 # (at one point this was based on the version in enlightenment's cvs)
 
-package="ncmpcpp"
+package="mpcplus"
 
 olddir="`pwd`"
 srcdir="`dirname $0`"

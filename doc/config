@@ -1,18 +1,18 @@
 ##############################################################
 ## This is an example configuration file. Copy it to        ##
-## $XDG_CONFIG_HOME/ncmpcpp/config or $HOME/.ncmpcpp/config ##
+## $XDG_CONFIG_HOME/mpcplus/config or $HOME/.mpcplus/config ##
 ## and set up your preferences.                             ##
 ##############################################################
 #
 ##### directories ######
 ##
-## Directory for storing ncmpcpp related files.  Changing it is useful if you
+## Directory for storing mpcplus related files.  Changing it is useful if you
 ## want to store everything somewhere else and provide command line setting for
 ## alternative location to config file which defines that while launching
-## ncmpcpp.
+## mpcplus.
 ##
 #
-#ncmpcpp_directory = ~/.config/ncmpcpp
+#mpcplus_directory = ~/.config/mpcplus
 #
 ##
 ## Directory for storing downloaded lyrics. It defaults to ~/.lyrics since other
@@ -74,7 +74,7 @@
 #visualizer_data_source = /tmp/mpd.fifo
 #
 ##
-## Note: Below parameter is needed for ncmpcpp to determine which output
+## Note: Below parameter is needed for mpcplus to determine which output
 ## provides data for visualizer and reset it at the beginning of visualization
 ## to synchronize with audio.
 ##
@@ -94,7 +94,7 @@
 #visualizer_sync_interval = 0
 #
 ##
-## Note: To enable spectrum frequency visualization you need to compile ncmpcpp
+## Note: To enable spectrum frequency visualization you need to compile mpcplus
 ## with fftw3 support.
 ##
 #
@@ -143,11 +143,11 @@
 #
 ##### system encoding #####
 ##
-## ncmpcpp should detect your charset encoding but if it failed to do so, you
+## mpcplus should detect your charset encoding but if it failed to do so, you
 ## can specify charset encoding you are using here.
 ##
-## Note: You can see whether your ncmpcpp build supports charset detection by
-## checking output of `ncmpcpp --version`.
+## Note: You can see whether your mpcplus build supports charset detection by
+## checking output of `mpcplus --version`.
 ##
 ## Note: Since MPD uses UTF-8 by default, setting this option makes sense only
 ## if your encoding is different.
@@ -421,7 +421,7 @@
 #allow_for_physical_item_deletion = no
 #
 ##
-## Note: If you set this variable, ncmpcpp will try to get info from last.fm in
+## Note: If you set this variable, mpcplus will try to get info from last.fm in
 ## language you set and if it fails, it will fall back to english. Otherwise it
 ## will use english the first time.
 ##
@@ -497,13 +497,13 @@
 #regular_expressions = perl
 #
 ##
-## Note: if below is enabled, ncmpcpp will ignore leading "The" word while
+## Note: if below is enabled, mpcplus will ignore leading "The" word while
 ## sorting items in browser, tags in media library, etc.
 ##
 #ignore_leading_the = no
 #
 ##
-## Note: if below is enabled, ncmpcpp will ignore diacritics while searching and
+## Note: if below is enabled, mpcplus will ignore diacritics while searching and
 ## filtering lists. This takes an effect only if boost was compiled with ICU
 ## support.
 ##
@@ -533,7 +533,7 @@
 ##
 ## - 1 - use mpd built-in searching (no regexes, pattern matching)
 ##
-## - 2 - use ncmpcpp searching (pattern matching with support for regexes, but
+## - 2 - use mpcplus searching (pattern matching with support for regexes, but
 ##       if your mpd is on a remote machine, downloading big database to process
 ##       it can take a while
 ##
@@ -558,7 +558,7 @@
 ## In addition, for terminals that support 256 colors it is possible to set one
 ## of them by using a number in range [1, 256] instead of color name,
 ## e.g. numerical value corresponding to red_black is 2_1. To find out if the
-## terminal supports 256 colors, run ncmpcpp and check out the bottom of the
+## terminal supports 256 colors, run mpcplus and check out the bottom of the
 ## help screen for list of available colors and their numerical values.
 ##
 ## What is more, there are two special values for the background color:

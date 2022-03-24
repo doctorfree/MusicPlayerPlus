@@ -1,5 +1,5 @@
-bin_PROGRAMS = ncmpcpp
-ncmpcpp_SOURCES = \
+bin_PROGRAMS = mpcplus
+mpcplus_SOURCES = \
 	curses/formatted_color.cpp \
 	curses/scrollpad.cpp \
 	curses/window.cpp \
@@ -44,7 +44,7 @@ ncmpcpp_SOURCES = \
 	macro_utilities.cpp \
 	mpdpp.cpp \
 	mutable_song.cpp \
-	ncmpcpp.cpp \
+	mpcplus.cpp \
 	settings.cpp \
 	song.cpp \
 	song_list.cpp \
@@ -57,7 +57,7 @@ ncmpcpp_SOURCES = \
 AM_CPPFLAGS= $(all_includes)
 
 # the library search path.
-ncmpcpp_LDFLAGS = $(all_libraries)
+mpcplus_LDFLAGS = $(all_libraries)
 noinst_HEADERS = \
 	curses/formatted_color.h \
 	curses/menu.h \
