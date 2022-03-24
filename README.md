@@ -1,10 +1,19 @@
-# NCurses Music Player Plus Client
+# NCurses Music Player Plus MPD Client
 
 Project page - https://github.com/doctorfree/mpcplus
 
 ## mpcplus – featureful ncurses based MPD client inspired by ncmpc
 
-### Main features:
+## Table of Contents
+
+1. [Main features](#main-features)
+1. [Dependencies](#dependencies)
+1. [Known issues](#known-issues)
+1. [Installation](#installation)
+1. [Documentation](#documentation)
+1. [Optional features](#optional-features)
+
+### Main features
 
 * tag editor
 * playlist editor
@@ -18,7 +27,7 @@ Project page - https://github.com/doctorfree/mpcplus
 * ability to browse and add files from outside of MPD music directory
 …and a lot more minor functions.
 
-### Dependencies:
+### Dependencies
 
 * boost library [https://www.boost.org/]
 * ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
@@ -27,10 +36,10 @@ Project page - https://github.com/doctorfree/mpcplus
 * fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
 * tag library (optional, required for tag editing) [https://taglib.org/]
 
-### Known issues:
+### Known issues
 * No full support for handling encodings other than UTF-8.
 
-### Installation:
+### Installation
 
 The simplest way to compile this package is:
 
@@ -55,7 +64,10 @@ The simplest way to compile this package is:
 
 Detailed intallation instructions can be found in the `INSTALL` file. 
 
-### Optional features:
+### Documentation
+[**mpcplus cheat sheet**](doc/mpcplus-cheatsheet.html) - Quick mpcplus user interface reference
+
+### Optional features
 
 Optional features can be enabled by specifying them during configure. For
 example, to enable visualizer run `./configure --enable-visualizer`. 
