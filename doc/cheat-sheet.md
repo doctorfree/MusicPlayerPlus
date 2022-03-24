@@ -52,8 +52,8 @@
 -   [Y] - Toggle replay gain mode
 -   [\#] - Toggle bitrate visibility
 -   [Z] - Shuffle playlist
--   [x] - Toggle crossfade mode
--   [X] - Set crossfade
+-   [\x] - Toggle crossfade mode
+-   [\X] - Set crossfade
 -   [u] - Start music database update
 -   [:] - Execute command
 -   [Ctrl-F] - Apply filter
@@ -118,9 +118,7 @@
 -   [e] - Edit song
 -   [y] - Start searching
 -   [3] - Reset search constraints and clear results
-:::
 
-::: grid-lg-1-3
 ## Keys - Media library
 
 -   [4] - Switch between two/three columns mode
@@ -190,9 +188,7 @@
 -   [e] - Edit tag (left column)/album (middle/right column)
 -   [\`] - Toggle type of tag used in left column
 -   [m] - Toggle sort mode
-:::
 
-::: grid-lg-1-3
 ## Keys - Playlist editor
 
 -   [Left h] - Previous column
