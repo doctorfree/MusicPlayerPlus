@@ -52,8 +52,8 @@
 -   [Y] - Toggle replay gain mode
 -   [\#] - Toggle bitrate visibility
 -   [Z] - Shuffle playlist
--   [\x] - Toggle crossfade mode
--   [\X] - Set crossfade
+-   [\\x] - Toggle crossfade mode
+-   [\\X] - Set crossfade
 -   [u] - Start music database update
 -   [:] - Execute command
 -   [Ctrl-F] - Apply filter
