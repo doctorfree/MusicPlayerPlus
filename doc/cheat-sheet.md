@@ -44,7 +44,7 @@
 -   `[ V ]` - Remove selection
 -   `[ B ]` - Select songs of album around the cursor
 -   `[ a ]` - Add selected items to playlist
--   `[ \` ]` - Add random items to playlist
+-   ``[ ` ]`` - Add random items to playlist
 -   `[ r ]` - Toggle repeat mode
 -   `[ z ]` - Toggle random mode
 -   `[ y ]` - Toggle single mode
@@ -105,7 +105,7 @@
 -   `[ e ]` - Edit directory name
 -   `[ e ]` - Edit playlist name
 -   `[ 2 ]` - Browse MPD database/local filesystem
--   `[ \` ]` - Toggle sort mode
+-   ``[ ` ]`` - Toggle sort mode
 -   `[ o ]` - Locate playing song
 -   `[ Ctrl-H Backspace ]` - Jump to parent directory
 -   `[ Delete ]` - Delete selected items from disk
@@ -128,7 +128,7 @@
 -   `[ Space ]` - Add item to playlist
 -   `[ e ]` - Edit song
 -   `[ e ]` - Edit tag (left column)/album (middle/right column)
--   `[ \` ]` - Toggle type of tag used in left column
+-   ``[ ` ]`` - Toggle type of tag used in left column
 -   `[ m ]` - Toggle sort mode
 
 ## Keys - Playlist editor
@@ -163,7 +163,7 @@
 -   `[ e ]` - Edit directory name
 -   `[ e ]` - Edit playlist name
 -   `[ 2 ]` - Browse MPD database/local filesystem
--   `[ \` ]` - Toggle sort mode
+-   ``[ ` ]`` - Toggle sort mode
 -   `[ o ]` - Locate playing song
 -   `[ Ctrl-H Backspace ]` - Jump to parent directory
 -   `[ Delete ]` - Delete selected items from disk
@@ -186,7 +186,7 @@
 -   `[ Space ]` - Add item to playlist
 -   `[ e ]` - Edit song
 -   `[ e ]` - Edit tag (left column)/album (middle/right column)
--   `[ \` ]` - Toggle type of tag used in left column
+-   ``[ ` ]`` - Toggle type of tag used in left column
 -   `[ m ]` - Toggle sort mode
 
 ## Keys - Playlist editor
@@ -209,7 +209,7 @@
 
 -   `[ Space ]` - Toggle reloading lyrics upon song change
 -   `[ e ]` - Open lyrics in external editor
--   `[ \` ]` - Refetch lyrics
+-   ``[ ` ]`` - Refetch lyrics
 
 ## Keys - Terminal Windows
 
