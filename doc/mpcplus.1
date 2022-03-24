@@ -5,9 +5,12 @@ mpcplus \- An ncurses Music Player Daemon (MPD) client.
 .B mpcplus
 [options]
 .SH "DESCRIPTION"
-mpcplus is an ncurses client for MPD (Music Player Daemon), inspired by ncmpc.
+mpcplus is an ncurses client for MPD (Music Player Daemon), inspired by ncmpc
+and configured to integrate with the Cava spectrum visualizer.
 
 Read more about MPD at http://www.musicpd.org
+
+Read more about Cava at https://github.com/karlstav/cava
 .SH "OPTIONS"
 Mandatory arguments to long options are mandatory for short options too.
 .TP
@@ -465,6 +468,16 @@ file is found, mpcplus uses the defaults. An example bindings file with default
 values can be found usually in /usr/share/doc/mpcplus (the exact location may
 depend on your operating system or configure prefix).
 
+Mpcplus includes bindings to integrate with the Cava spectrum visualizer.
+By default, these bindings are Alt-0 through Alt-9 to set the transparency
+of the terminal window in which mpcplus is running. Alt-1 sets the window
+to 90% transparent, Alt-2 to 80% and so on Alt-9 to 10% transparent, and
+Alt-0 to 100% opaque. These transparency setting bindings are useful when
+running mpcplus and cava in separate overlapping windows, the spectrum
+visualizer visible through and behind the mpcplus window.
+
+Alt-r raises/lowers the Cava window.
+
 You can view current keybindings by pressing F1.
 .SH "SONG FORMAT"
 
@@ -512,11 +525,11 @@ Available values for colors:
 \fBNote\fR: colors can be nested, so if you write $2some$5text$9, it'll disable only usage of blue color and make red the current one.
 
 .SH "BUGS"
-Report bugs on https://github.com/arybczak/mpcplus/issues
+Report bugs on https://github.com/doctorfree/mpcplus/issues
 .SH "NOTE"
 Since MPD uses UTF\-8, mpcplus needs to convert characters to the charset used by the local system. If you get character conversion errors while you are running mpcplus, you probably need to set up your locale. This is done by setting LANG and LC_ALL/LC_CTYPE environment variables (LC_CTYPE only affects character handling).
 .SH "HOMEPAGE"
--> http://rybczak.net/mpcplus
+-> https://github.com/doctorfree/mpcplus
 
 .SH "SEE ALSO"
 mpc(1), mpd(1)
