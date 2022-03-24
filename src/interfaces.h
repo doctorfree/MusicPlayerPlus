@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_INTERFACES_H
-#define NCMPCPP_INTERFACES_H
+#ifndef MPCPLUS_INTERFACES_H
+#define MPCPLUS_INTERFACES_H
 
 #include <boost/range/detail/any_iterator.hpp>
 #include <boost/tuple/tuple.hpp>
@@ -87,4 +87,4 @@ private:
 	BaseScreen *m_previous_screen;
 };
 
-#endif // NCMPCPP_INTERFACES_H
+#endif // MPCPLUS_INTERFACES_H

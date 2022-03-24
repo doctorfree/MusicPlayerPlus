@@ -18,9 +18,9 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_STORAGE_KIND_H
-#define NCMPCPP_UTILITY_STORAGE_KIND_H
+#ifndef MPCPLUS_UTILITY_STORAGE_KIND_H
+#define MPCPLUS_UTILITY_STORAGE_KIND_H
 
 enum class StorageKind { Reference, Value };
 
-#endif // NCMPCPP_UTILITY_VALUE_TYPE_H
+#endif // MPCPLUS_UTILITY_VALUE_TYPE_H

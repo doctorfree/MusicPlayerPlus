@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_HAVE_FORMAT_H
-#define NCMPCPP_HAVE_FORMAT_H
+#ifndef MPCPLUS_HAVE_FORMAT_H
+#define MPCPLUS_HAVE_FORMAT_H
 
 #include <boost/variant.hpp>
 
@@ -128,4 +128,4 @@ AST<wchar_t> parse(const std::wstring &ws, const unsigned flags = Flags::All);
 
 }
 
-#endif // NCMPCPP_HAVE_FORMAT_H
+#endif // MPCPLUS_HAVE_FORMAT_H

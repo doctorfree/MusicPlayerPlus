@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_CONVERSION_H
-#define NCMPCPP_UTILITY_CONVERSION_H
+#ifndef MPCPLUS_UTILITY_CONVERSION_H
+#define MPCPLUS_UTILITY_CONVERSION_H
 
 #include <boost/format.hpp>
 #include <boost/lexical_cast.hpp>
@@ -122,4 +122,4 @@ void upperBoundCheck(const Type &value, const Type &ubound)
 		OutOfBounds::raiseUpper(value, ubound);
 }
 
-#endif // NCMPCPP_UTILITY_CONVERSION_H
+#endif // MPCPLUS_UTILITY_CONVERSION_H

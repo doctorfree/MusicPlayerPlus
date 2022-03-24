@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_CLOCK_H
-#define NCMPCPP_CLOCK_H
+#ifndef MPCPLUS_CLOCK_H
+#define MPCPLUS_CLOCK_H
 
 #include "config.h"
 
@@ -64,4 +64,4 @@ extern Clock *myClock;
 
 #endif // ENABLE_CLOCK
 
-#endif // NCMPCPP_CLOCK_H
+#endif // MPCPLUS_CLOCK_H

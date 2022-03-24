@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_FUNCTIONAL_H
-#define NCMPCPP_UTILITY_FUNCTIONAL_H
+#ifndef MPCPLUS_UTILITY_FUNCTIONAL_H
+#define MPCPLUS_UTILITY_FUNCTIONAL_H
 
 #include <boost/locale/encoding_utf.hpp>
 #include <utility>
@@ -63,4 +63,4 @@ struct convertString<TargetT, TargetT>
 };
 
 
-#endif // NCMPCPP_UTILITY_FUNCTIONAL_H
+#endif // MPCPLUS_UTILITY_FUNCTIONAL_H

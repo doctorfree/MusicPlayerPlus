@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_SHARED_RESOURCE_H
-#define NCMPCPP_UTILITY_SHARED_RESOURCE_H
+#ifndef MPCPLUS_UTILITY_SHARED_RESOURCE_H
+#define MPCPLUS_UTILITY_SHARED_RESOURCE_H
 
 #include <mutex>
 
@@ -57,4 +57,4 @@ private:
 	ResourceT m_resource;
 };
 
-#endif // NCMPCPP_UTILITY_SHARED_RESOURCE_H
+#endif // MPCPLUS_UTILITY_SHARED_RESOURCE_H

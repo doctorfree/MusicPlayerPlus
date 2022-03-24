@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_ACTIONS_H
-#define NCMPCPP_ACTIONS_H
+#ifndef MPCPLUS_ACTIONS_H
+#define MPCPLUS_ACTIONS_H
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/format.hpp>
@@ -1427,4 +1427,4 @@ private:
 
 }
 
-#endif // NCMPCPP_ACTIONS_H
+#endif // MPCPLUS_ACTIONS_H

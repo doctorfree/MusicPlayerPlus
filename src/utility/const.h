@@ -18,9 +18,9 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_CONST_H
-#define NCMPCPP_UTILITY_CONST_H
+#ifndef MPCPLUS_UTILITY_CONST_H
+#define MPCPLUS_UTILITY_CONST_H
 
 enum class Const { Yes, No };
 
-#endif // NCMPCPP_UTILITY_CONST_H
+#endif // MPCPLUS_UTILITY_CONST_H

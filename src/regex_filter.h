@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_REGEX_FILTER_H
-#define NCMPCPP_REGEX_FILTER_H
+#ifndef MPCPLUS_REGEX_FILTER_H
+#define MPCPLUS_REGEX_FILTER_H
 
 #include "config.h"
 
@@ -206,4 +206,4 @@ private:
 
 }
 
-#endif // NCMPCPP_REGEX_FILTER_H
+#endif // MPCPLUS_REGEX_FILTER_H

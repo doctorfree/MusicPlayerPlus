@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SETTINGS_H
-#define NCMPCPP_SETTINGS_H
+#ifndef MPCPLUS_SETTINGS_H
+#define MPCPLUS_SETTINGS_H
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <boost/optional.hpp>
@@ -226,4 +226,4 @@ struct Configuration
 
 extern Configuration Config;
 
-#endif // NCMPCPP_SETTINGS_H
+#endif // MPCPLUS_SETTINGS_H

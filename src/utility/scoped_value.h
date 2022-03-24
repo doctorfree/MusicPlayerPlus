@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_SCOPED_VALUE_H
-#define NCMPCPP_UTILITY_SCOPED_VALUE_H
+#ifndef MPCPLUS_UTILITY_SCOPED_VALUE_H
+#define MPCPLUS_UTILITY_SCOPED_VALUE_H
 
 template <typename ValueT>
 struct ScopedValue
@@ -41,4 +41,4 @@ private:
 	ValueT m_value;
 };
 
-#endif // NCMPCPP_UTILITY_SCOPED_VALUE_H
+#endif // MPCPLUS_UTILITY_SCOPED_VALUE_H

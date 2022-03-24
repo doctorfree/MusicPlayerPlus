@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_MENU_IMPL_H
-#define NCMPCPP_MENU_IMPL_H
+#ifndef MPCPLUS_MENU_IMPL_H
+#define MPCPLUS_MENU_IMPL_H
 
 #include "menu.h"
 
@@ -390,4 +390,4 @@ void Menu<ItemT>::clearFilter()
 
 }
 
-#endif // NCMPCPP_MENU_IMPL_H
+#endif // MPCPLUS_MENU_IMPL_H

@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_STRBUFFER_H
-#define NCMPCPP_STRBUFFER_H
+#ifndef MPCPLUS_STRBUFFER_H
+#define MPCPLUS_STRBUFFER_H
 
 #include <boost/lexical_cast.hpp>
 #include <boost/variant.hpp>
@@ -212,4 +212,4 @@ OutputStreamT &operator<<(OutputStreamT &os, const BasicBuffer<CharT> &buffer)
 
 }
 
-#endif // NCMPCPP_STRBUFFER_H
+#endif // MPCPLUS_STRBUFFER_H

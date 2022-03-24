@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_HELP_H
-#define NCMPCPP_HELP_H
+#ifndef MPCPLUS_HELP_H
+#define MPCPLUS_HELP_H
 
 #include "actions.h"
 #include "interfaces.h"
@@ -43,5 +43,5 @@ struct Help: Screen<NC::Scrollpad>, Tabbable
 
 extern Help *myHelp;
 
-#endif // NCMPCPP_HELP_H
+#endif // MPCPLUS_HELP_H
 

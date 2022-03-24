@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SEARCH_ENGINE_H
-#define NCMPCPP_SEARCH_ENGINE_H
+#ifndef MPCPLUS_SEARCH_ENGINE_H
+#define MPCPLUS_SEARCH_ENGINE_H
 
 #include <cassert>
 
@@ -156,5 +156,5 @@ private:
 
 extern SearchEngine *mySearcher;
 
-#endif // NCMPCPP_SEARCH_ENGINE_H
+#endif // MPCPLUS_SEARCH_ENGINE_H
 

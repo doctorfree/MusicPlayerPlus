@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_HAVE_FORMAT_IMPL_H
-#define NCMPCPP_HAVE_FORMAT_IMPL_H
+#ifndef MPCPLUS_HAVE_FORMAT_IMPL_H
+#define MPCPLUS_HAVE_FORMAT_IMPL_H
 
 #include <boost/variant.hpp>
 
@@ -296,4 +296,4 @@ TagVector<CharT> flatten(const AST<CharT> &ast, const MPD::Song &song)
 
 }
 
-#endif // NCMPCPP_HAVE_FORMAT__IMPL_H
+#endif // MPCPLUS_HAVE_FORMAT__IMPL_H

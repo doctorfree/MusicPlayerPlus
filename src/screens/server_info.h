@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SERVER_INFO_H
-#define NCMPCPP_SERVER_INFO_H
+#ifndef MPCPLUS_SERVER_INFO_H
+#define MPCPLUS_SERVER_INFO_H
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
@@ -56,5 +56,5 @@ private:
 
 extern ServerInfo *myServerInfo;
 
-#endif // NCMPCPP_SERVER_INFO_H
+#endif // MPCPLUS_SERVER_INFO_H
 

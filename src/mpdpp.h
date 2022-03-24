@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_MPDPP_H
-#define NCMPCPP_MPDPP_H
+#ifndef MPCPLUS_MPDPP_H
+#define MPCPLUS_MPDPP_H
 
 #include <cassert>
 #include <exception>
@@ -624,4 +624,4 @@ private:
 
 extern MPD::Connection Mpd;
 
-#endif // NCMPCPP_MPDPP_H
+#endif // MPCPLUS_MPDPP_H

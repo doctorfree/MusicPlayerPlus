@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_GLOBAL_H
-#define NCMPCPP_GLOBAL_H
+#ifndef MPCPLUS_GLOBAL_H
+#define MPCPLUS_GLOBAL_H
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <random>
@@ -65,4 +65,4 @@ extern std::mt19937 RNG;
 
 }
 
-#endif // NCMPCPP_GLOBAL_H
+#endif // MPCPLUS_GLOBAL_H

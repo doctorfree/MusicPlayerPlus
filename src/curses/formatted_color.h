@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_FORMATTED_COLOR_H
-#define NCMPCPP_FORMATTED_COLOR_H
+#ifndef MPCPLUS_FORMATTED_COLOR_H
+#define MPCPLUS_FORMATTED_COLOR_H
 
 #include <boost/optional.hpp>
 #include <boost/range/adaptor/reversed.hpp>
@@ -100,4 +100,4 @@ OutputStreamT &operator<<(OutputStreamT &os,
 
 }
 
-#endif // NCMPCPP_FORMATTED_COLOR_H
+#endif // MPCPLUS_FORMATTED_COLOR_H

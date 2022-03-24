@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_LYRICS_FETCHER_H
-#define NCMPCPP_LYRICS_FETCHER_H
+#ifndef MPCPLUS_LYRICS_FETCHER_H
+#define MPCPLUS_LYRICS_FETCHER_H
 
 #include "config.h"
 
@@ -168,4 +168,4 @@ private:
 	std::string URL;
 };
 
-#endif // NCMPCPP_LYRICS_FETCHER_H
+#endif // MPCPLUS_LYRICS_FETCHER_H

@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_TYPE_CONVERSIONS_H
-#define NCMPCPP_UTILITY_TYPE_CONVERSIONS_H
+#ifndef MPCPLUS_UTILITY_TYPE_CONVERSIONS_H
+#define MPCPLUS_UTILITY_TYPE_CONVERSIONS_H
 
 #include <boost/optional.hpp>
 
@@ -42,4 +42,4 @@ boost::optional<mpd_tag_type> getFunctionToTagType(MPD::Song::GetFunction f);
 
 std::string itemTypeToString(MPD::Item::Type type);
 
-#endif // NCMPCPP_UTILITY_TYPE_CONVERSIONS_H
+#endif // MPCPLUS_UTILITY_TYPE_CONVERSIONS_H

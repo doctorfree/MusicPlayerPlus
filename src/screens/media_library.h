@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_MEDIA_LIBRARY_H
-#define NCMPCPP_MEDIA_LIBRARY_H
+#ifndef MPCPLUS_MEDIA_LIBRARY_H
+#define MPCPLUS_MEDIA_LIBRARY_H
 
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 
@@ -156,5 +156,5 @@ private:
 
 extern MediaLibrary *myLibrary;
 
-#endif // NCMPCPP_MEDIA_LIBRARY_H
+#endif // MPCPLUS_MEDIA_LIBRARY_H
 

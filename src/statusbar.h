@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_STATUSBAR_H
-#define NCMPCPP_STATUSBAR_H
+#ifndef MPCPLUS_STATUSBAR_H
+#define MPCPLUS_STATUSBAR_H
 
 #include <boost/format.hpp>
 #include "curses/window.h"
@@ -163,4 +163,4 @@ void printf(int delay, FormatT &&fmt, ArgT &&arg, Args&&... args)
 
 }
 
-#endif // NCMPCPP_STATUSBAR_H
+#endif // MPCPLUS_STATUSBAR_H

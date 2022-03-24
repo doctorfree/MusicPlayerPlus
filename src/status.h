@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_STATUS_CHECKER_H
-#define NCMPCPP_STATUS_CHECKER_H
+#ifndef MPCPLUS_STATUS_CHECKER_H
+#define MPCPLUS_STATUS_CHECKER_H
 
 #include "interfaces.h"
 #include "mpdpp.h"
@@ -70,4 +70,4 @@ void outputs();
 
 }
 
-#endif // NCMPCPP_STATUS_CHECKER_H
+#endif // MPCPLUS_STATUS_CHECKER_H

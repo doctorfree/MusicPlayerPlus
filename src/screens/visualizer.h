@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_VISUALIZER_H
-#define NCMPCPP_VISUALIZER_H
+#ifndef MPCPLUS_VISUALIZER_H
+#define MPCPLUS_VISUALIZER_H
 
 #include "config.h"
 
@@ -124,6 +124,6 @@ extern Visualizer *myVisualizer;
 
 #endif // ENABLE_VISUALIZER
 
-#endif // NCMPCPP_VISUALIZER_H
+#endif // MPCPLUS_VISUALIZER_H
 
 /* vim: set tabstop=4 softtabstop=4 shiftwidth=4 noexpandtab : */

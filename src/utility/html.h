@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_HTML_H
-#define NCMPCPP_UTILITY_HTML_H
+#ifndef MPCPLUS_UTILITY_HTML_H
+#define MPCPLUS_UTILITY_HTML_H
 
 #include <string>
 
@@ -27,4 +27,4 @@ std::string unescapeHtmlUtf8(const std::string &s);
 void unescapeHtmlEntities(std::string &s);
 void stripHtmlTags(std::string &s);
 
-#endif // NCMPCPP_UTILITY_HTML_H
+#endif // MPCPLUS_UTILITY_HTML_H

@@ -18,11 +18,11 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_CONFIGURATION_H
-#define NCMPCPP_CONFIGURATION_H
+#ifndef MPCPLUS_CONFIGURATION_H
+#define MPCPLUS_CONFIGURATION_H
 
 void expand_home(std::string &path);
 
 bool configure(int argc, char **argv);
 
-#endif // NCMPCPP_CONFIGURATION_H
+#endif // MPCPLUS_CONFIGURATION_H

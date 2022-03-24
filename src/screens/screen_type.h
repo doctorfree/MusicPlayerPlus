@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SCREEN_TYPE_H
-#define NCMPCPP_SCREEN_TYPE_H
+#ifndef MPCPLUS_SCREEN_TYPE_H
+#define MPCPLUS_SCREEN_TYPE_H
 
 #include <string>
 #include "config.h"
@@ -63,4 +63,4 @@ ScreenType stringToScreenType(const std::string &s);
 
 BaseScreen *toScreen(ScreenType st);
 
-#endif // NCMPCPP_SCREEN_TYPE_H
+#endif // MPCPLUS_SCREEN_TYPE_H

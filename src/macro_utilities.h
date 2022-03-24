@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_MACRO_UTILITIES_H
-#define NCMPCPP_MACRO_UTILITIES_H
+#ifndef MPCPLUS_MACRO_UTILITIES_H
+#define MPCPLUS_MACRO_UTILITIES_H
 
 #include <cassert>
 #include "actions.h"
@@ -87,4 +87,4 @@ private:
 void runExternalConsoleCommand(const std::string &cmd);
 void runExternalCommand(const std::string &cmd, bool block);
 
-#endif // NCMPCPP_MACRO_UTILITIES_H
+#endif // MPCPLUS_MACRO_UTILITIES_H

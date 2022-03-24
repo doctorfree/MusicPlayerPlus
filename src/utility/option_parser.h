@@ -30,8 +30,8 @@
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#ifndef NCMPCPP_UTILITY_OPTION_PARSER_H
-#define NCMPCPP_UTILITY_OPTION_PARSER_H
+#ifndef MPCPLUS_UTILITY_OPTION_PARSER_H
+#define MPCPLUS_UTILITY_OPTION_PARSER_H
 
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/tokenizer.hpp>
@@ -184,4 +184,4 @@ public:
 	bool initialize_undefined(bool warn_on_errors);
 };
 
-#endif // NCMPCPP_UTILITY_OPTION_PARSER_H
+#endif // MPCPLUS_UTILITY_OPTION_PARSER_H

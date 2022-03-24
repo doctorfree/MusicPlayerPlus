@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_TITLE_H
-#define NCMPCPP_TITLE_H
+#ifndef MPCPLUS_TITLE_H
+#define MPCPLUS_TITLE_H
 
 #include "curses/window.h"
 
@@ -27,4 +27,4 @@ void windowTitle(const std::string &title);
 
 void drawHeader();
 
-#endif // NCMPCPP_TITLE_H
+#endif // MPCPLUS_TITLE_H

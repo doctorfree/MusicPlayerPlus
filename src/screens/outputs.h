@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_OUTPUTS_H
-#define NCMPCPP_OUTPUTS_H
+#ifndef MPCPLUS_OUTPUTS_H
+#define MPCPLUS_OUTPUTS_H
 
 #include "config.h"
 
@@ -57,5 +57,5 @@ extern Outputs *myOutputs;
 
 #endif // ENABLE_OUTPUTS
 
-#endif // NCMPCPP_OUTPUTS_H
+#endif // MPCPLUS_OUTPUTS_H
 

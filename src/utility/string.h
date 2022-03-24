@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_STRING_H
-#define NCMPCPP_UTILITY_STRING_H
+#ifndef MPCPLUS_UTILITY_STRING_H
+#define MPCPLUS_UTILITY_STRING_H
 
 #include <cstdarg>
 #include <locale>
@@ -62,4 +62,4 @@ void removeInvalidCharsFromFilename(std::string &filename, bool win32_compatible
 
 void escapeSingleQuotes(std::string &filename);
 
-#endif // NCMPCPP_UTILITY_STRING_H
+#endif // MPCPLUS_UTILITY_STRING_H

@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_READLINE_H
-#define NCMPCPP_UTILITY_READLINE_H
+#ifndef MPCPLUS_UTILITY_READLINE_H
+#define MPCPLUS_UTILITY_READLINE_H
 
 #include "config.h"
 
@@ -35,4 +35,4 @@
 # error "readline is not available"
 #endif
 
-#endif // NCMPCPP_READLINE_UTILITY_H
+#endif // MPCPLUS_READLINE_UTILITY_H

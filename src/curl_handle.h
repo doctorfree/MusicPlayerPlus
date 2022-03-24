@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_CURL_HANDLE_H
-#define NCMPCPP_CURL_HANDLE_H
+#ifndef MPCPLUS_CURL_HANDLE_H
+#define MPCPLUS_CURL_HANDLE_H
 
 #include "config.h"
 
@@ -33,4 +33,4 @@ namespace Curl
 	std::string escape(const std::string &s);
 }
 
-#endif // NCMPCPP_CURL_HANDLE_H
+#endif // MPCPLUS_CURL_HANDLE_H

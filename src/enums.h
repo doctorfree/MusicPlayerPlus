@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_ENUMS_H
-#define NCMPCPP_ENUMS_H
+#ifndef MPCPLUS_ENUMS_H
+#define MPCPLUS_ENUMS_H
 
 #include "config.h"
 #include <iostream>
@@ -55,4 +55,4 @@ enum class VisualizerType {
 std::ostream &operator<<(std::ostream &os, VisualizerType vt);
 std::istream &operator>>(std::istream &is, VisualizerType &vt);
 
-#endif // NCMPCPP_ENUMS_H
+#endif // MPCPLUS_ENUMS_H

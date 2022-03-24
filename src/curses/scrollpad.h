@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SCROLLPAD_H
-#define NCMPCPP_SCROLLPAD_H
+#ifndef MPCPLUS_SCROLLPAD_H
+#define MPCPLUS_SCROLLPAD_H
 
 #include "curses/window.h"
 #include "curses/strbuffer.h"
@@ -80,5 +80,5 @@ private:
 
 }
 
-#endif // NCMPCPP_SCROLLPAD_H
+#endif // MPCPLUS_SCROLLPAD_H
 

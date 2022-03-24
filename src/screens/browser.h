@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_BROWSER_H
-#define NCMPCPP_BROWSER_H
+#ifndef MPCPLUS_BROWSER_H
+#define MPCPLUS_BROWSER_H
 
 #include "interfaces.h"
 #include "mpdpp.h"
@@ -105,5 +105,5 @@ private:
 
 extern Browser *myBrowser;
 
-#endif // NCMPCPP_BROWSER_H
+#endif // MPCPLUS_BROWSER_H
 

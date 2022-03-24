@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SONG_LIST_H
-#define NCMPCPP_SONG_LIST_H
+#ifndef MPCPLUS_SONG_LIST_H
+#define MPCPLUS_SONG_LIST_H
 
 #include <boost/range/detail/any_iterator.hpp>
 #include "curses/menu.h"
@@ -135,4 +135,4 @@ struct SongMenu: NC::Menu<MPD::Song>, SongList
 	virtual std::vector<MPD::Song> getSelectedSongs() override;
 };
 
-#endif // NCMPCPP_SONG_LIST_H
+#endif // MPCPLUS_SONG_LIST_H

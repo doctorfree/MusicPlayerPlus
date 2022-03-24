@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_UTILITY_WIDE_STRING_H
-#define NCMPCPP_UTILITY_WIDE_STRING_H
+#ifndef MPCPLUS_UTILITY_WIDE_STRING_H
+#define MPCPLUS_UTILITY_WIDE_STRING_H
 
 #include <string> // include before boost to compile on MACOSX
 #include <boost/locale/encoding_utf.hpp>
@@ -44,4 +44,4 @@ inline std::string wideShorten(const std::string &s, size_t max_length)
 	return ToString(wideShorten(ToWString(s), max_length));
 }
 
-#endif // NCMPCPP_UTILITY_WIDE_STRING_h
+#endif // MPCPLUS_UTILITY_WIDE_STRING_h

@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_SAMPLE_BUFFER_H
-#define NCMPCPP_SAMPLE_BUFFER_H
+#ifndef MPCPLUS_SAMPLE_BUFFER_H
+#define MPCPLUS_SAMPLE_BUFFER_H
 
 #include <cstdint>
 #include <vector>
@@ -44,4 +44,4 @@ private:
 	std::vector<int16_t> m_buffer;
 };
 
-#endif // NCMPCPP_SAMPLE_BUFFER_H
+#endif // MPCPLUS_SAMPLE_BUFFER_H

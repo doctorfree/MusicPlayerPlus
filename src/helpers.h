@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_HELPERS_H
-#define NCMPCPP_HELPERS_H
+#ifndef MPCPLUS_HELPERS_H
+#define MPCPLUS_HELPERS_H
 
 #include "interfaces.h"
 #include "mpdpp.h"
@@ -542,4 +542,4 @@ std::wstring Scroller(const std::wstring &str, size_t &pos, size_t width);
 void writeCyclicBuffer(const NC::WBuffer &buf, NC::Window &w, size_t &start_pos,
                        size_t width, const std::wstring &separator);
 
-#endif // NCMPCPP_HELPERS_H
+#endif // MPCPLUS_HELPERS_H

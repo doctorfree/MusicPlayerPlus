@@ -231,7 +231,7 @@ void resizeScreen(bool reload_main_window)
 	Status::Changes::playerState();
 	// Note: routines for drawing separator if alternative user
 	// interface is active and header is hidden are placed in
-	// NcmpcppStatusChanges.StatusFlags
+	// MpcplusStatusChanges.StatusFlags
 	Status::Changes::flags();
 	drawHeader();
 	wFooter->refresh();

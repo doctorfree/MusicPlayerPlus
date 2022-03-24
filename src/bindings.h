@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_BINDINGS_H
-#define NCMPCPP_BINDINGS_H
+#ifndef MPCPLUS_BINDINGS_H
+#define MPCPLUS_BINDINGS_H
 
 #include <algorithm>
 #include <cassert>
@@ -119,4 +119,4 @@ private:
 
 extern BindingsConfiguration Bindings;
 
-#endif // NCMPCPP_BINDINGS_H
+#endif // MPCPLUS_BINDINGS_H

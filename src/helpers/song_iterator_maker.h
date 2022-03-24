@@ -18,8 +18,8 @@
  *   51 Franklin St, Fifth Floor, Boston, MA 02110-1301, USA.              *
  ***************************************************************************/
 
-#ifndef NCMPCPP_HELPERS_SONG_ITERATOR_MAKER_H
-#define NCMPCPP_HELPERS_SONG_ITERATOR_MAKER_H
+#ifndef MPCPLUS_HELPERS_SONG_ITERATOR_MAKER_H
+#define MPCPLUS_HELPERS_SONG_ITERATOR_MAKER_H
 
 #include <boost/iterator/transform_iterator.hpp>
 #include "curses/menu.h"
@@ -66,4 +66,4 @@ ConstSongIterator makeConstSongIterator(ConstIteratorT it)
 	return ConstSongIterator(boost::make_transform_iterator(it, Extractor{}));
 }
 
-#endif // NCMPCPP_HELPERS_SONG_ITERATOR_MAKER_H
+#endif // MPCPLUS_HELPERS_SONG_ITERATOR_MAKER_H
