@@ -5,7 +5,7 @@
 -   [ Up k ] - Move cursor up
 -   [ Down j ] - Move cursor down
 -   \[ \[ \] - Move cursor up one album
--   \[ \] \] - Move cursor down one album
+-   \[ ] \] - Move cursor down one album
 -   [ { ] - Move cursor up one artist
 -   [ } ] - Move cursor down one artist
 -   [ Page Up ] - Page up
