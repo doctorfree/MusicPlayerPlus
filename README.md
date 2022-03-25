@@ -1,6 +1,6 @@
 # NCurses Music Player Plus MPD Client
 
-Project page - https://github.com/doctorfree/mpcplus
+Project page - https://github.com/doctorfree/MusicPlayerPlus
 
 ## mpcplus – featureful ncurses based MPD client inspired by ncmpc
 

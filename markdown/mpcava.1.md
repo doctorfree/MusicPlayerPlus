@@ -70,7 +70,7 @@ Submit bug reports online at:
 https://gitlab.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **cava**(1)
+**mpcplus**(1), **mpcpluskeys**(1), **cava**(1)
 
 Full documentation and sources at:
 
