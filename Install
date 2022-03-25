@@ -15,6 +15,8 @@ SRC_NAME="MusicPlayerPlus"
 PKG_NAMES="MusicPlayerPlus"
 APT_NAMES="musicplayerplus"
 SRC="${HOME}/src"
+DEB_ARCH=amd64
+RPM_ARCH=x86_64
 
 PKG_AVAILABLE=
 PKG_SELECTED=
@@ -35,7 +37,7 @@ get_available_packages() {
     [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.${SUF}" ] || {
       for pkg in ${pkgs}
       do
-        pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${SUF}//"` 
+        pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}//"` 
         PKG_AVAILABLE="${PKG_AVAILABLE} ${pkgname}"
       done
     }
@@ -81,7 +83,11 @@ else
   [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 
   SUF=deb
-  [ "${debian}" ] || SUF=rpm
+  ARCH=${DEB_ARCH}
+  [ "${debian}" ] || {
+    SUF=rpm
+    ARCH=${RPM_ARCH}
+  }
 
   get_available_packages
 
@@ -140,9 +146,9 @@ else
 
   for PKG_NAME in ${PKG_NAMES}
   do
-    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
+    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}"
     [ -f "${PKG}" ] || {
-      echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
+      echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF} not found."
       for pkgs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}
       do
         [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}" ] || {

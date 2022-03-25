@@ -4,6 +4,7 @@ SRC_NAME="MusicPlayerPlus"
 PKG_NAME="MusicPlayerPlus"
 DESTDIR="usr"
 SRC=${HOME}/src
+ARCH=amd64
 SUDO=sudo
 GCI=
 
@@ -67,7 +68,7 @@ echo "Package: ${PKG_NAME}
 Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
-Architecture: amd64
+Architecture: ${ARCH}
 Installed-Size: 2420
 Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1)
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
@@ -143,8 +144,8 @@ ${SUDO} chmod 755 ${OUT_DIR}/${DESTDIR}/bin/* \
 ${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
 
 cd dist
-echo "Building ${PKG_NAME}_${PKG_VER} package"
-${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
+echo "Building ${PKG_NAME}_${PKG_VER} Debian package"
+${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.deb
 cd ${PKG_NAME}_${PKG_VER}
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
 tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
