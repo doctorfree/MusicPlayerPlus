@@ -115,13 +115,15 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
-${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
-${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/copyright
-${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
-${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
-${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
-${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
-${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"
+${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp NOTICE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
+
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
 
