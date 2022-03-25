@@ -1,0 +1,9 @@
+
+Usage: mpcava [-f] [-h] [-q] [-r] [-t] [-u]
+Where:
+	-f indicates fullscreen display
+	-h indicates half-height for cava window (with -f only)
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+	-u displays this usage message and exits

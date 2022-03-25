@@ -1,0 +1,45 @@
+#!/bin/bash
+#
+# raise_cava - raise the cava window
+#
+
+VTITLE="Spectrum Visualizer"
+MTITLE="Music Player Plus"
+
+cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+[ "${cavawin}" ] || {
+  cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+  [ "${cavawin}" ] || {
+    cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+    [ "${cavawin}" ] || {
+      cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+    }
+  }
+}
+mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${MTITLE}"`
+[ "${mppwin}" ] || {
+  mppwin=`wmctrl -l -G -x | grep xfce4-terminal | grep "${MTITLE}"`
+  [ "${mppwin}" ] || {
+    mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "mpcplus"`
+    [ "${mppwin}" ] || {
+      mppwin=`wmctrl -l -G -x | grep xfce4-terminal | grep "mpcplus"`
+    }
+  }
+}
+[ "${cavawin}" ] && {
+  winid=`echo ${cavawin} | awk ' { print $1 } '`
+}
+[ "${mppwin}" ] && {
+  mppid=`echo ${mppwin} | awk ' { print $1 } '`
+}
+[ "${winid}" ] && [ "${mppid}" ] && {
+  above=`xprop -id ${winid} _NET_WM_STATE | grep WM_STATE_ABOVE`
+  if [ "${above}" ]
+  then
+    wmctrl -i -r "${winid}" -b "remove,above"
+    wmctrl -i -r "${mppid}" -b "add,above"
+  else
+    wmctrl -i -r "${mppid}" -b "remove,above"
+    wmctrl -i -r "${winid}" -b "add,above"
+  fi
+}

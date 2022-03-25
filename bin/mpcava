@@ -1,0 +1,320 @@
+#!/bin/bash
+#
+# mpcava - run mpcplus and cava in separate terminal emulators,
+#          cantata and cava in separate windows, or a specified
+#          MPD client and cava in separate windows.
+#
+# Written by Ronald Joe Record <ronaldrecord@gmail.com>
+# March, 2022
+#
+# I am using two separate terminal emulators as I want a smaller
+# font for the cava terminal. The terminal command options are
+# customized for my setup, you may need to adjust the geometry
+# to get the two windows to align as desired. I wanted the cava
+# terminal window at the bottom of the screen and aligned with
+# the mpcplus terminal window. Couldn't figure out how to set
+# the window title for gnome-terminal.
+#
+# If the "-t" option is specified then only a single terminal
+# emulator is used, tilix. Tilix is invoked twice with
+# different profiles, one for mpcplus and another for cava.
+# The profiles are named "MusicPlayer" and "Cava". 
+#
+# In both types of invocations, with or without "-t", the terminal
+# profiles used have font sizee settings of 32 and 8 for mpcplus and
+# cava, respectively. This aligns the windows, on my system, when
+# not in fullscreen mode.
+#
+# When using the cool-retro-term for mpcplus (-r option), adjust the
+# size of the cool-retro-term window manually so it aligns with the
+# cava window. I could not figure out how to specify a geometry for
+# the cool-retro-term window when invoked with "-e mpcplus".
+#
+# Note also that the key bindings I have configured for mpcplus
+# to dynamically set the transparency of the terminal window only
+# work when using xfce4-terminal for mpcplus. That is, without
+# the "-t" or "-r" arguments.
+#
+# Cantata can be used as the MPD client, replacing the invocation of a
+# terminal emulator running mpcplus with direct invocation of cantata.
+# In addition, an alternate MPD client can be specified on the command line.
+
+VTITLE="Spectrum Visualizer"
+MTITLE="Music Player Plus"
+MPCPLUS="/usr/local/bin/mpcplus"
+[ -x ${MPCPLUS} ] || MPCPLUS="mpcplus"
+
+usage() {
+  printf "\nUsage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
+  printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
+  printf "\n\t-f indicates fullscreen display"
+  printf "\n\t-h indicates half-height for cava window (with -f only)"
+  printf "\n\t-q indicates quarter-height for cava window (with -f only)"
+  printf "\n\t-r indicates use retro terminal emulator"
+  printf "\n\t-t indicates use tilix terminal emulator"
+  printf "\n\t-u displays this usage message and exits\n"
+  exit 1
+}
+
+FULLSCREEN=
+HALFHEIGHT=
+QRTRHEIGHT=
+CLIENT=
+RETRO=
+TILIX=
+while getopts "cC:fhqrtu" flag; do
+  case $flag in
+    c)
+      CLIENT=1
+      type -p cantata > /dev/null || {
+        echo "Option '-c' indicates use cantata MPD client."
+        echo "However, cantata is not installed or not in your path."
+        echo "You can install cantata using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install cantata\nor"
+        printf "\n\tsudo dnf install cantata\n\n"
+        echo "Continuing, using mpcplus rather than cantata."
+        CLIENT=
+      }
+      [ "${CLIENT}" ] && MPCPLUS="cantata"
+      ;;
+    C)
+      CLIENT="${OPTARG}"
+      type -p "${CLIENT}" > /dev/null || {
+        echo "Option '-C' indicates use ${CLIENT} MPD client."
+        echo "However, ${CLIENT} is not installed or not in your path."
+        echo "You may be able to install ${CLIENT} using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install ${CLIENT}\nor"
+        printf "\n\tsudo dnf install ${CLIENT}\n\n"
+        have_cantata=`type -p cantata`
+        if [ "${have_cantata}" ]
+        then
+          echo "Continuing, using cantata rather than ${CLIENT}."
+          CLIENT=cantata
+        else
+          echo "Continuing, using mpcplus rather than ${CLIENT}."
+          CLIENT=
+        fi
+      }
+      [ "${CLIENT}" ] && MPCPLUS="${CLIENT}"
+      ;;
+    f)
+      FULLSCREEN=1
+      ;;
+    h)
+      HALFHEIGHT=1
+      ;;
+    q)
+      QRTRHEIGHT=1
+      ;;
+    r)
+      type -p cool-retro-term > /dev/null || {
+        echo "Option '-r' indicates use cool-retro-term terminal emulator."
+        echo "However, cool-retro-term is not installed or not in your path."
+        echo "You can install cool-retro-term using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install cool-retro-term\nor"
+        printf "\n\tsudo dnf install cool-retro-term\n\n"
+        echo "Exiting"
+        exit 1
+      }
+      RETRO=1
+      type -p tilix > /dev/null && TILIX=1
+      ;;
+    t)
+      type -p tilix > /dev/null || {
+        echo "Option '-t' indicates use tilix terminal emulator."
+        echo "However, tilix is not installed or not in your path."
+        echo "You can install tilix using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install tilix\nor"
+        printf "\n\tsudo dnf install tilix\n\n"
+        echo "Exiting"
+        exit 1
+      }
+      TILIX=1
+      ;;
+    u)
+      usage
+      ;;
+    esac
+done
+
+[ "${TILIX}" ] || {
+  [ "${RETRO}" ] || {
+    type -p xfce4-terminal > /dev/null || {
+      echo "No option '-t' or '-r' indicates use xfce4-terminal"
+      echo "terminal emulator. However, xfce4-terminal is either"
+      echo "not installed or not in your path."
+      echo "You can install xfce4-terminal using apt or dnf as follows:"
+      printf "\n\n\tsudo apt install xfce4-terminal\nor"
+      printf "\n\tsudo dnf install xfce4-terminal\n\n"
+      type -p tilix > /dev/null || {
+        echo "Exiting"
+        exit 1
+      }
+      echo "Alternately, invoke mpcava with the '-t' option to use tilix."
+      echo "Continuing with tilix as the terminal emulator."
+      TILIX=1
+    }
+  }
+  [ "${TILIX}" ] || {
+    type -p gnome-terminal > /dev/null || {
+      echo "No option '-t' indicates use gnome-terminal terminal emulator."
+      echo "However, gnome-terminal is not installed or not in your path."
+      echo "You can install gnome-terminal using apt or dnf as follows:"
+      printf "\n\n\tsudo apt install gnome-terminal\nor"
+      printf "\n\tsudo dnf install gnome-terminal\n\n"
+      type -p tilix > /dev/null || {
+        echo "Exiting"
+        exit 1
+      }
+      echo "Alternately, invoke mpcava with the '-t' option to use tilix."
+      echo "Continuing with tilix as the terminal emulator."
+      TILIX=1
+    }
+  }
+}
+
+[ "${HALFHEIGHT}" ] && [ "${QRTRHEIGHT}" ] && {
+  [ "${FULLSCREEN}" ] && {
+    echo "Only one of '-h' and '-q' should be specified"
+    echo "Quarter-height overrides half-height. Using quarter-height."
+    HALFHEIGHT=
+  }
+}
+[ "${HALFHEIGHT}" ] && {
+  [ "${FULLSCREEN}" ] || {
+    echo "Height settings only apply when in fullscreen mode."
+    echo "Ignoring '-h' half-height option."
+    HALFHEIGHT=
+  }
+}
+[ "${QRTRHEIGHT}" ] && {
+  [ "${FULLSCREEN}" ] || {
+    echo "Height settings only apply when in fullscreen mode."
+    echo "Ignoring '-q' quarter-height option."
+    QRTRHEIGHT=
+  }
+}
+
+if [ "${FULLSCREEN}" ]
+then
+  if [ "${TILIX}" ]
+  then
+    tilix --title="${VTITLE}" \
+          --full-screen \
+          --window-style=borderless \
+          --profile=Cava \
+          --command=cava 2> /dev/null &
+  else
+    gnome-terminal -t "${VTITLE}" \
+          --profile=SmallFont \
+          --hide-menubar \
+          --full-screen \
+          -- cava &
+  fi
+  [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
+    sleep 1
+    if [ "${TILIX}" ]
+    then
+      cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+    else
+      cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+    fi
+    [ "${cavawin}" ] || {
+      if [ "${TILIX}" ]
+      then
+        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+        [ "${cavawin}" ] || echo "Could not find cava window"
+      else
+        cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+        [ "${cavawin}" ] || echo "Could not find cava window"
+      fi
+    }
+    [ "${cavawin}" ] && {
+      winid=`echo ${cavawin} | awk ' { print $1 } '`
+      grav=`echo ${cavawin} | awk ' { print $2 } '`
+      xoff=`echo ${cavawin} | awk ' { print $3 } '`
+      yoff=`echo ${cavawin} | awk ' { print $4 } '`
+      width=`echo ${cavawin} | awk ' { print $5 } '`
+      height=`echo ${cavawin} | awk ' { print $6 } '`
+      [ "${winid}" ] && {
+        if [ "${HALFHEIGHT}" ]
+        then
+          height=$((height / 2))
+        else
+          height=$((height / 4))
+          # Fudge this to compensate for differing window decoration size
+          [ "${TILIX}" ] || height=$((height - 30))
+        fi
+        mvarg="${grav},${xoff},${yoff},${width},${height}"
+        wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
+        wmctrl -i -r "${winid}" -e "${mvarg}"
+      }
+    }
+  }
+else
+  if [ "${TILIX}" ]
+  then
+    tilix --title="${VTITLE}" \
+          --window-style=borderless \
+          --geometry=360x16+150-0 \
+          --profile=Cava \
+          --command=cava 2> /dev/null &
+  else
+    gnome-terminal -t "${VTITLE}" \
+          --profile=SmallFont \
+          --hide-menubar \
+          --geometry 360x16+150-0 \
+          -- cava &
+  fi
+fi
+
+sleep 2
+
+if [ "${RETRO}" ]
+then
+  if [ "${FULLSCREEN}" ]
+  then
+    cool-retro-term --fullscreen -e "${MPCPLUS}" 2> /dev/null &
+  else
+    cool-retro-term -e "${MPCPLUS}" 2> /dev/null &
+  fi
+else
+  if [ "${FULLSCREEN}" ]
+  then
+    if [ "${TILIX}" ]
+    then
+      tilix --title="${MTITLE}" \
+            --full-screen \
+            --window-style=borderless \
+            --profile=MusicPlayer \
+            --command="${MPCPLUS}" 2> /dev/null &
+    else
+      xfce4-terminal --title "${MTITLE}" \
+            --icon=audio-player \
+            --hide-menubar \
+            --hide-toolbar \
+            --hide-scrollbar \
+            --fullscreen \
+            --command="${MPCPLUS}" &
+    fi
+  else
+    if [ "${TILIX}" ]
+    then
+      tilix --title="${MTITLE}" \
+            --window-style=borderless \
+            --geometry=90x20+150+25 \
+            --profile=MusicPlayer \
+            --command="${MPCPLUS}" 2> /dev/null &
+    else
+      xfce4-terminal --title "${MTITLE}" \
+            --icon=audio-player \
+            --hide-menubar \
+            --hide-toolbar \
+            --hide-scrollbar \
+            --geometry 90x20+150+25 \
+            --command="${MPCPLUS}" &
+    fi
+  fi
+fi

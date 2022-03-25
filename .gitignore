@@ -19,3 +19,12 @@ missing
 **/.deps/
 src/mpcplus
 stamp-h1
+archive/*
+dist/*
+releases/*
+tmp/*
+# vim files
+.*.sw[a-z]
+*.un~
+Session.vim
+.netrwhist

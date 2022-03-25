@@ -1,0 +1,3 @@
+?package(musicplayerplus):needs="text" section="Applications/Sound" \
+  title="musicplayerplus" longtitle="Music Player Plus" \
+  command="/usr/local/bin/mpcava -f -q -t" hints="Player"

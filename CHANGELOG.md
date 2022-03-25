@@ -1,3 +1,10 @@
+# Changelog
+
+All notable changes to this project will be documented in this file.
+
+# mpcplus-0.10 (2022-03-25)
+* Merged in packaging, utilities, doc, and config from MusicPlayerPlus
+
 # mpcplus-0.10 (2022-03-24)
 * Forked and changed name to mpcplus
 

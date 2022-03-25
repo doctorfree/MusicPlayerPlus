@@ -1,0 +1,194 @@
+#!/bin/bash
+PKG="musicplayerplus"
+SRC_NAME="MusicPlayerPlus"
+PKG_NAME="MusicPlayerPlus"
+TOP="usr"
+DESTDIR="${TOP}/local"
+SRC=${HOME}/src
+SUDO=sudo
+GCI=
+
+dpkg=`type -p dpkg-deb`
+[ "${dpkg}" ] || {
+    echo "Debian packaging tools do not appear to be installed on this system"
+    echo "Are you on the appropriate Linux system with packaging requirements ?"
+    echo "Exiting"
+    exit 1
+}
+
+[ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
+  [ -f "/builds/doctorfree/${SRC_NAME}/VERSION" ] || {
+    echo "$SRC/$SRC_NAME/VERSION does not exist. Exiting."
+    exit 1
+  }
+  SRC="/builds/doctorfree"
+  SUDO=
+  GCI=1
+}
+
+. "${SRC}/${SRC_NAME}/VERSION"
+PKG_VER=${VERSION}
+PKG_REL=${RELEASE}
+
+umask 0022
+
+# Subdirectory in which to create the distribution files
+OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
+
+[ -d "${SRC}/${SRC_NAME}" ] || {
+    echo "$SRC/$SRC_NAME does not exist or is not a directory. Exiting."
+    exit 1
+}
+
+cd "${SRC}/${SRC_NAME}"
+${SUDO} rm -rf dist
+mkdir dist
+
+[ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
+mkdir ${OUT_DIR}
+cp -a pkg/debian ${OUT_DIR}/DEBIAN
+chmod 755 ${OUT_DIR} ${OUT_DIR}/DEBIAN ${OUT_DIR}/DEBIAN/*
+
+echo "Package: ${PKG_NAME}
+Version: ${PKG_VER}-${PKG_REL}
+Section: sound
+Priority: optional
+Architecture: amd64
+Installed-Size: 2420
+Depends: libboost-filesystem1.74.0 (>= 1.74.0), libboost-locale1.74.0 (>= 1.74.0), libboost-program-options1.74.0 (>= 1.74.0), libboost-regex1.74.0-icu67, libboost-thread1.74.0 (>= 1.74.0), libc6 (>= 2.29), libcurl3-gnutls (>= 7.16.2), libfftw3-double3 (>= 3.3.5), libgcc-s1 (>= 3.3.1), libicu67 (>= 67.1-1~), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libstdc++6 (>= 6), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1)
+Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
+Build-Depends: debhelper (>= 11)
+Provides: mpd-client, mpcplus-completion
+Suggests: desktop-file-utils
+Standards-Version: 4.1.3
+Homepage: https://gitlab.com/doctorfree/MusicPlayerPlus
+Description: Music Player Plus
+ ncurses-based client for the Music Player Daemon (MPD)
+ mpcplus is almost an exact clone of ncmpc which is a text-mode client
+ for MPD, the Music Player Daemon. It provides a keyboard oriented and
+ consistent interface to MPD and contains some new features ncmpc
+ doesn't have. It's also been rewritten from scratch in C++.
+ .
+ New features include:
+  - tag editor;
+  - playlists editor;
+  - easy to use search screen;
+  - media library screen;
+  - lyrics screen;
+  - possibility of going to any position in currently playing track
+    without rewinding/fastforwarding;
+  - multi colored main window (if you want);
+  - songs can be added to playlist more than once;
+  - a lot of minor useful functions." > ${OUT_DIR}/DEBIAN/control
+
+chmod 644 ${OUT_DIR}/DEBIAN/control
+
+for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" \
+           "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/menu"
+do
+    [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
+    ${SUDO} chown root:root ${OUT_DIR}/${dir}
+done
+
+for dir in bin
+do
+    [ -d ${OUT_DIR}/${DESTDIR}/${dir} ] && ${SUDO} rm -rf ${OUT_DIR}/${DESTDIR}/${dir}
+done
+
+${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
+
+# mpcplus must previously have been installed in /usr
+${SUDO} cp /usr/bin/mpcplus ${OUT_DIR}/${DESTDIR}/bin
+${SUDO} cp -a /usr/share/doc/mpcplus \
+              ${OUT_DIR}/${DESTDIR}/share/doc/mpcplus
+${SUDO} cp /usr/share/man/man1/mpcplus.1 \
+              ${OUT_DIR}/${DESTDIR}/share/man/man1/mpcplus.1
+${SUDO} cp /usr/share/man/man1/mpcpluskeys.1 \
+              ${OUT_DIR}/${DESTDIR}/share/man/man1/mpcpluskeys.1
+
+${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
+${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
+${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/copyright
+${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
+${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
+${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
+${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"
+${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/man"
+
+[ -f .gitignore ] && {
+    while read ignore
+    do
+        ${SUDO} rm -f ${OUT_DIR}/${DESTDIR}/${ignore}
+    done < .gitignore
+}
+
+${SUDO} chmod 644 ${OUT_DIR}/${DESTDIR}/share/man/*/*
+${SUDO} chmod 755 ${OUT_DIR}/${DESTDIR}/bin/* \
+                  ${OUT_DIR}/${DESTDIR}/bin \
+                  ${OUT_DIR}/${DESTDIR}/share/man \
+                  ${OUT_DIR}/${DESTDIR}/share/man/*
+${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
+
+cd dist
+echo "Building ${PKG_NAME}_${PKG_VER} package"
+${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
+cd ${PKG_NAME}_${PKG_VER}
+echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
+tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
+
+have_zip=`type -p zip`
+[ "${have_zip}" ] || {
+  ${SUDO} apt-get update
+  ${SUDO} apt-get install zip -y
+}
+echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
+zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.zip usr
+
+cd ..
+[ "${GCI}" ] || {
+    [ -d ../releases ] || mkdir ../releases
+    [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
+    ${SUDO} cp *.deb *.tgz *.zip ../releases/${PKG_VER}
+}
+
+cd "${SRC}/${SRC_NAME}"
+[ -d pkg/rpm ] && cp -a pkg/rpm ${OUT_DIR}/rpm
+[ -d ${OUT_DIR}/rpm ] || mkdir ${OUT_DIR}/rpm
+
+have_rpm=`type -p rpmbuild`
+[ "${have_rpm}" ] || {
+  ${SUDO} apt-get update
+  export DEBIAN_FRONTEND=noninteractive
+  ${SUDO} ln -fs /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+  ${SUDO} apt-get install rpm -y
+  ${SUDO} dpkg-reconfigure --frontend noninteractive tzdata
+}
+
+rpmbuild -ba --build-in-place \
+   --define "_topdir ${OUT_DIR}" \
+   --define "_sourcedir ${OUT_DIR}" \
+   --define "_version ${PKG_VER}" \
+   --define "_release ${PKG_REL}" \
+   --buildroot ${SRC}/${SRC_NAME}/${OUT_DIR}/BUILDROOT \
+   ${OUT_DIR}/rpm/${PKG_NAME}.spec
+
+# Rename RPMs if necessary
+for rpmfile in ${OUT_DIR}/RPMS/*/*.rpm
+do
+  [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
+  rpmbas=`basename ${rpmfile}`
+  rpmdir=`dirname ${rpmfile}`
+  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/" -e "s/noarch.rpm/rpm/"`
+  [ "${rpmbas}" == "${newnam}" ] && continue
+  mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
+done
+
+${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm dist
+
+[ "${GCI}" ] || {
+    [ -d releases ] || mkdir releases
+    [ -d releases/${PKG_VER} ] || mkdir releases/${PKG_VER}
+    ${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm releases/${PKG_VER}
+}

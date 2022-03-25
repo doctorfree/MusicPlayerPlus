@@ -1,0 +1,6 @@
+
+For job ref 1894561264 and job name 'build'
+
+Browse artifacts
+
+https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/1894561264/artifacts/browse?job=build
