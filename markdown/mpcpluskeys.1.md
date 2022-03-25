@@ -208,7 +208,7 @@ the **mpcplus** music player client.
 
 # LICENSING
 MPCPLUSKEYS is distributed under an Open Source license.
-See the file LICENSE in the MPCPLUSKEYS source distribution
+See the file COPYING in the MPCPLUSKEYS source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPCPLUSKEYS and for a DISCLAIMER OF ALL WARRANTIES.
 

@@ -400,7 +400,7 @@ it'll disable only usage of blue color and make red the current one.
 
 # LICENSING
 MPCPLUS is distributed under an Open Source license.
-See the file LICENSE in the MPCPLUS source distribution
+See the file COPYING in the MPCPLUS source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPCPLUS and for a DISCLAIMER OF ALL WARRANTIES.
 
