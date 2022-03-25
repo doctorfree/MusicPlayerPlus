@@ -40,6 +40,21 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 }
 
 cd "${SRC}/${SRC_NAME}"
+
+[ -x src/mpcplus ] || {
+  # Build mpcplus
+  [ -x ./configure ] || ./autogen.sh > /dev/null
+  ./configure --prefix=/usr \
+              --enable-outputs \
+              --enable-clock \
+              --enable-unicode \
+              --disable-visualizer \
+              --without-iconv \
+              --with-curl \
+              --with-taglib > configure$$.out
+  make > make$$.out
+}
+
 ${SUDO} rm -rf dist
 mkdir dist
 
@@ -97,10 +112,7 @@ done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 
-# mpcplus must previously have been installed in /usr
-${SUDO} cp /usr/bin/mpcplus ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp -a /usr/share/doc/mpcplus \
-              ${OUT_DIR}/${DESTDIR}/share/doc/mpcplus
+${SUDO} cp src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
