@@ -13,3 +13,5 @@ For example, the man page output for the `mpcava` command would be found at
 ## Contents
 
 - [**mpcava.1.md**](mpcava.1.md) - Markdown input for auto-generation of the mpcava man page
+- [**mpcplus.1.md**](mpcplus.1.md) - Markdown input for auto-generation of the mpcplus man page
+- [**mpcpluskeys.1.md**](mpcpluskeys.1.md) - Markdown input for auto-generation of the mpcpluskeys man page

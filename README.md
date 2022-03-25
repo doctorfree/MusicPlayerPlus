@@ -1,76 +1,314 @@
-# NCurses Music Player Plus MPD Client
+# MusicPlayerPlus
 
-Project page - https://github.com/doctorfree/MusicPlayerPlus
+## Table of contents
 
-## mpcplus – featureful ncurses based MPD client inspired by ncmpc
-
-## Table of Contents
-
-1. [Main features](#main-features)
-1. [Dependencies](#dependencies)
-1. [Known issues](#known-issues)
+1. [Overview](#overview)
+1. [Requirements](#requirements)
 1. [Installation](#installation)
+    1. [Debian Package installation](#debian-package-installation)
+    1. [RPM Package installation](#rpm-package-installation)
+    1. [Post Installation Configuration](#post-installation-configuration)
+        1. [MPD Server Configuration](#mpd-server-configuration)
+        1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
+            1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
+            1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
+1. [Removal](#removal)
 1. [Documentation](#documentation)
-1. [Optional features](#optional-features)
+    1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
+    1. [Man Pages](#man-pages)
+1. [Screenshots](#screenshots)
+1. [Usage](#usage)
+1. [Contents](#contents)
 
-### Main features
+## Overview
 
-* tag editor
-* playlist editor
-* easy to use search engine
-* media library
-* integration with cava spectrum visualizer
-* ability to fetch song lyrics from a variety of sources
-* ability to fetch artist info from last.fm
-* new display mode
-* alternative user interface
-* ability to browse and add files from outside of MPD music directory
-…and a lot more minor functions.
+The Music Player Plus project provides integration and extension of
+several audio packages designed to stream and play music. In particular,
+integration is provided for:
 
-### Dependencies
+* [mpd](https://www.musicpd.org/), the Music Player Daemon
+* [mpcplus](doc/README-mpcplus.md), a character based Music Player Plus MPD client
+* [cantata](https://github.com/CDrummond/cantata), a graphical MPD client
+* [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
+* Enhanced key bindings for extended control of terminal windows
+* Several terminal emulators
+    * xfce4-terminal
+    * gnome-terminal
+    * tilix
+    * cool-retro-term
 
-* boost library [https://www.boost.org/]
-* ncurses library [http://www.gnu.org/software/ncurses/ncurses.html]
-* readline library [https://tiswww.case.edu/php/chet/readline/rltop.html]
-* curl library (optional, required for fetching lyrics and last.fm data) [https://curl.haxx.se/]
-* fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
-* tag library (optional, required for tag editing) [https://taglib.org/]
+Additional detail and info can be found in the
+[MusicPlayerPlus Wiki](https://gitlab.com/doctorfree/MusicPlayerPlus/-/wikis/home).
 
-### Known issues
-* No full support for handling encodings other than UTF-8.
+## Requirements
 
-### Installation
+MusicPlayerPlus can be installed on Debian or RPM based Linux systems.
+It requires:
 
-The simplest way to compile this package is:
+* [MPD Music Player Daemon](https://www.musicpd.org/),
+* [Cava](https://github.com/karlstav/cava),
+* [Boost library](https://www.boost.org/)
+* [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
+* [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
+* [Curl library](https://curl.haxx.se/)
+* [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
 
-  1. `cd` to the directory containing the package's source code.
+These dependencies will all be automatically installed if not present
+when MusicPlayerPlus is installed using the Debian or RPM packaging.
 
-  For the next two commands, `csh` users will need to prefix them with
-  `sh `.
+## Installation
 
-  2. Run `./autogen.sh` to generate the `configure` script.
+MusicPlayerPlus v1.0.0 and later can be installed on Linux systems using
+either the Debian packaging format or the Red Hat Package Manager (RPM).
 
-  3. Run `./configure` to configure the package for your system.  This
-     will take a while.  While running, it prints some messages
-     telling which features it is checking for.
+### Debian Package installation
 
-  4. Run `make` to compile the package.
+Many Linux distributions, most notably Ubuntu and its derivatives, use the
+Debian packaging system.
 
-  5. Type `make install` to install the programs and any data files
-     and documentation.
+To tell if a Linux system is Debian based it is usually sufficient to
+check for the existence of the file `/etc/debian_version` and/or examine the
+contents of the file `/etc/os-release`.
 
-  6. You can remove the program binaries and object files from the
-     source code directory by typing `make clean`.
+To install on a Debian based Linux system, download the latest Debian format
+package from the
+[MusicPlayerPlus Releases](https://gitlab.com/doctorfree/MusicPlayerPlus/-/releases).
 
-Detailed intallation instructions can be found in the `INSTALL` file. 
+Install the MusicPlayerPlus package by executing the command
 
-### Documentation
-* [**mpcplus key bindings**](markdown/mpcpluskeys.1.md) - mpcplus user interface reference
-* [**mpcplus man page**](markdown/mpcplus.1.md) - mpcplus command manual
+```bash
+sudo apt install ./MusicPlayerPlus_<version>-<release>.deb
+```
+or
+```console
+sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.deb
+```
 
-### Optional features
+### RPM Package installation
 
-Optional features can be enabled by specifying them during configure. For
-example, to enable visualizer run `./configure --enable-visualizer`. 
+Red Hat Linux, SUSE Linux, and their derivatives use the RPM packaging
+format. RPM based Linux distributions include Fedora, AlmaLinux, CentOS,
+openSUSE, OpenMandriva, Mandrake Linux, Red Hat Linux, and Oracle Linux.
 
-Additional details can be found in the INSTALL file. 
+To install on an RPM based Linux system, download the latest RPM format
+package from the
+[MusicPlayerPlus Releases](https://gitlab.com/doctorfree/MusicPlayerPlus/-/releases).
+
+Install the MusicPlayerPlus package by executing the command
+
+```bash
+sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.rpm
+```
+or
+```console
+sudo rpm -i ./MusicPlayerPlus_<version>-<release>.rpm
+```
+
+### Post Installation Configuration
+After installing MusicPlayerPlus there are several recommended
+configuration steps. If not already configured, the MPD server
+will need to know where to locate your music library. This can
+be configured by editing the MPD configuration file `/etc/mpd.conf`.
+In addition, it is recommended to setup custom profiles in some
+of the terminal emulators to enhance the spectrum visualization.
+
+#### MPD Server Configuration
+Edit `/etc/mpd.conf`, uncomment the `music_directory` entry and
+set the value to the location of your music library. For example,
+
+```
+music_directory		"/u/audio/Music"
+```
+
+It may be necessary to adjust the `audio_output` settings in `mpd.conf`.
+MPD must have at least one `audio_output` configured and in order to use
+the spectrum visualizer as configured by default it is necessary to
+configure a second `audio_output` in MPD. An example ALSA `audio_output`
+configuration in `/etc/mpd.conf` might look like:
+
+```
+audio_output {
+	type		"alsa"
+	name		"My ALSA Device"
+    buffer_time "50000"   # (50ms); default is 500000 microseconds (0.5s)
+#	device		"hw:0,0"	# optional
+#	mixer_type      "hardware"      # optional
+#	mixer_device	"default"	# optional
+#	mixer_control	"PCM"		# optional
+#	mixer_index	"0"		# optional
+}
+```
+
+A FIFO `audio_output` is used as a data source for the Cava spectrum visualizer.
+To configure this output, add the following to `/etc/mpd.conf`:
+
+```
+audio_output {
+    type            "fifo"
+    name            "Visualizer feed"
+    path            "/tmp/mpd.fifo"
+    format          "44100:16:2"
+}
+```
+
+Additional MPD configuration may be desired. See the
+[MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)
+
+#### Terminal Emulator Profiles
+The Cava spectrum visualizer looks better when the font used by the
+terminal emulator in which it is running is a small sized font. Some
+terminal emulators rely on a profile from which they draw much of
+their configuration. Profiles are used in MusicPlayerPlus to provide
+an enhanced visual presentation. To configure terminal emulator profiles
+launch the desired terminal emulator and create a new profile in the
+Preferences dialog.
+
+There are three terminal profiles in two terminal emulators used by
+MusicPlayerPlus. The `gnome-terminal` emulator has a single profile
+called "SmallFont" and the `tilix` terminal emulator has two profiles
+called "Cava" and "MusicPlayer". To create these profiles:
+
+##### Gnome Terminal Emulator Profile
+Launch `gnome-terminal`, click the `...` three dots in the Title Bar
+and then click `Preferences` in the dropdown menu. This will bring up
+a Preferences dialog window. Next to the `Profiles` entry on the left,
+click the `+` plus sign to add a new profile. Name the profile "SmallFont".
+
+Under `Profiles` on the left side of the Preferences window, click on
+your new profile "SmallFont". In the `Text` tab of the "SmallFont" profile,
+check `Custom font` and select a font. Set the size of the font to 8 or
+smaller. A very small font size, say 1, may cause performance issues on
+large visualizer windows.
+
+While still in the "SmallFont" profile configuration dialog, click the
+`Colors` tab. Check `Use transparent background` and adjust the slider
+to halfway full. You may need to revisit this dialog to adjust the
+transparency level to suit your display and preference.
+
+I also disable the scroll bar in the `Scrolling` tab by unchecking
+`Show scrollbar` but this is optional. Scrolling is not likely to be
+needed in the spectrum visualizer window.
+
+##### Tilix Terminal Emulator Profiles
+Launch `tilix`, click the `...` three dots in the Title Bar
+and then click `Preferences` in the dropdown menu. This will bring up
+a Preferences dialog window. At the lower left of the left pane,
+click the `+` plus sign to add a new profile. Name the profile "Cava".
+
+In the `General` tab of the "Cava" profile, check `Custom font` and
+select a font. Set the size of the font to 8 or smaller. A very small
+font size, say 1, may cause performance issues on large visualizer windows.
+
+While still in the "Cava" profile configuration dialog, click the
+`Colors` tab. Adjust the `Transparency` slider to halfway full.
+You may need to revisit this dialog to adjust the transparency level
+to suit your display and preference.
+
+I also disable the scroll bar in the `Scrolling` tab by unchecking
+`Show scrollbar` but this is optional. Scrolling is not likely to be
+needed in the spectrum visualizer window.
+
+Tilix is also used as the MPD client window for character based clients.
+An additional terminal profile is needed for this. Repeat the process
+described above to create the `Cava` tilix profile only this time create
+a new profile named `MusicPlayer`. The `MusicPlayer` tilix profile creation
+is exactly the same as the `Cava` profile creation but the name of the
+profile is different and the size of the font is different. Name the new
+profile `MusicPlayer` and set the font size to something like 32. You may
+need to adjust the font size subsequently. On my system, a music player
+client window with font size 32 aligns nicely with a spectrum visualizer
+window with font size 8. This will vary depending on your display device.
+
+Also set the transparency level for the `MusicPlayer` profile just as you
+did for the `Cava` profile, somewhere around half transparent in the `Color`
+tab of the profile config dialog.
+
+## Removal
+
+On Debian based Linux systems where the MusicPlayerPlus package was installed
+using the MusicPlayerPlus Debian format package, remove the MusicPlayerPlus
+package by executing the command:
+
+```bash
+    sudo apt remove musicplayerplus
+```
+or
+```bash
+    sudo dpkg -r musicplayerplus
+```
+
+On RPM based Linux systems where the MusicPlayerPlus package was installed
+using the MusicPlayerPlus RPM format package, remove the MusicPlayerPlus
+package by executing the command:
+
+```bash
+    sudo yum remove MusicPlayerPlus
+```
+or
+```bash
+    sudo rpm -e MusicPlayerPlus
+```
+
+The MusicPlayerPlus package can be removed by executing the "Uninstall"
+script in the MusicPlayerPlus source directory:
+
+```bash
+    git clone git@gitlab.com:doctorfree/MusicPlayerPlus.git
+    cd MusicPlayerPlus
+    ./Uninstall
+```
+
+## Documentation
+
+All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
+to view the manual page for a command. The `mpcava` frontend is the primary
+user interface for MusicPlayerPlus and the manual page for `mpcava` can be
+viewed with the command `man mpcava`. Most commands also have
+help/usage messages that can be viewed with the **-u** argument option,
+e.g. `mpcava -u`.
+
+### README for mpcplus MPD client
+- [**README-mpcplus.md**](doc/README-mpcplus.md) - Introduction to the mpcplus MPD client
+
+### Man Pages
+- [**mpcava.1.md**](markdown/mpcava.1.md) - Markdown input for auto-generation of the mpcava man page
+- [**mpcplus.1.md**](markdown/mpcplus.1.md) - Markdown input for auto-generation of the mpcplus man page
+- [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - Markdown input for auto-generation of the mpcpluskeys man page
+
+## Screenshots
+
+<p float="left">
+  <img src="screenshots/mpcava-tilix.png" style="width:800px;height:600px;">
+  <img src="screenshots/mpcava-lyrics.png" style="width:800px;height:600px;">
+</p>
+
+## Usage
+
+Here is the current output of "mpcava -u" which displays a usage message.
+
+Usage: mpcava [-f] [-h] [-q] [-r] [-t] [-u]
+
+Where:
+	-f indicates fullscreen display
+	-h indicates half-height for cava window (with -f only)
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+	-u displays this usage message and exits
+
+## Contents
+
+[**mpcava**](bin/mpcava) - Shell script frontend that provides the primary
+user interface to launch mpcplus and cava
+
+[**raise_cava**](bin/raise_cava) - Raise/lower the cava window
+
+[**set_term_trans**](bin/set_term_trans) - Set the transparency level of the mpcplus window
+
+[**LICENSE**](LICENSE) - Apache License version 2.0
+
+[**Install**](Install) - Installation script for Linux systems, Debian format install
+
+[**Uninstall**](Uninstall) - Removal script for Linux systems, Debian format uninstall
+
+[**usage.txt**](usage.txt) - Frontend "mpcava" script usage documentation
