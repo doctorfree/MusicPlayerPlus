@@ -2,7 +2,7 @@
 # have all needed files, that a GNU package needs
 AUTOMAKE_OPTIONS = foreign 1.4
 
-SUBDIRS = src doc
+SUBDIRS = src doc man
 docdir = $(prefix)/share/doc/$(PACKAGE)
-doc_DATA = AUTHORS CHANGELOG.md COPYING
+doc_DATA = AUTHORS CHANGELOG.md COPYING copyright README.md
 EXTRA_DIST = $(doc_DATA)
