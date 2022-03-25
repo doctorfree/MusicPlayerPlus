@@ -1,6 +1,18 @@
-# Music Player Plus Cheat Sheet
+---
+title: MPCPLUSKEYS
+section: 1
+header: User Manual
+footer: mpcpluskeys 0.10
+date: March 24, 2022
+---
+# NAME
+**mpcpluskeys** - mpcplus key bindings and usage
 
-## Keys - Movement
+# DESCRIPTION
+This man page describes the key bindings used to control
+the **mpcplus** music player client.
+
+# KEYS - MOVEMENT
 
 -   `[ Up k ]` - Move cursor up
 -   `[ Down j ]` - Move cursor down
@@ -26,7 +38,7 @@
 -   `[ = ]` - Show clock
 -   `[ @ ]` - Show server info
 
-## Keys - Global
+# KEYS - GLOBAL
 
 -   `[ s ]` - Stop
 -   `[ p ]` - Pause
@@ -79,7 +91,7 @@
 -   `[ F ]` - Toggle fetching lyrics for playing songs in background
 -   `[ q ]` - Quit
 
-## Keys - Playlist
+# KEYS - PLAYLIST
 
 -   `[ Enter ]` - Play selected item
 -   `[ Delete ]` - Delete selected item(s) from playlist
@@ -97,7 +109,7 @@
 -   `[ o ]` - Jump to current song
 -   `[ U ]` - Toggle playing song centering
 
-## Keys - Browser
+# KEYS - BROWSER
 
 -   `[ Enter ]` - Enter directory/Add item to playlist and play it
 -   `[ Space ]` - Add item to playlist/select it
@@ -111,7 +123,7 @@
 -   `[ Delete ]` - Delete selected items from disk
 -   `[ G ]` - Jump to playlist editor (playlists only)
 
-## Keys - Search engine
+# KEYS - SEARCH ENGINE
 
 -   `[ Enter ]` - Add item to playlist and play it/change option
 -   `[ Space ]` - Add item to playlist
@@ -119,7 +131,7 @@
 -   `[ y ]` - Start searching
 -   `[ 3 ]` - Reset search constraints and clear results
 
-## Keys - Media library
+# KEYS - MEDIA LIBRARY
 
 -   `[ 4 ]` - Switch between two/three columns mode
 -   `[ Left h ]` - Previous column
@@ -131,7 +143,7 @@
 -   ``[ ` ]`` - Toggle type of tag used in left column
 -   `[ m ]` - Toggle sort mode
 
-## Keys - Playlist editor
+# KEYS - PLAYLIST EDITOR
 
 -   `[ Left h ]` - Previous column
 -   `[ Right l ]` - Next column
@@ -157,13 +169,13 @@
 -   `[ o ]` - Jump to current song
 -   `[ U ]` - Toggle playing song centering
 
-## Keys - Lyrics
+# KEYS - LYRICS
 
 -   `[ Space ]` - Toggle reloading lyrics upon song change
 -   `[ e ]` - Open lyrics in external editor
 -   ``[ ` ]`` - Refetch lyrics
 
-## Keys - Terminal Windows
+# KEYS - TERMINAL WINDOWS
 
 -   `[ Alt-1 ]` - Set xfce4-terminal window transparency to 90%
 -   `[ Alt-2 ]` - Set xfce4-terminal window transparency to 80%
@@ -177,12 +189,12 @@
 -   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
 -   `[ Alt-r ]` - Raise/lower the Cava terminal window
 
-## Keys - Tiny tag editor
+# KEYS - TINY TAG EDITOR
 
 -   `[ Enter ]` - Edit tag
 -   `[ y ]` - Save
 
-## Keys - Tag editor
+# KEYS - TAG EDITOR
 
 -   `[ Enter ]` - Edit tag/filename of selected item (left column)
 -   `[ Enter ]` - Perform operation on all/selected items (middle
@@ -193,3 +205,22 @@
 -   `[ Right l ]` - Next column
 -   `[ Ctrl-H Backspace ]` - Jump to parent directory (left column,
     directories view)
+
+# LICENSING
+MPCPLUSKEYS is distributed under an Open Source license.
+See the file LICENSE in the MPCPLUSKEYS source distribution
+for information on terms &amp; conditions for accessing and
+otherwise using MPCPLUSKEYS and for a DISCLAIMER OF ALL WARRANTIES.
+
+# BUGS
+Submit bug reports online at:
+
+https://gitlab.com/doctorfree/mpcplus/issues
+
+# SEE ALSO
+**mpcplus**(1), **mpcava**(1), **mpd**(1)
+
+Full documentation and sources at:
+
+https://gitlab.com/doctorfree/mpcplus
+
