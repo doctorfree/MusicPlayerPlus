@@ -54,7 +54,7 @@ Section: sound
 Priority: optional
 Architecture: amd64
 Installed-Size: 2420
-Depends: libboost-filesystem1.74.0 (>= 1.74.0), libboost-locale1.74.0 (>= 1.74.0), libboost-program-options1.74.0 (>= 1.74.0), libboost-regex1.74.0-icu67, libboost-thread1.74.0 (>= 1.74.0), libc6 (>= 2.29), libcurl3-gnutls (>= 7.16.2), libfftw3-double3 (>= 3.3.5), libgcc-s1 (>= 3.3.1), libicu67 (>= 67.1-1~), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libstdc++6 (>= 6), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1)
+Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1)
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Build-Depends: debhelper (>= 11)
 Provides: mpd-client, mpcplus-completion
