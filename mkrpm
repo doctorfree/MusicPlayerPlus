@@ -127,15 +127,15 @@ rpmbuild -ba --build-in-place \
    ${OUT_DIR}/rpm/${PKG_NAME}.spec
 
 # Rename RPMs if necessary
-# for rpmfile in ${OUT_DIR}/RPMS/*/*.rpm
-# do
-#   [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
-#   rpmbas=`basename ${rpmfile}`
-#   rpmdir=`dirname ${rpmfile}`
-#   newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/" -e "s/noarch.rpm/rpm/"`
-#   [ "${rpmbas}" == "${newnam}" ] && continue
-#   mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
-# done
+for rpmfile in ${OUT_DIR}/RPMS/*/*.rpm
+do
+  [ "${rpmfile}" == "${OUT_DIR}/RPMS/*/*.rpm" ] && continue
+  rpmbas=`basename ${rpmfile}`
+  rpmdir=`dirname ${rpmfile}`
+  newnam=`echo ${rpmbas} | sed -e "s/${PKG_NAME}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/"`
+  [ "${rpmbas}" == "${newnam}" ] && continue
+  mv ${rpmdir}/${rpmbas} ${rpmdir}/${newnam}
+done
 
 ${SUDO} cp ${OUT_DIR}/RPMS/*/*.rpm dist
 
