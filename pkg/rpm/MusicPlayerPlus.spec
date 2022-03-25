@@ -2,7 +2,7 @@ Name: MusicPlayerPlus
 Version:    %{_version}
 Release:    %{_release}
 BuildArch:  x86_64
-Requires:   mpd, boost-filesystem, boost-locale, boost-program-options, boost-thread, libcurl, libcurl-minimal, libicu, libmpdclient, ncurses-libs, readline, taglib, ncurses-libs, xfce4-terminal, gnome-terminal, cool-retro-term, tilix
+Requires: boost (>= 1.76.0), libcurl (>= 7.79.1), libmpdclient (>= 2.20), ncurses (>= 6), readline (>= 8.1), taglib (>= 1.12), mpd (>= 0.23.6), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1), gnome-terminal (>= 3.42.2)
 URL:        https://gitlab.com/doctorfree/MusicPlayerPlus
 Vendor:     Doctorwhen's Bodacious Laboratory
 Packager:   ronaldrecord@gmail.com
