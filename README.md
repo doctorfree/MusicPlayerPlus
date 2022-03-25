@@ -10,15 +10,14 @@
     1. [Post Installation Configuration](#post-installation-configuration)
         1. [MPD Server Configuration](#mpd-server-configuration)
         1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
-            1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
-            1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
+        1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
+        1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
 1. [Removal](#removal)
 1. [Documentation](#documentation)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
     1. [Man Pages](#man-pages)
+    1. [Usage](#usage)
 1. [Screenshots](#screenshots)
-1. [Usage](#usage)
-1. [Contents](#contents)
 
 ## Overview
 
@@ -168,7 +167,7 @@ MusicPlayerPlus. The `gnome-terminal` emulator has a single profile
 called "SmallFont" and the `tilix` terminal emulator has two profiles
 called "Cava" and "MusicPlayer". To create these profiles:
 
-##### Gnome Terminal Emulator Profile
+#### Gnome Terminal Emulator Profile
 Launch `gnome-terminal`, click the `...` three dots in the Title Bar
 and then click `Preferences` in the dropdown menu. This will bring up
 a Preferences dialog window. Next to the `Profiles` entry on the left,
@@ -189,7 +188,7 @@ I also disable the scroll bar in the `Scrolling` tab by unchecking
 `Show scrollbar` but this is optional. Scrolling is not likely to be
 needed in the spectrum visualizer window.
 
-##### Tilix Terminal Emulator Profiles
+#### Tilix Terminal Emulator Profiles
 Launch `tilix`, click the `...` three dots in the Title Bar
 and then click `Preferences` in the dropdown menu. This will bring up
 a Preferences dialog window. At the lower left of the left pane,
@@ -275,6 +274,23 @@ e.g. `mpcava -u`.
 - [**mpcplus.1.md**](markdown/mpcplus.1.md) - Markdown input for auto-generation of the mpcplus man page
 - [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - Markdown input for auto-generation of the mpcpluskeys man page
 
+### Usage
+
+Here is the current output of "mpcava -u" which displays a usage message.
+
+```
+Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Where:
+	-c indicates use cantata MPD client rather than mpcplus
+	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-f indicates fullscreen display
+	-h indicates half-height for cava window (with -f only)
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+	-u displays this usage message and exits
+```
+
 ## Screenshots
 
 <p float="left">
@@ -282,33 +298,3 @@ e.g. `mpcava -u`.
   <img src="screenshots/mpcava-lyrics.png" style="width:800px;height:600px;">
 </p>
 
-## Usage
-
-Here is the current output of "mpcava -u" which displays a usage message.
-
-Usage: mpcava [-f] [-h] [-q] [-r] [-t] [-u]
-
-Where:
-	-f indicates fullscreen display
-	-h indicates half-height for cava window (with -f only)
-	-q indicates quarter-height for cava window (with -f only)
-	-r indicates use retro terminal emulator
-	-t indicates use tilix terminal emulator
-	-u displays this usage message and exits
-
-## Contents
-
-[**mpcava**](bin/mpcava) - Shell script frontend that provides the primary
-user interface to launch mpcplus and cava
-
-[**raise_cava**](bin/raise_cava) - Raise/lower the cava window
-
-[**set_term_trans**](bin/set_term_trans) - Set the transparency level of the mpcplus window
-
-[**LICENSE**](LICENSE) - Apache License version 2.0
-
-[**Install**](Install) - Installation script for Linux systems, Debian format install
-
-[**Uninstall**](Uninstall) - Removal script for Linux systems, Debian format uninstall
-
-[**usage.txt**](usage.txt) - Frontend "mpcava" script usage documentation

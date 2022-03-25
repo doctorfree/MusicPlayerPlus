@@ -1,6 +1,8 @@
 
-Usage: mpcava [-f] [-h] [-q] [-r] [-t] [-u]
+Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
 Where:
+	-c indicates use cantata MPD client rather than mpcplus
+	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-h indicates half-height for cava window (with -f only)
 	-q indicates quarter-height for cava window (with -f only)
