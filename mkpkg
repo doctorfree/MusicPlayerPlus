@@ -84,7 +84,7 @@ chmod 644 ${OUT_DIR}/DEBIAN/control
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}"
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/man"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -101,12 +101,6 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp /usr/bin/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp -a /usr/share/doc/mpcplus \
               ${OUT_DIR}/${DESTDIR}/share/doc/mpcplus
-${SUDO} cp /usr/share/man/man1/mpcava.1 \
-              ${OUT_DIR}/${DESTDIR}/share/man/man1/mpcava.1
-${SUDO} cp /usr/share/man/man1/mpcplus.1 \
-              ${OUT_DIR}/${DESTDIR}/share/man/man1/mpcplus.1
-${SUDO} cp /usr/share/man/man1/mpcpluskeys.1 \
-              ${OUT_DIR}/${DESTDIR}/share/man/man1/mpcpluskeys.1
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/AUTHORS
@@ -116,7 +110,7 @@ ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"
-${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/man"
+${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
 
 [ -f .gitignore ] && {
