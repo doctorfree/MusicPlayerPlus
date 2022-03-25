@@ -85,7 +85,7 @@ chmod 644 ${OUT_DIR}/DEBIAN/control
 
 for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/menu"
+           "${DESTDIR}/share/doc/${PKG}"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -118,6 +118,7 @@ ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/changelog
 ${SUDO} cp -a markdown "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/markdown"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/man"
 ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/man"
+${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
 
 [ -f .gitignore ] && {
     while read ignore
@@ -127,6 +128,7 @@ ${SUDO} cp -a man "${OUT_DIR}/${DESTDIR}/share/man"
 }
 
 ${SUDO} chmod 644 ${OUT_DIR}/${DESTDIR}/share/man/*/*
+${SUDO} chmod 644 ${OUT_DIR}/${DESTDIR}/share/menu/*
 ${SUDO} chmod 755 ${OUT_DIR}/${DESTDIR}/bin/* \
                   ${OUT_DIR}/${DESTDIR}/bin \
                   ${OUT_DIR}/${DESTDIR}/share/man \
