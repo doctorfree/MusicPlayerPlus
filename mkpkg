@@ -2,8 +2,7 @@
 PKG="musicplayerplus"
 SRC_NAME="MusicPlayerPlus"
 PKG_NAME="MusicPlayerPlus"
-TOP="usr"
-DESTDIR="${TOP}/local"
+DESTDIR="usr"
 SRC=${HOME}/src
 SUDO=sudo
 GCI=
@@ -83,7 +82,7 @@ Description: Music Player Plus
 
 chmod 644 ${OUT_DIR}/DEBIAN/control
 
-for dir in "${TOP}" "${DESTDIR}" "${DESTDIR}/share" \
+for dir in "${DESTDIR}" "${DESTDIR}/share" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
            "${DESTDIR}/share/doc/${PKG}"
 do
