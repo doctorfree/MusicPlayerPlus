@@ -72,5 +72,3 @@ Detailed intallation instructions can be found in the `INSTALL` file.
 
 Optional features can be enabled by specifying them during configure. For
 example, to enable visualizer run `./configure --enable-visualizer`. 
-
-Additional details can be found in the INSTALL file. 
