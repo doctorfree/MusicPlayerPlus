@@ -2,9 +2,8 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    paths:
+      - 'mpcplus/**'
 
 jobs:
   build:
