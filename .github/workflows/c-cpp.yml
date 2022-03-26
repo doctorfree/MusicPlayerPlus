@@ -15,12 +15,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: apt update
-      run: apt update -y
-    - name: apt upgrade
-      run: apt upgrade -y
-    - name: apt install
-      run: apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev -y
+    - name: update
+      run: sudo apt update -y
+    - name: upgrade
+      run: sudo apt upgrade -y
+    - name: install
+      run: sudo apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev -y
     - name: autogen
       run: ./autogen.sh
     - name: configure
