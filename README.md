@@ -26,7 +26,7 @@ several audio packages designed to stream and play music. In particular,
 integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
-* [mpcplus](doc/README-mpcplus.md), a character based Music Player Plus MPD client
+* [mpcplus](mpcplus/README.md), a character based Music Player Plus MPD client
 * [cantata](https://github.com/CDrummond/cantata), a graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * Enhanced key bindings for extended control of terminal windows
@@ -267,7 +267,7 @@ help/usage messages that can be viewed with the **-u** argument option,
 e.g. `mpcava -u`.
 
 ### README for mpcplus MPD client
-- [**README-mpcplus.md**](doc/README-mpcplus.md) - Introduction to the mpcplus MPD client
+- [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
 
 ### Man Pages
 - [**mpcava.1.md**](markdown/mpcava.1.md) - Markdown input for auto-generation of the mpcava man page

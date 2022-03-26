@@ -57,9 +57,9 @@ mkdir dist
 [ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
 mkdir ${OUT_DIR}
 
-for dir in "${DESTDIR}" "${DESTDIR}/share" \
+for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/man"
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -75,14 +75,17 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
-${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
-${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp NOTICE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
+
+${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
