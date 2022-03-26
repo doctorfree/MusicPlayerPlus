@@ -65,8 +65,8 @@ The simplest way to compile this package is:
 Detailed intallation instructions can be found in the `INSTALL` file. 
 
 ### Documentation
-* [**mpcplus key bindings**](markdown/mpcpluskeys.1.md) - mpcplus user interface reference
-* [**mpcplus man page**](markdown/mpcplus.1.md) - mpcplus command manual
+* [**mpcplus key bindings**](../markdown/mpcpluskeys.1.md) - mpcplus user interface reference
+* [**mpcplus man page**](../markdown/mpcplus.1.md) - mpcplus command manual
 
 ### Optional features
 
