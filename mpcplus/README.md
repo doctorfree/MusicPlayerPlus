@@ -1,5 +1,9 @@
 # Music Player Plus MPD Client
 
+MPD is the Music Player Daemon, an open source music player server.
+
+The `mpcplus` ncurses MPD client is part of the MusicPlayerPlus project.
+
 Project page - https://github.com/doctorfree/MusicPlayerPlus
 
 ## mpcplus – featureful ncurses based MPD client inspired by ncmpc
