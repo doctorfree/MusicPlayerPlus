@@ -4,26 +4,42 @@
 # For more information, see: https://docs.gitlab.com/ee/ci/yaml/index.html#stages
 
 stages:
-  - build
+  - build_deb
+  - build_rpm
   - release
 
 build:  
-  stage: build
+  stage: build_deb
   image: ubuntu:latest
   before_script:
     - echo $CI_JOB_ID
     - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
     - cat VERSION >> build.env
   script:
-    - ./mkpkg
+    - ./mkdeb
   only:
     - tags
   artifacts:
     paths:
       - dist/*.deb
-      - dist/*.rpm
       - dist/*.tgz
       - dist/*.zip
+    reports:
+      dotenv: build.env
+
+  stage: build_rpm
+  image: fedora:latest
+  before_script:
+    - echo $CI_JOB_ID
+    - echo BUILD_JOB_ID=$CI_JOB_ID >> build.env
+    - cat VERSION >> build.env
+  script:
+    - ./mkrpm
+  only:
+    - tags
+  artifacts:
+    paths:
+      - dist/*.rpm
     reports:
       dotenv: build.env
 
@@ -47,11 +63,11 @@ release:
     tag_name: 'v${VERSION}r${RELEASE}'
     assets:
       links:
-        - name: 'MusicPlayerPlus_${VERSION}-${RELEASE}.deb - Debian format installation package (Ubuntu Linux, etc)'
-          url: 'https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/MusicPlayerPlus_${VERSION}-${RELEASE}.deb'
+        - name: 'MusicPlayerPlus_${VERSION}-${RELEASE}.amd64.deb - Debian format installation package (Ubuntu Linux, etc)'
+          url: 'https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/MusicPlayerPlus_${VERSION}-${RELEASE}.amd64.deb'
           link_type: 'package'
-        - name: 'MusicPlayerPlus_${VERSION}-${RELEASE}.rpm - RPM format installation package (CentOS/Fedora Linux etc)'
-          url: 'https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/MusicPlayerPlus_${VERSION}-${RELEASE}.rpm'
+        - name: 'MusicPlayerPlus_${VERSION}-${RELEASE}.x86_64.rpm - RPM format installation package (CentOS/Fedora Linux etc)'
+          url: 'https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/MusicPlayerPlus_${VERSION}-${RELEASE}.x86_64.rpm'
           link_type: 'package'
         - name: 'MusicPlayerPlus_${VERSION}-${RELEASE}.tgz - Compressed tar format distribution archive'
           url: 'https://gitlab.com/doctorfree/MusicPlayerPlus/-/jobs/${BUILD_JOB_ID}/artifacts/file/dist/MusicPlayerPlus_${VERSION}-${RELEASE}.tgz'
