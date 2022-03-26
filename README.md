@@ -120,11 +120,24 @@ set the value to the location of your music library. For example,
 music_directory		"/u/audio/Music"
 ```
 
-It may be necessary to adjust the `audio_output` settings in `mpd.conf`.
-MPD must have at least one `audio_output` configured and in order to use
-the spectrum visualizer as configured by default it is necessary to
-configure a second `audio_output` in MPD. An example ALSA `audio_output`
-configuration in `/etc/mpd.conf` might look like:
+Adjust the `audio_output` settings in `mpd.conf`. MPD must have at least
+one `audio_output` configured and in order to use the spectrum visualizer
+as configured by default it is necessary to configure a second `audio_output`
+in MPD.
+
+A FIFO `audio_output` is used as a data source for the Cava spectrum visualizer.
+To configure this output, add the following to `/etc/mpd.conf`:
+
+```
+audio_output {
+    type            "fifo"
+    name            "Visualizer feed"
+    path            "/tmp/mpd.fifo"
+    format          "44100:16:2"
+}
+```
+
+An example ALSA `audio_output` configuration in `/etc/mpd.conf`:
 
 ```
 audio_output {
@@ -139,16 +152,15 @@ audio_output {
 }
 ```
 
-A FIFO `audio_output` is used as a data source for the Cava spectrum visualizer.
-To configure this output, add the following to `/etc/mpd.conf`:
+Or, to use PulseAudio:
 
 ```
-audio_output {
-    type            "fifo"
-    name            "Visualizer feed"
-    path            "/tmp/mpd.fifo"
-    format          "44100:16:2"
-}
+audio_output {  
+    type  "pulse"  
+    name  "pulse audio"
+    device         "pulse" 
+    mixer_type      "hardware" 
+}  
 ```
 
 Additional MPD configuration may be desired. See the
