@@ -15,17 +15,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v2
-    - name: Download and install Boost
-      uses: MarkusJx/install-boost@v2.2.0
-      id: install-boost
-      with:
-        boost_version: 1.73.0
-        platform_version: 20.04
+    - name: apt update
+      run: apt update -y
+    - name: apt upgrade
+      run: apt upgrade -y
+    - name: apt install
+      run: apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev -y
     - name: autogen
       run: ./autogen.sh
     - name: configure
       run: ./configure --prefix=/usr --enable-outputs --enable-clock --disable-visualizer --with-taglib
-      env:
-        BOOST_ROOT: ${{ steps.install-boost.outputs.BOOST_ROOT }}
     - name: make
       run: make
