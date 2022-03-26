@@ -43,5 +43,11 @@ cp -a %{_sourcedir}/usr %{buildroot}/usr
 
 %files
 /usr
+%exclude %dir /usr/share/man/man1
+%exclude %dir /usr/share/man
+%exclude %dir /usr/share/doc
+%exclude %dir /usr/share/menu
+%exclude %dir /usr/share
+%exclude %dir /usr/bin
 
 %changelog
