@@ -42,18 +42,22 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 
 cd "${SRC}/${SRC_NAME}"
 
-[ -x src/mpcplus ] || {
+[ -x mpcplus/src/mpcplus ] || {
   # Build mpcplus
-  [ -x ./configure ] || ./autogen.sh > /dev/null
-  ./configure --prefix=/usr \
-              --enable-outputs \
-              --enable-clock \
-              --disable-visualizer \
-              --with-taglib > configure$$.out
-#             --enable-unicode \
-#             --without-iconv \
-#             --with-curl \
-  make > make$$.out
+  if [ -x build-mpcplus.sh ]
+  then
+    ./build-mpcplus.sh
+  else
+    cd mpcplus
+    [ -x ./configure ] || ./autogen.sh > /dev/null
+    ./configure --prefix=/usr \
+                --enable-outputs \
+                --enable-clock \
+                --disable-visualizer \
+                --with-taglib > configure$$.out
+    make > make$$.out
+    cd ..
+  fi
 }
 
 ${SUDO} rm -rf dist
@@ -113,11 +117,11 @@ done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 
-${SUDO} cp src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
+${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
-${SUDO} cp AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
-${SUDO} cp COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
+${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp NOTICE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
