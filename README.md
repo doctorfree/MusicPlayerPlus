@@ -7,11 +7,12 @@
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
-    1. [Post Installation Configuration](#post-installation-configuration)
-        1. [MPD Server Configuration](#mpd-server-configuration)
-        1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
-        1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
-        1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
+1. [Post Installation Configuration](#post-installation-configuration)
+    1. [MPD Server Configuration](#mpd-server-configuration)
+    1. [Initialize Music Database](#initialize-music-database)
+    1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
+    1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
+    1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
 1. [Removal](#removal)
 1. [Documentation](#documentation)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
@@ -103,7 +104,7 @@ or
 sudo rpm -i ./MusicPlayerPlus_<version>-<release>.rpm
 ```
 
-### Post Installation Configuration
+## Post Installation Configuration
 After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
@@ -111,7 +112,7 @@ be configured by editing the MPD configuration file `/etc/mpd.conf`.
 In addition, it is recommended to setup custom profiles in some
 of the terminal emulators to enhance the spectrum visualization.
 
-#### MPD Server Configuration
+### MPD Server Configuration
 Edit `/etc/mpd.conf`, uncomment the `music_directory` entry and
 set the value to the location of your music library. For example,
 
@@ -153,7 +154,18 @@ audio_output {
 Additional MPD configuration may be desired. See the
 [MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)
 
-#### Terminal Emulator Profiles
+### Initialize Music Database
+To initialize the music database, after configuring MPD as described above,
+launch an MPD client and update the database. The `mpcplus` MPD client can
+be used for this or the standard `mpc` MPD client can be used. For example:
+
+After launching the MPD client make sure the MPD client window has focus
+and type `u`. This should trigger a database update. If your music library
+is large this process can take several minutes to complete. Once the music
+database has been updated you should see the songs, albums, and playlists
+in your music library appear in the MPD client view.
+
+### Terminal Emulator Profiles
 The Cava spectrum visualizer looks better when the font used by the
 terminal emulator in which it is running is a small sized font. Some
 terminal emulators rely on a profile from which they draw much of
@@ -167,7 +179,7 @@ MusicPlayerPlus. The `gnome-terminal` emulator has a single profile
 called "SmallFont" and the `tilix` terminal emulator has two profiles
 called "Cava" and "MusicPlayer". To create these profiles:
 
-#### Gnome Terminal Emulator Profile
+### Gnome Terminal Emulator Profile
 Launch `gnome-terminal`, click the `...` three dots in the Title Bar
 and then click `Preferences` in the dropdown menu. This will bring up
 a Preferences dialog window. Next to the `Profiles` entry on the left,
@@ -188,7 +200,7 @@ I also disable the scroll bar in the `Scrolling` tab by unchecking
 `Show scrollbar` but this is optional. Scrolling is not likely to be
 needed in the spectrum visualizer window.
 
-#### Tilix Terminal Emulator Profiles
+### Tilix Terminal Emulator Profiles
 Launch `tilix`, click the `...` three dots in the Title Bar
 and then click `Preferences` in the dropdown menu. This will bring up
 a Preferences dialog window. At the lower left of the left pane,
