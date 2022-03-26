@@ -62,7 +62,7 @@ The simplest way to compile this package is:
   6. You can remove the program binaries and object files from the
      source code directory by typing `make clean`.
 
-Detailed intallation instructions can be found in the `INSTALL` file. 
+Generic intallation instructions can be found in the `INSTALL` file. 
 
 ### Documentation
 * [**mpcplus key bindings**](../markdown/mpcpluskeys.1.md) - mpcplus user interface reference
