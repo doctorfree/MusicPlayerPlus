@@ -17,7 +17,7 @@ ltmain.sh
 missing
 **.m4
 **/.deps/
-src/mpcplus
+mpcplus/src/mpcplus
 stamp-h1
 archive/*
 dist/*

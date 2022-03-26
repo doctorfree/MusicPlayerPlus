@@ -75,7 +75,7 @@ cd ${PROJ}
 [ -x ./configure ] || ./autogen.sh
 [ "${AUTOGEN_ONLY}" ] && exit 0
 
-prefix="/usr"
+prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 ./configure ${prefix} \
             --enable-outputs \
