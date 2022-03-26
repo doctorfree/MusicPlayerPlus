@@ -20,7 +20,7 @@ jobs:
     - name: upgrade
       run: sudo apt upgrade -y
     - name: install
-      run: sudo apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev -y
+      run: sudo apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev libmpdclient-dev -y
     - name: autogen
       run: ./autogen.sh
     - name: configure
