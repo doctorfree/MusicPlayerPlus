@@ -1,11 +1,56 @@
+=============================================================================
 
 Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
 Where:
-	-c indicates use cantata MPD client rather than mpcplus
-	-C 'client' indicates use 'client' MPD client rather than mpcplus
-	-f indicates fullscreen display
-	-h indicates half-height for cava window (with -f only)
-	-q indicates quarter-height for cava window (with -f only)
-	-r indicates use retro terminal emulator
-	-t indicates use tilix terminal emulator
-	-u displays this usage message and exits
+  -c indicates use cantata MPD client rather than mpcplus
+  -C 'client' indicates use 'client' MPD client rather than mpcplus
+  -f indicates fullscreen display
+  -h indicates half-height for cava window (with -f only)
+  -q indicates quarter-height for cava window (with -f only)
+  -r indicates use retro terminal emulator
+  -t indicates use tilix terminal emulator
+  -u displays this usage message and exits
+
+=============================================================================
+
+Usage: mpcplus [options]...
+Options:
+  -h [ --host ] HOST (=localhost)       connect to server at host
+  -p [ --port ] PORT (=6600)            connect to server at port
+  --current-song [=FORMAT(={{{(%l) }{{%a - }%t}}|{%f}})]
+                                        print current song using given format 
+                                        and exit
+  -c [ --config ] PATH (=~/.config/mpcplus/config AND ~/.mpcplus/config)
+                                        specify configuration file(s)
+  --ignore-config-errors                ignore unknown and invalid options in 
+                                        configuration files
+  --test-lyrics-fetchers                check if lyrics fetchers work
+  -b [ --bindings ] PATH (=~/.config/mpcplus/bindings AND ~/.mpcplus/bindings)
+                                        specify bindings file(s)
+  -s [ --screen ] SCREEN                specify the startup screen
+  -S [ --slave-screen ] SCREEN          specify the startup slave screen
+  -? [ --help ]                         show help message
+  -v [ --version ]                      display version information
+  -q [ --quiet ]                        suppress logs and excess output
+
+=============================================================================
+
+Usage : cava [options]
+Visualize audio input in terminal. 
+
+Options:
+    -p          path to config file
+    -v          print version
+
+Keys:
+        Up        Increase sensitivity
+        Down      Decrease sensitivity
+        Left      Decrease number of bars
+        Right     Increase number of bars
+        r         Reload config
+        c         Reload colors only
+        f         Cycle foreground color
+        b         Cycle background color
+        q         Quit
+
+as of 0.4.0 all options are specified in config file, see in '/home/username/.config/cava/' 

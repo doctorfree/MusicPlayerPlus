@@ -9,16 +9,18 @@
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [MPD Server Configuration](#mpd-server-configuration)
+    1. [Start MPD](#start-mpd)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
     1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
     1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
-1. [Removal](#removal)
 1. [Documentation](#documentation)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
     1. [Man Pages](#man-pages)
     1. [Usage](#usage)
+    1. [Example client invocations](#example-client-invocations)
 1. [Screenshots](#screenshots)
+1. [Removal](#removal)
 
 ## Overview
 
@@ -163,13 +165,28 @@ audio_output {
 }  
 ```
 
-Additional MPD configuration may be desired. See the
+MPD is a powerful and flexible music player server with many configuration
+options. Additional MPD configuration may be desired. See the
 [MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)
+
+### Start MPD
+
+If this is a fresh installation of MPD, start mpd by executing the command:
+
+`sudo systemctl start mpd`
+
+If you want MPD to start automatically on subsequent reboots, run:
+
+`sudo systemctl enable mpd`
+
+And if you want MPD to start automatically when a client tries to connect:
+
+`sudo systemctl enable mpd.socket`
 
 ### Initialize Music Database
 To initialize the music database, after configuring MPD as described above,
 launch an MPD client and update the database. The `mpcplus` MPD client can
-be used for this or the standard `mpc` MPD client can be used. For example:
+be used for this or the standard `mpc` MPD client can be used.
 
 After launching the MPD client make sure the MPD client window has focus
 and type `u`. This should trigger a database update. If your music library
@@ -246,6 +263,134 @@ Also set the transparency level for the `MusicPlayer` profile just as you
 did for the `Cava` profile, somewhere around half transparent in the `Color`
 tab of the profile config dialog.
 
+## Documentation
+
+All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
+to view the manual page for a command. The `mpcava` frontend is the primary
+user interface for MusicPlayerPlus and the manual page for `mpcava` can be
+viewed with the command `man mpcava`. Most commands also have
+help/usage messages that can be viewed with the **-u** argument option,
+e.g. `mpcava -u`.
+
+### README for mpcplus MPD client
+- [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
+
+### Man Pages
+- [**mpcava.1.md**](markdown/mpcava.1.md) - mpcava man page
+- [**mpcplus.1.md**](markdown/mpcplus.1.md) - mpcplus man page
+- [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - mpcpluskeys man page
+
+### Usage
+
+The usage messages for `mpcava`, `mpcplus`, and `cava` provide a brief
+summary of the command line options:
+
+```
+Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Where:
+	-c indicates use cantata MPD client rather than mpcplus
+	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-f indicates fullscreen display
+	-h indicates half-height for cava window (with -f only)
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+	-u displays this usage message and exits
+```
+
+```
+Usage: mpcplus [options]...
+Options:
+  -h [ --host ] HOST (=localhost)       connect to server at host
+  -p [ --port ] PORT (=6600)            connect to server at port
+  --current-song [=FORMAT(={{{(%l) }{{%a - }%t}}|{%f}})]
+                                        print current song using given format 
+                                        and exit
+  -c [ --config ] PATH (=~/.config/mpcplus/config AND ~/.mpcplus/config)
+                                        specify configuration file(s)
+  --ignore-config-errors                ignore unknown and invalid options in 
+                                        configuration files
+  --test-lyrics-fetchers                check if lyrics fetchers work
+  -b [ --bindings ] PATH (=~/.config/mpcplus/bindings AND ~/.mpcplus/bindings)
+                                        specify bindings file(s)
+  -s [ --screen ] SCREEN                specify the startup screen
+  -S [ --slave-screen ] SCREEN          specify the startup slave screen
+  -? [ --help ]                         show help message
+  -v [ --version ]                      display version information
+  -q [ --quiet ]                        suppress logs and excess output
+```
+
+The mpcplus MPD client has an extensive set of key bindings that allow
+quick and easy control of MPD, searches, lyrics display, client navigation,
+and much more via the keyboard. View the
+[**mpcpluskeys man page**](markdown/mpcpluskeys.1.md) with the command
+`man mpcpluskeys`.
+
+```
+Usage : cava [options]
+Visualize audio input in terminal. 
+
+Options:
+    -p          path to config file
+    -v          print version
+
+Keys:
+        Up        Increase sensitivity
+        Down      Decrease sensitivity
+        Left      Decrease number of bars
+        Right     Increase number of bars
+        r         Reload config
+        c         Reload colors only
+        f         Cycle foreground color
+        b         Cycle background color
+        q         Quit
+
+All options are specified in a config file. See `/home/username/.config/cava/`
+```
+
+### Example client invocations
+The `mpcava` command is intended to serve as the primary interface to invoke
+the `mpcplus` MPD client and `cava` spectrum visualizer. The `mpcava` command
+utilizes several different terminal emulators and can also be used to invoke
+any specified MPD client. Some example invocations of `mpcava` follow.
+
+Open the mpcplus client and cava visualizer in fullscreen mode. The client
+will open in the xfce4-terminal emulator and the visualizer in gnome-terminal:
+
+`mpcava -f`
+
+Open the mpcplus client and cava visualizer in fullscreen mode using the
+tilix terminal emulator and displaying the visualizer using quarter-height:
+
+`mpcava -f -q -t`
+
+Open the cantata MPD graphical client and cava visualizer:
+
+`mpcava -c`
+
+Open the mpcplus client in the cool-retro-term terminal and cava visualizer
+in gnome-terminal:
+
+`mpcava -r`
+
+The mpcplus MPD client can be opened directly without using mpcava.
+Similarly, the cava spectrum visualizer can be opened directly without mpcava.
+
+`mpcplus` # In one terminal window
+
+`cava`    # In another terminal window
+
+To test the mpcplus lyrics fetchers:
+
+`mpcplus --test-lyrics-fetchers`
+
+## Screenshots
+
+<p float="left">
+  <img src="screenshots/mpcava-tilix.png" style="width:800px;height:600px;">
+  <img src="screenshots/mpcava-lyrics.png" style="width:800px;height:600px;">
+</p>
+
 ## Removal
 
 On Debian based Linux systems where the MusicPlayerPlus package was installed
@@ -280,45 +425,4 @@ script in the MusicPlayerPlus source directory:
     cd MusicPlayerPlus
     ./Uninstall
 ```
-
-## Documentation
-
-All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
-to view the manual page for a command. The `mpcava` frontend is the primary
-user interface for MusicPlayerPlus and the manual page for `mpcava` can be
-viewed with the command `man mpcava`. Most commands also have
-help/usage messages that can be viewed with the **-u** argument option,
-e.g. `mpcava -u`.
-
-### README for mpcplus MPD client
-- [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
-
-### Man Pages
-- [**mpcava.1.md**](markdown/mpcava.1.md) - Markdown input for auto-generation of the mpcava man page
-- [**mpcplus.1.md**](markdown/mpcplus.1.md) - Markdown input for auto-generation of the mpcplus man page
-- [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - Markdown input for auto-generation of the mpcpluskeys man page
-
-### Usage
-
-Here is the current output of "mpcava -u" which displays a usage message.
-
-```
-Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
-Where:
-	-c indicates use cantata MPD client rather than mpcplus
-	-C 'client' indicates use 'client' MPD client rather than mpcplus
-	-f indicates fullscreen display
-	-h indicates half-height for cava window (with -f only)
-	-q indicates quarter-height for cava window (with -f only)
-	-r indicates use retro terminal emulator
-	-t indicates use tilix terminal emulator
-	-u displays this usage message and exits
-```
-
-## Screenshots
-
-<p float="left">
-  <img src="screenshots/mpcava-tilix.png" style="width:800px;height:600px;">
-  <img src="screenshots/mpcava-lyrics.png" style="width:800px;height:600px;">
-</p>
 
