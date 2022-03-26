@@ -10,14 +10,15 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./mpcplus
 
     steps:
     - uses: actions/checkout@v2
+    - name: autogen
+      run: ./autogen.sh
     - name: configure
-      run: ./configure
+      run: ./configure --prefix=/usr --enable-outputs --enable-clock --disable-visualizer --with-taglib
     - name: make
       run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
