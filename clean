@@ -1,8 +1,11 @@
 #!/bin/bash
 
 sudo rm -rf dist releases
-make clean
-make distclean
+cd mpcplus
+[ -f Makefile ] && {
+    make clean
+    make distclean
+}
 
 rm -f aclocal.m4 \
       compile \
