@@ -47,13 +47,13 @@ Additional detail and info can be found in the
 MusicPlayerPlus can be installed on Debian or RPM based Linux systems.
 It requires:
 
-* [MPD Music Player Daemon](https://www.musicpd.org/),
-* [Cava](https://github.com/karlstav/cava),
+* [MPD Music Player Daemon](https://www.musicpd.org/)
+* [Cava](https://github.com/karlstav/cava)
 * [Boost library](https://www.boost.org/)
 * [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
 * [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
 * [Curl library](https://curl.haxx.se/)
-* [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell)),
+* [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
 
 These dependencies will all be automatically installed if not present
 when MusicPlayerPlus is installed using the Debian or RPM packaging.
@@ -78,7 +78,7 @@ package from the
 
 Install the MusicPlayerPlus package by executing the command
 
-```bash
+```console
 sudo apt install ./MusicPlayerPlus_<version>-<release>.deb
 ```
 or
@@ -98,7 +98,7 @@ package from the
 
 Install the MusicPlayerPlus package by executing the command
 
-```bash
+```console
 sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.rpm
 ```
 or
@@ -397,11 +397,11 @@ On Debian based Linux systems where the MusicPlayerPlus package was installed
 using the MusicPlayerPlus Debian format package, remove the MusicPlayerPlus
 package by executing the command:
 
-```bash
+```console
     sudo apt remove musicplayerplus
 ```
 or
-```bash
+```console
     sudo dpkg -r musicplayerplus
 ```
 
@@ -409,18 +409,18 @@ On RPM based Linux systems where the MusicPlayerPlus package was installed
 using the MusicPlayerPlus RPM format package, remove the MusicPlayerPlus
 package by executing the command:
 
-```bash
+```console
     sudo yum remove MusicPlayerPlus
 ```
 or
-```bash
+```console
     sudo rpm -e MusicPlayerPlus
 ```
 
 The MusicPlayerPlus package can be removed by executing the "Uninstall"
 script in the MusicPlayerPlus source directory:
 
-```bash
+```console
     git clone git@gitlab.com:doctorfree/MusicPlayerPlus.git
     cd MusicPlayerPlus
     ./Uninstall
