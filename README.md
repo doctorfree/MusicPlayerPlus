@@ -20,6 +20,7 @@
     1. [Man Pages](#man-pages)
     1. [Usage](#usage)
     1. [Example client invocations](#example-client-invocations)
+    1. [Adding Album Cover Art](#adding-album-cover-art)
 1. [Screenshots](#screenshots)
 1. [Removal](#removal)
 
@@ -400,6 +401,15 @@ Similarly, the cava spectrum visualizer can be opened directly without mpcava.
 To test the mpcplus lyrics fetchers:
 
 `mpcplus --test-lyrics-fetchers`
+
+### Adding Album Cover Art
+The `mpcplus` MPD client is a character based application. As such, it is
+difficult to display graphical images. However, this limitation can be
+overcome using `tmux` and additional tools. In this way we can add
+album cover art to MusicPlayerPlus.
+
+See [Adding album art to MusicPlayerPlus](with-album-art/README) to get
+started integrating album art in MusicPlayerPlus.
 
 ## Screenshots
 
