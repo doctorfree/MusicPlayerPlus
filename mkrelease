@@ -11,14 +11,14 @@ usage() {
     printf "\nWhere:"
     printf "\n\t-c indicates clean first"
     printf "\n\t-d indicates create draft release"
-    printf "\n\t-p indicates create package first"
+    printf "\n\t-p indicates skip package creation step"
     printf "\n\t-u displays this usage message and exits\n"
     exit 1
 }
 
 CLEAN=
 DRAFT=
-PACKAGE=
+PACKAGE=1
 while getopts "cdpu" flag; do
     case $flag in
         c)
@@ -28,7 +28,7 @@ while getopts "cdpu" flag; do
             DRAFT="--draft"
             ;;
         p)
-            PACKAGE=1
+            PACKAGE=
             ;;
         u)
             usage
