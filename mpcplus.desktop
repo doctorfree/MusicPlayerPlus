@@ -1,8 +1,11 @@
 [Desktop Entry]
-Type=Application
-Name=Mpcplus
-GenericName=NCurses Music Player Plus
-Exec=/usr/local/bin/mpcplus
-Icon=mpd
+Name=mpcplus
+Comment=NCurses Music Player Plus
+Keywords=Terminal;Audio;Player
 Terminal=true
-Categories=AudioVideo;Audio;Player;ConsoleOnly;
+TryExec=mpcplus
+Exec=mpcplus
+Icon=mpd
+Type=Application
+StartupNotify=false
+Categories=Audio;Player;ConsoleOnly;

@@ -41,7 +41,7 @@
 
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
-MPCPLUS="/usr/local/bin/mpcplus"
+MPCPLUS="/usr/bin/mpcplus"
 [ -x ${MPCPLUS} ] || MPCPLUS="mpcplus"
 
 usage() {
