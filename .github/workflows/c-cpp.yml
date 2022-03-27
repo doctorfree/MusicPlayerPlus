@@ -27,12 +27,3 @@ jobs:
     - name: make
       run: make
       working-directory: ./mpcplus
-    - name: package
-      run: ./mkdeb
-#   - uses: actions/upload-artifact@v3
-#     with:
-#       name: my-artifact
-#       path: |
-#         dist/*.deb
-#         dist/*.tgz
-#         dist/*.zip
