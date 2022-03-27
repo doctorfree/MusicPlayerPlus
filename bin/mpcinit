@@ -1,0 +1,65 @@
+#!/bin/bash
+#
+# mpcinit - initialize mpcplus configuration files
+
+CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
+
+[ -f ${CONFDIR}/config ] || {
+    echo "${CONFDIR}/config does not exist."
+    echo "MusicPlayerPlus installation incomplete"
+    exit 1
+}
+[ -f ${CONFDIR}/bindings ] || {
+    echo "${CONFDIR}/bindings does not exist."
+    echo "MusicPlayerPlus installation incomplete"
+    exit 1
+}
+
+if [ -f ~/.config/mpcplus/config ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ~/.mpcplus/config ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    [ -d ~/.config/mpcplus ] || mkdir -p ~/.config/mpcplus
+    cp ${CONFDIR}/config ~/.config/mpcplus/config
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+[ -f ~/${MPCDIR}/bindings ] || {
+  cp ${CONFDIR}/bindings ~/${MPCDIR}/bindings
+}
+
+[ -f /etc/mpd.conf ] || {
+  echo "/etc/mpd.conf missing"
+  echo "Check/reinstall mpd"
+  exit 1
+}
+
+mpd_music=`grep ^music_directory /etc/mpd.conf`
+[ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`
+mpd_music=`echo ${mpd_music} | sed -e "s/\"//g"`
+[ "${mpd_music}" ] || {
+  echo "Could not detect any music_directory setting in /etc/mpd.conf"
+  echo "Manual configuration of /etc/mpd.conf and ~/${MPCDIR}/config required"
+  exit 1
+}
+
+mpc_custom=1
+mpc_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
+[ "${mpc_music}" ] || {
+  mpc_music=`grep \#mpd_music_dir ~/${MPCDIR}/config`
+  mpc_custom=
+}
+[ "${mpd_music}" == "${mpc_music}" ] || {
+  if [ "${mpc_custom}" ]
+  then
+    cat ~/${MPCDIR}/config | sed -e "s/^mpd_music_dir.*/mpd_music_dir = ${mpd_music}/" > /tmp/newconf$$
+  else
+    cat ~/${MPCDIR}/config | sed -e "s/#mpd_music_dir.*/mpd_music_dir = ${mpd_music}/" > /tmp/newconf$$
+  fi
+  cp /tmp/newconf$$ ~/${MPCDIR}/config
+  rm -f /tmp/darkness$$
+}

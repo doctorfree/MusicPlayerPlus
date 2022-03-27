@@ -9,6 +9,7 @@
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [MPD Server Configuration](#mpd-server-configuration)
+    1. [Client Configuration](#client-configuration)
     1. [Start MPD](#start-mpd)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
@@ -168,6 +169,22 @@ audio_output {
 MPD is a powerful and flexible music player server with many configuration
 options. Additional MPD configuration may be desired. See the
 [MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)
+
+### Client Configuration
+After configuring the MPD music_directory in `/etc/mpd.conf`, initialize
+the `mpcplus` client configuration by executing the command:
+
+```
+mpcinit
+```
+
+Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
+and `~/.config/mpcplus/bindings` and make any desired changes.
+
+While the MPD Server configuration changes above are system-wide,
+the Client configuration performed by `mpcinit` is per-user.
+Each user needs to perform this step as well as the creation of
+terminal profiles described below.
 
 ### Start MPD
 
