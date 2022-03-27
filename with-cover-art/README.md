@@ -210,5 +210,4 @@ This way the session will be killed and no resources will be wasted.
 Now simply type `music` into the terminal to launch it.
 
 You can take a look at
-<a href="https://github.com/doctorfree/MusicPlayerPlus/with-cover-art"
-target="_blank"> the complete config files</a>.
+<a href="https://github.com/doctorfree/MusicPlayerPlus/tree/master/with-cover-art" target="_blank"> the complete config files</a>.
