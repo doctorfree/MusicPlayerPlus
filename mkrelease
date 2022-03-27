@@ -50,7 +50,8 @@ read -p "Press Enter to continue" answer
 echo "Creating release for version ${VERSION} release ${RELEASE}"
 
 gh release create v${VERSION}r${RELEASE} ${DRAFT} \
+                  --title "${ANNO}" \
                   --notes-file pkg/release.md \
-                  ./releases/${VERSION}/*
+                  releases/${VERSION}/*
 
 git fetch --tags origin
