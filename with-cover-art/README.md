@@ -74,25 +74,38 @@ renders the new image in the terminal.
 Start by creating a script named `album_cover.sh` in `~/.config/mpcplus/`:
 
 ```bash
-    #!/bin/bash
+#!/bin/bash
 
-    source "`ueberzug library`"
+source "`ueberzug library`"
 
-    COVER="/tmp/album_cover.png"
+COVER="/tmp/album_cover.png"
 
-    function add_cover {
-      ImageLayer::add [identifier]="img" [x]="2" [y]="1" [path]="$COVER"
-    }
+function add_cover {
+  ImageLayer::add [identifier]="img" [x]="2" [y]="1" [path]="${COVER}"
+}
 
-    ImageLayer 0< <(
-    if [ ! -f "$COVER" ]; then
-      cp "$HOME/.config/mpcplus/default_cover.png" "$COVER"
-    fi
-    #rerender image when changed
-    while inotifywait -q -q -e close_write "$COVER"; do
-      add_cover
-    done
-    )
+if [ -f ~/.config/mpcplus/config ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ~/.mpcplus/config ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    mpcinit
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+
+ImageLayer 0< <(
+if [ ! -f "${COVER}" ]; then
+  cp "${HOME}/${MPCDIR}/default_cover.png" "${COVER}"
+fi
+while inotifywait -q -q -e close_write "${COVER}"; do
+  add_cover
+done
+)
+
 ```
 
 This is going to listen for album cover changes and render them.
@@ -103,30 +116,52 @@ selected. Be sure to add one named `default_cover.png` in `~/.config/mpcplus/`.
 Now create `cover_obs.sh` in the same directory:
 
 ```bash
-    #!/bin/bash
+#!/bin/bash
 
-    COVER="/tmp/album_cover.png"
-    COVER_SIZE="400"
+COVER="/tmp/album_cover.png"
+COVER_SIZE="400"
 
-    #path to current song
-    file="$MUSIC_DIR/$(mpc --format %file% current)"
-    album="${file%/*}"
-    #search for cover image
-    art=$(find "$album"  -maxdepth 1 | grep -m 1 ".*\.\(jpg\|png\|gif\|bmp\)")
-    if [ "$art" = "" ]; then
-      art="$HOME/.config/mpcplus/default_cover.png"
-    fi
-    #copy and resize image to destination
-    ffmpeg -loglevel 0 -y -i "$art" -vf "scale=$COVER_SIZE:-1" "$COVER"
+if [ -f ~/.config/mpcplus/config ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ~/.mpcplus/config ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    mpcinit
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+
+mpd_music=`grep ^music_directory /etc/mpd.conf`
+if [ "${mpd_music}" ]
+then
+  MUSIC_DIR=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+else
+  mpd_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
+  if [ "${mpd_music}" ]
+  then
+    MUSIC_DIR=`echo ${mpd_music} | awk ' { print $3 } '`
+  else
+    MUSIC_DIR=${HOME}/Music
+  fi
+fi
+
+file="${MUSIC_DIR}/$(mpc --format %file% current)"
+album="${file%/*}"
+art=$(find "${album}"  -maxdepth 1 | grep -m 1 ".*\.\(jpg\|png\|gif\|bmp\)")
+if [ "${art}" = "" ]; then
+  art="${HOME}/${MPCDIR}/default_cover.png"
+fi
+ffmpeg -loglevel 0 -y -i "${art}" -vf "scale=${COVER_SIZE}:-1" "${COVER}"
+
 ```
 
 This is the script executed when switching songs. It searches for images
 in the directory of the current song.
 
 Here I chose a render size of 400 x 400, but it can be anything.
-
-Notice the use of `$MUSIC_DIR`. You need to export it with the path to
-your music directory.
 
 Tell mpcplus to execute it every time the song changes by adding this to
 `~/.config/mpcplus/config`
