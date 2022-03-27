@@ -9,9 +9,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./mpcplus
 
     steps:
     - uses: actions/checkout@v2
@@ -23,7 +20,19 @@ jobs:
       run: sudo apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev libmpdclient-dev -y
     - name: autogen
       run: ./autogen.sh
+      working-directory: ./mpcplus
     - name: configure
       run: ./configure --prefix=/usr --enable-outputs --enable-clock --disable-visualizer --with-taglib
+      working-directory: ./mpcplus
     - name: make
       run: make
+      working-directory: ./mpcplus
+    - name: package
+      run: ./mkdeb
+#   - uses: actions/upload-artifact@v3
+#     with:
+#       name: my-artifact
+#       path: |
+#         dist/*.deb
+#         dist/*.tgz
+#         dist/*.zip

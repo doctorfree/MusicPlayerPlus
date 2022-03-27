@@ -1,0 +1,21 @@
+#!/bin/bash
+
+[ -f VERSION ] || {
+    echo "VERSION file missing. Exiting."
+    exit 1
+}
+. ./VERSION
+
+./clean
+./mkdeb
+
+echo "Copy RPM to releases/${VERSION}"
+
+read -p "Press Enter to continue" answer
+
+echo "Creating draft release for version ${VERSION} release ${RELEASE}"
+
+gh release create v${VERSION}r${RELEASE} --draft --notes-file pkg/release.md \
+   ./releases/${VERSION}/*
+
+git fetch --tags origin

@@ -23,11 +23,3 @@ Removal of the package on RPM based systems can be accomplished by issuing the c
 ```bash
 sudo yum remove MusicPlayerPlus
 ```
-
-To install on Mac OS X, clone the repository and execute the `Install` command:
-
-```bash
-git clone https://gitlab.com/doctorfree/MusicPlayerPlus.git
-cd MusicPlayerPlus
-./Install
-```

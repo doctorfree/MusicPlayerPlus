@@ -22,8 +22,8 @@ dpkg=`type -p dpkg-deb`
     exit 1
   }
   SRC="/builds/doctorfree"
-  SUDO=
   GCI=1
+# SUDO=
 }
 
 . "${SRC}/${SRC_NAME}/VERSION"
