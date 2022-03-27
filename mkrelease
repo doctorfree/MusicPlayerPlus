@@ -5,17 +5,32 @@
     exit 1
 }
 . ./VERSION
+DRAFT=
 
-./clean
-./mkdeb
+[ "$1" == "-c" ] && {
+    ./clean
+    shift
+}
+[ "$1" == "-d" ] && {
+    DRAFT="--draft"
+    shift
+}
+[ "$1" == "-p" ] && {
+    ./mkdeb
+    shift
+}
+
+ANNO="MusicPlayerPlus Version ${VERSION} Release ${RELEASE}"
+gittag v${VERSION}r${RELEASE} ${ANNO}
 
 echo "Copy RPM to releases/${VERSION}"
 
 read -p "Press Enter to continue" answer
 
-echo "Creating draft release for version ${VERSION} release ${RELEASE}"
+echo "Creating release for version ${VERSION} release ${RELEASE}"
 
-gh release create v${VERSION}r${RELEASE} --draft --notes-file pkg/release.md \
-   ./releases/${VERSION}/*
+gh release create v${VERSION}r${RELEASE} ${DRAFT} \
+                  --notes-file pkg/release.md \
+                  ./releases/${VERSION}/*
 
 git fetch --tags origin
