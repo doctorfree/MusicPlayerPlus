@@ -167,13 +167,12 @@ session:
     select-pane -t 1
     send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
     send-keys 1
+    send-keys u
 
-    #visualizer pane; run instance of mpcplus in visualizer mode
+    # visualizer pane; run instance of cava spectrum visualizer
     select-pane -t 0
     split-window -h
-    send-keys "mpcplus --config='~/.config/mpcplus/visualizer.conf'" C-m
-    send-keys 8
-    send-keys u
+    send-keys "cava" C-m
 
     #resize image and visualizer pane to fit image
     resize-pane -t 0 -x 49 -y 23
