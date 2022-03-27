@@ -9,7 +9,8 @@ send-keys "~/.config/mpcplus/album_cover.sh " C-m
 
 split-window -v
 select-pane -t 1
-send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
+# send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
+send-keys "mpcplus" C-m
 send-keys 1
 send-keys u
 

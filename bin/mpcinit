@@ -53,6 +53,7 @@ mpc_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
   mpc_music=`grep \#mpd_music_dir ~/${MPCDIR}/config`
   mpc_custom=
 }
+mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
 [ "${mpd_music}" == "${mpc_music}" ] || {
   if [ "${mpc_custom}" ]
   then
