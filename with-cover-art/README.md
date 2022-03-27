@@ -192,7 +192,7 @@ but it's not mandatory. If you changed the image size from
 Define an alias in your `.bashrc` so it's more convenient to start:
 
 ```
-alias music='tmux new-session -s $$ "tmux source-file ~/.config/mpcplus/tsession"'
+alias musicplayerplus='tmux new-session -s $$ "tmux source-file ~/.config/mpcplus/tsession"'
 ```
 
 This will create the session and name it after it's PID. One important
@@ -206,7 +206,7 @@ following:
 
 This way the session will be killed and no resources will be wasted.
 
-Now simply type `music` into the terminal to launch it.
+Now simply type `musicplayerplus` into the terminal to launch it.
 
 You can take a look at
 <a href="https://github.com/doctorfree/MusicPlayerPlus/tree/master/with-cover-art" target="_blank"> the complete config files</a>.
