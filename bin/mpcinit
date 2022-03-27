@@ -40,7 +40,7 @@ fi
 
 mpd_music=`grep ^music_directory /etc/mpd.conf`
 [ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`
-mpd_music=`echo ${mpd_music} | sed -e "s/\"//g"`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 [ "${mpd_music}" ] || {
   echo "Could not detect any music_directory setting in /etc/mpd.conf"
   echo "Manual configuration of /etc/mpd.conf and ~/${MPCDIR}/config required"
@@ -56,9 +56,9 @@ mpc_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
 [ "${mpd_music}" == "${mpc_music}" ] || {
   if [ "${mpc_custom}" ]
   then
-    cat ~/${MPCDIR}/config | sed -e "s/^mpd_music_dir.*/mpd_music_dir = ${mpd_music}/" > /tmp/newconf$$
+    cat ~/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
   else
-    cat ~/${MPCDIR}/config | sed -e "s/#mpd_music_dir.*/mpd_music_dir = ${mpd_music}/" > /tmp/newconf$$
+    cat ~/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
   fi
   cp /tmp/newconf$$ ~/${MPCDIR}/config
   rm -f /tmp/darkness$$
