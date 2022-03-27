@@ -1,7 +1,7 @@
 # MusicPlayerPlus/markdown
 
-This directory contains markdown format input files used by pandoc to automatically
-generate man format man pages. The utility script
+This directory contains markdown format input files used by pandoc to
+automatically generate man format man pages. The utility script
 [md2man](https://gitlab.com/doctorfree/DoctorFreeScripts/-/blob/master/scripts/md2man.sh)
 in the [DoctorFreeScripts repository](https://gitlab.com/doctorfree/DoctorFreeScripts)
 is used as a pandoc wrapper.

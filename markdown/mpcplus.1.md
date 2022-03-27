@@ -407,7 +407,7 @@ otherwise using MPCPLUS and for a DISCLAIMER OF ALL WARRANTIES.
 # BUGS
 Submit bug reports online at:
 
-https://gitlab.com/doctorfree/MusicPlayerPlus/issues
+https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # NOTE
 
@@ -422,5 +422,5 @@ Since MPD uses UTF-8, mpcplus needs to convert characters to the charset used by
 
 Full documentation and sources at:
 
-https://gitlab.com/doctorfree/MusicPlayerPlus
+https://github.com/doctorfree/MusicPlayerPlus
 

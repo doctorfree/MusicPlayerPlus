@@ -215,12 +215,12 @@ otherwise using MPCPLUSKEYS and for a DISCLAIMER OF ALL WARRANTIES.
 # BUGS
 Submit bug reports online at:
 
-https://gitlab.com/doctorfree/MusicPlayerPlus/issues
+https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
 **mpcplus**(1), **mpcava**(1), **mpd**(1)
 
 Full documentation and sources at:
 
-https://gitlab.com/doctorfree/MusicPlayerPlus
+https://github.com/doctorfree/MusicPlayerPlus
 

@@ -40,7 +40,7 @@ integration is provided for:
     * cool-retro-term
 
 Additional detail and info can be found in the
-[MusicPlayerPlus Wiki](https://gitlab.com/doctorfree/MusicPlayerPlus/-/wikis/home).
+[MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
 
 ## Requirements
 
@@ -74,7 +74,7 @@ contents of the file `/etc/os-release`.
 
 To install on a Debian based Linux system, download the latest Debian format
 package from the
-[MusicPlayerPlus Releases](https://gitlab.com/doctorfree/MusicPlayerPlus/-/releases).
+[MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases).
 
 Install the MusicPlayerPlus package by executing the command
 
@@ -94,7 +94,7 @@ openSUSE, OpenMandriva, Mandrake Linux, Red Hat Linux, and Oracle Linux.
 
 To install on an RPM based Linux system, download the latest RPM format
 package from the
-[MusicPlayerPlus Releases](https://gitlab.com/doctorfree/MusicPlayerPlus/-/releases).
+[MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases).
 
 Install the MusicPlayerPlus package by executing the command
 
@@ -421,7 +421,7 @@ The MusicPlayerPlus package can be removed by executing the "Uninstall"
 script in the MusicPlayerPlus source directory:
 
 ```console
-    git clone git@gitlab.com:doctorfree/MusicPlayerPlus.git
+    git clone git@github.com:doctorfree/MusicPlayerPlus.git
     cd MusicPlayerPlus
     ./Uninstall
 ```

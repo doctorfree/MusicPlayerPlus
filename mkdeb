@@ -79,7 +79,7 @@ Build-Depends: debhelper (>= 11)
 Provides: mpd-client, mpcplus-completion
 Suggests: desktop-file-utils
 Standards-Version: 4.1.3
-Homepage: https://gitlab.com/doctorfree/MusicPlayerPlus
+Homepage: https://github.com/doctorfree/MusicPlayerPlus
 Description: Music Player Plus
  ncurses-based client for the Music Player Daemon (MPD)
  mpcplus is almost an exact clone of ncmpc which is a text-mode client
