@@ -408,7 +408,7 @@ difficult to display graphical images. However, this limitation can be
 overcome using `tmux` and additional tools. In this way we can add
 album cover art to MusicPlayerPlus.
 
-See [Adding album art to MusicPlayerPlus](with-cover-art/README) to get
+See [Adding album art to MusicPlayerPlus](with-cover-art/README.md) to get
 started integrating album art in MusicPlayerPlus.
 
 ## Screenshots
