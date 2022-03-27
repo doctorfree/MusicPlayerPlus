@@ -5,20 +5,40 @@
     exit 1
 }
 . ./VERSION
-DRAFT=
 
-[ "$1" == "-c" ] && {
-    ./clean
-    shift
+usage() {
+    printf "\nUsage: mkrelease [-c] [-d] [-p] [-u]"
+    printf "\nWhere:"
+    printf "\n\t-c indicates clean first"
+    printf "\n\t-d indicates create draft release"
+    printf "\n\t-p indicates create package first"
+    printf "\n\t-u displays this usage message and exits"
+    exit 1
 }
-[ "$1" == "-d" ] && {
-    DRAFT="--draft"
-    shift
-}
-[ "$1" == "-p" ] && {
-    ./mkdeb
-    shift
-}
+
+CLEAN=
+DRAFT=
+PACKAGE=
+while getopts "cdpu" flag; do
+    case $flag in
+        c)
+            CLEAN=1
+            ;;
+        d)
+            DRAFT="--draft"
+            ;;
+        p)
+            PACKAGE=1
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "$CLEAN" ] && ./clean
+[ "$PACKAGE" ] && ./mkdeb
 
 ANNO="MusicPlayerPlus Version ${VERSION} Release ${RELEASE}"
 gittag v${VERSION}r${RELEASE} ${ANNO}
