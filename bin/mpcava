@@ -41,8 +41,7 @@
 
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
-MPCPLUS="/usr/bin/mpcplus"
-[ -x ${MPCPLUS} ] || MPCPLUS="mpcplus"
+MPCPLUS="mpcplus"
 
 usage() {
   printf "\nUsage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]"
@@ -58,6 +57,7 @@ usage() {
   exit 1
 }
 
+CAVA_COMMAND=cava
 FULLSCREEN=
 HALFHEIGHT=
 QRTRHEIGHT=
@@ -205,13 +205,13 @@ then
           --full-screen \
           --window-style=borderless \
           --profile=Cava \
-          --command=cava 2> /dev/null &
+          --command="${CAVA_COMMAND}" 2> /dev/null &
   else
     gnome-terminal -t "${VTITLE}" \
           --profile=SmallFont \
           --hide-menubar \
           --full-screen \
-          -- cava &
+          -- ${CAVA_COMMAND} &
   fi
   [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
     sleep 1
@@ -260,13 +260,13 @@ else
           --window-style=borderless \
           --geometry=360x16+150-0 \
           --profile=Cava \
-          --command=cava 2> /dev/null &
+          --command="${CAVA_COMMAND}" 2> /dev/null &
   else
     gnome-terminal -t "${VTITLE}" \
           --profile=SmallFont \
           --hide-menubar \
           --geometry 360x16+150-0 \
-          -- cava &
+          -- ${CAVA_COMMAND} &
   fi
 fi
 
@@ -309,12 +309,12 @@ else
             --command="${MPCPLUS}" 2> /dev/null &
     else
       xfce4-terminal --title "${MTITLE}" \
-            --icon=audio-player \
-            --hide-menubar \
-            --hide-toolbar \
-            --hide-scrollbar \
-            --geometry 90x20+150+25 \
-            --command="${MPCPLUS}" &
+          --icon=audio-player \
+          --hide-menubar \
+          --hide-toolbar \
+          --hide-scrollbar \
+          --geometry 90x20+150+25 \
+          --command="${MPCPLUS}" &
     fi
   fi
 fi

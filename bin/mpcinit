@@ -1,10 +1,14 @@
 #!/bin/bash
 #
 # mpcinit - initialize mpcplus configuration files
+#
+# Copy and configure default configuration files in $HOME/.config/mpcplus/
+# Also setup default tmux configuration for this user
+# Install required pip modules if not already installed
 
 CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
 WITHART="album_cover.sh catalog.conf config-cava \
-         cover_obs.sh default_cover.png"
+         cover_obs.sh default_cover.png plasma.py julia.py"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -77,6 +81,19 @@ mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
   rm -f /tmp/catalog$$
 }
 
+# Setup default tmux configuration for this user unless terminal-overrides has already been set
+[ -f ${CONFDIR}/tmux.conf ] && {
+  if [ -f ${HOME}/.tmux.conf ]
+  then
+    grep terminal-overrides ${HOME}/.tmux.conf > /dev/null || {
+      cat ${CONFDIR}/tmux.conf >> ${HOME}/.tmux.conf
+    }
+  else
+    cat ${CONFDIR}/tmux.conf >> ${HOME}/.tmux.conf
+  fi
+}
+
 have_pip=`type -p pip`
 [ "${have_pip}" ] || sudo apt install python3-pip
 pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
+pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
