@@ -237,9 +237,6 @@ tmux send-keys 1
 tmux select-pane -t 0
 tmux split-window -h
 tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
-#tmux send-keys "mpcplusv --config=${HOME}/${MPCDIR}/visualizer.conf" C-m
-#tmux send-keys 8
-#tmux send-keys u
 
 tmux resize-pane -t 0 -x 20 -y 9
 tmux resize-pane -t 1 -y 9
