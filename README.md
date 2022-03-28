@@ -426,6 +426,16 @@ cover art to MusicPlayerPlus when using the character based `mpcplus` client.
 See [Adding album art to MusicPlayerPlus](with-cover-art/README.md) to get
 started integrating album art in MusicPlayerPlus.
 
+An album cover art downloader is included in MusicPlayerPlus. To download
+cover art for all of the albums in your MPD music directory, run the command:
+
+```
+download_cover_art
+```
+
+Cover art for each album is saved as the file `cover.jpg` in the album folder.
+Existing cover art is preserved.
+
 ## Screenshots
 
 <p float="left">

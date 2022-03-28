@@ -1,0 +1,32 @@
+#!/bin/bash
+
+mpd_music=`grep ^music_directory /etc/mpd.conf`
+[ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+[ "${mpd_music}" ] || {
+  echo "Could not detect any music_directory setting in /etc/mpd.conf."
+  echo "Set the music_directory setting in /etc/mpd.conf and rerun this command."
+  echo "Exiting."
+  exit 1
+}
+
+pip list | grep sacad > /dev/null || python -m pip install sacad
+
+cd ${mpd_music}
+for artist in *
+do
+  [ "${artist}" == "*" ] && {
+    echo "No artists or albums found in ${mpd_music}"
+    echo "Exiting"
+    continue
+  }
+  [ -d "${artist}" ] || {
+    echo "Plain file ${artist} found in top-level of music directory."
+    echo "This downloader assumes music directory organized in"
+    echo "Artist/Album/Song directory structure"
+    echo "Skipping ${artist}"
+    continue
+  }
+  echo "Downloading cover art for artist: ${artist}"
+  sacad_r "${mpd_music}/${artist}" 600 cover.jpg
+done
