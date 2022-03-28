@@ -16,8 +16,6 @@ fi
 COVER="${HOME}/${MPCDIR}/album_cover.png"
 [ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 
-pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
-
 tmux new-session -d -x 252 -y 29 -s musicplayerplus
 tmux set -g status off
 tmux set -g default-terminal "tmux-256color"

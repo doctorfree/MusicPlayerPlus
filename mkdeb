@@ -94,7 +94,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: ${ARCH}
-Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1)
+Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), tilix (>= 1.9.1), xfce4-terminal (>= 0.8.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1), tmux, ffmpeg, inotify-tools, mpc
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Build-Depends: debhelper (>= 11)
 Provides: mpd-client, mpcplus-completion
@@ -151,6 +151,12 @@ ${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+
+${SUDO} cp with-cover-art/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp with-cover-art/catalog.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp with-cover-art/config-cava ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp with-cover-art/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp with-cover-art/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"

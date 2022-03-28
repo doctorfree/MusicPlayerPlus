@@ -3,6 +3,8 @@
 # mpcinit - initialize mpcplus configuration files
 
 CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
+WITHART="album_cover.sh catalog.conf config-cava \
+         cover_obs.sh default_cover.png"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -15,22 +17,29 @@ CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
     exit 1
 }
 
-if [ -f ~/.config/mpcplus/config ]
+if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
 else
-  if [ -f ~/.mpcplus/config ]
+  if [ -f ${HOME}/.mpcplus/config ]
   then
     MPCDIR=".mpcplus"
   else
-    [ -d ~/.config/mpcplus ] || mkdir -p ~/.config/mpcplus
-    cp ${CONFDIR}/config ~/.config/mpcplus/config
+    [ -d ${HOME}/.config/mpcplus ] || mkdir -p ${HOME}/.config/mpcplus
+    cp ${CONFDIR}/config ${HOME}/.config/mpcplus/config
     MPCDIR=".config/mpcplus"
   fi
 fi
-[ -f ~/${MPCDIR}/bindings ] || {
-  cp ${CONFDIR}/bindings ~/${MPCDIR}/bindings
+[ -f ${HOME}/${MPCDIR}/bindings ] || {
+  cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
 }
+
+for cfg in ${WITHART}
+do
+  [ -f ${HOME}/${MPCDIR}/${cfg} ] || {
+    cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+  }
+done
 
 [ -f /etc/mpd.conf ] || {
   echo "/etc/mpd.conf missing"
@@ -43,24 +52,31 @@ mpd_music=`grep ^music_directory /etc/mpd.conf`
 mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 [ "${mpd_music}" ] || {
   echo "Could not detect any music_directory setting in /etc/mpd.conf"
-  echo "Manual configuration of /etc/mpd.conf and ~/${MPCDIR}/config required"
+  echo "Manual configuration of /etc/mpd.conf and ${HOME}/${MPCDIR}/config required"
   exit 1
 }
 
 mpc_custom=1
-mpc_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
+mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
 [ "${mpc_music}" ] || {
-  mpc_music=`grep \#mpd_music_dir ~/${MPCDIR}/config`
+  mpc_music=`grep \#mpd_music_dir ${HOME}/${MPCDIR}/config`
   mpc_custom=
 }
 mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
 [ "${mpd_music}" == "${mpc_music}" ] || {
   if [ "${mpc_custom}" ]
   then
-    cat ~/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    cat ${HOME}/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
   else
-    cat ~/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    cat ${HOME}/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
   fi
-  cp /tmp/newconf$$ ~/${MPCDIR}/config
-  rm -f /tmp/darkness$$
+  cp /tmp/newconf$$ ${HOME}/${MPCDIR}/config
+  rm -f /tmp/newconf$$
+  cat ${HOME}/${MPCDIR}/catalog.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/catalog$$
+  cp /tmp/catalog$$ ${HOME}/${MPCDIR}/catalog.conf
+  rm -f /tmp/catalog$$
 }
+
+have_pip=`type -p pip`
+[ "${have_pip}" ] || sudo apt install python3-pip
+pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
