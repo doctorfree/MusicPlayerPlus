@@ -1,13 +1,10 @@
 #!/bin/bash
 
-COVER="/tmp/album_cover.png"
-COVER_SIZE="400"
-
-if [ -f ~/.config/mpcplus/config ]
+if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
 else
-  if [ -f ~/.mpcplus/config ]
+  if [ -f ${HOME}/.mpcplus/config ]
   then
     MPCDIR=".mpcplus"
   else
@@ -16,12 +13,15 @@ else
   fi
 fi
 
+COVER="${HOME}/${MPCDIR}/album_cover.png"
+COVER_SIZE="400"
+
 mpd_music=`grep ^music_directory /etc/mpd.conf`
 if [ "${mpd_music}" ]
 then
   MUSIC_DIR=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 else
-  mpd_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
+  mpd_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
   if [ "${mpd_music}" ]
   then
     MUSIC_DIR=`echo ${mpd_music} | awk ' { print $3 } '`

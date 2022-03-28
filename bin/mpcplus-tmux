@@ -1,0 +1,50 @@
+#!/bin/bash
+
+if [ -f ${HOME}/.config/mpcplus/config ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ${HOME}/.mpcplus/config ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    mpcinit
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+
+COVER="${HOME}/${MPCDIR}/album_cover.png"
+[ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
+
+pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
+
+tmux new-session -d -x 252 -y 29 -s musicplayerplus
+tmux set -g status off
+tmux set -g default-terminal "tmux-256color"
+tmux set -ga terminal-overrides ",tmux-256color:Tc"
+
+tmux send-keys "stty -echo" C-m
+tmux send-keys "tput civis -- invisible" C-m
+tmux send-keys "export PS1=''" C-m
+tmux send-keys "clear" C-m
+tmux send-keys "${HOME}/${MPCDIR}/album_cover.sh " C-m
+
+tmux split-window -v
+tmux select-pane -t 1
+tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/catalog.conf'" C-m
+tmux send-keys 1
+
+tmux select-pane -t 0
+tmux split-window -h
+tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+#tmux send-keys "mpcplusv --config=${HOME}/${MPCDIR}/visualizer.conf" C-m
+#tmux send-keys 8
+#tmux send-keys u
+
+tmux resize-pane -t 0 -x 20 -y 9
+tmux resize-pane -t 1 -y 9
+
+tmux set-hook client-resized 'resize-pane -t 0 -x 20 -y 9'
+
+tmux select-pane -t 2
+tmux a #

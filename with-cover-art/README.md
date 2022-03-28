@@ -6,7 +6,13 @@ has no built-in way of showing album art for the current playing song
 as rendering images via a terminal emulator is pretty tricky.
 
 Here you will learn how to include album art in your mpcplus client and
-include the cava spectrum visualizer while browsing songs.
+include the cava spectrum visualizer while browsing songs. Luckily, you
+will not have to copy and paste these files and setup the system yourself.
+The MusicPlayerPlus package contains all the configuration, scripts, dependencies,
+and a convenience startup command. To run `mpcplus` with spectrum visualization
+and album art all you need to do is execute the `mpcplus-tmux` command.
+If your music library contains album art in the album folders then it will
+be displayed alongside the visualizer and MPD client.
 
 The final result would be something like this:
 
@@ -78,17 +84,15 @@ Start by creating a script named `album_cover.sh` in `~/.config/mpcplus/`:
 
 source "`ueberzug library`"
 
-COVER="/tmp/album_cover.png"
-
 function add_cover {
-  ImageLayer::add [identifier]="img" [x]="2" [y]="1" [path]="${COVER}"
+  ImageLayer::add [identifier]="img" [x]="1" [y]="2" [path]="${COVER}"
 }
 
-if [ -f ~/.config/mpcplus/config ]
+if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
 else
-  if [ -f ~/.mpcplus/config ]
+  if [ -f ${HOME}/.mpcplus/config ]
   then
     MPCDIR=".mpcplus"
   else
@@ -97,9 +101,11 @@ else
   fi
 fi
 
+COVER=${HOME}/${MPCDIR}/album_cover.png
+
 ImageLayer 0< <(
 if [ ! -f "${COVER}" ]; then
-  cp "${HOME}/${MPCDIR}/default_cover.png" "${COVER}"
+  cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 fi
 while inotifywait -q -q -e close_write "${COVER}"; do
   add_cover
@@ -118,14 +124,11 @@ Now create `cover_obs.sh` in the same directory:
 ```bash
 #!/bin/bash
 
-COVER="/tmp/album_cover.png"
-COVER_SIZE="400"
-
-if [ -f ~/.config/mpcplus/config ]
+if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
 else
-  if [ -f ~/.mpcplus/config ]
+  if [ -f ${HOME}/.mpcplus/config ]
   then
     MPCDIR=".mpcplus"
   else
@@ -134,12 +137,15 @@ else
   fi
 fi
 
+COVER="${HOME}/${MPCDIR}/album_cover.png"
+COVER_SIZE="400"
+
 mpd_music=`grep ^music_directory /etc/mpd.conf`
 if [ "${mpd_music}" ]
 then
   MUSIC_DIR=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 else
-  mpd_music=`grep ^mpd_music_dir ~/${MPCDIR}/config`
+  mpd_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
   if [ "${mpd_music}" ]
   then
     MUSIC_DIR=`echo ${mpd_music} | awk ' { print $3 } '`
@@ -164,7 +170,7 @@ in the directory of the current song.
 Here I chose a render size of 400 x 400, but it can be anything.
 
 Tell mpcplus to execute it every time the song changes by adding this to
-`~/.config/mpcplus/config`
+`~/.config/mpcplus/catalog.conf`
 
 ```
     execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"
@@ -179,69 +185,76 @@ And don't forget to make them executable
 
 ## Wrapping everything in one window
 
-As mentioned above, we use tmux to run multiple terminal based programs
-in a single window so that everything fits nicely (i.e. 2 instances of
-mpcplus and one terminal running our image rendering script).
+As mentioned above, we use tmux to run multiple terminal based programs in a
+single window so that everything fits nicely (i.e. an instance of `mpcplus`,
+an instance of `cava`, and one terminal running our image rendering script).
 
-Create a file named `tsession` in `~/.config/mpcplus/` to define a tmux
-session:
-
-```
-    neww
-    set -g status off
-
-    #image pane; run cover script, disable text output and remove prompt
-    send-keys "stty -echo" C-m
-    send-keys "tput civis -- invisible" C-m
-    send-keys "export PS1=''" C-m
-    send-keys "clear" C-m
-    send-keys "~/.config/mpcplus/album_cover.sh " C-m
-
-    #catalog pane; run instance of mpcplus
-    split-window -v
-    select-pane -t 1
-    send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
-    send-keys 1
-    send-keys u
-
-    # visualizer pane; run instance of cava spectrum visualizer
-    select-pane -t 0
-    split-window -h
-    send-keys "cava" C-m
-
-    #resize image and visualizer pane to fit image
-    resize-pane -t 0 -x 49 -y 23
-    resize-pane -t 1 -y 23
-
-    #hook for keeping the image pane size constant
-    set-hook client-resized 'resize-pane -t 0 -x 49 -y 23'
-
-    #focus on catalog pane
-    select-pane -t 2
-```
-
-Here I used some custom configuration for both catalog and visualizer,
-but it's not mandatory. If you changed the image size from
-`cover_obs.sh`, you may want to adjust the pane resize values.
-
-Define an alias in your `.bashrc` so it's more convenient to start:
+MusicPlayerPlus includes a command that starts the tmux session and configures
+the tmux panes. Start a tmux session displaying `mpcplus`, the `cava` spectrum
+visualizer, and album art in separate tmux panes by executing the command:
 
 ```
-alias musicplayerplus='tmux new-session -s $$ "tmux source-file ~/.config/mpcplus/tsession"'
+mpcplus-tmux
 ```
 
-This will create the session and name it after it's PID. One important
-thing to note is that whenever you close the terminal, the session will
-keep running in a detached state. To circumvent this, also add the
-following:
+```bash
+#!/bin/bash
 
+if [ -f ${HOME}/.config/mpcplus/config ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ${HOME}/.mpcplus/config ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    mpcinit
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+
+COVER="${HOME}/${MPCDIR}/album_cover.png"
+[ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
+
+pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
+
+tmux new-session -d -x 252 -y 29 -s musicplayerplus
+tmux set -g status off
+tmux set -g default-terminal "tmux-256color"
+tmux set -ga terminal-overrides ",tmux-256color:Tc"
+
+tmux send-keys "stty -echo" C-m
+tmux send-keys "tput civis -- invisible" C-m
+tmux send-keys "export PS1=''" C-m
+tmux send-keys "clear" C-m
+tmux send-keys "${HOME}/${MPCDIR}/album_cover.sh " C-m
+
+tmux split-window -v
+tmux select-pane -t 1
+tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/catalog.conf'" C-m
+tmux send-keys 1
+
+tmux select-pane -t 0
+tmux split-window -h
+tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+#tmux send-keys "mpcplusv --config=${HOME}/${MPCDIR}/visualizer.conf" C-m
+#tmux send-keys 8
+#tmux send-keys u
+
+tmux resize-pane -t 0 -x 20 -y 9
+tmux resize-pane -t 1 -y 9
+
+tmux set-hook client-resized 'resize-pane -t 0 -x 20 -y 9'
+
+tmux select-pane -t 2
+tmux a #
 ```
-    _trap_exit() { tmux kill-session -t $$; }
-```
 
-This way the session will be killed and no resources will be wasted.
+Here I used some custom configuration but it's not mandatory.
+If you changed the image size from `cover_obs.sh`, you may want
+to adjust the pane resize values.
 
-Now simply type `musicplayerplus` into the terminal to launch it.
+Now simply type `mpcplus-tmux` into the terminal to launch it.
 
 You can take a look at
 <a href="https://github.com/doctorfree/MusicPlayerPlus/tree/master/with-cover-art" target="_blank"> the complete config files</a>.

@@ -9,17 +9,15 @@ send-keys "~/.config/mpcplus/album_cover.sh " C-m
 
 split-window -v
 select-pane -t 1
-# send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
 send-keys "mpcplus" C-m
+send-keys "mpcplus --config='~/.config/mpcplus/catalog.conf'" C-m
 send-keys 1
-send-keys u
 
 select-pane -t 0
 split-window -h
-# Use cava rather than the built-in spectrum visualizer
-# send-keys "mpcplus --config='~/.config/mpcplus/visualizer.conf'" C-m
-send-keys "cava" C-m
-# send-keys 8
+send-keys "mpcplusv --config='~/.config/mpcplus/visualizer.conf'" C-m
+send-keys 8
+send-keys u
 
 resize-pane -t 0 -x 49 -y 23
 resize-pane -t 1 -y 23

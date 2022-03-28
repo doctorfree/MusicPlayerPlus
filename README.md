@@ -316,8 +316,20 @@ Where:
 	-u displays this usage message and exits
 ```
 
+The MusicPlayerPlus package includes two versions of the `mpcplus` binary,
+one configured and compiled with visualizer disabled (*mpcplus*) and one
+configured and compiled with visualizer enabled (*mpcplusv*). These require
+different configuration files. Default configuration files are created
+for both by the `mpcinit` command. To use the default configuration with
+`mpcplus` no config file argument is necessary. To use the default config
+with `mpcplusv` it should be invoked as follows:
+
 ```
-Usage: mpcplus [options]...
+mpcplusv --config ~/.config/mpcplus/visualizer.conf
+```
+
+```
+Usage: mpcplus|mpcplusv [options]...
 Options:
   -h [ --host ] HOST (=localhost)       connect to server at host
   -p [ --port ] PORT (=6600)            connect to server at port
@@ -405,8 +417,8 @@ To test the mpcplus lyrics fetchers:
 ### Adding Album Cover Art
 The `mpcplus` MPD client is a character based application. As such, it is
 difficult to display graphical images. However, this limitation can be
-overcome using `tmux` and additional tools. In this way we can add
-album cover art to MusicPlayerPlus.
+overcome using `tmux` and additional tools. In this way we can add album
+cover art to MusicPlayerPlus when using the character based `mpcplus` client.
 
 See [Adding album art to MusicPlayerPlus](with-cover-art/README.md) to get
 started integrating album art in MusicPlayerPlus.

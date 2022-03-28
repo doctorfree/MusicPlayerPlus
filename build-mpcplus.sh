@@ -27,14 +27,15 @@
 # Where -i indicates install mpcplus after configuring and compiling
 
 usage() {
-    printf "\nUsage: ./build-mpcplus.sh [-aCi] [-p prefix] [-u]"
+    printf "\nUsage: ./build-mpcplus.sh [-aCiv] [-p prefix] [-u]"
     printf "\nWhere:"
     printf "\n\t-a indicates run autogen script and exit"
     printf "\n\t-C indicates run autogen, and configure and exit"
     printf "\n\t-i indicates configure, build, and install"
+    printf "\n\t-v indicates configure with visualizer"
     printf "\n\t-p prefix specifies installation prefix (default /usr)"
     printf "\n\t-u displays this usage message and exits\n"
-    printf "\nNo arguments: configure with prefix=/usr, build\n"
+    printf "\nNo arguments: configure with prefix=/usr, no visualizer, build\n"
     exit 1
 }
 
@@ -43,7 +44,8 @@ CONFIGURE_ONLY=
 AUTOGEN_ONLY=
 INSTALL=
 PREFIX=
-while getopts "aCip:u" flag; do
+VISUAL="--disable-visualizer"
+while getopts "aCip:uv" flag; do
     case $flag in
         a)
             AUTOGEN_ONLY=1
@@ -53,6 +55,9 @@ while getopts "aCip:u" flag; do
             ;;
         i)
             INSTALL=1
+            ;;
+        v)
+            VISUAL="--enable-visualizer --with-fftw"
             ;;
         p)
             PREFIX="$OPTARG"
@@ -80,12 +85,8 @@ prefix="--prefix=/usr"
 ./configure ${prefix} \
             --enable-outputs \
             --enable-clock \
-            --disable-visualizer \
+            ${VISUAL} \
             --with-taglib
-#           --enable-unicode \
-#           --without-iconv \
-#           --with-curl \
-#           --enable-static-boost
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
 make
