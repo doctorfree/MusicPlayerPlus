@@ -116,6 +116,9 @@ be configured by editing the MPD configuration file `/etc/mpd.conf`.
 In addition, it is recommended to setup custom profiles in some
 of the terminal emulators to enhance the spectrum visualization.
 
+Minimal post installation configuration required is the configuration of
+your music directory in `/etc/mpd.conf` and execution of the command `mpcinit`.
+
 ### MPD Server Configuration
 Edit `/etc/mpd.conf`, uncomment the `music_directory` entry and
 set the value to the location of your music library. For example,
