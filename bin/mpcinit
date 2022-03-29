@@ -7,8 +7,8 @@
 # Install required pip modules if not already installed
 
 CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
-WITHART="album_cover.sh catalog.conf config-cava \
-         cover_obs.sh default_cover.png plasma.py julia.py"
+WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh \
+         default_cover.png musicplayerplus.py plasma.py julia.py"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -97,3 +97,5 @@ have_pip=`type -p pip`
 [ "${have_pip}" ] || sudo apt install python3-pip
 pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
 pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
+
+type -p mppsplash > /dev/null && mppsplash -c 1

@@ -1,4 +1,6 @@
 #!/bin/bash
+#
+# Uses sacad from https://github.com/desbma/sacad
 
 mpd_music=`grep ^music_directory /etc/mpd.conf`
 [ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`

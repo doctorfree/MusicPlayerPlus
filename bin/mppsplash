@@ -1,0 +1,41 @@
+#!/bin/bash
+#
+# mppsplash - display MusicPlayerPlus splash screen using asciimatics
+#
+# An argument of '-c' indicates cycle forever until 'q' is pressed
+
+usage() {
+    printf "\nUsage: mppsplash [-c numcycles] [-j] [-p] [-u]"
+    printf "\nWhere:"
+    printf "\n\t-c numcycles specifies the number of times to cycle"
+    printf "\n\t-j indicates use Julia Set effect"
+    printf "\n\t-m indicates use MusicPlayerPlus effect"
+    printf "\n\t-p indicates use Plasma effect"
+    printf "\n\t-u displays this usage message and exits\n"
+    printf "\nWithout any options the MusicPlayerPlus effect will repeat\n"
+    exit 1
+}
+
+cycle=
+script="musicplayerplus"
+while getopts "c:jmpu" flag; do
+    case $flag in
+        c)
+            cycle="-c ${OPTARG}"
+            ;;
+        j)
+            script="julia"
+            ;;
+        m)
+            script="musicplayerplus"
+            ;;
+        p)
+            script="plasma"
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+
+python /usr/share/doc/musicplayerplus/mpcplus/${script}.py ${cycle}

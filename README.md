@@ -62,6 +62,9 @@ MusicPlayerPlus adds the following commands to your system:
 **mpcplus-tmux**
 : runs mpcplus, a visualizer, and displays album art in a tmux session
 
+**mppsplash**
+: a fun welcome screen introducing MusicPlayerPlus with ascii graphics
+
 **raise_cava**
 : raises the cava spectrum visualizer window
 
