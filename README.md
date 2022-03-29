@@ -26,13 +26,17 @@
 
 ## Overview
 
-The Music Player Plus project provides integration and extension of
-several audio packages designed to stream and play music. In particular,
-integration is provided for:
+The MusicPlayerPlus project provides integration and extension of several
+audio packages designed to stream and play music. MusicPlayerPlus interacts
+with the Music Player Daemon (MPD). Outputs from the MPD streaming audio server
+are used as MusicPlayerPlus inputs for playback and visualization. In addition,
+MusicPlayerPlus components are used to manage, control, and update MPD.
+
+Integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
-* [mpcplus](mpcplus/README.md), a character based Music Player Plus MPD client
-* [cantata](https://github.com/CDrummond/cantata), a graphical MPD client
+* [mpcplus](mpcplus/README.md), character based Music Player Plus MPD client
+* [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
@@ -40,6 +44,32 @@ integration is provided for:
     * gnome-terminal
     * tilix
     * cool-retro-term
+
+MusicPlayerPlus adds the following commands to your system:
+
+**mpcplus**
+: Featureful NCurses MPD client, compiled without visualizer
+
+**mpcplusv**
+: Featureful NCurses MPD client, compiled with spectrum visualizer
+
+**mpcava**
+: invokes an MPD client and spectrum visualizer
+
+**mpcinit**
+: one-time initializaton of a user's mpcplus configuration
+
+**mpcplus-tmux**
+: runs mpcplus, a visualizer, and displays album art in a tmux session
+
+**raise_cava**
+: raises the cava spectrum visualizer window
+
+**set_term_trans**
+: sets an xfce4-terminal window's transparency level
+
+**download_cover_art**
+: automatically downloads cover album art for your entire music directory
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).

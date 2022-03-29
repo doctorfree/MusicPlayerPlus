@@ -6,14 +6,22 @@ footer: mpcplus 0.10
 date: March 24, 2022
 ---
 # NAME
-**mpcplus** - An ncurses Music Player Daemon (MPD) client
+**mpcplus**/**mpcplusv** - An ncurses Music Player Daemon (MPD) client
 
 # SYNOPSIS
 **mpcplus** [options]
 
+**mpcplusv** [options]
+
 # DESCRIPTION
-mpcplus is an ncurses client for MPD (Music Player Daemon), inspired by ncmpc
+*mpcplus* is an NCurses client for MPD (Music Player Daemon), inspired by ncmpc
 and configured to integrate with the Cava spectrum visualizer.
+
+If invoked as *mpcplus* no visualizer is enabled. If invoked as *mpcplusv* the
+visualizer is enabled including the spectrum visualizer. All command line options
+and configurations settings are identical for both *mpcplus* and *mpcplusv* with
+the exception of the visualization configurations settings. No visualization
+configuration settings are supported for *mpcplus*, use these only with *mpcplusv*.
 
 Read more about MPD at http://www.musicpd.org
 

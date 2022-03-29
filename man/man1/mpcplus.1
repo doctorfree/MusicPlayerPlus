@@ -18,14 +18,27 @@
 .hy
 .SH NAME
 .PP
-\f[B]mpcplus\f[R] - An ncurses Music Player Daemon (MPD) client
+\f[B]mpcplus\f[R]/\f[B]mpcplusv\f[R] - An ncurses Music Player Daemon
+(MPD) client
 .SH SYNOPSIS
 .PP
 \f[B]mpcplus\f[R] [options]
+.PP
+\f[B]mpcplusv\f[R] [options]
 .SH DESCRIPTION
 .PP
-mpcplus is an ncurses client for MPD (Music Player Daemon), inspired by
-ncmpc and configured to integrate with the Cava spectrum visualizer.
+\f[I]mpcplus\f[R] is an NCurses client for MPD (Music Player Daemon),
+inspired by ncmpc and configured to integrate with the Cava spectrum
+visualizer.
+.PP
+If invoked as \f[I]mpcplus\f[R] no visualizer is enabled.
+If invoked as \f[I]mpcplusv\f[R] the visualizer is enabled including the
+spectrum visualizer.
+All command line options and configurations settings are identical for
+both \f[I]mpcplus\f[R] and \f[I]mpcplusv\f[R] with the exception of the
+visualization configurations settings.
+No visualization configuration settings are supported for
+\f[I]mpcplus\f[R], use these only with \f[I]mpcplusv\f[R].
 .PP
 Read more about MPD at <http://www.musicpd.org>
 .PP
