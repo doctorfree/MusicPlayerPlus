@@ -42,7 +42,8 @@ usage() {
   else
     printf "\n\trecording disabled"
   fi
-  printf "\n"
+  printf "\nType 'man mpcplus-tmux' for detailed usage info on mpcplus-tmux"
+  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
   exit 1
 }
 

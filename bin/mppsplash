@@ -5,14 +5,15 @@
 # An argument of '-c' indicates cycle forever until 'q' is pressed
 
 usage() {
-    printf "\nUsage: mppsplash [-c numcycles] [-j] [-p] [-u]"
+    printf "\nUsage: mppsplash [-c numcycles] [-j] [-m] [-p] [-u]"
     printf "\nWhere:"
     printf "\n\t-c numcycles specifies the number of times to cycle"
     printf "\n\t-j indicates use Julia Set effect"
     printf "\n\t-m indicates use MusicPlayerPlus effect"
     printf "\n\t-p indicates use Plasma effect"
     printf "\n\t-u displays this usage message and exits\n"
-    printf "\nWithout any options the MusicPlayerPlus effect will repeat\n"
+    printf "\nWithout any options the MusicPlayerPlus effect will repeat"
+    printf "\nType 'man mppsplash' for more detailed usage info\n"
     exit 1
 }
 

@@ -3,6 +3,8 @@
 ## Table of contents
 
 1. [Overview](#overview)
+    1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
+    1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Requirements](#requirements)
 1. [Installation](#installation)
     1. [Debian Package installation](#debian-package-installation)
@@ -45,6 +47,7 @@ Integration is provided for:
     * tilix
     * cool-retro-term
 
+### MusicPlayerPlus Commands
 MusicPlayerPlus adds the following commands to your system:
 
 **mpcplus**
@@ -76,6 +79,20 @@ MusicPlayerPlus adds the following commands to your system:
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
+
+### Main mpcplus MPD client features
+
+* tag editor
+* playlist editor
+* easy to use search engine
+* media library
+* integration with external spectrum visualizer
+* ability to fetch song lyrics from a variety of sources
+* ability to fetch artist info from last.fm
+* new display mode
+* alternative user interface
+* ability to browse and add files from outside of MPD music directory
+* cute trick to add album cover art in character display using tmux
 
 ## Requirements
 

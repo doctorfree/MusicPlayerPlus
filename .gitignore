@@ -23,6 +23,8 @@ archive/*
 dist/*
 releases/*
 tmp/*
+tools/*
+TODO
 # vim files
 .*.sw[a-z]
 *.un~

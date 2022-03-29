@@ -54,6 +54,8 @@ usage() {
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
   printf "\n\t-u displays this usage message and exits\n"
+  printf "\nType 'man mpcava' for detailed usage info on mpcava"
+  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
   exit 1
 }
 

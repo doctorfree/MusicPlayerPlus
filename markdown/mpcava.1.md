@@ -41,19 +41,22 @@ The *mpcava* command acts as a front-end for launching the mpcplus music player 
 
 # EXAMPLES
 **mpcava**
-: Launches mpcplus music player client running in xfce4 terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `mpcplus` music player client running in xfce4 terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
 **mpcava -r**
-: Launches mpcplus music player client running in cool-retro-term terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `mpcplus` music player client running in cool-retro-term terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
 **mpcava -c**
-: Launches cantata music player client running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `cantata` music player client running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+
+**mpcava -C cmus**
+: Launches the `cmus` music player client with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
 **mpcava -C mcg**
-: Launches the CoverGrid music player client (mcg) running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches the CoverGrid music player client (`mcg`) running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
 **mpcava -f -q -t**
-: Launches mpcplus music player client in fullscreen mode with cava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 
+: Launches `mpcplus` music player client in fullscreen mode with cava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

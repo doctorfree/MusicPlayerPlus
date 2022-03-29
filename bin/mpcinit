@@ -98,4 +98,18 @@ have_pip=`type -p pip`
 pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
 pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
 
-type -p mppsplash > /dev/null && mppsplash -c 1
+printf "\nMusicPlayerPlus Initialization Complete\n"
+printf "\nFor documentation, tips, how-to's and more, visit the MusicPlayerPlus Wiki at:"
+printf "\n\thttps://github.com/doctorfree/MusicPlayerPlus/wiki\n"
+
+type -p mppsplash > /dev/null && {
+  while true
+  do
+    read -p "Would you like to view a brief fun splashy introduction to MusicPlayerPlus ? (y/n) " yn
+    case $yn in
+      [Yy]* ) mppsplash -c 1 ; break;;
+      [Nn]* ) printf "\nExiting.\n"; exit 0;;
+          * ) echo "Please answer yes or no.";;
+    esac
+  done
+}
