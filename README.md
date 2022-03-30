@@ -50,30 +50,18 @@ Integration is provided for:
 ### MusicPlayerPlus Commands
 MusicPlayerPlus adds the following commands to your system:
 
-**mpcplus**
-: Featureful NCurses MPD client, compiled without visualizer
-**mpcplusv**
-: Featureful NCurses MPD client, compiled with spectrum visualizer
-**mpcava**
-: invokes an MPD client and spectrum visualizer
-**mpcinit**
-: one-time initializaton of a user's mpcplus configuration
-**mpcplus-tmux**
-: runs mpcplus, a visualizer, and displays album art in a tmux session
-**mppsplash**
-: fun ascii art screens using Asciimatics animations. Ascii art commands:
-    **asciijulia**
-    : Asciimatics animated zoom on a Julia Set
-    **asciiplasma**
-    : Asciimatics animated plasma graphic
-    **asciimpplus**
-    : Asciimatics animated MusicPlayerPlus splash screen
-**raise_cava**
-: raises the cava spectrum visualizer window
-**set_term_trans**
-: sets an xfce4-terminal window's transparency level
-**download_cover_art**
-: automatically downloads cover album art for your entire music directory
+* **mpcplus** : Featureful NCurses MPD client, compiled without visualizer
+* **mpcplusv** : Featureful NCurses MPD client, compiled with spectrum visualizer
+* **mpcava** : invokes an MPD client and spectrum visualizer
+* **mpcinit** : one-time initializaton of a user's mpcplus configuration
+* **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
+* **mppsplash** : fun ascii art screens using Asciimatics animations. Ascii art commands:
+    * **asciijulia** : Asciimatics animated zoom on a Julia Set
+    * **asciiplasma** : Asciimatics animated plasma graphic
+    * **asciimpplus** : Asciimatics animated MusicPlayerPlus splash screen
+* **raise_cava** : raises the cava spectrum visualizer window
+* **set_term_trans** : sets an xfce4-terminal window's transparency level
+* **download_cover_art** : automatically downloads cover album art for your entire music directory
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
