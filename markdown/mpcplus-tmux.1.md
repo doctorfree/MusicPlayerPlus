@@ -24,7 +24,7 @@ Alternately, the visualizer pane can display a Python asciimatics visualization.
 : indicates display album cover art
 
 **-p script**
-: specifies a python script to run in the visualizer pane. Available scripts are "julia", "musicplayerplus", and "mpcplus".
+: specifies a python script to run in the visualizer pane. Available scripts are "julia", "plasma", and "mpplus".
 
 **-r**
 : indicates record tmux session with asciinema
@@ -47,6 +47,9 @@ Alternately, the visualizer pane can display a Python asciimatics visualization.
 
 **mpcplus-tmux -a**
 : With the -a option, *mpcplus-tmux* displays the mpcplus MPD client, cava spectrum visualizer, and album cover art in a tmux session. 
+
+**mpcplus-tmux -p plasma**
+: With the -p plasma option, *mpcplus-tmux* displays the mpcplus MPD client and plasma asciimatics display in a tmux session. 
 
 **mpcplus-tmux -r**
 : With the -r option, *mpcplus-tmux* displays the mpcplus MPD client and cava spectrum visualizer in a tmux session and records the session using asciinema. Recordings are stored in the user's `$HOME/Videos/` folder.

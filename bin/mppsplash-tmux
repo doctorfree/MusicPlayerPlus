@@ -1,17 +1,6 @@
 #!/bin/bash
-
-if [ -f ${HOME}/.config/mpcplus/mpcplus.py ]
-then
-  MPCDIR=".config/mpcplus"
-else
-  if [ -f ${HOME}/.mpcplus/mpcplus.py ]
-  then
-    MPCDIR=".mpcplus"
-  else
-    mpcinit
-    MPCDIR=".config/mpcplus"
-  fi
-fi
+#
+# mppsplash-tmux - display asciimatics splash screens in a tmux session
 
 usage() {
   printf "\nUsage: mppsplash-tmux [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
@@ -24,8 +13,10 @@ usage() {
   printf "\n\t-x width specifies the width of the spectrum visualizer"
   printf "\n\t-y height specifies the height of the spectrum visualizer"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nDefaults: single pane, width=50 height=100, left pane mpcplus, right pane julia, recording disabled"
+  printf "\nDefaults: single pane, width=50 height=100, left pane plasma, right pane julia, recording disabled"
   printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
+  printf "\n\tPrimary pane = ${PYLEFT}"
+  [ "${DUAL}" ] && printf "\n\tSecondary pane = ${PYRIGHT}"
   if [ "${RECORD}" ]
   then
     printf "\n\trecording enabled"
@@ -42,8 +33,8 @@ DUDE=
 RECORD=
 WIDTH=50
 HEIGHT=100
-PYLEFT=mpcplus.py
-PYRIGHT=julia.py
+PYLEFT=plasma
+PYRIGHT=julia
 USAGE=
 while getopts "dl:r:Rtx:y:u" flag; do
     case $flag in
@@ -52,19 +43,9 @@ while getopts "dl:r:Rtx:y:u" flag; do
           ;;
         l)
           PYLEFT=${OPTARG}
-          [ -f ${HOME}/${MPCDIR}/${PYLEFT} ] || {
-            [ -f ${HOME}/${MPCDIR}/${PYLEFT}.py ] && {
-              PYLEFT=${PYLEFT}.py
-            }
-          }
           ;;
         r)
           PYRIGHT=${OPTARG}
-          [ -f ${HOME}/${MPCDIR}/${PYRIGHT} ] || {
-            [ -f ${HOME}/${MPCDIR}/${PYRIGHT}.py ] && {
-              PYRIGHT=${PYRIGHT}.py
-            }
-          }
           ;;
         R)
           have_nema=`type -p asciinema`
@@ -87,12 +68,17 @@ done
 shift $(( OPTIND - 1 ))
 script_args="$*"
 
-[ "${USAGE}" ] && usage
-
 [ "${DUDE}" ] && {
-  [ "${PYLEFT}" == "mpcplus.py" ] && PYLEFT="mpcplus.py -t"
-  [ "${PYRIGHT}" == "mpcplus.py" ] && PYRIGHT="mpcplus.py -t"
+  [ "${PYLEFT}" == "plasma" ] && PYLEFT="plasma -t"
+  [ "${PYRIGHT}" == "plasma" ] && PYRIGHT="plasma -t"
 }
+
+have_left=`type -p ascii${PYLEFT}`
+[ "${have_left}" ] && PYLEFT="ascii${PYLEFT}"
+have_right=`type -p ascii${PYRIGHT}`
+[ "${have_right}" ] && PYRIGHT="ascii${PYRIGHT}"
+
+[ "${USAGE}" ] && usage
 
 tmux new-session -d -x 80 -y 28 -s mppsplash
 tmux set -g status off
@@ -104,21 +90,23 @@ tmux send-keys "clear" C-m
 [ "${DUAL}" ] && tmux split-window -h
 
 tmux select-pane -t 0
-[ -f ${HOME}/${MPCDIR}/${PYLEFT} ] || {
+have_left=`type -p ${PYLEFT}`
+[ "${have_left}" ] || {
   tmux kill-session -t mppsplash
-  echo "${HOME}/${MPCDIR}/${PYLEFT} not found. Exiting."
+  echo "${PYLEFT} not found. Exiting."
   exit 1
 }
-tmux send-keys "python ${HOME}/${MPCDIR}/${PYLEFT} ${script_args}" C-m
+tmux send-keys "${PYLEFT} ${script_args}" C-m
 
 [ "${DUAL}" ] && {
-  [ -f ${HOME}/${MPCDIR}/${PYRIGHT} ] || {
+  have_right=`type -p ${PYRIGHT}`
+  [ "${have_right}" ] || {
     tmux kill-session -t mppsplash
-    echo "${HOME}/${MPCDIR}/${PYRIGHT} not found. Exiting."
+    echo "${PYRIGHT} not found. Exiting."
     exit 1
   }
   tmux select-pane -t 1
-  tmux send-keys "python ${HOME}/${MPCDIR}/${PYRIGHT} ${script_args}" C-m
+  tmux send-keys "${PYRIGHT} ${script_args}" C-m
 }
 
 tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}

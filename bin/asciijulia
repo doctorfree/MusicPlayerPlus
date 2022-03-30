@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 #
-# Animate a zoom bounce on a Julia Set
+# Animate a zoom bounce on a Julia Set using ASCII characters
 # Written by Ronald Record <ronaldrecord@gmail.com>
 #
-# Usage: julia.py [-c int] [-x float -y float]
+# Usage: asciijulia [-c int] [-x float -y float]
 # Where -c int specifies how many times to cycle the zoom/bounce before exit
 #              without any -c argument the cycling continues until 'q' press
 #       -x float -y float specify the real coordinates of the complex number
@@ -11,9 +11,9 @@
 #                     Default value for this is [-0.8, 0.156]
 #
 # Interesting zooms occur with these example invocations:
-#     julia.py -x 0.687 -y 0.312
-#     julia.py -x 0.6 -y 0.55
-#     julia.py -x 0.0 -y 0.8
+#     asciijulia -x 0.687 -y 0.312
+#     asciijulia -x 0.6 -y 0.55
+#     asciijulia -x 0.0 -y 0.8
 
 from asciimatics.effects import Julia
 from asciimatics.scene import Scene
@@ -23,7 +23,7 @@ import sys
 import argparse
 
 
-def julia(screen, c):
+def asciijulia(screen, c):
     scenes = []
     effects = [
         Julia(screen, c, stop_frame=numcycles),
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            Screen.wrapper(julia, arguments=[c])
+            Screen.wrapper(asciijulia, arguments=[c])
             sys.exit(0)
         except ResizeScreenError:
             pass

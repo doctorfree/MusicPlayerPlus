@@ -23,7 +23,7 @@ set_cycles() {
     julia)
       usecycle=$(( 1000*$2 ))
       ;;
-    mpcplus)
+    plasma)
       usecycle=$(( 10*$2 ))
       ;;
     *)
@@ -34,27 +34,27 @@ set_cycles() {
 
 all=
 cycle=
-script="musicplayerplus"
+script="mpplus"
 while getopts "ac:jmpsu" flag; do
   case $flag in
-      c)
-        cycle="-c ${OPTARG}"
-        ;;
       a)
         all=1
+        ;;
+      c)
+        cycle="-c ${OPTARG}"
         ;;
       j)
         script="julia"
         ;;
       m)
-        script="musicplayerplus"
+        script="mpplus"
         ;;
       p)
-        script="mpcplus"
+        script="plasma"
         script_args="-t"
         ;;
       s)
-        script="mpcplus"
+        script="plasma"
         ;;
       u)
         usage
@@ -69,18 +69,18 @@ if [ "${all}" ]
 then
   [ "${cycle}" ] || cycle="-c 1"
   numcycles=`echo ${cycle} | awk ' { print $2 } '`
-  for script in julia musicplayerplus mpcplus
+  for script in julia mpplus plasma
   do
     set_cycles ${script} ${numcycles}
-    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c ${usecycle} ${script_args}
+    ascii${script} -c ${usecycle} ${script_args}
   done
 else
   if [ "${cycle}" ]
   then
     numcycles=`echo ${cycle} | awk ' { print $2 } '`
     set_cycles ${script} ${numcycles}
-    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c ${usecycle} ${script_args}
+    ascii${script} -c ${usecycle} ${script_args}
   else
-    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py ${script_args}
+    ascii${script} ${script_args}
   fi
 fi

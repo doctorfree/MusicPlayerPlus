@@ -213,21 +213,95 @@ else
   fi
 fi
 
+usage() {
+  printf "\nUsage: mpcplus-tmux [-a] [-p script] [-r] [-x width] [-y height] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-a indicates display album cover art"
+  printf "\n\t-p script specifies a python script to display ascii art in the visualizer pane"
+  printf "\n\t-r indicates record tmux session with asciinema"
+  printf "\n\t-x width specifies the width of the spectrum visualizer"
+  printf "\n\t-y height specifies the height of the spectrum visualizer"
+  printf "\n\t-u displays this usage message and exits\n"
+  printf "\nDefaults: width=256 height=9, cover art disabled, ascii art disabled, recording disabled"
+  printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
+  if [ "${ART}" ]
+  then
+    printf "\n\tcover art enabled"
+  else
+    printf "\n\tcover art disabled"
+  fi
+  if [ "${PYART}" ]
+  then
+    printf "\n\tascii art enabled"
+  else
+    printf "\n\tascii art disabled"
+  fi
+  if [ "${RECORD}" ]
+  then
+    printf "\n\trecording enabled"
+  else
+    printf "\n\trecording disabled"
+  fi
+  printf "\nType 'man mpcplus-tmux' for detailed usage info on mpcplus-tmux"
+  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
+  exit 1
+}
+
+ART=
+PYART=
+RECORD=
+WIDTH=256
+HEIGHT=9
+USAGE=
+while getopts "ap:rx:y:u" flag; do
+    case $flag in
+        a)
+          have_uebz=`type -p ueberzug`
+          [ "${have_uebz}" ] && ART=1
+          ;;
+        p)
+          PYART=${OPTARG}
+          ;;
+        r)
+          have_nema=`type -p asciinema`
+          [ "${have_nema}" ] && RECORD=1
+          ;;
+        x)
+          WIDTH=${OPTARG}
+          ;;
+        y)
+          HEIGHT=${OPTARG}
+          ;;
+        u)
+          USAGE=1
+          ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+# If both ART and PYART have been specified, disable ART and use PYART
+# [ "${ART}" ] && [ "${PYART}" ] && ART=
+
+[ "${ART}" ] && {
+  [ ${HEIGHT} -lt 9 ] && HEIGHT=9
+}
+[ "${PYART}" ] && {
+  [ ${HEIGHT} -lt 12 ] && HEIGHT=12
+}
+
+[ "${USAGE}" ] && usage
+
 COVER="${HOME}/${MPCDIR}/album_cover.png"
 [ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 
-pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
-
-tmux new-session -d -x 252 -y 29 -s musicplayerplus
+tmux new-session -d -x 256 -y 128 -s musicplayerplus
 tmux set -g status off
-tmux set -g default-terminal "tmux-256color"
-tmux set -ga terminal-overrides ",tmux-256color:Tc"
 
 tmux send-keys "stty -echo" C-m
 tmux send-keys "tput civis -- invisible" C-m
 tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
-tmux send-keys "${HOME}/${MPCDIR}/album_cover.sh " C-m
+[ "${ART}" ] && tmux send-keys "${HOME}/${MPCDIR}/album_cover.sh " C-m
 
 tmux split-window -v
 tmux select-pane -t 1
@@ -235,16 +309,38 @@ tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/catalog.conf'" C-m
 tmux send-keys 1
 
 tmux select-pane -t 0
-tmux split-window -h
-tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+[ "${ART}" ] && tmux split-window -h
+if [ "${PYART}" ]
+then
+  have_pyart=`type -p ascii${PYART}`
+  [ "${have_pyart}" ] && PYART="ascii${PYART}"
+  tmux send-keys "${PYART}" C-m
+else
+  tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+fi
 
-tmux resize-pane -t 0 -x 20 -y 9
-tmux resize-pane -t 1 -y 9
+tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
+[ "${ART}" ] && tmux resize-pane -t 1 -y ${HEIGHT}
 
-tmux set-hook client-resized 'resize-pane -t 0 -x 20 -y 9'
+tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
 
-tmux select-pane -t 2
-tmux a #
+if [ "${ART}" ]
+then
+  tmux select-pane -t 2
+else
+  tmux select-pane -t 1
+fi
+
+if [ "${RECORD}" ]
+then
+  tmux d
+  REC_DIR=$HOME/Videos
+  [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
+  echo "Recording this mpcava session with asciinema"
+  asciinema rec --command "tmux attach -t musicplayerplus" ${REC_DIR}/tmux-$(date +%F--%H%M).asciicast
+else
+  tmux a #
+fi
 ```
 
 Here I used some custom configuration but it's not mandatory.

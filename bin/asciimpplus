@@ -16,7 +16,7 @@ from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError
 
 
-def _musicplayerplus(screen):
+def _mpplus(screen):
     scenes = []
 
     text = Figlet(font="banner", width=200).renderText("MusicPlayer")
@@ -246,7 +246,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            Screen.wrapper(_musicplayerplus)
+            Screen.wrapper(_mpplus)
             sys.exit(0)
         except ResizeScreenError:
             pass

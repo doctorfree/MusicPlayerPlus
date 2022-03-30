@@ -7,8 +7,7 @@
 # Install required pip modules if not already installed
 
 CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
-WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh \
-         default_cover.png musicplayerplus.py mpcplus.py julia.py"
+WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh default_cover.png"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."

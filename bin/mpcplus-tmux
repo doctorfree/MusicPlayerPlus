@@ -17,12 +17,12 @@ usage() {
   printf "\nUsage: mpcplus-tmux [-a] [-p script] [-r] [-x width] [-y height] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art"
-  printf "\n\t-p script specifies a python script to run in the visualizer pane"
+  printf "\n\t-p script specifies a python script to display ascii art in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
   printf "\n\t-x width specifies the width of the spectrum visualizer"
   printf "\n\t-y height specifies the height of the spectrum visualizer"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nDefaults: width=256 height=9, cover art disabled, python art disabled, recording disabled"
+  printf "\nDefaults: width=256 height=9, cover art disabled, ascii art disabled, recording disabled"
   printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
   if [ "${ART}" ]
   then
@@ -32,9 +32,9 @@ usage() {
   fi
   if [ "${PYART}" ]
   then
-    printf "\n\tpython art enabled"
+    printf "\n\tascii art enabled"
   else
-    printf "\n\tpython art disabled"
+    printf "\n\tascii art disabled"
   fi
   if [ "${RECORD}" ]
   then
@@ -112,7 +112,9 @@ tmux select-pane -t 0
 [ "${ART}" ] && tmux split-window -h
 if [ "${PYART}" ]
 then
-  tmux send-keys "python ${HOME}/${MPCDIR}/${PYART}.py" C-m
+  have_pyart=`type -p ascii${PYART}`
+  [ "${have_pyart}" ] && PYART="ascii${PYART}"
+  tmux send-keys "${PYART}" C-m
 else
   tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
 fi

@@ -117,9 +117,6 @@ ${SUDO} cp with-cover-art/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PK
 
 ${SUDO} cp with-cover-art/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp with-cover-art/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/musicplayerplus.py ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/mpcplus.py ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/julia.py ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp with-cover-art/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
