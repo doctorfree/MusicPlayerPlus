@@ -336,7 +336,7 @@ then
   tmux d
   REC_DIR=$HOME/Videos
   [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
-  echo "Recording this mpcava session with asciinema"
+  echo "Recording this mpplus session with asciinema"
   asciinema rec --command "tmux attach -t musicplayerplus" ${REC_DIR}/tmux-$(date +%F--%H%M).asciicast
 else
   tmux a #

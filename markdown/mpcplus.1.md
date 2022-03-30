@@ -418,7 +418,7 @@ Since MPD uses UTF-8, mpcplus needs to convert characters to the charset used by
 -&gt; https://github.com/doctorfree/MusicPlayerPlus
 
 # SEE ALSO
-**mpcpluskeys**(1), **mpc**(1), **mpd**(1), **mpcava**(1)
+**mpcpluskeys**(1), **mpc**(1), **mpd**(1), **mpplus**(1)
 
 Full documentation and sources at:
 

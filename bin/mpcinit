@@ -6,11 +6,7 @@
 # Also setup default tmux configuration for this user
 # Install required pip modules if not already installed
 
-MPPLDIR=/usr/share/doc/musicplayerplus
-CONFDIR=${MPPLDIR}/mpcplus
-MUSEDIR=${MPPLDIR}/music
-SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
-ALTSONG="${MUSEDIR}/Robot_Coupe-Lost_European.mp3"
+CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
 WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh default_cover.png"
 
 [ -f ${CONFDIR}/config ] || {
@@ -111,17 +107,7 @@ type -p mppsplash > /dev/null && {
     read -p "View a MusicPlayerPlus ASCII animation ? (y/n) " yn
     case $yn in
       [Yy]* )
-              if [ -f "${SONG}" ]
-              then
-                  mppsplash -c 1 -a "${SONG}"
-              else
-                  if [ -f "${ALTSONG}" ]
-                  then
-                      mppsplash -c 1 -a "${ALTSONG}"
-                  else
-                      mppsplash -c 1
-                  fi
-              fi
+              mppsplash -c 1 -a
               break
               ;;
       [Nn]* )

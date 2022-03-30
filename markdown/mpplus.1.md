@@ -1,18 +1,18 @@
 ---
-title: MPCAVA
+title: MPPLUS
 section: 1
 header: User Manual
-footer: mpcava 2.0.1
+footer: mpplus 2.0.1
 date: December 05, 2021
 ---
 # NAME
-mpcava - Launch an MPD music player client and cava spectrum visualizer
+mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
-**mpcava** [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+**mpplus** [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
 
 # DESCRIPTION
-The *mpcava* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpcava can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer.
+The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer.
 
 # COMMAND LINE OPTIONS
 **-c**
@@ -40,32 +40,32 @@ The *mpcava* command acts as a front-end for launching the mpcplus music player 
 : displays this usage message and exits
 
 # EXAMPLES
-**mpcava**
+**mpplus**
 : Launches `mpcplus` music player client running in xfce4 terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
-**mpcava -r**
+**mpplus -r**
 : Launches `mpcplus` music player client running in cool-retro-term terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
-**mpcava -c**
+**mpplus -c**
 : Launches `cantata` music player client running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
-**mpcava -C cmus**
+**mpplus -C cmus**
 : Launches the `cmus` music player client with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
-**mpcava -C mcg**
+**mpplus -C mcg**
 : Launches the CoverGrid music player client (`mcg`) running in a separate window with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
-**mpcava -f -q -t**
+**mpplus -f -q -t**
 : Launches `mpcplus` music player client in fullscreen mode with cava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-MPCAVA is distributed under an Open Source license.
-See the file LICENSE in the MPCAVA source distribution
+MPPLUS is distributed under an Open Source license.
+See the file LICENSE in the MPPLUS source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using MPCAVA and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using MPPLUS and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at:

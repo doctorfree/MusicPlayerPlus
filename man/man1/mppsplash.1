@@ -21,7 +21,7 @@
 mppsplash - Launch a fun splashy screen of Asciimatics animations
 .SH SYNOPSIS
 .PP
-\f[B]mppsplash\f[R] [-c numcycles] [-j] [-m] [-p] [-u]
+\f[B]mppsplash\f[R] [-a] [-c numcycles] [-j] [-m] [-p] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mppsplash\f[R] command plays one of the Asciimatics animations
@@ -31,8 +31,12 @@ Asciimatics library.
 By default, \f[I]mppsplash\f[R] will play a series of animations about
 MusicPlayerPlus.
 Command line options can be used to tell \f[I]mppsplash\f[R] to play
-animations for the Julia Set or a Plasma animation.
+animations for the Julia Set or a Plasma animation as well as play a
+public domain audio to accompany the ascii art display.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-a\f[R]
+indicates play audio accompaniment
 .TP
 \f[B]-c numcycles\f[R]
 specifies the number of times to cycle
@@ -66,6 +70,10 @@ Plays the Julia Set asciimatics animation 5 times then exits
 \f[B]mppsplash -p\f[R]
 Plays the Plasma asciimatics animation in an endless loop until the
 \[aq]q\[aq] key is pressed
+.TP
+\f[B]mppsplash -a -c 1\f[R]
+Plays the MusicPlayerPlus asciimatics animation for one cycle
+accompanied by a public domain audio
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

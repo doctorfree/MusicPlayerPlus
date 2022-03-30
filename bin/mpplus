@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# mpcava - run mpcplus and cava in separate terminal emulators,
+# mpplus - run mpcplus and cava in separate terminal emulators,
 #          cantata and cava in separate windows, or a specified
 #          MPD client and cava in separate windows.
 #
@@ -44,7 +44,7 @@ MTITLE="Music Player Plus"
 MPCPLUS="mpcplus"
 
 usage() {
-  printf "\nUsage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]"
+  printf "\nUsage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]"
   printf "\nWhere:"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
@@ -54,7 +54,7 @@ usage() {
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nType 'man mpcava' for detailed usage info on mpcava"
+  printf "\nType 'man mpplus' for detailed usage info on mpplus"
   printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
   exit 1
 }
@@ -154,7 +154,7 @@ done
         echo "Exiting"
         exit 1
       }
-      echo "Alternately, invoke mpcava with the '-t' option to use tilix."
+      echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
     }
@@ -170,7 +170,7 @@ done
         echo "Exiting"
         exit 1
       }
-      echo "Alternately, invoke mpcava with the '-t' option to use tilix."
+      echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
     }

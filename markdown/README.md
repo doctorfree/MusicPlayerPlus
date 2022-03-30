@@ -7,11 +7,11 @@ in the [DoctorFreeScripts repository](https://gitlab.com/doctorfree/DoctorFreeSc
 is used as a pandoc wrapper.
 
 The man page format output can be found at ../man/man?/<command>.?
-For example, the man page output for the `mpcava` command would be found at
-../man/man1/mpcava.1
+For example, the man page output for the `mpplus` command would be found at
+../man/man1/mpplus.1
 
 ## Contents
 
-- [**mpcava.1.md**](mpcava.1.md) - Markdown input for auto-generation of the mpcava man page
+- [**mpplus.1.md**](mpplus.1.md) - Markdown input for auto-generation of the mpplus man page
 - [**mpcplus.1.md**](mpcplus.1.md) - Markdown input for auto-generation of the mpcplus man page
 - [**mpcpluskeys.1.md**](mpcpluskeys.1.md) - Markdown input for auto-generation of the mpcpluskeys man page

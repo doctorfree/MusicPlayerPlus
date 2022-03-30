@@ -218,7 +218,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcava**(1), **mpd**(1)
+**mpcplus**(1), **mpplus**(1), **mpd**(1)
 
 Full documentation and sources at:
 

@@ -52,7 +52,7 @@ Integration is provided for:
 MusicPlayerPlus adds the following commands to your system:
 
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
-* **mpcava** : invokes an MPD client and spectrum visualizer
+* **mpplus** : invokes an MPD client and spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
 * **mppsplash** : fun ascii art screens using Asciimatics animations. Ascii art commands:
@@ -331,27 +331,27 @@ tab of the profile config dialog.
 ## Documentation
 
 All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
-to view the manual page for a command. The `mpcava` frontend is the primary
-user interface for MusicPlayerPlus and the manual page for `mpcava` can be
-viewed with the command `man mpcava`. Most commands also have
+to view the manual page for a command. The `mpplus` frontend is the primary
+user interface for MusicPlayerPlus and the manual page for `mpplus` can be
+viewed with the command `man mpplus`. Most commands also have
 help/usage messages that can be viewed with the **-u** argument option,
-e.g. `mpcava -u`.
+e.g. `mpplus -u`.
 
 ### README for mpcplus MPD client
 - [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
 
 ### Man Pages
-- [**mpcava.1.md**](markdown/mpcava.1.md) - mpcava man page
+- [**mpplus.1.md**](markdown/mpplus.1.md) - mpplus man page
 - [**mpcplus.1.md**](markdown/mpcplus.1.md) - mpcplus man page
 - [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - mpcpluskeys man page
 
 ### Usage
 
-The usage messages for `mpcava`, `mpcplus`, and `cava` provide a brief
+The usage messages for `mpplus`, `mpcplus`, and `cava` provide a brief
 summary of the command line options:
 
 ```
-Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Usage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
 Where:
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
@@ -414,32 +414,32 @@ All options are specified in a config file. See `/home/username/.config/cava/`
 ```
 
 ### Example client invocations
-The `mpcava` command is intended to serve as the primary interface to invoke
-the `mpcplus` MPD client and `cava` spectrum visualizer. The `mpcava` command
+The `mpplus` command is intended to serve as the primary interface to invoke
+the `mpcplus` MPD client and `cava` spectrum visualizer. The `mpplus` command
 utilizes several different terminal emulators and can also be used to invoke
-any specified MPD client. Some example invocations of `mpcava` follow.
+any specified MPD client. Some example invocations of `mpplus` follow.
 
 Open the mpcplus client and cava visualizer in fullscreen mode. The client
 will open in the xfce4-terminal emulator and the visualizer in gnome-terminal:
 
-`mpcava -f`
+`mpplus -f`
 
 Open the mpcplus client and cava visualizer in fullscreen mode using the
 tilix terminal emulator and displaying the visualizer using quarter-height:
 
-`mpcava -f -q -t`
+`mpplus -f -q -t`
 
 Open the cantata MPD graphical client and cava visualizer:
 
-`mpcava -c`
+`mpplus -c`
 
 Open the mpcplus client in the cool-retro-term terminal and cava visualizer
 in gnome-terminal:
 
-`mpcava -r`
+`mpplus -r`
 
-The mpcplus MPD client can be opened directly without using mpcava.
-Similarly, the cava spectrum visualizer can be opened directly without mpcava.
+The mpcplus MPD client can be opened directly without using mpplus.
+Similarly, the cava spectrum visualizer can be opened directly without mpplus.
 
 `mpcplus` # In one terminal window
 
@@ -471,8 +471,8 @@ Existing cover art is preserved.
 ## Screenshots
 
 <p float="left">
-  <img src="screenshots/mpcava-tilix.png" style="width:800px;height:600px;">
-  <img src="screenshots/mpcava-lyrics.png" style="width:800px;height:600px;">
+  <img src="screenshots/mpplus-tilix.png" style="width:800px;height:600px;">
+  <img src="screenshots/mpplus-lyrics.png" style="width:800px;height:600px;">
 </p>
 
 ## Removal

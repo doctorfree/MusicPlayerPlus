@@ -1,0 +1,59 @@
+---
+title: ASCIIMPPLUS
+section: 1
+header: User Manual
+footer: asciimpplus 1.0.0
+date: March 27, 2022
+---
+# NAME
+asciimpplus - Display an Asciimatics animation featuring ascii art for the MusicPlayerPlus project
+
+# SYNOPSIS
+**asciimpplus** [-h] [-a AUDIO] [-c CYCLE]
+
+# DESCRIPTION
+The *asciimpplus* command plays one of the Asciimatics animations included in
+MusicPlayerPlus. Command line options can be used to tell *asciimpplus* to play
+animations for a specified number of cycles and which audio file to use as accompaniment.
+
+# COMMAND LINE OPTIONS
+**-h, --help**
+: show this help message and exit
+
+**-a AUDIO, --audio AUDIO**
+: audio file to play during effects
+
+**-c CYCLE, --cycle CYCLE**
+: number of times to cycle back through effects
+
+# EXAMPLES
+**asciimpplus**
+: Without options asciimpplus will display an Asciimatics animation featuring MusicPlayerPlus. These will continue until the 'q' key is pressed.
+
+**asciimpplus -c 10**
+: Plays the MusicPlayerPlus asciimatics animation 10 times then exits 
+
+**asciimpplus -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
+: Plays the MusicPlayerPlus asciimatics animation 5 times accompanied by audio then exits 
+
+# AUTHORS
+Written by Ronald Record github@ronrecord.com
+
+# LICENSING
+ASCIIMPPLUS is distributed under an Open Source license.
+See the file LICENSE in the ASCIIMPPLUS source distribution
+for information on terms &amp; conditions for accessing and
+otherwise using ASCIIMPPLUS and for a DISCLAIMER OF ALL WARRANTIES.
+
+# BUGS
+Submit bug reports online at:
+
+https://github.com/doctorfree/MusicPlayerPlus/issues
+
+# SEE ALSO
+**mpcplus**(1), **mpcpluskeys**(1)
+
+Full documentation and sources at:
+
+https://github.com/doctorfree/MusicPlayerPlus
+

@@ -1,6 +1,6 @@
 =============================================================================
 
-Usage: mpcava [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Usage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
 Where:
   -c indicates use cantata MPD client rather than mpcplus
   -C 'client' indicates use 'client' MPD client rather than mpcplus
