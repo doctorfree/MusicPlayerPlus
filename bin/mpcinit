@@ -6,7 +6,11 @@
 # Also setup default tmux configuration for this user
 # Install required pip modules if not already installed
 
-CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
+MPPLDIR=/usr/share/doc/musicplayerplus
+CONFDIR=${MPPLDIR}/mpcplus
+MUSEDIR=${MPPLDIR}/music
+SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
+ALTSONG="${MUSEDIR}/Robot_Coupe-Lost_European.mp3"
 WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh default_cover.png"
 
 [ -f ${CONFDIR}/config ] || {
@@ -98,17 +102,34 @@ pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
 pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
 
 printf "\nMusicPlayerPlus Initialization Complete\n"
-printf "\nFor documentation, tips, how-to's and more, visit the MusicPlayerPlus Wiki at:"
+printf "\nVisit the MusicPlayerPlus Wiki at:"
 printf "\n\thttps://github.com/doctorfree/MusicPlayerPlus/wiki\n"
 
 type -p mppsplash > /dev/null && {
   while true
   do
-    read -p "Would you like to view a brief fun splashy introduction to MusicPlayerPlus ? (y/n) " yn
+    read -p "View a MusicPlayerPlus ASCII animation ? (y/n) " yn
     case $yn in
-      [Yy]* ) mppsplash -c 1 ; break;;
-      [Nn]* ) printf "\nExiting.\n"; exit 0;;
-          * ) echo "Please answer yes or no.";;
+      [Yy]* )
+              if [ -f "${SONG}" ]
+              then
+                  mppsplash -c 1 -a "${SONG}"
+              else
+                  if [ -f "${ALTSONG}" ]
+                  then
+                      mppsplash -c 1 -a "${ALTSONG}"
+                  else
+                      mppsplash -c 1
+                  fi
+              fi
+              break
+              ;;
+      [Nn]* )
+              printf "\nExiting.\n"
+              exit 0
+              ;;
+          * ) echo "Please answer yes or no."
+              ;;
     esac
   done
 }

@@ -2,6 +2,9 @@
 
 from __future__ import division
 import argparse
+import os
+import signal
+import subprocess
 import sys
 from random import randint, choice
 from pyfiglet import Figlet
@@ -236,17 +239,32 @@ def _mpplus(screen):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser()
+    parser.add_argument("-a", "--audio", help="audio file to play during effects")
     parser.add_argument("-c", "--cycle", help="number of times to cycle back through effects")
     args = parser.parse_args()
 
+    if args.audio:
+        song = args.audio
+    else:
+        song = None
     if args.cycle:
         numcycles = args.cycle
     else:
         numcycles = None
 
+    play_song = None
+    if song is not None:
+        play_song = subprocess.Popen(["aplay", "-q", song],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT)
+
     while True:
         try:
             Screen.wrapper(_mpplus)
+            if play_song is not None:
+                song_status = play_song.poll()
+                if song_status is None:
+                    os.killpg(os.getpgid(play_song.pid), signal.SIGTERM)
             sys.exit(0)
         except ResizeScreenError:
             pass

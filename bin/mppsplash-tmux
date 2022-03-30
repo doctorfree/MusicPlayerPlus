@@ -1,10 +1,14 @@
 #!/bin/bash
 #
 # mppsplash-tmux - display asciimatics splash screens in a tmux session
+MUSEDIR=/usr/share/doc/musicplayerplus/music
+SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
+ALTSONG="${MUSEDIR}/Robot_Coupe-Lost_European.mp3"
 
 usage() {
-  printf "\nUsage: mppsplash-tmux [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
+  printf "\nUsage: mppsplash-tmux [-a] [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
   printf "\nWhere:"
+  printf "\n\t-a indicates play audio during asciimatics display"
   printf "\n\t-d indicates dual window panes, run two scripts"
   printf "\n\t-l script specifies a python script to run in the left visualizer pane"
   printf "\n\t-r script specifies a python script to run in the right visualizer pane"
@@ -28,6 +32,7 @@ usage() {
   exit 1
 }
 
+AUDIO=
 DUAL=
 DUDE=
 RECORD=
@@ -36,8 +41,11 @@ HEIGHT=100
 PYLEFT=plasma
 PYRIGHT=julia
 USAGE=
-while getopts "dl:r:Rtx:y:u" flag; do
+while getopts "adl:r:Rtx:y:u" flag; do
     case $flag in
+        a)
+          AUDIO=1
+          ;;
         d)
           DUAL=1
           ;;
@@ -67,6 +75,17 @@ while getopts "dl:r:Rtx:y:u" flag; do
 done
 shift $(( OPTIND - 1 ))
 script_args="$*"
+[ "${AUDIO}" ] && {
+  if [ -f "${SONG}" ]
+  then
+    script_args="${script_args} -a ${SONG}"
+  else
+    if [ -f "${ALTSONG}" ]
+    then
+      script_args="${script_args} -a ${ALTSONG}"
+    fi
+  fi
+}
 
 [ "${DUDE}" ] && {
   [ "${PYLEFT}" == "plasma" ] && PYLEFT="plasma -t"
