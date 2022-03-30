@@ -380,6 +380,7 @@ centered_cursor = yes
 ## part of progressbar.
 ##
 #progressbar_look = =>
+progressbar_look = ->▃
 #
 ## Available values: database, playlist.
 ##
@@ -619,7 +620,7 @@ state_flags_color = red
 #color2 = green
 #
 #progressbar_color = black:b
-progressbar_color = yellow
+progressbar_color = cyan
 #
 #progressbar_elapsed_color = green:b
 #

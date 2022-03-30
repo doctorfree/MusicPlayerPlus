@@ -1,6 +1,7 @@
 #!/bin/bash
 
 sudo rm -rf dist releases
+
 cd mpcplus
 [ -f Makefile ] && {
     make clean

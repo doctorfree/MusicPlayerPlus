@@ -10,14 +10,13 @@ from asciimatics.effects import Scroll, Mirage, Wipe, Cycle, Matrix, \
     BannerText, Stars, Print
 from asciimatics.particles import RingFirework, SerpentFirework, StarFirework, \
     PalmFirework
-from asciimatics.particles import DropScreen
 from asciimatics.renderers import FigletText, Rainbow, Fire
 from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.exceptions import ResizeScreenError
 
 
-def _credits(screen):
+def _musicplayerplus(screen):
     scenes = []
 
     text = Figlet(font="banner", width=200).renderText("MusicPlayer")
@@ -122,7 +121,8 @@ def _credits(screen):
             Rainbow(screen, FigletText(
                 "MusicPlayerPlus", font='banner3-D')),
             screen.height // 2 - 3,
-            Screen.COLOUR_CYAN)
+            Screen.COLOUR_CYAN),
+        Stars(screen, (screen.width + screen.height) // 2, stop_frame=0)
     ]
     scenes.append(Scene(effects))
 
@@ -132,7 +132,8 @@ def _credits(screen):
             Rainbow(screen, FigletText(
                 "ASCII MPD Client", font='banner3-D')),
             screen.height // 2 - 3,
-            Screen.COLOUR_CYAN)
+            Screen.COLOUR_CYAN),
+        Stars(screen, (screen.width + screen.height) // 2, stop_frame=0)
     ]
     scenes.append(Scene(effects))
 
@@ -142,7 +143,8 @@ def _credits(screen):
             Rainbow(screen, FigletText(
                 "Album Cover Art", font='banner3-D')),
             screen.height // 2 - 3,
-            Screen.COLOUR_CYAN)
+            Screen.COLOUR_CYAN),
+        Stars(screen, (screen.width + screen.height) // 2, stop_frame=0)
     ]
     scenes.append(Scene(effects))
 
@@ -152,8 +154,28 @@ def _credits(screen):
             Rainbow(screen, FigletText(
                 "Spectrum Visualizer", font='banner3-D')),
             screen.height // 2 - 3,
-            Screen.COLOUR_CYAN)
+            Screen.COLOUR_CYAN),
+        Stars(screen, (screen.width + screen.height) // 2, stop_frame=0)
     ]
+
+    for _ in range(20):
+        fireworks = [
+            (PalmFirework, 25, 30),
+            (PalmFirework, 25, 30),
+            (StarFirework, 25, 35),
+            (StarFirework, 25, 35),
+            (StarFirework, 25, 35),
+            (RingFirework, 20, 30),
+            (SerpentFirework, 30, 35),
+        ]
+        firework, start, stop = choice(fireworks)
+        effects.insert(
+            1,
+            firework(screen,
+                     randint(0, screen.width),
+                     randint(screen.height // 8, screen.height * 3 // 4),
+                     randint(start, stop),
+                     start_frame=randint(0, 250)))
     scenes.append(Scene(effects))
 
     effects = [
@@ -161,14 +183,13 @@ def _credits(screen):
             screen,
             FigletText("MUSIC PLAYER PLUS", font='big'),
             screen.height // 2 - 8,
-            stop_frame=100),
+            stop_frame=200),
         Cycle(
             screen,
             FigletText("ROCKS!", font='big'),
             screen.height // 2 + 3,
-            stop_frame=100),
-        Stars(screen, (screen.width + screen.height) // 2, stop_frame=100),
-        DropScreen(screen, 200, start_frame=100)
+            stop_frame=200),
+        Stars(screen, (screen.width + screen.height) // 2, stop_frame=200)
     ]
     scenes.append(Scene(effects, 200))
 
@@ -225,7 +246,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            Screen.wrapper(_credits)
+            Screen.wrapper(_musicplayerplus)
             sys.exit(0)
         except ResizeScreenError:
             pass
