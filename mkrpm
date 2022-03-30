@@ -36,25 +36,6 @@ cd "${SRC}/${SRC_NAME}"
 # Build mpcplus
 if [ -x build-mpcplus.sh ]
 then
-  ./build-mpcplus.sh
-else
-  cd mpcplus
-  make clean
-  make distclean
-  [ -x ./configure ] || ./autogen.sh > /dev/null
-  ./configure --prefix=/usr \
-              --enable-outputs \
-              --enable-clock \
-              --disable-visualizer \
-              --with-taglib > configure$$.out
-  make > make$$.out
-  cd ..
-fi
-cp mpcplus/src/mpcplus bin/mpcplus
-
-# Build mpcplus with visualizer
-if [ -x build-mpcplus.sh ]
-then
   ./build-mpcplus.sh -v
 else
   cd mpcplus
@@ -70,7 +51,6 @@ else
   make > make$$.out
   cd ..
 fi
-cp mpcplus/src/mpcplus bin/mpcplusv
 
 ${SUDO} rm -rf dist
 mkdir dist
@@ -92,7 +72,7 @@ do
 done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} rm -f bin/mpcplus bin/mpcplusv
+${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}

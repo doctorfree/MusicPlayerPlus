@@ -7,7 +7,7 @@
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Requirements](#requirements)
 1. [Installation](#installation)
-    1. [Debian Package installation](#debian-package-installation)
+    1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [MPD Server Configuration](#mpd-server-configuration)
@@ -50,8 +50,7 @@ Integration is provided for:
 ### MusicPlayerPlus Commands
 MusicPlayerPlus adds the following commands to your system:
 
-* **mpcplus** : Featureful NCurses MPD client, compiled without visualizer
-* **mpcplusv** : Featureful NCurses MPD client, compiled with spectrum visualizer
+* **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
 * **mpcava** : invokes an MPD client and spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
@@ -101,7 +100,7 @@ when MusicPlayerPlus is installed using the Debian or RPM packaging.
 MusicPlayerPlus v1.0.0 and later can be installed on Linux systems using
 either the Debian packaging format or the Red Hat Package Manager (RPM).
 
-### Debian Package installation
+### Debian package installation
 
 Many Linux distributions, most notably Ubuntu and its derivatives, use the
 Debian packaging system.
@@ -117,12 +116,20 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo apt install ./MusicPlayerPlus_<version>-<release>.deb
+sudo apt install ./MusicPlayerPlus_<version>-<release>.amd64.deb
 ```
 or
 ```console
-sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.deb
+sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.amd64.deb
 ```
+
+**NOTE:** In some cases you may see a warning message when installing the
+Debian package. The message:
+
+Repository is broken: musicplayerplus:amd64 (= <version-<release>) has no Size information
+
+can safely be ignored. This is an issue with the Debian packaging system
+and has no effect on the installation.
 
 ### RPM Package installation
 
@@ -137,11 +144,11 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.rpm
+sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 ```
 or
 ```console
-sudo rpm -i ./MusicPlayerPlus_<version>-<release>.rpm
+sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 ```
 
 ## Post Installation Configuration
@@ -355,20 +362,8 @@ Where:
 	-u displays this usage message and exits
 ```
 
-The MusicPlayerPlus package includes two versions of the `mpcplus` binary,
-one configured and compiled with visualizer disabled (*mpcplus*) and one
-configured and compiled with visualizer enabled (*mpcplusv*). These require
-different configuration files. Default configuration files are created
-for both by the `mpcinit` command. To use the default configuration with
-`mpcplus` no config file argument is necessary. To use the default config
-with `mpcplusv` it should be invoked as follows:
-
 ```
-mpcplusv --config ~/.config/mpcplus/visualizer.conf
-```
-
-```
-Usage: mpcplus|mpcplusv [options]...
+Usage: mpcplus [options]...
 Options:
   -h [ --host ] HOST (=localhost)       connect to server at host
   -p [ --port ] PORT (=6600)            connect to server at port
