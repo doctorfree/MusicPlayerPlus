@@ -25,6 +25,7 @@
     1. [Adding Album Cover Art](#adding-album-cover-art)
 1. [Screenshots](#screenshots)
 1. [Removal](#removal)
+1. [Troubleshooting](#troubleshooting)
 
 ## Overview
 
@@ -509,3 +510,44 @@ script in the MusicPlayerPlus source directory:
     ./Uninstall
 ```
 
+## Troubleshooting
+Many problems encountered with MusicPlayerPlus often resolve to problems with
+the underlying Linux audio configuration. As a first step in troubleshooting,
+verify the audio subsystem is functioning properly. Most systems use either
+ALSA or PulseAudio and there are numerous audio test guides available.
+
+MusicPlayerPlus includes a convenience script to test the ALSA audio subsystem.
+The command `alsa_audio_test` can be run to test your ALSA audio setup.
+If successful you will hear the test output of the `aplay` command.
+To view a `alsa_audio_test` usage message and current ALSA configuration
+settings, run the command `alsa_audio_test -u`
+
+Another source of problems to investigate is the Music Player Daemon (MPD).
+This is the music streaming server that MusicPlayerPlus connects to. MPD
+is run as a system service that runs automatically. You can check the status
+of the MPD service by running the command `systemctl status mpd`. You can
+restart the MPD service with `sudo systemctl restart mpd`. If the issue is
+not resolved by a restart or reboot, check the MPD log file at
+`/var/log/mpd/mpd.log` looking for recent failures and exceptions.
+
+It may be the case that the root of a problem is a missing dependency.
+MusicPlayerPlus should have installed any missing dependencies but one
+may have been overlooked, improperly installed, or subsequently removed.
+If the system logs or error output indicates something was "not found"
+then check for its existence. On Debian based systems there is a nice
+repository package index maintained. If a command was not found, it is
+often possible to simply type that command at a shell prompt and the
+Debian packaging system will be searched for any packages that contain
+a command with that name. If a likely looking package is returned, the
+problem may be solved by installing that package.
+
+Finally, see the Troubleshooting section of the
+[MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
+for additional troubleshooting techniques and commonly resolved issues.
+
+If an issue cannot be resolved and all troubleshooting efforts have
+failed, open an issue at
+[MusicPlayerPlus issues](https://github.com/doctorfree/MusicPlayerPlus/issues).
+Even if you do manage to resolve an issue, it may still be helpful to
+report the issue at https://github.com/doctorfree/MusicPlayerPlus/issues
+so that a fix may be incorporated in the next release.
