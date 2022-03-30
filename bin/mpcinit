@@ -8,7 +8,7 @@
 
 CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
 WITHART="album_cover.sh catalog.conf config-cava cover_obs.sh \
-         default_cover.png musicplayerplus.py plasma.py julia.py"
+         default_cover.png musicplayerplus.py mpcplus.py julia.py"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."

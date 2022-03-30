@@ -1,0 +1,137 @@
+#!/bin/bash
+
+if [ -f ${HOME}/.config/mpcplus/mpcplus.py ]
+then
+  MPCDIR=".config/mpcplus"
+else
+  if [ -f ${HOME}/.mpcplus/mpcplus.py ]
+  then
+    MPCDIR=".mpcplus"
+  else
+    mpcinit
+    MPCDIR=".config/mpcplus"
+  fi
+fi
+
+usage() {
+  printf "\nUsage: mppsplash-tmux [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-d indicates dual window panes, run two scripts"
+  printf "\n\t-l script specifies a python script to run in the left visualizer pane"
+  printf "\n\t-r script specifies a python script to run in the right visualizer pane"
+  printf "\n\t-R indicates record tmux session with asciinema"
+  printf "\n\t-t indicates use original plasma effect comments"
+  printf "\n\t-x width specifies the width of the spectrum visualizer"
+  printf "\n\t-y height specifies the height of the spectrum visualizer"
+  printf "\n\t-u displays this usage message and exits\n"
+  printf "\nDefaults: single pane, width=50 height=100, left pane mpcplus, right pane julia, recording disabled"
+  printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
+  if [ "${RECORD}" ]
+  then
+    printf "\n\trecording enabled"
+  else
+    printf "\n\trecording disabled"
+  fi
+  printf "\nType 'man mppsplash-tmux' for detailed usage info on mppsplash-tmux"
+  printf "\nType 'man mppsplash' for detailed usage info on mppsplash\n"
+  exit 1
+}
+
+DUAL=
+DUDE=
+RECORD=
+WIDTH=50
+HEIGHT=100
+PYLEFT=mpcplus.py
+PYRIGHT=julia.py
+USAGE=
+while getopts "dl:r:Rtx:y:u" flag; do
+    case $flag in
+        d)
+          DUAL=1
+          ;;
+        l)
+          PYLEFT=${OPTARG}
+          [ -f ${HOME}/${MPCDIR}/${PYLEFT} ] || {
+            [ -f ${HOME}/${MPCDIR}/${PYLEFT}.py ] && {
+              PYLEFT=${PYLEFT}.py
+            }
+          }
+          ;;
+        r)
+          PYRIGHT=${OPTARG}
+          [ -f ${HOME}/${MPCDIR}/${PYRIGHT} ] || {
+            [ -f ${HOME}/${MPCDIR}/${PYRIGHT}.py ] && {
+              PYRIGHT=${PYRIGHT}.py
+            }
+          }
+          ;;
+        R)
+          have_nema=`type -p asciinema`
+          [ "${have_nema}" ] && RECORD=1
+          ;;
+        t)
+          DUDE=1
+          ;;
+        x)
+          WIDTH=${OPTARG}
+          ;;
+        y)
+          HEIGHT=${OPTARG}
+          ;;
+        u)
+          USAGE=1
+          ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+script_args="$*"
+
+[ "${USAGE}" ] && usage
+
+[ "${DUDE}" ] && {
+  [ "${PYLEFT}" == "mpcplus.py" ] && PYLEFT="mpcplus.py -t"
+  [ "${PYRIGHT}" == "mpcplus.py" ] && PYRIGHT="mpcplus.py -t"
+}
+
+tmux new-session -d -x 80 -y 28 -s mppsplash
+tmux set -g status off
+
+tmux send-keys "stty -echo" C-m
+tmux send-keys "tput civis -- invisible" C-m
+tmux send-keys "export PS1=''" C-m
+tmux send-keys "clear" C-m
+[ "${DUAL}" ] && tmux split-window -h
+
+tmux select-pane -t 0
+[ -f ${HOME}/${MPCDIR}/${PYLEFT} ] || {
+  tmux kill-session -t mppsplash
+  echo "${HOME}/${MPCDIR}/${PYLEFT} not found. Exiting."
+  exit 1
+}
+tmux send-keys "python ${HOME}/${MPCDIR}/${PYLEFT} ${script_args}" C-m
+
+[ "${DUAL}" ] && {
+  [ -f ${HOME}/${MPCDIR}/${PYRIGHT} ] || {
+    tmux kill-session -t mppsplash
+    echo "${HOME}/${MPCDIR}/${PYRIGHT} not found. Exiting."
+    exit 1
+  }
+  tmux select-pane -t 1
+  tmux send-keys "python ${HOME}/${MPCDIR}/${PYRIGHT} ${script_args}" C-m
+}
+
+tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
+
+tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
+
+if [ "${RECORD}" ]
+then
+  tmux d
+  REC_DIR=$HOME/Videos
+  [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
+  echo "Recording this mpcava session with asciinema"
+  asciinema rec --command "tmux attach -t mppsplash" ${REC_DIR}/tmux-$(date +%F--%H%M).asciicast
+else
+  tmux a #
+fi

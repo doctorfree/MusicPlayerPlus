@@ -10,19 +10,7 @@ import sys
 import argparse
 
 
-class PlasmaScene(Scene):
-
-    # Random cheesy comments
-    _comments = [
-        "Far out!",
-        "Groovy",
-        "Excellent!",
-        "Heavy",
-        "Right on!",
-        "Cool",
-        "Epic",
-        "Dude!"
-    ]
+class MusicPlayerPlusScene(Scene):
 
     def __init__(self, screen):
         self._screen = screen
@@ -33,10 +21,10 @@ class PlasmaScene(Scene):
                   speed=1,
                   transparent=False),
         ]
-        super(PlasmaScene, self).__init__(effects, 200, clear=False)
+        super(MusicPlayerPlusScene, self).__init__(effects, 200, clear=False)
 
-    def _add_cheesy_comment(self):
-        msg = FigletText(choice(self._comments), font)
+    def _add_mpcplus_comment(self):
+        msg = FigletText(choice(comments), font)
         self._effects.append(
             Print(self._screen,
                   msg,
@@ -55,21 +43,21 @@ class PlasmaScene(Scene):
                   speed=1))
 
     def reset(self, old_scene=None, screen=None):
-        super(PlasmaScene, self).reset(old_scene, screen)
+        super(MusicPlayerPlusScene, self).reset(old_scene, screen)
 
         # Make sure that we only have the initial Effect
-        # and add a new cheesy comment
+        # and add a new comment
         self._effects = [self._effects[0]]
-        self._add_cheesy_comment()
+        self._add_mpcplus_comment()
 
 
-def plasma(screen, cycle=None):
+def mpplus(screen, cycle=None):
     if cycle is None:
-        screen.play([PlasmaScene(screen)], stop_on_resize=True)
+        screen.play([MusicPlayerPlusScene(screen)], stop_on_resize=True)
     else:
         numplays=0
         while numplays < cycle:
-            screen.play([PlasmaScene(screen)], stop_on_resize=True, repeat=False)
+            screen.play([MusicPlayerPlusScene(screen)], stop_on_resize=True, repeat=False)
             numplays += 1
 
 
@@ -78,6 +66,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", "--cycle", help="number of times to cycle back through effects")
     parser.add_argument("-f", "--font", help="Font for FigletText, default 'banner3'")
+    parser.add_argument('-t', "--text", action='store_true', help="Use alternate set of comments")
     args = parser.parse_args()
     cycle = 0
 
@@ -89,10 +78,32 @@ if __name__ == "__main__":
         font = args.font
     else:
         font = "banner3"
+    if args.text:
+        comments = [
+            "Far out!",
+            "Groovy",
+            "Excellent!",
+            "Heavy",
+            "Right on!",
+            "Cool",
+            "Epic",
+            "Dude!"
+        ]
+    else:
+        comments = [
+            "Music Player",
+            "Music Server",
+            "Visualizer!",
+            "Asciimatics",
+            "Terminals!",
+            "Cool",
+            "Retro",
+            "Album Art"
+        ]
 
     while True:
         try:
-            Screen.wrapper(plasma, arguments=[numcycles])
+            Screen.wrapper(mpplus, arguments=[numcycles])
             sys.exit(0)
         except ResizeScreenError:
             pass

@@ -23,7 +23,7 @@ import sys
 import argparse
 
 
-def demo(screen, c):
+def julia(screen, c):
     scenes = []
     effects = [
         Julia(screen, c, stop_frame=numcycles),
@@ -59,7 +59,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            Screen.wrapper(demo, arguments=[c])
+            Screen.wrapper(julia, arguments=[c])
             sys.exit(0)
         except ResizeScreenError:
             pass

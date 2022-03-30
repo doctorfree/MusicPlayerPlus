@@ -4,23 +4,38 @@
 #
 
 usage() {
-  printf "\nUsage: mppsplash [-a] [-c numcycles] [-j] [-m] [-p] [-u]"
+  printf "\nUsage: mppsplash [-a] [-c num] [-j] [-m] [-p] [-s] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates use all effects"
-  printf "\n\t-c numcycles specifies the number of times to cycle"
+  printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
   printf "\n\t-p indicates use Plasma effect"
+  printf "\n\t-s indicates use second MusicPlayerPlus effect"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nWithout any options the MusicPlayerPlus effect will repeat"
   printf "\nType 'man mppsplash' for more detailed usage info\n"
   exit 1
 }
 
+set_cycles() {
+  case $1 in
+    julia)
+      usecycle=$(( 1000*$2 ))
+      ;;
+    mpcplus)
+      usecycle=$(( 10*$2 ))
+      ;;
+    *)
+      usecycle=$2
+      ;;
+  esac
+}
+
 all=
 cycle=
 script="musicplayerplus"
-while getopts "ac:jmpu" flag; do
+while getopts "ac:jmpsu" flag; do
   case $flag in
       c)
         cycle="-c ${OPTARG}"
@@ -35,32 +50,37 @@ while getopts "ac:jmpu" flag; do
         script="musicplayerplus"
         ;;
       p)
-        script="plasma"
+        script="mpcplus"
+        script_args="-t"
+        ;;
+      s)
+        script="mpcplus"
         ;;
       u)
         usage
         ;;
   esac
 done
+shift $(( OPTIND - 1 ))
+script_args="$* ${script_args}"
 
+usecycle=1
 if [ "${all}" ]
 then
   [ "${cycle}" ] || cycle="-c 1"
   numcycles=`echo ${cycle} | awk ' { print $2 } '`
-  for script in julia musicplayerplus plasma
+  for script in julia musicplayerplus mpcplus
   do
-    case ${script} in
-      julia)
-        python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c $(( 1000*numcycles ))
-        ;;
-      plasma)
-        python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c $(( 10*numcycles ))
-        ;;
-      *)
-        python /usr/share/doc/musicplayerplus/mpcplus/${script}.py ${cycle}
-        ;;
-    esac
+    set_cycles ${script} ${numcycles}
+    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c ${usecycle} ${script_args}
   done
 else
-  python /usr/share/doc/musicplayerplus/mpcplus/${script}.py ${cycle}
+  if [ "${cycle}" ]
+  then
+    numcycles=`echo ${cycle} | awk ' { print $2 } '`
+    set_cycles ${script} ${numcycles}
+    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py -c ${usecycle} ${script_args}
+  else
+    python /usr/share/doc/musicplayerplus/mpcplus/${script}.py ${script_args}
+  fi
 fi
