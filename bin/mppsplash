@@ -78,8 +78,12 @@ while getopts "Aabc:jmpsu" flag; do
   esac
 done
 shift $(( OPTIND - 1 ))
+
+[ "${all}" ] && script_args=
 [ "${switch_comments}" ] && script_args=
+[ "${script}" == "plasma" ] || script_args=
 script_args="$* ${script_args}"
+
 [ "${audio}" ] && {
   if [ -f "${SONG}" ]
   then
