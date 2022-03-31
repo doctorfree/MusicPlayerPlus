@@ -3,12 +3,13 @@
 # mppsplash-tmux - display asciimatics splash screens in a tmux session
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
-ALTSONG="${MUSEDIR}/Robot_Coupe-Lost_European.mp3"
+ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 
 usage() {
-  printf "\nUsage: mppsplash-tmux [-a] [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
+  printf "\nUsage: mppsplash-tmux [-a] [-b] [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates play audio during asciimatics display"
+  printf "\n\t-b indicates use backup song during asciimatics display"
   printf "\n\t-d indicates dual window panes, run two scripts"
   printf "\n\t-l script specifies a python script to run in the left visualizer pane"
   printf "\n\t-r script specifies a python script to run in the right visualizer pane"
@@ -41,10 +42,16 @@ HEIGHT=100
 PYLEFT=plasma
 PYRIGHT=julia
 USAGE=
-while getopts "adl:r:Rtx:y:u" flag; do
+while getopts "abdl:r:Rtx:y:u" flag; do
     case $flag in
         a)
           AUDIO=1
+          ;;
+        b)
+          AUDIO=1
+          TMPSONG=${SONG}
+          SONG=${ALTSONG}
+          ALTSONG=${TMPSONG}
           ;;
         d)
           DUAL=1

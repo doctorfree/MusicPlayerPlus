@@ -4,13 +4,14 @@
 #
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
-ALTSONG="${MUSEDIR}/Robot_Coupe-Lost_European.mp3"
+ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 
 usage() {
-  printf "\nUsage: mppsplash [-A] [-a] [-c num] [-j] [-m] [-p] [-s] [-u]"
+  printf "\nUsage: mppsplash [-A] [-a] [-b] [-c num] [-j] [-m] [-p] [-s] [-u]"
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
   printf "\n\t-a indicates play audio during asciimatics display"
+  printf "\n\t-b indicates use backup audio during asciimatics display"
   printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
@@ -40,13 +41,19 @@ all=
 audio=
 cycle=
 script="mpplus"
-while getopts "Aac:jmpsu" flag; do
+while getopts "Aabc:jmpsu" flag; do
   case $flag in
-      a)
-        audio=1
-        ;;
       A)
         all=1
+        ;;
+      b)
+        audio=1
+        TMPSONG=${SONG}
+        SONG=${ALTSONG}
+        ALTSONG=${TMPSONG}
+        ;;
+      a)
+        audio=1
         ;;
       c)
         cycle="-c ${OPTARG}"
