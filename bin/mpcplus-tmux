@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SSESSION=musicplayerplus
+
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
@@ -94,7 +96,7 @@ shift $(( OPTIND - 1 ))
 COVER="${HOME}/${MPCDIR}/album_cover.png"
 [ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 
-tmux new-session -d -x 256 -y 128 -s musicplayerplus
+tmux new-session -d -x 256 -y 128 -s ${SESSION}
 tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
@@ -105,7 +107,7 @@ tmux send-keys "clear" C-m
 
 tmux split-window -v
 tmux select-pane -t 1
-tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/catalog.conf'" C-m
+tmux send-keys "mpcplus --config=${HOME}/${MPCDIR}/catalog.conf; exit" C-m
 tmux send-keys 1
 
 tmux select-pane -t 0
@@ -114,9 +116,9 @@ if [ "${PYART}" ]
 then
   have_pyart=`type -p ascii${PYART}`
   [ "${have_pyart}" ] && PYART="ascii${PYART}"
-  tmux send-keys "${PYART}" C-m
+  tmux send-keys "${PYART}; exit" C-m
 else
-  tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+  tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava; exit" C-m
 fi
 
 tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
@@ -134,10 +136,12 @@ fi
 if [ "${RECORD}" ]
 then
   tmux d
-  REC_DIR=$HOME/Videos
+  VID_DIR=$HOME/Videos
+  [ -d ${VID_DIR} ] || mkdir ${VID_DIR}
+  REC_DIR=${VID_DIR}/asciinema
   [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
   echo "Recording this mpplus session with asciinema"
-  asciinema rec --command "tmux attach -t musicplayerplus" ${REC_DIR}/tmux-$(date +%F--%H%M).asciicast
+  asciinema rec --command "tmux attach -t ${SESSION}" ${REC_DIR}/${SESSION}-$(date +%F--%H%M).cast
 else
   tmux a #
 fi

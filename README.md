@@ -41,6 +41,8 @@ Integration is provided for:
 * [mpcplus](mpcplus/README.md), character based Music Player Plus MPD client
 * [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
+* [ASCIImatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
+* [asciinema](https://asciinema.org/) - automatically create ascii character based video clips
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
     * xfce4-terminal

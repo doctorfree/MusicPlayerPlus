@@ -1,10 +1,11 @@
 Todo:
-- Mirrir on gitlab
 - v1.0.1r1 release
 - Create asciinema casts and upload
 - Add asciinema casts to website, README, Twitter, ...
 - Create a fun splash screen with key bindings that control MPD (play, pause, next, prev, ...)
 
 Done:
+- Get the kill tmux session working
+- Mirrir on gitlab
 - Rename mpcava to mpplus
 - Update asciimatics man pages with -a song argument

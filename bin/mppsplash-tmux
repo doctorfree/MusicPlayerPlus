@@ -4,12 +4,14 @@
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
+export SESSION=mppsplash
 
 usage() {
-  printf "\nUsage: mppsplash-tmux [-a] [-b] [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
+  printf "\nUsage: mppsplash-tmux [-a] [-b] [-c num] [-d] [-l script] [-r script] [-R] [-t] [-x width] [-y height] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup song during ASCIImatics display"
+  printf "\n\t-c num specifies number of cycles ASCIImatics effects should run"
   printf "\n\t-d indicates dual window panes, run two scripts"
   printf "\n\t-l script specifies a python script to run in the left visualizer pane"
   printf "\n\t-r script specifies a python script to run in the right visualizer pane"
@@ -34,15 +36,17 @@ usage() {
 }
 
 AUDIO=
+CYCLE=
 DUAL=
 DUDE=
+KILLME=
 RECORD=
 WIDTH=50
 HEIGHT=100
 PYLEFT=plasma
 PYRIGHT=julia
 USAGE=
-while getopts "abdl:r:Rtx:y:u" flag; do
+while getopts "abc:dl:r:Rtx:y:u" flag; do
     case $flag in
         a)
           AUDIO=1
@@ -52,6 +56,9 @@ while getopts "abdl:r:Rtx:y:u" flag; do
           TMPSONG=${SONG}
           SONG=${ALTSONG}
           ALTSONG=${TMPSONG}
+          ;;
+        c)
+          CYCLE="-c ${OPTARG}"
           ;;
         d)
           DUAL=1
@@ -93,6 +100,7 @@ script_args="$*"
     fi
   fi
 }
+script_args="${script_args} ${CYCLE}"
 
 [ "${DUDE}" ] && {
   [ "${PYLEFT}" == "plasma" ] && PYLEFT="plasma -t"
@@ -106,7 +114,7 @@ have_right=`type -p ascii${PYRIGHT}`
 
 [ "${USAGE}" ] && usage
 
-tmux new-session -d -x 80 -y 28 -s mppsplash
+tmux new-session -d -x 80 -y 28 -s ${SESSION}
 tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
@@ -118,21 +126,25 @@ tmux send-keys "clear" C-m
 tmux select-pane -t 0
 have_left=`type -p ${PYLEFT}`
 [ "${have_left}" ] || {
-  tmux kill-session -t mppsplash
+  tmux kill-session -t ${SESSION}
   echo "${PYLEFT} not found. Exiting."
   exit 1
 }
-tmux send-keys "${PYLEFT} ${script_args}" C-m
+
+# Start the left pane script
+tmux send-keys "${PYLEFT} ${script_args}; exit" C-m
 
 [ "${DUAL}" ] && {
   have_right=`type -p ${PYRIGHT}`
   [ "${have_right}" ] || {
-    tmux kill-session -t mppsplash
+    tmux kill-session -t ${SESSION}
     echo "${PYRIGHT} not found. Exiting."
     exit 1
   }
   tmux select-pane -t 1
-  tmux send-keys "${PYRIGHT} ${script_args}" C-m
+
+  # Start the right pane script
+  tmux send-keys "${PYRIGHT} ${script_args}; exit" C-m
 }
 
 tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
@@ -142,10 +154,13 @@ tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
 if [ "${RECORD}" ]
 then
   tmux d
-  REC_DIR=$HOME/Videos
+  VID_DIR=$HOME/Videos
+  [ -d ${VID_DIR} ] || mkdir ${VID_DIR}
+  REC_DIR=${VID_DIR}/asciinema
   [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
-  echo "Recording this mpplus session with asciinema"
-  asciinema rec --command "tmux attach -t mppsplash" ${REC_DIR}/tmux-$(date +%F--%H%M).asciicast
+  echo "Recording this ${SESSION} session with asciinema"
+  asciinema rec --command "tmux attach -t ${SESSION}" \
+                ${REC_DIR}/${SESSION}-$(date +%F--%H%M).cast
 else
   tmux a #
 fi
