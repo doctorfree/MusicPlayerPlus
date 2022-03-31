@@ -16,7 +16,7 @@ usage() {
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
   printf "\n\t-p indicates use Plasma effect"
-  printf "\n\t-s indicates use second MusicPlayerPlus effect"
+  printf "\n\t-s indicates use alternate comments in Plasma effect"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nWithout any options the MusicPlayerPlus effect will repeat"
   printf "\nType 'man mppsplash' for more detailed usage info\n"
@@ -29,7 +29,7 @@ set_cycles() {
       usecycle=$(( 1000*$2 ))
       ;;
     plasma)
-      usecycle=$(( 10*$2 ))
+      usecycle=$(( 8*$2 ))
       ;;
     *)
       usecycle=$2
@@ -41,6 +41,8 @@ all=
 audio=
 cycle=
 script="mpplus"
+script_args="-t"
+switch_comments=
 while getopts "Aabc:jmpsu" flag; do
   case $flag in
       A)
@@ -66,10 +68,9 @@ while getopts "Aabc:jmpsu" flag; do
         ;;
       p)
         script="plasma"
-        script_args="-t"
         ;;
       s)
-        script="plasma"
+        switch_comments=1
         ;;
       u)
         usage
@@ -77,6 +78,7 @@ while getopts "Aabc:jmpsu" flag; do
   esac
 done
 shift $(( OPTIND - 1 ))
+[ "${switch_comments}" ] && script_args=
 script_args="$* ${script_args}"
 [ "${audio}" ] && {
   if [ -f "${SONG}" ]
