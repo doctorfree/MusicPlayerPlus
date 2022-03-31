@@ -9,12 +9,13 @@ date: March 27, 2022
 asciimpplus - Display an Asciimatics animation featuring ascii art for the MusicPlayerPlus project
 
 # SYNOPSIS
-**asciimpplus** [-h] [-a AUDIO] [-c CYCLE]
+**asciimpplus** [-h] [-a AUDIO] [-c CYCLE] [-f font]
 
 # DESCRIPTION
 The *asciimpplus* command plays one of the Asciimatics animations included in
 MusicPlayerPlus. Command line options can be used to tell *asciimpplus* to play
-animations for a specified number of cycles and which audio file to use as accompaniment.
+animations for a specified number of cycles, which audio file to use as
+accompaniment, and specify the font used in the Cycle effect.
 
 # COMMAND LINE OPTIONS
 **-h, --help**
@@ -26,6 +27,9 @@ animations for a specified number of cycles and which audio file to use as accom
 **-c CYCLE, --cycle CYCLE**
 : number of times to cycle back through effects
 
+**-f FONT, --font FONT**
+: Font for FigletText in Cycle effect, default 'small'
+
 # EXAMPLES
 **asciimpplus**
 : Without options asciimpplus will display an Asciimatics animation featuring MusicPlayerPlus. These will continue until the 'q' key is pressed.
@@ -35,6 +39,9 @@ animations for a specified number of cycles and which audio file to use as accom
 
 **asciimpplus -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the MusicPlayerPlus asciimatics animation 5 times accompanied by audio then exits 
+
+**asciimpplus -f big**
+: Plays the asciimatics animation using the 'big' FigletText font for the Cycle effect
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

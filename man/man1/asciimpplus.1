@@ -22,14 +22,14 @@ asciimpplus - Display an Asciimatics animation featuring ascii art for
 the MusicPlayerPlus project
 .SH SYNOPSIS
 .PP
-\f[B]asciimpplus\f[R] [-h] [-a AUDIO] [-c CYCLE]
+\f[B]asciimpplus\f[R] [-h] [-a AUDIO] [-c CYCLE] [-f font]
 .SH DESCRIPTION
 .PP
 The \f[I]asciimpplus\f[R] command plays one of the Asciimatics
 animations included in MusicPlayerPlus.
 Command line options can be used to tell \f[I]asciimpplus\f[R] to play
-animations for a specified number of cycles and which audio file to use
-as accompaniment.
+animations for a specified number of cycles, which audio file to use as
+accompaniment, and specify the font used in the Cycle effect.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-h, --help\f[R]
@@ -40,6 +40,9 @@ audio file to play during effects
 .TP
 \f[B]-c CYCLE, --cycle CYCLE\f[R]
 number of times to cycle back through effects
+.TP
+\f[B]-f FONT, --font FONT\f[R]
+Font for FigletText in Cycle effect, default \[aq]small\[aq]
 .SH EXAMPLES
 .TP
 \f[B]asciimpplus\f[R]
@@ -53,6 +56,10 @@ Plays the MusicPlayerPlus asciimatics animation 10 times then exits
 \f[B]asciimpplus -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5\f[R]
 Plays the MusicPlayerPlus asciimatics animation 5 times accompanied by
 audio then exits
+.TP
+\f[B]asciimpplus -f big\f[R]
+Plays the asciimatics animation using the \[aq]big\[aq] FigletText font
+for the Cycle effect
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
