@@ -41,7 +41,6 @@ all=
 audio=
 cycle=
 script="mpplus"
-script_args="-t"
 switch_comments=
 while getopts "Aabc:jmpsu" flag; do
   case $flag in
@@ -68,6 +67,7 @@ while getopts "Aabc:jmpsu" flag; do
         ;;
       p)
         script="plasma"
+        script_args="-t"
         ;;
       s)
         switch_comments=1

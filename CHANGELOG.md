@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 * Add capability to play audio while displaying ASCIImatics scenes
 * Add several ASCIImatics scenes including one during initialization
 * Rename `mpcava` to `mpplus`
+* Integration with `asciinema` for recording ascii terminal sessions
 * Several new commands including:
     * **alsa_audio_test**
     * **asciijulia**
