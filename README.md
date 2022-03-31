@@ -26,6 +26,7 @@
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
 1. [Screenshots](#screenshots)
+1. [Videos](#videos)
 
 ## Overview
 
@@ -553,6 +554,8 @@ so that a fix may be incorporated in the next release.
   <img src="screenshots/mpplus-tilix.png" style="width:800px;height:600px;">
   <img src="screenshots/mpplus-lyrics.png" style="width:800px;height:600px;">
 </p>
+
+## Videos
 
 - [![MusicPlayerPlus Intro](https://i.imgur.com/UH2A21h.png)](https://www.youtube.com/watch?v=r7XLA9tO45Q "MusicPlayerPlus ASCIImatics Intro")
 - [![MusicPlayerPlus Demo](https://i.imgur.com/ZntE1sH.jpg)](https://www.youtube.com/watch?v=y2yaHm04ELM "MusicPlayerPlus Demo")
