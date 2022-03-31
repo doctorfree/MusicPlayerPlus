@@ -185,7 +185,7 @@ def _mpplus(screen):
     effects = [
         Cycle(
             screen,
-            FigletText("MUSIC PLAYER PLUS", font=font),
+            FigletText("MusicPlayerPlus", font=font),
             center[1] - 8,
             stop_frame=200),
         Cycle(
