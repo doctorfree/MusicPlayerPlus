@@ -23,9 +23,9 @@
     1. [Usage](#usage)
     1. [Example client invocations](#example-client-invocations)
     1. [Adding Album Cover Art](#adding-album-cover-art)
-1. [Screenshots](#screenshots)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
+1. [Screenshots](#screenshots)
 
 ## Overview
 
@@ -470,13 +470,6 @@ download_cover_art
 Cover art for each album is saved as the file `cover.jpg` in the album folder.
 Existing cover art is preserved.
 
-## Screenshots
-
-<p float="left">
-  <img src="screenshots/mpplus-tilix.png" style="width:800px;height:600px;">
-  <img src="screenshots/mpplus-lyrics.png" style="width:800px;height:600px;">
-</p>
-
 ## Removal
 
 On Debian based Linux systems where the MusicPlayerPlus package was installed
@@ -553,3 +546,13 @@ failed, open an issue at
 Even if you do manage to resolve an issue, it may still be helpful to
 report the issue at https://github.com/doctorfree/MusicPlayerPlus/issues
 so that a fix may be incorporated in the next release.
+
+## Screenshots
+
+<p float="left">
+  <img src="screenshots/mpplus-tilix.png" style="width:800px;height:600px;">
+  <img src="screenshots/mpplus-lyrics.png" style="width:800px;height:600px;">
+</p>
+
+- [![MusicPlayerPlus Intro](https://i.imgur.com/UH2A21h.png)](https://www.youtube.com/watch?v=r7XLA9tO45Q "MusicPlayerPlus ASCIImatics Intro")
+- [![MusicPlayerPlus Demo](https://i.imgur.com/ZntE1sH.jpg)](https://www.youtube.com/watch?v=y2yaHm04ELM "MusicPlayerPlus Demo")
