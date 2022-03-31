@@ -6,14 +6,14 @@ footer: mppsplash 1.0.0
 date: March 27, 2022
 ---
 # NAME
-mppsplash - Launch a fun splashy screen of Asciimatics animations
+mppsplash - Launch a fun splashy screen of ASCIImatics animations
 
 # SYNOPSIS
 **mppsplash** [-a] [-b] [-c numcycles] [-j] [-m] [-p] [-s] [-u]
 
 # DESCRIPTION
-The *mppsplash* command plays one of the Asciimatics animations included in MusicPlayerPlus.
-It's a fun demonstration of some of the capabilities of the Asciimatics library. By default,
+The *mppsplash* command plays one of the ASCIImatics animations included in MusicPlayerPlus.
+It's a fun demonstration of some of the capabilities of the ASCIImatics library. By default,
 *mppsplash* will play a series of animations about MusicPlayerPlus. Command line options
 can be used to tell *mppsplash* to play animations for the Julia Set or a Plasma animation
 as well as play a public domain audio to accompany the ascii art display.
@@ -50,19 +50,19 @@ Without any options the MusicPlayerPlus effect will repeat
 : Without options mppsplash will play a series of animations about MusicPlayerPlus. These will repeat until the 'q' key is pressed.
 
 **mppsplash -c 10**
-: Plays the MusicPlayerPlus asciimatics animations 10 times then exits 
+: Plays the MusicPlayerPlus ASCIImatics animations 10 times then exits 
 
 **mppsplash -j -c 5**
-: Plays the Julia Set asciimatics animation 5 times then exits 
+: Plays the Julia Set ASCIImatics animation 5 times then exits 
 
 **mppsplash -p**
-: Plays the Plasma asciimatics animation in an endless loop until the 'q' key is pressed
+: Plays the Plasma ASCIImatics animation in an endless loop until the 'q' key is pressed
 
 **mppsplash -p -s**
-: Plays the Plasma asciimatics animation using alternate comments
+: Plays the Plasma ASCIImatics animation using alternate comments
 
 **mppsplash -a -c 1**
-: Plays the MusicPlayerPlus asciimatics animation for one cycle accompanied by a public domain audio
+: Plays the MusicPlayerPlus ASCIImatics animation for one cycle accompanied by a public domain audio
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

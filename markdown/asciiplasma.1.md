@@ -6,13 +6,13 @@ footer: asciiplasma 1.0.0
 date: March 27, 2022
 ---
 # NAME
-asciiplasma - Display an Asciimatics animation featuring the Plasma effect
+asciiplasma - Display an ASCIImatics animation featuring the Plasma effect
 
 # SYNOPSIS
 **asciiplasma** [-h] [-a AUDIO] [-c CYCLE] [-f FONT] [-t]
 
 # DESCRIPTION
-The *asciiplasma* command plays one of the Asciimatics animations included in
+The *asciiplasma* command plays one of the ASCIImatics animations included in
 MusicPlayerPlus. Command line options can be used to tell *asciiplasma* to play
 animations for a specified number of cycles, which FigletText font to use,
 which audio file to use as accompaniment, and which comments to use.
@@ -35,13 +35,13 @@ which audio file to use as accompaniment, and which comments to use.
 
 # EXAMPLES
 **asciiplasma**
-: Without options asciiplasma will display an Asciimatics animation featuring the Plasma effect. These will continue until the 'q' key is pressed.
+: Without options asciiplasma will display an ASCIImatics animation featuring the Plasma effect. These will continue until the 'q' key is pressed.
 
 **asciiplasma -c 10**
-: Plays the Plasma asciimatics animation 10 times then exits 
+: Plays the Plasma ASCIImatics animation 10 times then exits 
 
 **asciiplasma -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
-: Plays the Plasma asciimatics animation 5 times accompanied by audio then exits 
+: Plays the Plasma ASCIImatics animation 5 times accompanied by audio then exits 
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

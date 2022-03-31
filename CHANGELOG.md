@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file.
 
+# MusicPlayerPlus-1.0.1r1 (2022-03-31)
+* Add capability to play audio while displaying ASCIImatics scenes
+* Add several ASCIImatics scenes including one during initialization
+* Rename `mpcava` to `mpplus`
+* Several new commands including:
+    * **alsa_audio_test**
+    * **asciijulia**
+    * **asciimpplus**
+    * **asciiplasma**
+    * **download_cover_art**
+    * **mpcinit**
+    * **mpcplus-tmux**
+    * **mppsplash**
+    * **mppsplash-tmux**
+* Added display of client, visualizer, and album cover art in tmux
+* Additional terminal support
+
 # MusicPlayerPlus-1.0.0r1 (2022-03-26)
 * Added Debian and RPM packaging (pkg/debian/ and pkg/rpm/)
 * Added configure and compile of mpcplus to packaging scripts

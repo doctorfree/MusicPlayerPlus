@@ -6,13 +6,13 @@ footer: asciijulia 1.0.0
 date: March 27, 2022
 ---
 # NAME
-asciijulia - Display an Asciimatics animated zoom on a Julia Set
+asciijulia - Display an ASCIImatics animated zoom on a Julia Set
 
 # SYNOPSIS
 **asciijulia** [-h] [-a AUDIO] [-c CYCLE] [-x XVALUE] [-y YVALUE]
 
 # DESCRIPTION
-The *asciijulia* command plays one of the Asciimatics animations included in
+The *asciijulia* command plays one of the ASCIImatics animations included in
 MusicPlayerPlus. Command line options can be used to tell *asciijulia* to play
 animations for a specified number of cycles, what complex number to use as the
 starting point for calculations, and which audio file to use as accompaniment.
@@ -38,10 +38,10 @@ starting point for calculations, and which audio file to use as accompaniment.
 : Without options asciijulia will display an animated zoom on a Julia Set. These will continue until the 'q' key is pressed.
 
 **asciijulia -c 10**
-: Plays the Julia Set asciimatics animation 10 times then exits 
+: Plays the Julia Set ASCIImatics animation 10 times then exits 
 
 **asciijulia -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
-: Plays the Julia Set asciimatics animation 5 times accompanied by audio then exits 
+: Plays the Julia Set ASCIImatics animation 5 times accompanied by audio then exits 
 
 **asciijulia -x 0.687 -y 0.312**
 : Display an animated zoom on the Julia Set with starting complex coordinates [0.687, 0.312]

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# mppsplash - display MusicPlayerPlus splash screen using asciimatics
+# mppsplash - display MusicPlayerPlus splash screen using ASCIImatics
 #
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
@@ -10,8 +10,8 @@ usage() {
   printf "\nUsage: mppsplash [-A] [-a] [-b] [-c num] [-j] [-m] [-p] [-s] [-u]"
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
-  printf "\n\t-a indicates play audio during asciimatics display"
-  printf "\n\t-b indicates use backup audio during asciimatics display"
+  printf "\n\t-a indicates play audio during ASCIImatics display"
+  printf "\n\t-b indicates use backup audio during ASCIImatics display"
   printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
