@@ -16,6 +16,7 @@
 #     asciijulia -x 0.54 -y 0.54
 #     asciijulia -x 0.6 -y 0.55
 #     asciijulia -x 0.0 -y 0.8
+#     asciijulia -x -0.4 -y -0.59
 
 from asciimatics.effects import Julia, Print, Stars
 from asciimatics.renderers import FigletText, Rainbow

@@ -120,6 +120,7 @@ else
     set_cycles ${script} ${numcycles}
     if [ "${script}" == "julia" ] && [ "${longjulia}" ]
     then
+      ascii${script} -c ${usecycle} ${script_args} -x -0.4 -y -0.59
       ascii${script} -c ${usecycle} ${script_args} -x 0.687 -y 0.312
       ascii${script} -c ${usecycle} ${script_args}
       ascii${script} -c ${usecycle} ${script_args} -x 0.54 -y 0.54
