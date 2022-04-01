@@ -4,21 +4,25 @@
 #
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
+PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 
 usage() {
-  printf "\nUsage: mppsplash [-A] [-a] [-b] [-c num] [-jJ] [-m] [-p] [-s] [-u]"
+  printf "\nUsage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-jJ] "
+  printf "[-m] [-p] [-s song] [-u]"
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup audio during ASCIImatics display"
+  printf "\n\t-C indicates use alternate comments in Plasma effect"
   printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-J indicates Julia Set with several runs using different parameters"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
   printf "\n\t-p indicates use Plasma effect"
-  printf "\n\t-s indicates use alternate comments in Plasma effect"
+  printf "\n\t-s song specifies the audio file to play as accompaniment"
   printf "\n\t-u displays this usage message and exits\n"
+  printf "\nDefault audio: ${SONG}"
   printf "\nWithout any options the MusicPlayerPlus effect will repeat"
   printf "\nType 'man mppsplash' for more detailed usage info\n"
   exit 1
@@ -40,11 +44,12 @@ set_cycles() {
 
 all=
 audio=
+custom_audio=
 cycle=
 longjulia=
 script="mpplus"
 switch_comments=
-while getopts "Aabc:jJmpsu" flag; do
+while getopts "AabCc:jJmps:u" flag; do
   case $flag in
       A)
         all=1
@@ -57,6 +62,9 @@ while getopts "Aabc:jJmpsu" flag; do
         ;;
       a)
         audio=1
+        ;;
+      C)
+        switch_comments=1
         ;;
       c)
         cycle="-c ${OPTARG}"
@@ -77,7 +85,25 @@ while getopts "Aabc:jJmpsu" flag; do
         script_args="-t"
         ;;
       s)
-        switch_comments=1
+        custom_audio=1
+        if [ -f "${OPTARG}" ]
+        then
+          SONG="${OPTARG}"
+        else
+          if [ -f "${MUSEDIR}/${OPTARG}" ]
+          then
+            SONG="${MUSEDIR}/${OPTARG}"
+          else
+            if [ -f "${HOME}/Music/${OPTARG}" ]
+            then
+              SONG="${HOME}/Music/${OPTARG}"
+            else
+              custom_audio=
+              echo "Cannot locate ${OPTARG}"
+              echo "Using default song: ${SONG}"
+            fi
+          fi
+        fi
         ;;
       u)
         usage
@@ -92,6 +118,9 @@ shift $(( OPTIND - 1 ))
 script_args="$* ${script_args}"
 
 [ "${audio}" ] && {
+  [ "${script}" == "plasma" ] && {
+    [ "${custom_audio}" ] || SONG="${PLASMA_SONG}"
+  }
   if [ -f "${SONG}" ]
   then
     script_args="${script_args} -a ${SONG}"

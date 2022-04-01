@@ -21,8 +21,8 @@
 mppsplash - Launch a fun splashy screen of ASCIImatics animations
 .SH SYNOPSIS
 .PP
-\f[B]mppsplash\f[R] [-a] [-b] [-c numcycles] [-j] [-J] [-m] [-p] [-s]
-[-u]
+\f[B]mppsplash\f[R] [-a] [-b] [-C] [-c numcycles] [-j] [-J] [-m] [-p]
+[-s song] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mppsplash\f[R] command plays one of the ASCIImatics animations
@@ -45,6 +45,9 @@ indicates play alternate audio accompaniment
 \f[B]-c numcycles\f[R]
 specifies the number of times to cycle
 .TP
+\f[B]-C\f[R]
+indicates use alternate comments in Plasma effect
+.TP
 \f[B]-J\f[R]
 indicates use Julia Set effect and play multiple zooms with different
 parameters
@@ -58,8 +61,8 @@ indicates use MusicPlayerPlus effect
 \f[B]-p\f[R]
 indicates use Plasma effect
 .TP
-\f[B]-s\f[R]
-indicates use alternate comments in Plasma effect
+\f[B]-s song\f[R]
+specifies the audio file to use as accompaniment
 .TP
 \f[B]-u\f[R]
 displays this usage message and exits
@@ -82,12 +85,16 @@ Plays the Julia Set ASCIImatics animation 5 times then exits
 Plays the Plasma ASCIImatics animation in an endless loop until the
 \[aq]q\[aq] key is pressed
 .TP
-\f[B]mppsplash -p -s\f[R]
+\f[B]mppsplash -p -C\f[R]
 Plays the Plasma ASCIImatics animation using alternate comments
 .TP
 \f[B]mppsplash -a -c 1\f[R]
 Plays the MusicPlayerPlus ASCIImatics animation for one cycle
 accompanied by a public domain audio
+.TP
+\f[B]mppsplash -j -s /u/audio/deep.wav\f[R]
+Plays the Julia Set ASCIImatics animation and the audio file
+\f[V]/u/audio/deep.wav\f[R] as accompaniment
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

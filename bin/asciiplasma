@@ -94,7 +94,7 @@ if __name__ == "__main__":
             "Heavy",
             "Right on!",
             "Cool",
-            "Epic",
+            "Epic!",
             "Dude!"
         ]
     else:
@@ -111,19 +111,10 @@ if __name__ == "__main__":
 
     play_song = None
     if song is not None:
-        fnam, fext = os.path.splitext(song)
-        if fext == ".ogg":
-            play_song = subprocess.Popen(["ogg123", "-q", "-d", "alsa", song],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT)
-        elif fext == ".mp3":
-            play_song = subprocess.Popen(["mpg123", "-q", song],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT)
-        else:
-            play_song = subprocess.Popen(["aplay", "-q", song],
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.STDOUT)
+        play_song = subprocess.Popen(
+            ["mplayer", "-novideo", "-really-quiet", "-nolirc", song],
+            stdout=subprocess.DEVNULL,
+            stderr=subprocess.STDOUT)
 
     while True:
         try:
