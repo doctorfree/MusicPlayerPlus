@@ -6,7 +6,7 @@ The `mpcplus` ncurses MPD client is part of the MusicPlayerPlus project.
 
 Project page - https://github.com/doctorfree/MusicPlayerPlus
 
-## mpcplus – featureful ncurses based MPD client inspired by ncmpc
+## mpcplus – Featureful ncurses based MPD client inspired by ncmpc
 
 ## Table of Contents
 
