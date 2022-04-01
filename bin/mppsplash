@@ -7,13 +7,14 @@ SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 
 usage() {
-  printf "\nUsage: mppsplash [-A] [-a] [-b] [-c num] [-j] [-m] [-p] [-s] [-u]"
+  printf "\nUsage: mppsplash [-A] [-a] [-b] [-c num] [-jJ] [-m] [-p] [-s] [-u]"
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup audio during ASCIImatics display"
   printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-j indicates use Julia Set effect"
+  printf "\n\t-J indicates Julia Set with several runs using different parameters"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
   printf "\n\t-p indicates use Plasma effect"
   printf "\n\t-s indicates use alternate comments in Plasma effect"
@@ -40,9 +41,10 @@ set_cycles() {
 all=
 audio=
 cycle=
+longjulia=
 script="mpplus"
 switch_comments=
-while getopts "Aabc:jmpsu" flag; do
+while getopts "Aabc:jJmpsu" flag; do
   case $flag in
       A)
         all=1
@@ -61,6 +63,11 @@ while getopts "Aabc:jmpsu" flag; do
         ;;
       j)
         script="julia"
+        ;;
+      J)
+        script="julia"
+        longjulia=1
+        script_args="-i"
         ;;
       m)
         script="mpplus"
@@ -81,7 +88,7 @@ shift $(( OPTIND - 1 ))
 
 [ "${all}" ] && script_args=
 [ "${switch_comments}" ] && script_args=
-[ "${script}" == "plasma" ] || script_args=
+[ "${script}" == "plasma" ] || [ "${longjulia}" ] || script_args=
 script_args="$* ${script_args}"
 
 [ "${audio}" ] && {
@@ -111,7 +118,16 @@ else
   then
     numcycles=`echo ${cycle} | awk ' { print $2 } '`
     set_cycles ${script} ${numcycles}
-    ascii${script} -c ${usecycle} ${script_args}
+    if [ "${script}" == "julia" ] && [ "${longjulia}" ]
+    then
+      ascii${script} -c ${usecycle} ${script_args} -x 0.687 -y 0.312
+      ascii${script} -c ${usecycle} ${script_args}
+      ascii${script} -c ${usecycle} ${script_args} -x 0.54 -y 0.54
+      ascii${script} -c ${usecycle} ${script_args} -x 0.6 -y 0.55
+      ascii${script} -c ${usecycle} ${script_args} -x 0.0 -y 0.8
+    else
+      ascii${script} -c ${usecycle} ${script_args}
+    fi
   else
     ascii${script} ${script_args}
   fi
