@@ -17,12 +17,12 @@ jobs:
     - name: upgrade
       run: sudo apt upgrade -y
     - name: install
-      run: sudo apt install libboost-all-dev libncurses-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev libmpdclient-dev -y
+      run: sudo apt install libboost-all-dev libncurses-dev libfftw3-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev libmpdclient-dev -y
     - name: autogen
       run: ./autogen.sh
       working-directory: ./mpcplus
     - name: configure
-      run: ./configure --prefix=/usr --enable-outputs --enable-clock --disable-visualizer --with-taglib
+      run: ./configure --prefix=/usr --enable-outputs --enable-clock --enable-visualizer --with-fftw --with-taglib
       working-directory: ./mpcplus
     - name: make
       run: make

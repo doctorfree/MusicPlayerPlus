@@ -24,9 +24,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots or logs to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. ARCH]
- - Terminal: [e.g. bash]
- - Version [e.g. 22]
+ - OS: [e.g. Ubuntu]
+ - Version [e.g. 20.04.4]
+ - Terminal: [e.g. gnome-terminal]
 
 **Additional context**
 Add any other context about the problem here.
