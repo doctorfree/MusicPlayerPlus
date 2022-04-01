@@ -9,7 +9,7 @@ date: March 27, 2022
 mppsplash - Launch a fun splashy screen of ASCIImatics animations
 
 # SYNOPSIS
-**mppsplash** [-a] [-b] [-c numcycles] [-j] [-m] [-p] [-s] [-u]
+**mppsplash** [-a] [-b] [-c numcycles] [-j] [-J] [-m] [-p] [-s] [-u]
 
 # DESCRIPTION
 The *mppsplash* command plays one of the ASCIImatics animations included in MusicPlayerPlus.
@@ -27,6 +27,9 @@ as well as play a public domain audio to accompany the ascii art display.
 
 **-c numcycles**
 : specifies the number of times to cycle
+
+**-J**
+: indicates use Julia Set effect and play multiple zooms with different parameters
 
 **-j**
 : indicates use Julia Set effect
