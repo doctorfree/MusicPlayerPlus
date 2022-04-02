@@ -53,21 +53,6 @@ class MusicPlayerPlusScene(Scene):
         self._effects = [self._effects[0]]
         self._add_mpcplus_comment()
 
-def handler(signal_number, frame):
-#   if play_song is not None:
-#       song_status = play_song.poll()
-#       if song_status is None:
-#           mp_fifo = open(fifo, 'w')
-#           for vol in range(80, 0, -5):
-#               mp_fifo.write("volume " + str(vol) + " 1")
-#           mp_fifo.write("stop")
-#           mp_fifo.write("volume 80 1")
-#           mp_fifo.write("quit")
-#           os.killpg(os.getpgid(play_song.pid), signal.SIGTERM)
-    print('Removing', fifo)
-    os.remove(fifo)
-    os.rmdir(tmpdir)
-
 def mpplus(screen, cycle=None):
     if cycle is None:
         screen.play([MusicPlayerPlusScene(screen)], stop_on_resize=True)
@@ -79,6 +64,17 @@ def mpplus(screen, cycle=None):
 
 
 if __name__ == "__main__":
+
+    def handler(signal_number, frame):
+        with open(fifo, "w") as mp_fifo:
+            for vol in range(80, 0, -5):
+                print("volume " + str(vol) + " 1", file=mp_fifo)
+            print("stop", file=mp_fifo)
+            print("volume 80 1", file=mp_fifo)
+            print("quit", file=mp_fifo)
+        os.remove(fifo)
+        os.rmdir(tmpdir)
+        sys.exit(0)
 
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--audio", help="audio file to play during effects")
@@ -126,30 +122,35 @@ if __name__ == "__main__":
     play_song = None
     tmpdir = tempfile.mkdtemp()
     fifo = os.path.join(tmpdir, 'mplayer.fifo')
+    os.mkfifo(fifo)
     signal.signal(signal.SIGINT, handler)
-    signal.signal(signal.SIGTERM, handler)
+
     if song is not None:
-        os.mkfifo(fifo)
         play_song = subprocess.Popen(
-            ["mplayer", "-novideo", "-volume", "80", "-really-quiet", "-nolirc", "-slave", "-input", "file=" + fifo, song],
+            ["mplayer", "-novideo", "-volume", "80", "-really-quiet",
+                        "-nolirc", "-slave", "-input", "file=" + fifo, song],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
 
     while True:
         try:
             Screen.wrapper(mpplus, arguments=[numcycles])
+
+            with open(fifo, "w") as mp_fifo:
+                for vol in range(80, 0, -5):
+                    print("volume " + str(vol) + " 1", file=mp_fifo)
+                print("stop", file=mp_fifo)
+                print("volume 80 1", file=mp_fifo)
+                print("quit", file=mp_fifo)
+
+            os.remove(fifo)
+            os.rmdir(tmpdir)
+
             if play_song is not None:
                 song_status = play_song.poll()
                 if song_status is None:
-                    mp_fifo = open(fifo, 'w')
-                    for vol in range(80, 0, -5):
-                        mp_fifo.write("volume " + str(vol) + " 1")
-                    mp_fifo.write("stop")
-                    mp_fifo.write("volume 80 1")
-                    mp_fifo.write("quit")
-                    os.killpg(os.getpgid(play_song.pid), signal.SIGTERM)
-#           os.remove(fifo)
-#           os.rmdir(tmpdir)
+                    os.kill(play_song.pid, signal.SIGTERM)
+
             sys.exit(0)
         except ResizeScreenError:
             pass
