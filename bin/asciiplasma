@@ -6,7 +6,7 @@ from asciimatics.scene import Scene
 from asciimatics.screen import Screen
 from asciimatics.effects import Print
 from asciimatics.exceptions import ResizeScreenError
-import os
+import os, tempfile
 import signal
 import subprocess
 import sys
@@ -14,7 +14,7 @@ import argparse
 
 
 class MusicPlayerPlusScene(Scene):
-
+ 
     def __init__(self, screen):
         self._screen = screen
         effects = [
@@ -53,6 +53,21 @@ class MusicPlayerPlusScene(Scene):
         self._effects = [self._effects[0]]
         self._add_mpcplus_comment()
 
+ 
+def sighandler(signal_number, frame):
+    if play_song is not None:
+        song_status = play_song.poll()
+        if song_status is None:
+            mp_fifo = open(fifo, 'w')
+            for vol in range(80, 0, -5):
+                mp_fifo.write("volume " + str(vol) + " 1")
+            mp_fifo.write("stop")
+            mp_fifo.write("volume 80 1")
+            mp_fifo.write("quit")
+            os.killpg(os.getpgid(play_song.pid), signal.SIGTERM)
+    os.remove(fifo)
+    os.rmdir(tmpdir)
+    sys.exit(0)
 
 def mpplus(screen, cycle=None):
     if cycle is None:
@@ -110,9 +125,13 @@ if __name__ == "__main__":
         ]
 
     play_song = None
+    tmpdir = tempfile.mkdtemp()
+    fifo = os.path.join(tmpdir, 'mplayer.fifo')
+    signal.signal(signal.SIGINT, sighandler)
     if song is not None:
+        os.mkfifo(fifo)
         play_song = subprocess.Popen(
-            ["mplayer", "-novideo", "-really-quiet", "-nolirc", song],
+            ["mplayer", "-novideo", "-volume", "80", "-really-quiet", "-nolirc", "-slave", "-input", "file=" + fifo, song],
             stdout=subprocess.DEVNULL,
             stderr=subprocess.STDOUT)
 
@@ -122,7 +141,15 @@ if __name__ == "__main__":
             if play_song is not None:
                 song_status = play_song.poll()
                 if song_status is None:
+                    mp_fifo = open(fifo, 'w')
+                    for vol in range(80, 0, -5):
+                        mp_fifo.write("volume " + str(vol) + " 1")
+                    mp_fifo.write("stop")
+                    mp_fifo.write("volume 80 1")
+                    mp_fifo.write("quit")
                     os.killpg(os.getpgid(play_song.pid), signal.SIGTERM)
+            os.remove(fifo)
+            os.rmdir(tmpdir)
             sys.exit(0)
         except ResizeScreenError:
             pass
