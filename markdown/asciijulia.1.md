@@ -9,7 +9,7 @@ date: March 27, 2022
 asciijulia - Display an ASCIImatics animated zoom on a Julia Set
 
 # SYNOPSIS
-**asciijulia** [-h] [-i] [-a AUDIO] [-c CYCLE] [-x XVALUE] [-y YVALUE]
+**asciijulia** [-h] [-d] [-i] [-a AUDIO] [-c CYCLE] [-x XVALUE] [-y YVALUE]
 
 # DESCRIPTION
 The *asciijulia* command plays one of the ASCIImatics animations included in
@@ -20,6 +20,9 @@ starting point for calculations, and which audio file to use as accompaniment.
 # COMMAND LINE OPTIONS
 **-h, --help**
 : show this help message and exit
+
+**-d, --debug**
+: enable debug mode
 
 **-i, --info**
 : show an information screen prior to displaying the Julia Set zoom

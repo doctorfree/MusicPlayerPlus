@@ -21,8 +21,8 @@
 mppsplash - Launch a fun splashy screen of ASCIImatics animations
 .SH SYNOPSIS
 .PP
-\f[B]mppsplash\f[R] [-a] [-b] [-C] [-c numcycles] [-j] [-J] [-m] [-p]
-[-s song] [-u]
+\f[B]mppsplash\f[R] [-a] [-b] [-C] [-c numcycles] [-d] [-j] [-J] [-m]
+[-p] [-s song] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mppsplash\f[R] command plays one of the ASCIImatics animations
@@ -47,6 +47,9 @@ specifies the number of times to cycle
 .TP
 \f[B]-C\f[R]
 indicates use alternate comments in Plasma effect
+.TP
+\f[B]-d\f[R]
+enabled debug mode
 .TP
 \f[B]-J\f[R]
 indicates use Julia Set effect and play multiple zooms with different
@@ -92,7 +95,7 @@ Plays the Plasma ASCIImatics animation using alternate comments
 Plays the MusicPlayerPlus ASCIImatics animation for one cycle
 accompanied by a public domain audio
 .TP
-\f[B]mppsplash -j -s /u/audio/deep.wav\f[R]
+\f[B]mppsplash -a -j -s /u/audio/deep.wav\f[R]
 Plays the Julia Set ASCIImatics animation and the audio file
 \f[V]/u/audio/deep.wav\f[R] as accompaniment
 .SH AUTHORS

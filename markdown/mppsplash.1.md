@@ -9,7 +9,7 @@ date: March 27, 2022
 mppsplash - Launch a fun splashy screen of ASCIImatics animations
 
 # SYNOPSIS
-**mppsplash** [-a] [-b] [-C] [-c numcycles] [-j] [-J] [-m] [-p] [-s song] [-u]
+**mppsplash** [-a] [-b] [-C] [-c numcycles] [-d] [-j] [-J] [-m] [-p] [-s song] [-u]
 
 # DESCRIPTION
 The *mppsplash* command plays one of the ASCIImatics animations included in MusicPlayerPlus.
@@ -30,6 +30,9 @@ as well as play a public domain audio to accompany the ascii art display.
 
 **-C**
 : indicates use alternate comments in Plasma effect
+
+**-d**
+: enabled debug mode
 
 **-J**
 : indicates use Julia Set effect and play multiple zooms with different parameters
@@ -70,7 +73,7 @@ Without any options the MusicPlayerPlus effect will repeat
 **mppsplash -a -c 1**
 : Plays the MusicPlayerPlus ASCIImatics animation for one cycle accompanied by a public domain audio
 
-**mppsplash -j -s /u/audio/deep.wav**
+**mppsplash -a -j -s /u/audio/deep.wav**
 : Plays the Julia Set ASCIImatics animation and the audio file `/u/audio/deep.wav` as accompaniment
 
 # AUTHORS

@@ -38,12 +38,13 @@ MusicPlayerPlus components are used to manage, control, and update MPD.
 
 Integration is provided for:
 
-* [mpd](https://www.musicpd.org/), the Music Player Daemon
-* [mpcplus](mpcplus/README.md), character based Music Player Plus MPD client
-* [cantata](https://github.com/CDrummond/cantata), graphical MPD client
-* [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
+* [MPD](https://www.musicpd.org/), the Music Player Daemon
+* [MPCplus](mpcplus/README.md), character based Music Player Plus MPD client
+* [Cantata](https://github.com/CDrummond/cantata), graphical MPD client
+* [Cava](https://github.com/karlstav/cava), an audio spectrum visualizer
+* [MPlayer](http://mplayerhq.hu/design7/info.html), a media player
 * [ASCIImatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
-* [asciinema](https://asciinema.org/) - automatically create ascii character based video clips
+* [ASCIInema](https://asciinema.org/) - automatically create ascii character based video clips
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
     * xfce4-terminal

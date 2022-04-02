@@ -9,7 +9,7 @@ date: March 27, 2022
 asciimpplus - Display an ASCIImatics animation featuring ascii art for the MusicPlayerPlus project
 
 # SYNOPSIS
-**asciimpplus** [-h] [-a AUDIO] [-c CYCLE] [-f font]
+**asciimpplus** [-h] [=d] [-a AUDIO] [-c CYCLE] [-f font]
 
 # DESCRIPTION
 The *asciimpplus* command plays one of the ASCIImatics animations included in
@@ -26,6 +26,9 @@ accompaniment, and specify the font used in the Cycle effect.
 
 **-c CYCLE, --cycle CYCLE**
 : number of times to cycle back through effects
+
+**-d, --debug**
+: enable debug mode
 
 **-f FONT, --font FONT**
 : Font for FigletText in Cycle effect, default 'small'

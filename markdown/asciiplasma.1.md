@@ -9,7 +9,7 @@ date: March 27, 2022
 asciiplasma - Display an ASCIImatics animation featuring the Plasma effect
 
 # SYNOPSIS
-**asciiplasma** [-h] [-a AUDIO] [-c CYCLE] [-f FONT] [-t]
+**asciiplasma** [-h] [-d] [-a AUDIO] [-c CYCLE] [-f FONT] [-t]
 
 # DESCRIPTION
 The *asciiplasma* command plays one of the ASCIImatics animations included in
@@ -26,6 +26,9 @@ which audio file to use as accompaniment, and which comments to use.
 
 **-c CYCLE, --cycle CYCLE**
 : number of times to cycle back through effects
+
+**-d, --debug**
+: enable debug mode
 
 **-f FONT, --font FONT**
 : Font for FigletText, default 'banner3'
