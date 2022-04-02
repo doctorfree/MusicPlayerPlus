@@ -6,6 +6,7 @@ import os
 import signal, tempfile
 import subprocess
 import sys
+import time
 from random import randint, choice
 from pyfiglet import Figlet
 
@@ -245,12 +246,26 @@ def _mpplus(screen):
 if __name__ == "__main__":
 
     def handler(signal_number, frame):
+        if debug:
+            print("In signal handler with\nsignal number = " + signal_number)
+            print("frame = " + str(frame))
         with open(fifo, "w") as mp_fifo:
+            if debug:
+                print("Fading volume in signal handler")
             for vol in range(80, 0, -5):
-                print("volume " + str(vol) + " 1", file=mp_fifo)
-            print("stop", file=mp_fifo)
-            print("volume 80 1", file=mp_fifo)
-            print("quit", file=mp_fifo)
+                print("volume " + str(vol) + " 1", flush=True, file=mp_fifo)
+                time.sleep(0.1)
+            if debug:
+                print("Stopping mplayer in signal handler")
+            print("stop", flush=True, file=mp_fifo)
+            if debug:
+                print("Resetting volume in signl handler")
+            print("volume 80 1", flush=True, file=mp_fifo)
+            if debug:
+                print("Exiting mplayer in signal handler")
+            print("quit", flush=True, file=mp_fifo)
+        if debug:
+            print("Removing mplayer FIFO in signal handler")
         os.remove(fifo)
         os.rmdir(tmpdir)
         sys.exit(0)
@@ -258,6 +273,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-a", "--audio", help="audio file to play during effects")
     parser.add_argument("-c", "--cycle", help="number of times to cycle back through effects")
+    parser.add_argument("-d", "--debug", default=False, action='store_true', help="Output hopefully useful debugging statements")
     parser.add_argument("-f", "--font", help="Font for FigletText in Cycle effect, default 'small'")
     args = parser.parse_args()
 
@@ -269,6 +285,10 @@ if __name__ == "__main__":
         numcycles = args.cycle
     else:
         numcycles = None
+    if args.debug:
+        debug = True
+    else:
+        debug = False
     if args.font:
         font = args.font
     else:
@@ -277,9 +297,13 @@ if __name__ == "__main__":
     play_song = None
     tmpdir = tempfile.mkdtemp()
     fifo = os.path.join(tmpdir, 'mplayer.fifo')
+    if debug:
+        print("Using mplayer FIFO " + fifo)
     os.mkfifo(fifo)
     signal.signal(signal.SIGINT, handler)
     if song is not None:
+        if debug:
+            print("MPlayer starting: mplayer -novideo -volume 80 -really-quiet -nolirc -slave -input file=" + fifo + " " + song)
         play_song = subprocess.Popen(
             ["mplayer", "-novideo", "-volume", "80", "-really-quiet", "-nolirc", "-slave", "-input", "file=" + fifo, song],
             stdout=subprocess.DEVNULL,
@@ -290,12 +314,24 @@ if __name__ == "__main__":
             Screen.wrapper(_mpplus)
 
             with open(fifo, "w") as mp_fifo:
+                if debug:
+                    print("Fading volume")
                 for vol in range(80, 0, -5):
-                    print("volume " + str(vol) + " 1", file=mp_fifo)
-                print("stop", file=mp_fifo)
-                print("volume 80 1", file=mp_fifo)
-                print("quit", file=mp_fifo)
+                    print("volume " + str(vol) + " 1",
+                            flush=True, file=mp_fifo)
+                    time.sleep(0.1)
+                if debug:
+                    print("Stopping mplayer")
+                print("stop", flush=True, file=mp_fifo)
+                if debug:
+                    print("Resetting volume")
+                print("volume 80 1", flush=True, file=mp_fifo)
+                if debug:
+                    print("Exiting mplayer")
+                print("quit", flush=True, file=mp_fifo)
 
+            if debug:
+                print("Removing mplayer FIFO")
             os.remove(fifo)
             os.rmdir(tmpdir)
 

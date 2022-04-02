@@ -8,7 +8,7 @@ PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 
 usage() {
-  printf "\nUsage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-jJ] "
+  printf "\nUsage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] "
   printf "[-m] [-p] [-s song] [-u]"
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
@@ -16,6 +16,7 @@ usage() {
   printf "\n\t-b indicates use backup audio during ASCIImatics display"
   printf "\n\t-C indicates use alternate comments in Plasma effect"
   printf "\n\t-c num specifies the number of times to cycle"
+  printf "\n\t-d indicates enable debug mode"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-J indicates Julia Set with several runs using different parameters"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
@@ -31,10 +32,20 @@ usage() {
 set_cycles() {
   case $1 in
     julia)
-      usecycle=$(( 1000*$2 ))
+      if [ "${debug}" ]
+      then
+        usecycle=$(( 100*$2 ))
+      else
+        usecycle=$(( 1000*$2 ))
+      fi
       ;;
     plasma)
-      usecycle=$(( 8*$2 ))
+      if [ "${debug}" ]
+      then
+        usecycle=$(( 1*$2 ))
+      else
+        usecycle=$(( 8*$2 ))
+      fi
       ;;
     *)
       usecycle=$2
@@ -46,10 +57,11 @@ all=
 audio=
 custom_audio=
 cycle=
+debug=
 longjulia=
 script="mpplus"
 switch_comments=
-while getopts "AabCc:jJmps:u" flag; do
+while getopts "AabCc:djJmps:u" flag; do
   case $flag in
       A)
         all=1
@@ -68,6 +80,9 @@ while getopts "AabCc:jJmps:u" flag; do
         ;;
       c)
         cycle="-c ${OPTARG}"
+        ;;
+      d)
+        debug="--debug"
         ;;
       j)
         script="julia"
@@ -115,7 +130,7 @@ shift $(( OPTIND - 1 ))
 [ "${all}" ] && script_args=
 [ "${switch_comments}" ] && script_args=
 [ "${script}" == "plasma" ] || [ "${longjulia}" ] || script_args=
-script_args="$* ${script_args}"
+script_args="$* ${debug} ${script_args}"
 
 [ "${audio}" ] && {
   [ "${script}" == "plasma" ] && {
