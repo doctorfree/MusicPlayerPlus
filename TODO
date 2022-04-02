@@ -1,4 +1,5 @@
 Todo:
+- Fix signal handling in asciiplasma and copy to others
 - Create asciinema casts and upload
 - Add asciinema casts to website, README, Twitter, ...
 - Blog post for release, videos
