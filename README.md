@@ -45,6 +45,7 @@ Integration is provided for:
 * [MPlayer](http://mplayerhq.hu/design7/info.html), a media player
 * [ASCIImatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
 * [ASCIInema](https://asciinema.org/) - automatically create ascii character based video clips
+* [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
     * xfce4-terminal
