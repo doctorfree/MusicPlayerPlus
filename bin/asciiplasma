@@ -68,7 +68,7 @@ if __name__ == "__main__":
 
     def handler(signal_number, frame):
         if debug:
-            print("In signal handler with\nsignal number = " + signal_number)
+            print("In signal handler with\nsignal number = " + str(signal_number))
             print("frame = " + str(frame))
         with open(fifo, "w") as mp_fifo:
             for vol in range(80, 0, -5):
@@ -133,12 +133,12 @@ if __name__ == "__main__":
     play_song = None
     tmpdir = tempfile.mkdtemp()
     fifo = os.path.join(tmpdir, 'mplayer.fifo')
-    if debug:
-        print("Using mplayer FIFO " + fifo)
-    os.mkfifo(fifo)
     signal.signal(signal.SIGINT, handler)
 
     if song is not None:
+        if debug:
+            print("Using mplayer FIFO " + fifo)
+        os.mkfifo(fifo)
         if debug:
             print("MPlayer starting: mplayer -novideo -volume 80 -really-quiet -nolirc -slave -input file=" + fifo + " " + song)
         play_song = subprocess.Popen(
@@ -151,26 +151,27 @@ if __name__ == "__main__":
         try:
             Screen.wrapper(mpplus, arguments=[numcycles])
 
-            with open(fifo, "w") as mp_fifo:
+            if song is not None:
+                with open(fifo, "w") as mp_fifo:
+                    if debug:
+                        print("Fading volume")
+                    for vol in range(80, 0, -5):
+                        print("volume " + str(vol) + " 1",
+                                flush=True, file=mp_fifo)
+                        time.sleep(0.1)
+                    if debug:
+                        print("Stopping mplayer")
+                    print("stop", flush=True, file=mp_fifo)
+                    if debug:
+                        print("Resetting volume")
+                    print("volume 80 1", flush=True, file=mp_fifo)
+                    if debug:
+                        print("Quiting mplayer")
+                    print("quit", flush=True, file=mp_fifo)
                 if debug:
-                    print("Fading volume")
-                for vol in range(80, 0, -5):
-                    print("volume " + str(vol) + " 1",
-                            flush=True, file=mp_fifo)
-                    time.sleep(0.1)
-                if debug:
-                    print("Stopping mplayer")
-                print("stop", flush=True, file=mp_fifo)
-                if debug:
-                    print("Resetting volume")
-                print("volume 80 1", flush=True, file=mp_fifo)
-                if debug:
-                    print("Quiting mplayer")
-                print("quit", flush=True, file=mp_fifo)
+                    print("Removing FIFO " + fifo)
+                os.remove(fifo)
 
-            if debug:
-                print("Removing FIFO " + fifo)
-            os.remove(fifo)
             if debug:
                 print("Removing temp directory " + tmpdir)
             os.rmdir(tmpdir)

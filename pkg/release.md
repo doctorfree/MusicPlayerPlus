@@ -1,5 +1,3 @@
-# MusicPlayerPlus version 1.0.1 release 1
-
 Changes in this release include:
 
 * Add capability to play audio while displaying ASCIImatics scenes
@@ -22,12 +20,12 @@ Changes in this release include:
 ## Installation
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.1-1.amd64.deb
+sudo apt install ./MusicPlayerPlus_1.0.1-2.amd64.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.1-1.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-1.0.1-2.x86_64.rpm
 ```
 
 ## Configuration
