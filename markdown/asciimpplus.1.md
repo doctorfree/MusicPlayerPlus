@@ -9,7 +9,7 @@ date: March 27, 2022
 asciimpplus - Display an ASCIImatics animation featuring ascii art for the MusicPlayerPlus project
 
 # SYNOPSIS
-**asciimpplus** [-h] [=d] [-a AUDIO] [-c CYCLE] [-f font]
+**asciimpplus** [-h] [-d] [-a AUDIO] [-c CYCLE] [-f font]
 
 # DESCRIPTION
 The *asciimpplus* command plays one of the ASCIImatics animations included in
