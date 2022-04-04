@@ -1,5 +1,11 @@
 # MusicPlayerPlus
 
+The MusicPlayerPlus project provides integration and extension of several
+audio packages designed to stream and play music. MusicPlayerPlus interacts
+with the Music Player Daemon (MPD). Outputs from the MPD streaming audio server
+are used as MusicPlayerPlus inputs for playback and visualization. In addition,
+MusicPlayerPlus components are used to manage, control, and update MPD.
+
 ## Table of contents
 
 1. [Overview](#overview)
@@ -30,21 +36,33 @@
 
 ## Overview
 
-The MusicPlayerPlus project provides integration and extension of several
-audio packages designed to stream and play music. MusicPlayerPlus interacts
-with the Music Player Daemon (MPD). Outputs from the MPD streaming audio server
-are used as MusicPlayerPlus inputs for playback and visualization. In addition,
-MusicPlayerPlus components are used to manage, control, and update MPD.
+MusicPlayerPlus integrations and extensions are primarily aimed at the
+character based terminal user. They enable an easy to use seamlessly
+integrated control of audio streaming, playing, and visualization in
+a lightweight character based environment.
+
+Audio streaming is provided by the Music Player Daemon (MPD).
+At the core of MusicPlayerPlus is the `mpplus` command which acts as
+a front-end for a variety of terminal and/or `tmux` sessions.
+
+The `mpplus` command can be used to invoke:
+
+* The lightweight character based MPD client, `mpcplus`
+* One or more terminal emulators running an MPD client and visualizer
+* A tmux session
+* A spectrum visualizer
+* Any MPD client the user wishes to run
+* One of several asciimatics animations optionally accompanied by audio
 
 Integration is provided for:
 
-* [MPD](https://www.musicpd.org/), the Music Player Daemon
-* [MPCplus](mpcplus/README.md), character based Music Player Plus MPD client
-* [Cantata](https://github.com/CDrummond/cantata), graphical MPD client
-* [Cava](https://github.com/karlstav/cava), an audio spectrum visualizer
-* [MPlayer](http://mplayerhq.hu/design7/info.html), a media player
-* [ASCIImatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
-* [ASCIInema](https://asciinema.org/) - automatically create ascii character based video clips
+* [mpd](https://www.musicpd.org/), the Music Player Daemon
+* [mpcplus](mpcplus/README.md), character based Music Player Plus MPD client
+* [cantata](https://github.com/CDrummond/cantata), graphical MPD client
+* [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
+* [mplayer](http://mplayerhq.hu/design7/info.html), a media player
+* [asciimatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
+* [asciinema](https://asciinema.org/) - automatically create ascii character based video clips
 * [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
@@ -54,10 +72,11 @@ Integration is provided for:
     * cool-retro-term
 
 ### MusicPlayerPlus Commands
+
 MusicPlayerPlus adds the following commands to your system:
 
+* **mpplus** : primary user interface, invokes an MPD client, spectrum visualizer, and more
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
-* **mpplus** : invokes an MPD client and spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:

@@ -5,11 +5,11 @@ MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
-export SESSION=mppsplash
+SESSION=mppsplash
 
 usage() {
   printf "\nUsage: mppsplash-tmux [-a] [-b] [-c num] [-d] [-l script] "
-  printf "[-r script] [-R] [-s song] [-t] [-x width] [-y height] [-u]"
+  printf "[-r script] [-R] [-s song] [-t] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup song during ASCIImatics display"
@@ -20,11 +20,9 @@ usage() {
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-s song specifies audio file to use as accompaniment"
   printf "\n\t-t indicates use original plasma effect comments"
-  printf "\n\t-x width specifies the width of the spectrum visualizer"
-  printf "\n\t-y height specifies the height of the spectrum visualizer"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nDefaults: single pane, width=50 height=100, left pane plasma, right pane julia, recording disabled"
-  printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
+  printf "\nDefaults: single pane, left pane plasma, right pane julia, recording disabled"
+  printf "\nThis run:"
   printf "\n\tPrimary pane = ${PYLEFT}"
   [ "${DUAL}" ] && printf "\n\tSecondary pane = ${PYRIGHT}"
   if [ "${RECORD}" ]
@@ -45,12 +43,10 @@ DUAL=
 DUDE=
 KILLME=
 RECORD=
-WIDTH=50
-HEIGHT=100
 PYLEFT=plasma
 PYRIGHT=julia
 USAGE=
-while getopts "abc:dl:r:Rs:tx:y:u" flag; do
+while getopts "abc:dl:r:Rs:tu" flag; do
     case $flag in
         a)
           AUDIO=1
@@ -101,39 +97,44 @@ while getopts "abc:dl:r:Rs:tx:y:u" flag; do
         t)
           DUDE=1
           ;;
-        x)
-          WIDTH=${OPTARG}
-          ;;
-        y)
-          HEIGHT=${OPTARG}
-          ;;
         u)
           USAGE=1
           ;;
     esac
 done
 shift $(( OPTIND - 1 ))
-script_args="$*"
 [ "${AUDIO}" ] && {
   [ "${PYLEFT}" == "plasma" ] && {
     [ "${custom_audio}" ] || SONG="${PLASMA_SONG}"
   }
   if [ -f "${SONG}" ]
   then
-    script_args="${script_args} -a ${SONG}"
+    left_script_args="${left_script_args} -s ${SONG}"
   else
     if [ -f "${ALTSONG}" ]
     then
-      script_args="${script_args} -a ${ALTSONG}"
+      left_script_args="${left_script_args} -s ${ALTSONG}"
     fi
   fi
 }
 script_args="${script_args} ${CYCLE}"
 
-[ "${DUDE}" ] && {
-  [ "${PYLEFT}" == "plasma" ] && PYLEFT="plasma -t"
-  [ "${PYRIGHT}" == "plasma" ] && PYRIGHT="plasma -t"
-}
+if [ "${DUDE}" ]
+then
+  [ "${PYLEFT}" == "mpplus" ] && left_script_args="${left_script_args} -m -C"
+  [ "${PYRIGHT}" == "mpplus" ] && right_script_args="${right_script_args} -m -C"
+  [ "${PYLEFT}" == "plasma" ] && left_script_args="${left_script_args} -p -C"
+  [ "${PYRIGHT}" == "plasma" ] && right_script_args="${right_script_args} -p -C"
+  [ "${PYLEFT}" == "julia" ] && left_script_args="${left_script_args} -j -C"
+  [ "${PYRIGHT}" == "julia" ] && right_script_args="${right_script_args} -j -C"
+else
+  [ "${PYLEFT}" == "mpplus" ] && left_script_args="${left_script_args} -m"
+  [ "${PYRIGHT}" == "mpplus" ] && right_script_args="${right_script_args} -m"
+  [ "${PYLEFT}" == "plasma" ] && left_script_args="${left_script_args} -p"
+  [ "${PYRIGHT}" == "plasma" ] && right_script_args="${right_script_args} -p"
+  [ "${PYLEFT}" == "julia" ] && left_script_args="${left_script_args} -j"
+  [ "${PYRIGHT}" == "julia" ] && right_script_args="${right_script_args} -j"
+fi
 
 have_left=`type -p ascii${PYLEFT}`
 [ "${have_left}" ] && PYLEFT="ascii${PYLEFT}"
@@ -142,14 +143,14 @@ have_right=`type -p ascii${PYRIGHT}`
 
 [ "${USAGE}" ] && usage
 
-tmux new-session -d -x 80 -y 28 -s ${SESSION}
+tmux new-session -d -x "$(tput cols)" -y "$(tput lines)" -s ${SESSION}
 tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
 tmux send-keys "tput civis -- invisible" C-m
 tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
-[ "${DUAL}" ] && tmux split-window -h
+[ "${DUAL}" ] && tmux split-window -h -p 50
 
 tmux select-pane -t 0
 have_left=`type -p ${PYLEFT}`
@@ -160,7 +161,7 @@ have_left=`type -p ${PYLEFT}`
 }
 
 # Start the left pane script
-tmux send-keys "${PYLEFT} ${script_args}; exit" C-m
+tmux send-keys "mppsplash ${left_script_args} ${script_args}; tmux kill-session -t ${SESSION}" C-m
 
 [ "${DUAL}" ] && {
   have_right=`type -p ${PYRIGHT}`
@@ -172,12 +173,11 @@ tmux send-keys "${PYLEFT} ${script_args}; exit" C-m
   tmux select-pane -t 1
 
   # Start the right pane script
-  tmux send-keys "${PYRIGHT} ${script_args}; exit" C-m
+  tmux send-keys "mppsplash ${right_script_args} ${script_args}; tmux kill-session -t ${SESSION}" C-m
 }
 
-tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
-
-tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
+#tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
+#tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
 
 if [ "${RECORD}" ]
 then

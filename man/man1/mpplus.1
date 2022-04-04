@@ -21,7 +21,8 @@
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+\f[B]mpplus\f[R] [-a] [-c] [-C client] [-f] [-h] [-k] [-p script] [-q]
+[-r] [-R] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -31,7 +32,16 @@ It can be used to display these utilities juxtaposed in separate windows
 or fullscreen overlayed with transparency.
 Alternately, mpplus can launch the cantata MPD client or any specified
 MPD client along with the cava spectrum visualizer.
+Command line options also support running the \f[I]mpplus\f[R] windows
+in a tmux session and recording that session using \f[I]asciinema\f[R].
+.PP
+Occasionally a tmux session or asciimatics script will hang.
+Previously started tmux sessions and asciimatics scripts can be quickly
+and easily killed by executing the \f[V]mpplus -k\f[R] command.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-a\f[R]
+indicates display album cover art (implies tmux session)
 .TP
 \f[B]-c\f[R]
 indicates launch cantata MPD client rather than mpcplus
@@ -45,6 +55,19 @@ indicates fullscreen display
 \f[B]-h\f[R]
 indicates half-height for cava window (with -f only)
 .TP
+\f[B]-k\f[R]
+indicates kill any previously started tmux sessions and asciimatics
+scripts
+.TP
+\f[B]-p script\f[R]
+specifies an asciimatics script to run in the visualizer pane
+.TP
+\f[B]-R\f[R]
+indicates record tmux session with asciinema
+.TP
+\f[B]-T\f[R]
+indicates use a tmux session for terminal display
+.TP
 \f[B]-q\f[R]
 indicates quarter-height for cava window (with -f only)
 .TP
@@ -56,6 +79,9 @@ indicates use tilix terminal emulator
 .TP
 \f[B]-u\f[R]
 displays this usage message and exits
+.PP
+Type \[aq]man mpplus\[aq] for detailed usage info on mpplus Type
+\[aq]man mpcplus\[aq] for detailed usage info on the mpcplus MPD client
 .SH EXAMPLES
 .TP
 \f[B]mpplus\f[R]
@@ -86,6 +112,14 @@ gnome-terminal terminal emulator window.
 Launches \f[V]mpcplus\f[R] music player client in fullscreen mode with
 cava spectrum visualizer in quarter-screen mode, both running in a tilix
 terminal emulator window.
+.TP
+\f[B]mpplus -a -T\f[R]
+Launches \f[V]mpcplus\f[R] music player client and visualizer running in
+a tmux session displaying album cover art.
+.TP
+\f[B]mpplus -R -T\f[R]
+Creates an asciinema recording of \f[V]mpcplus\f[R] music player client
+and visualizer running in a tmux session
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

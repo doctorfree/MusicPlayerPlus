@@ -14,61 +14,74 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "MPCPLUS-TMUX" "1" "March 26, 2022" "mpcplus-tmux 1.0.0" "User Manual"
+.TH "MPPSPLASH-TMUX" "1" "March 26, 2022" "mppsplash-tmux 1.0.0" "User Manual"
 .hy
 .SH NAME
 .PP
-mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a
-tmux session
+mppsplash-tmux - embeds \f[V]mppsplash\f[R] in a tmux session
 .SH SYNOPSIS
 .PP
-\f[B]mpcplus-tmux\f[R] [-a] [-p script] [-r] [-u]
+\f[B]mppsplash-tmux\f[R] [-a] [-b] [-c num] [-d] [-l script] [-r script]
+[-R] [-s song] [-t] [-u]
 .SH DESCRIPTION
 .PP
-The \f[I]mpcplus-tmux\f[R] command opens several panes in a terminal
-window, executing the mpcplus MPD client in one pane, a visualizer in
-another pane, and displaying album cover art in another pane.
-The album cover art automatically updates when another album is selected
-in the MPD client pane.
-The visualizer pane displays, by default, the cava spectrum visualizer.
-Alternately, the visualizer pane can display a Python ASCIImatics
-visualization.
+The \f[I]mppsplash-tmux\f[R] command runs the \f[I]mppsplash\f[R]
+command in a tmux session.
+This enables automatic recording with \f[I]asciinema\f[R], if desired,
+and simplifies the process of creating and managing a tmux session.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-a\f[R]
-Indicates display album cover art
+indicates play audio during ASCIImatics display
 .TP
-\f[B]-p script\f[R]
-Specifies a python script to run in the visualizer pane.
-Available scripts are \[dq]julia\[dq], \[dq]plasma\[dq], and
-\[dq]mpplus\[dq].
+\f[B]-b\f[R]
+indicates use backup song during ASCIImatics display
 .TP
-\f[B]-r\f[R]
-Indicates record tmux session with asciinema (album cover art not
-recorded)
+\f[B]-c num\f[R]
+specifies number of cycles ASCIImatics effects should run
+.TP
+\f[B]-d\f[R]
+indicates dual window panes, run two scripts
+.TP
+\f[B]-l script\f[R]
+specifies a python script to run in the left visualizer pane
+.TP
+\f[B]-r script\f[R]
+specifies a python script to run in the right visualizer pane
+.TP
+\f[B]-R\f[R]
+indicates record tmux session with asciinema
+.TP
+\f[B]-s song\f[R]
+specifies audio file to use as accompaniment
+.TP
+\f[B]-t\f[R]
+indicates use original plasma effect comments
 .TP
 \f[B]-u\f[R]
 Displays this usage message and exits
 .TP
 \f[B]Defaults:\f[R]
-cover art disabled, python art disabled, recording disabled
+single pane, left pane plasma, right pane julia, recording disabled
 .SH EXAMPLES
 .TP
-\f[B]mpcplus-tmux\f[R]
-Without options, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD client
-and cava spectrum visualizer in a tmux session.
+\f[B]mppsplash-tmux\f[R]
+Without options, \f[I]mppsplash-tmux\f[R] displays the plasma
+asciimatics script in a single pane of a tmux session.
 .TP
-\f[B]mpcplus-tmux -a\f[R]
-With the -a option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
-client, cava spectrum visualizer, and album cover art in a tmux session.
+\f[B]mppsplash-tmux -a\f[R]
+With the -a option, \f[I]mppsplash-tmux\f[R] displays the plasma
+asciimatics script in a single pane of a tmux session accompanied by a
+song.
 .TP
-\f[B]mpcplus-tmux -p plasma\f[R]
-With the -p plasma option, \f[I]mpcplus-tmux\f[R] displays the mpcplus
-MPD client and plasma ASCIImatics display in a tmux session.
+\f[B]mppsplash-tmux -l julia\f[R]
+With the -l julia option, \f[I]mppsplash-tmux\f[R] displays the julia
+set asciimatics script in a single pane of a tmux session.
 .TP
-\f[B]mpcplus-tmux -r\f[R]
-With the -r option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
-client and cava spectrum visualizer in a tmux session and records the
+\f[B]mppsplash-tmux -d -l plasma -r julia -R\f[R]
+With these options, \f[I]mppsplash-tmux\f[R] displays the plasma
+asciimatics script in the left pane of a tmux session, the julia set
+asciimatics script in the right pane of a tmux session and records the
 session using asciinema.
 Recordings are stored in the user\[aq]s \f[V]$HOME/Videos/\f[R] folder.
 .SH TMUX USAGE
@@ -326,10 +339,10 @@ bind Down last-window \[rs]; swap-pane -s tmp.1 \[rs]; kill-window -t tmp
 Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
-MPCPLUS-TMUX is distributed under an Open Source license.
-See the file LICENSE in the MPCPLUS-TMUX source distribution for
+MPPSPLASH-TMUX is distributed under an Open Source license.
+See the file LICENSE in the MPPSPLASH-TMUX source distribution for
 information on terms & conditions for accessing and otherwise using
-MPCPLUS-TMUX and for a DISCLAIMER OF ALL WARRANTIES.
+MPPSPLASH-TMUX and for a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
 Submit bug reports online at:
@@ -337,7 +350,7 @@ Submit bug reports online at:
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
 .SH SEE ALSO
 .PP
-\f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
+\f[B]mppsplash\f[R](1), \f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
 .PP
 Full documentation and sources at:
 .PP

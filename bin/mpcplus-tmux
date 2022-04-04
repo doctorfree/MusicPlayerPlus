@@ -1,6 +1,9 @@
 #!/bin/bash
+#
+# mpcplus-tmux - run the mpcplus MPD client, spectrum visualizer,
+#                and display album cover art in a tmux session
 
-SSESSION=musicplayerplus
+SESSION=musicplayerplus
 
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
@@ -16,16 +19,16 @@ else
 fi
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-p script] [-r] [-x width] [-y height] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-f] [-p script] [-r] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art"
-  printf "\n\t-p script specifies a python script to display ascii art in the visualizer pane"
+  printf "\n\t-f indicates we have been invoked from a fullscreen window"
+  printf "\n\t-p script specifies an asciimatics script to run"
+  printf " in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
-  printf "\n\t-x width specifies the width of the spectrum visualizer"
-  printf "\n\t-y height specifies the height of the spectrum visualizer"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nDefaults: width=256 height=9, cover art disabled, ascii art disabled, recording disabled"
-  printf "\nThis run:\n\twidth=${WIDTH} height=${HEIGHT}"
+  printf "\nDefaults: cover art disabled, ascii art disabled, recording disabled"
+  printf "\nThis run:"
   if [ "${ART}" ]
   then
     printf "\n\tcover art enabled"
@@ -50,16 +53,22 @@ usage() {
 }
 
 ART=
+ART_WIDTH=22
+ART_HEIGHT=42
+ALBUM_COVER="${HOME}/${MPCDIR}/album_cover.sh"
 PYART=
 RECORD=
-WIDTH=256
-HEIGHT=9
 USAGE=
-while getopts "ap:rx:y:u" flag; do
+while getopts "afp:ru" flag; do
     case $flag in
         a)
           have_uebz=`type -p ueberzug`
           [ "${have_uebz}" ] && ART=1
+          ;;
+        f)
+          ART_WIDTH=10
+          ART_HEIGHT=35
+          ALBUM_COVER="${HOME}/${MPCDIR}/album_cover.sh -f"
           ;;
         p)
           PYART=${OPTARG}
@@ -67,12 +76,6 @@ while getopts "ap:rx:y:u" flag; do
         r)
           have_nema=`type -p asciinema`
           [ "${have_nema}" ] && RECORD=1
-          ;;
-        x)
-          WIDTH=${OPTARG}
-          ;;
-        y)
-          HEIGHT=${OPTARG}
           ;;
         u)
           USAGE=1
@@ -84,34 +87,28 @@ shift $(( OPTIND - 1 ))
 # If both ART and PYART have been specified, disable ART and use PYART
 # [ "${ART}" ] && [ "${PYART}" ] && ART=
 
-[ "${ART}" ] && {
-  [ ${HEIGHT} -lt 9 ] && HEIGHT=9
-}
-[ "${PYART}" ] && {
-  [ ${HEIGHT} -lt 12 ] && HEIGHT=12
-}
-
 [ "${USAGE}" ] && usage
 
 COVER="${HOME}/${MPCDIR}/album_cover.png"
 [ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 
-tmux new-session -d -x 256 -y 128 -s ${SESSION}
+tmux new-session -d -x "$(tput cols)" -y "$(tput lines)" -s ${SESSION}
 tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
 tmux send-keys "tput civis -- invisible" C-m
 tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
-[ "${ART}" ] && tmux send-keys "${HOME}/${MPCDIR}/album_cover.sh " C-m
+[ "${ART}" ] && tmux send-keys "${ALBUM_COVER}" C-m
 
-tmux split-window -v
+tmux split-window -v -p $((100 - ART_HEIGHT))
 tmux select-pane -t 1
 tmux send-keys "mpcplus --config=${HOME}/${MPCDIR}/catalog.conf; exit" C-m
 tmux send-keys 1
 
 tmux select-pane -t 0
-[ "${ART}" ] && tmux split-window -h
+[ "${ART}" ] && tmux split-window -h -p $((100 - ART_WIDTH))
+
 if [ "${PYART}" ]
 then
   have_pyart=`type -p ascii${PYART}`
@@ -121,15 +118,15 @@ else
   tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava; exit" C-m
 fi
 
-tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}
-[ "${ART}" ] && tmux resize-pane -t 1 -y ${HEIGHT}
-
-tmux set-hook client-resized "resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}"
 
 if [ "${ART}" ]
 then
+# tmux resize-pane -t 0 -x "${ART_WIDTH}\%" -y "${ART_HEIGHT}\%"
+# tmux set-hook client-resized "resize-pane -t 0 -x \"${ART_WIDTH}\\\%\" -y \"${ART_HEIGHT}\\\%\""
   tmux select-pane -t 2
 else
+# tmux resize-pane -t 0 -x "100\%" -y "${ART_HEIGHT}\%"
+# tmux set-hook client-resized "resize-pane -t 0 -x \"100\\\%\" -y \"${ART_HEIGHT}\\\%\""
   tmux select-pane -t 1
 fi
 

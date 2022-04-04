@@ -1,52 +1,65 @@
 ---
-title: MPCPLUS-TMUX
+title: MPPSPLASH-TMUX
 section: 1
 header: User Manual
-footer: mpcplus-tmux 1.0.0
+footer: mppsplash-tmux 1.0.0
 date: March 26, 2022
 ---
 # NAME
-mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a tmux session
+mppsplash-tmux - embeds `mppsplash` in a tmux session
 
 # SYNOPSIS
-**mpcplus-tmux** [-a] [-p script] [-r] [-u]
+**mppsplash-tmux** [-a] [-b] [-c num] [-d] [-l script] [-r script] [-R] [-s song] [-t] [-u]
 
 # DESCRIPTION
-The *mpcplus-tmux* command opens several panes in a terminal window,
-executing the mpcplus MPD client in one pane, a visualizer in another pane,
-and displaying album cover art in another pane. The album cover art
-automatically updates when another album is selected in the MPD client pane.
-The visualizer pane displays, by default, the cava spectrum visualizer.
-Alternately, the visualizer pane can display a Python ASCIImatics visualization.
+The *mppsplash-tmux* command runs the *mppsplash* command in a tmux session. This enables automatic recording with *asciinema*, if desired, and simplifies the process of creating and managing a tmux session.
 
 # COMMAND LINE OPTIONS
 **-a**
-: Indicates display album cover art
+: indicates play audio during ASCIImatics display
 
-**-p script**
-: Specifies a python script to run in the visualizer pane. Available scripts are "julia", "plasma", and "mpplus".
+**-b**
+: indicates use backup song during ASCIImatics display
 
-**-r**
-: Indicates record tmux session with asciinema (album cover art not recorded)
+**-c num**
+: specifies number of cycles ASCIImatics effects should run
+
+**-d**
+: indicates dual window panes, run two scripts
+
+**-l script**
+: specifies a python script to run in the left visualizer pane
+
+**-r script**
+: specifies a python script to run in the right visualizer pane
+
+**-R**
+: indicates record tmux session with asciinema
+
+**-s song**
+: specifies audio file to use as accompaniment
+
+**-t**
+: indicates use original plasma effect comments
 
 **-u**
 : Displays this usage message and exits
 
 **Defaults:**
-: cover art disabled, python art disabled, recording disabled
+: single pane, left pane plasma, right pane julia, recording disabled
 
 # EXAMPLES
-**mpcplus-tmux**
-: Without options, *mpcplus-tmux* displays the mpcplus MPD client and cava spectrum visualizer in a tmux session. 
+**mppsplash-tmux**
+: Without options, *mppsplash-tmux* displays the plasma asciimatics script in a single pane of a tmux session.
 
-**mpcplus-tmux -a**
-: With the -a option, *mpcplus-tmux* displays the mpcplus MPD client, cava spectrum visualizer, and album cover art in a tmux session. 
+**mppsplash-tmux -a**
+: With the -a option, *mppsplash-tmux* displays the plasma asciimatics script in a single pane of a tmux session accompanied by a song.
 
-**mpcplus-tmux -p plasma**
-: With the -p plasma option, *mpcplus-tmux* displays the mpcplus MPD client and plasma ASCIImatics display in a tmux session. 
+**mppsplash-tmux -l julia**
+: With the -l julia option, *mppsplash-tmux* displays the julia set asciimatics script in a single pane of a tmux session. 
 
-**mpcplus-tmux -r**
-: With the -r option, *mpcplus-tmux* displays the mpcplus MPD client and cava spectrum visualizer in a tmux session and records the session using asciinema. Recordings are stored in the user's `$HOME/Videos/` folder.
+**mppsplash-tmux -d -l plasma -r julia -R**
+: With these options, *mppsplash-tmux* displays the plasma asciimatics script in the left pane of a tmux session, the julia set asciimatics script in the right pane of a tmux session and records the session using asciinema. Recordings are stored in the user's `$HOME/Videos/` folder.
 
 # TMUX USAGE
 
@@ -225,10 +238,10 @@ For example, we can use "w" to jump to the next word and "b" to jump back one wo
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-MPCPLUS-TMUX is distributed under an Open Source license.
-See the file LICENSE in the MPCPLUS-TMUX source distribution
+MPPSPLASH-TMUX is distributed under an Open Source license.
+See the file LICENSE in the MPPSPLASH-TMUX source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using MPCPLUS-TMUX and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using MPPSPLASH-TMUX and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at:
@@ -236,7 +249,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcpluskeys**(1)
+**mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 

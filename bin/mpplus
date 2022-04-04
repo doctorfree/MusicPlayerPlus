@@ -42,17 +42,24 @@
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 MPCPLUS="mpcplus"
+MPCPLUS_TMUX="mpcplus-tmux -f"
 
 usage() {
-  printf "\nUsage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]"
+  printf "\nUsage: mpplus [-a] [-c] [-C client] [-f] [-h] [-k]"
+  printf "\n\t[-p script] [-q] [-r] [-R] [-t] [-T] [-u]"
   printf "\nWhere:"
+  printf "\n\t-a indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-h indicates half-height for cava window (with -f only)"
+  printf "\n\t-k indicates kill previously started tmux session and asciimatics scripts"
+  printf "\n\t-p script specifies an asciimatics script to run in the visualizer pane"
   printf "\n\t-q indicates quarter-height for cava window (with -f only)"
   printf "\n\t-r indicates use retro terminal emulator"
+  printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-t indicates use tilix terminal emulator"
+  printf "\n\t-T indicates use a tmux session for terminal display"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nType 'man mpplus' for detailed usage info on mpplus"
   printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
@@ -66,8 +73,18 @@ QRTRHEIGHT=
 CLIENT=
 RETRO=
 TILIX=
-while getopts "cC:fhqrtu" flag; do
+TMUX=
+PYART=
+USAGE=
+while getopts "acC:fhkp:qrRtTu" flag; do
   case $flag in
+    a)
+      have_uebz=`type -p ueberzug`
+      [ "${have_uebz}" ] && {
+        TMUX=1
+        MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+      }
+      ;;
     c)
       CLIENT=1
       type -p cantata > /dev/null || {
@@ -107,6 +124,31 @@ while getopts "cC:fhqrtu" flag; do
     h)
       HALFHEIGHT=1
       ;;
+    k)
+      SESSIONS="musicplayerplus mppsplash"
+      for session in ${SESSIONS}
+      do
+        ps -ef | grep tmux | grep ${session} > /dev/null && {
+          tmux kill-session -t ${session}
+        }
+      done
+      ASCIIS="asciijulia asciimpplus asciiplasma"
+      for ascii in ${ASCIIS}
+      do
+        ps -ef | grep -v grep | grep ${ascii} > /dev/null && {
+          ps -ef | grep -v grep | grep ${ascii} | while IFS= read -r line
+          do
+            pid=`echo "$line" | awk ' { print $2 } '`
+            kill ${pid}
+          done 
+        }
+      done
+      exit 0
+      ;;
+    p)
+      PYART=${OPTARG}
+      MPCPLUS_TMUX="${MPCPLUS_TMUX} -p ${OPTARG}"
+      ;;
     q)
       QRTRHEIGHT=1
       ;;
@@ -123,6 +165,13 @@ while getopts "cC:fhqrtu" flag; do
       RETRO=1
       type -p tilix > /dev/null && TILIX=1
       ;;
+    R)
+      have_nema=`type -p asciinema`
+      [ "${have_nema}" ] && {
+        TMUX=1
+        MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
+      }
+      ;;
     t)
       type -p tilix > /dev/null || {
         echo "Option '-t' indicates use tilix terminal emulator."
@@ -135,8 +184,11 @@ while getopts "cC:fhqrtu" flag; do
       }
       TILIX=1
       ;;
+    T)
+      TMUX=1
+      ;;
     u)
-      usage
+      USAGE=1
       ;;
     esac
 done
@@ -150,10 +202,7 @@ done
       echo "You can install xfce4-terminal using apt or dnf as follows:"
       printf "\n\n\tsudo apt install xfce4-terminal\nor"
       printf "\n\tsudo dnf install xfce4-terminal\n\n"
-      type -p tilix > /dev/null || {
-        echo "Exiting"
-        exit 1
-      }
+      type -p tilix > /dev/null || usage
       echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
@@ -166,10 +215,7 @@ done
       echo "You can install gnome-terminal using apt or dnf as follows:"
       printf "\n\n\tsudo apt install gnome-terminal\nor"
       printf "\n\tsudo dnf install gnome-terminal\n\n"
-      type -p tilix > /dev/null || {
-        echo "Exiting"
-        exit 1
-      }
+      type -p tilix > /dev/null || usage
       echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
@@ -199,81 +245,95 @@ done
   }
 }
 
-if [ "${FULLSCREEN}" ]
-then
-  if [ "${TILIX}" ]
+[ "${USAGE}" ] && usage
+
+# Begin visualizer startup section
+#
+# Do not start visualizer here if we are going to start a tmux session
+[ "${TMUX}" ] || {
+  if [ "${FULLSCREEN}" ]
   then
-    tilix --title="${VTITLE}" \
-          --full-screen \
-          --window-style=borderless \
-          --profile=Cava \
-          --command="${CAVA_COMMAND}" 2> /dev/null &
-  else
-    gnome-terminal -t "${VTITLE}" \
-          --profile=SmallFont \
-          --hide-menubar \
-          --full-screen \
-          -- ${CAVA_COMMAND} &
-  fi
-  [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
-    sleep 1
     if [ "${TILIX}" ]
     then
-      cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+      tilix --title="${VTITLE}" \
+            --full-screen \
+            --window-style=borderless \
+            --profile=Cava \
+            --command="${CAVA_COMMAND}" 2> /dev/null &
     else
-      cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+      gnome-terminal -t "${VTITLE}" \
+            --profile=SmallFont \
+            --hide-menubar \
+            --full-screen \
+            -- ${CAVA_COMMAND} &
     fi
-    [ "${cavawin}" ] || {
+    [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
+      sleep 1
       if [ "${TILIX}" ]
       then
-        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
-        [ "${cavawin}" ] || echo "Could not find cava window"
+        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
       else
-        cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
-        [ "${cavawin}" ] || echo "Could not find cava window"
+        cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
       fi
-    }
-    [ "${cavawin}" ] && {
-      winid=`echo ${cavawin} | awk ' { print $1 } '`
-      grav=`echo ${cavawin} | awk ' { print $2 } '`
-      xoff=`echo ${cavawin} | awk ' { print $3 } '`
-      yoff=`echo ${cavawin} | awk ' { print $4 } '`
-      width=`echo ${cavawin} | awk ' { print $5 } '`
-      height=`echo ${cavawin} | awk ' { print $6 } '`
-      [ "${winid}" ] && {
-        if [ "${HALFHEIGHT}" ]
+      [ "${cavawin}" ] || {
+        if [ "${TILIX}" ]
         then
-          height=$((height / 2))
+          cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+          [ "${cavawin}" ] || echo "Could not find cava window"
         else
-          height=$((height / 4))
-          # Fudge this to compensate for differing window decoration size
-          [ "${TILIX}" ] || height=$((height - 30))
+          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+          [ "${cavawin}" ] || echo "Could not find cava window"
         fi
-        mvarg="${grav},${xoff},${yoff},${width},${height}"
-        wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
-        wmctrl -i -r "${winid}" -e "${mvarg}"
+      }
+      [ "${cavawin}" ] && {
+        winid=`echo ${cavawin} | awk ' { print $1 } '`
+        grav=`echo ${cavawin} | awk ' { print $2 } '`
+        xoff=`echo ${cavawin} | awk ' { print $3 } '`
+        yoff=`echo ${cavawin} | awk ' { print $4 } '`
+        width=`echo ${cavawin} | awk ' { print $5 } '`
+        height=`echo ${cavawin} | awk ' { print $6 } '`
+        [ "${winid}" ] && {
+          if [ "${HALFHEIGHT}" ]
+          then
+            height=$((height / 2))
+          else
+            height=$((height / 4))
+            # Fudge this to compensate for differing window decoration size
+            [ "${TILIX}" ] || height=$((height - 30))
+          fi
+          mvarg="${grav},${xoff},${yoff},${width},${height}"
+          wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
+          wmctrl -i -r "${winid}" -e "${mvarg}"
+        }
       }
     }
-  }
-else
-  if [ "${TILIX}" ]
-  then
-    tilix --title="${VTITLE}" \
-          --window-style=borderless \
-          --geometry=360x16+150-0 \
-          --profile=Cava \
-          --command="${CAVA_COMMAND}" 2> /dev/null &
   else
-    gnome-terminal -t "${VTITLE}" \
-          --profile=SmallFont \
-          --hide-menubar \
-          --geometry 360x16+150-0 \
-          -- ${CAVA_COMMAND} &
+    if [ "${TILIX}" ]
+    then
+      tilix --title="${VTITLE}" \
+            --window-style=borderless \
+            --geometry=360x16+150-0 \
+            --profile=Cava \
+            --command="${CAVA_COMMAND}" 2> /dev/null &
+    else
+      gnome-terminal -t "${VTITLE}" \
+            --profile=SmallFont \
+            --hide-menubar \
+            --geometry 360x16+150-0 \
+            -- ${CAVA_COMMAND} &
+    fi
   fi
-fi
+  sleep 2
+}
+# End visualizer startup section
 
-sleep 2
+# Fullscreen tmux sessions
+[ "${TMUX}" ] && {
+  MPCPLUS="${MPCPLUS_TMUX}"
+  FULLSCREEN=1
+}
 
+# Begin MPD client startup section
 if [ "${RETRO}" ]
 then
   if [ "${FULLSCREEN}" ]
@@ -320,3 +380,4 @@ else
     fi
   fi
 fi
+# End MPD client startup section

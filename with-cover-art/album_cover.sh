@@ -3,7 +3,7 @@
 source "`ueberzug library`"
 
 function add_cover {
-  ImageLayer::add [identifier]="img" [x]="1" [y]="2" [path]="${COVER}"
+  ImageLayer::add [identifier]="img" [x]="1" [y]="${YOFF}" [path]="${COVER}"
 }
 
 if [ -f ${HOME}/.config/mpcplus/config ]
@@ -20,6 +20,8 @@ else
 fi
 
 COVER=${HOME}/${MPCDIR}/album_cover.png
+YOFF=2
+[ "$1" == "-f" ] && YOFF=1
 
 ImageLayer 0< <(
 if [ ! -f "${COVER}" ]; then

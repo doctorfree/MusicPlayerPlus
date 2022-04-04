@@ -373,7 +373,8 @@ centered_cursor = yes
 ## part of progressbar.
 ##
 #progressbar_look = =>
-progressbar_look = ->▃
+#progressbar_look = ->▃
+progressbar_look = ▃_▃
 #
 ## Available values: database, playlist.
 ##
@@ -604,7 +605,7 @@ volume_color = red
 state_line_color = yellow
 #
 #state_flags_color = default:b
-state_flags_color = red
+state_flags_color = red:b
 #
 #main_window_color = yellow
 #
@@ -616,6 +617,7 @@ state_flags_color = red
 progressbar_color = cyan
 #
 #progressbar_elapsed_color = green:b
+progressbar_elapsed_color = cyan:b
 #
 #statusbar_color = default
 statusbar_color = cyan
