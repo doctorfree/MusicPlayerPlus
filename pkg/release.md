@@ -1,5 +1,14 @@
 Changes in this release include:
 
+* Use MPlayer to play media during ASCIImatics animations
+* Use a signal handler in ASCIImatics animations to fade audio and cleanup
+* Use a FIFO in ASCIImatics animations to communicate with MPlayer
+* Added tmux session integration to `mpplus` command
+* Re-enable visualizer in `mpcplus` MPD client build
+* Cleanup tmux sessions, add ability to kill tmux sessions in `mpplus`
+
+Changes in previous release include:
+
 * Add capability to play audio while displaying ASCIImatics scenes
 * Add several ASCIImatics scenes including one during initialization
 * Rename `mpcava` to `mpplus`

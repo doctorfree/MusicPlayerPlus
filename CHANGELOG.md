@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file.
 
+# MusicPlayerPlus-1.0.1r2 (2022-04-04)
+* Use MPlayer to play media during ASCIImatics animations
+* Use a signal handler in ASCIImatics animations to fade audio and cleanup
+* Use a FIFO in ASCIImatics animations to communicate with MPlayer
+* Added tmux session integration to `mpplus` command
+* Re-enable visualizer in `mpcplus` MPD client build
+* Cleanup tmux sessions, add ability to kill tmux sessions in `mpplus`
+
 # MusicPlayerPlus-1.0.1r1 (2022-03-31)
 * Add capability to play audio while displaying ASCIImatics scenes
 * Add several ASCIImatics scenes including one during initialization
