@@ -11,6 +11,7 @@ MusicPlayerPlus components are used to manage, control, and update MPD.
 1. [Overview](#overview)
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
+1. [Quickstart](#quickstart)
 1. [Requirements](#requirements)
 1. [Installation](#installation)
     1. [Debian package installation](#debian-package-installation)
@@ -103,6 +104,20 @@ Additional detail and info can be found in the
 * alternative user interface
 * ability to browse and add files from outside of MPD music directory
 * cute trick to add album cover art in character display using tmux
+
+## Quickstart
+
+* Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
+* Edit `/etc/mpd.conf` and set the `music_directory` entry to the location of your music library (must be done with `sudo`, e.g. `sudo vi /etc/mpd.conf`)
+* Run the `mpcinit` command (must be done as your normal user, no need for `sudo`)
+* Verify the `mpd` service is running and if not then start it:
+    * `systemctl status mpd`
+    * `sudo systemctl start mpd`
+* Update the MPD client database:
+    * `mpplus` then type `u`
+* Play music with `mpplus`
+    * See the [online mpcpluskeys cheat sheet](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpcpluskeys.1) or `man mpcpluskeys` for help navigating the `mpplus` windows
+    * See the [online mpplus man page](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpplus.1) or `man mpplus` for different ways to invoke the `mpplus` command
 
 ## Requirements
 
@@ -365,9 +380,17 @@ e.g. `mpplus -u`.
 - [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
 
 ### Man Pages
-- [**mpplus.1.md**](markdown/mpplus.1.md) - mpplus man page
-- [**mpcplus.1.md**](markdown/mpcplus.1.md) - mpcplus man page
-- [**mpcpluskeys.1.md**](markdown/mpcpluskeys.1.md) - mpcpluskeys man page
+
+- [**mpplus**](markdown/mpplus.1.md) : Primary MusicPlayerPlus user interface
+- [**asciijulia**](markdown/asciijulia.1.md) : asciimatics animation of a Julia Set
+- [**asciimpplus**](markdown/asciimpplus.1.md) : asciimatics animation of MusicPlayerPlus intro
+- [**asciiplasma**](markdown/asciiplasma.1.md) : asciimatics animation with Plasma effect
+- [**mpcinit**](markdown/mpcinit.1.md) : MusicPlayerPlus initialization
+- [**mpcplus-tmux**](markdown/mpcplus-tmux.1.md) : MusicPlayerPlus in a tmux session
+- [**mpcplus**](markdown/mpcplus.1.md) : MusicPlayerPlus MPD client
+- [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
+- [**mppsplash-tmux**](markdown/mppsplash-tmux.1.md) : MusicPlayerPlus asciimatics animations in a tmux session
+- [**mppsplash**](markdown/mppsplash.1.md) : MusicPlayerPlus asciimatics animations
 
 ### Usage
 
