@@ -21,8 +21,8 @@
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-a] [-c] [-C client] [-f] [-h] [-k] [-p script] [-q]
-[-r] [-R] [-t] [-T] [-u]
+\f[B]mpplus\f[R] [-a] [-c] [-C client] [-d] [-f] [-h] [-k] [-p script]
+[-q] [-r] [-R] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -48,6 +48,9 @@ indicates launch cantata MPD client rather than mpcplus
 .TP
 \f[B]-C client\f[R]
 indicates launch \[aq]client\[aq] MPD client rather than mpcplus
+.TP
+\f[B]-d\f[R]
+indicates download album cover art
 .TP
 \f[B]-f\f[R]
 indicates fullscreen display
@@ -120,6 +123,10 @@ a tmux session displaying album cover art.
 \f[B]mpplus -R -T\f[R]
 Creates an asciinema recording of \f[V]mpcplus\f[R] music player client
 and visualizer running in a tmux session
+.TP
+\f[B]mpplus -d\f[R]
+Download album cover art for any albums in the music library that do not
+already have cover art
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

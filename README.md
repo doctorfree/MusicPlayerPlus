@@ -512,6 +512,12 @@ cover art for all of the albums in your MPD music directory, run the command:
 download_cover_art
 ```
 
+or, alternately,
+
+```
+mpplus -d
+```
+
 Cover art for each album is saved as the file `cover.jpg` in the album folder.
 Existing cover art is preserved.
 

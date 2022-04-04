@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-a] [-c] [-C client] [-f] [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
+**mpplus** [-a] [-c] [-C client] [-d] [-f] [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -25,6 +25,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-C client**
 : indicates launch 'client' MPD client rather than mpcplus
+
+**-d**
+: indicates download album cover art
 
 **-f**
 : indicates fullscreen display
@@ -83,6 +86,9 @@ Type 'man mpcplus' for detailed usage info on the mpcplus MPD client
 
 **mpplus -R -T**
 : Creates an asciinema recording of `mpcplus` music player client and visualizer running in a tmux session
+
+**mpplus -d**
+: Download album cover art for any albums in the music library that do not already have cover art 
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

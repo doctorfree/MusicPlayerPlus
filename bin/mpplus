@@ -45,12 +45,13 @@ MPCPLUS="mpcplus"
 MPCPLUS_TMUX="mpcplus-tmux -f"
 
 usage() {
-  printf "\nUsage: mpplus [-a] [-c] [-C client] [-f] [-h] [-k]"
-  printf "\n\t[-p script] [-q] [-r] [-R] [-t] [-T] [-u]"
+  printf "\nUsage: mpplus [-a] [-c] [-C client] [-d] [-f] [-h] [-k]"
+  printf "\n\t\t[-p script] [-q] [-r] [-R] [-t] [-T] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
+  printf "\n\t-d indicates download album cover art"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-h indicates half-height for cava window (with -f only)"
   printf "\n\t-k indicates kill previously started tmux session and asciimatics scripts"
@@ -76,7 +77,7 @@ TILIX=
 TMUX=
 PYART=
 USAGE=
-while getopts "acC:fhkp:qrRtTu" flag; do
+while getopts "acC:dfhkp:qrRtTu" flag; do
   case $flag in
     a)
       have_uebz=`type -p ueberzug`
@@ -117,6 +118,9 @@ while getopts "acC:fhkp:qrRtTu" flag; do
         fi
       }
       [ "${CLIENT}" ] && MPCPLUS="${CLIENT}"
+      ;;
+    d)
+      download_cover_art
       ;;
     f)
       FULLSCREEN=1

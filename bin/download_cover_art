@@ -11,6 +11,15 @@ mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
   echo "Exiting."
   exit 1
 }
+[ -d "${mpd_music}" ] || {
+  echo "music_directory setting in /etc/mpd.conf:
+  echo "    ${mpd_music}"
+  echo "Does not exist or is not a directory."
+  echo ""
+  echo "Set the music_directory setting in /etc/mpd.conf and rerun this command."
+  echo "Exiting."
+  exit 1
+}
 
 pip list | grep sacad > /dev/null || python -m pip install sacad
 
