@@ -11,6 +11,10 @@ mppsplash - Launch a fun splashy screen of ASCIImatics animations
 # SYNOPSIS
 **mppsplash** [-a] [-b] [-C] [-c numcycles] [-d] [-j] [-J] [-m] [-p] [-s song] [-u]
 
+**NOTE:** `mppsplash` can be run by invoking `mpplus [-a] [-b] [-jJ] [-m] [-n num] [-N] [-p] [-R] [-S]`
+
+See `man mpplus` for details on how to front-end `mppsplash` with `mpplus`
+
 # DESCRIPTION
 The *mppsplash* command plays one of the ASCIImatics animations included in MusicPlayerPlus.
 It's a fun demonstration of some of the capabilities of the ASCIImatics library. By default,
@@ -91,7 +95,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcpluskeys**(1)
+**mpplus**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 

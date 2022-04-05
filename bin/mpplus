@@ -1,8 +1,12 @@
 #!/bin/bash
 #
-# mpplus - run mpcplus and cava in separate terminal emulators,
+# mpplus - Run mpcplus and cava in separate terminal emulators,
 #          cantata and cava in separate windows, or a specified
-#          MPD client and cava in separate windows.
+#          MPD client and cava in separate windows. Alternately,
+#          Run an ASCIImatics animation optionally accompanied
+#          by specified audio.
+#
+#          Can also download album cover art or kill tmux sessions.
 #
 # Written by Ronald Joe Record <ronaldrecord@gmail.com>
 # March, 2022
@@ -43,53 +47,79 @@ VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 MPCPLUS="mpcplus"
 MPCPLUS_TMUX="mpcplus-tmux -f"
+MPPSPLASH="mppsplash"
+MPPSPLASH_TMUX="mppsplash-tmux"
 
 usage() {
-  printf "\nUsage: mpplus [-a] [-c] [-C client] [-D] [-d music_directory] [-f]"
-  printf "\n\t[-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]"
-  printf "\nWhere:"
-  printf "\n\t-a indicates display album cover art (implies tmux session)"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
+  printf "\n\t\t[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]"
+  printf "\n\t\t[-q] [-r] [-R] [-S] [-t] [-T] [-u]"
+  printf "\nMPCplus/Visualizer options:"
+  printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
+  printf "\n\t-f indicates fullscreen display"
+  printf "\n\t-h indicates half-height for cava window (with -f only)"
+  printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
+  printf "\n\t-q indicates quarter-height for cava window (with -f only)"
+  printf "\n\t-r indicates use retro terminal emulator"
+  printf "\n\t-t indicates use tilix terminal emulator"
+  printf "\nASCIImatics animation options:"
+  printf "\n\t-a indicates play audio during ASCIImatics display"
+  printf "\n\t-b indicates use backup audio during ASCIImatics display"
+  printf "\n\t-j indicates use Julia Set scenes in ASCIImatics display"
+  printf "\n\t-J indicates Julia Set with several runs using different parameters"
+  printf "\n\t-m indicates use MusicPlayerPlus scenes in ASCIImatics display"
+  printf "\n\t-n num specifies the number of times to cycle ASCIImatics scenes"
+  printf "\n\t-N indicates use alternate comments in Plasma ASCIImatics scenes"
+  printf "\n\t-p indicates use Plasma scenes in ASCIImatics display"
+  printf "\n\t-s song specifies a song to accompany an ASCIImatics animation"
+  printf "\n\t-S indicates display ASCIImatics splash animation"
+  printf "\nGeneral options:"
   printf "\n\t-D indicates download album cover art"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '/etc/mpd.conf'"
-  printf "\n\t-f indicates fullscreen display"
-  printf "\n\t-h indicates half-height for cava window (with -f only)"
-  printf "\n\t-k indicates kill previously started tmux session and asciimatics scripts"
-  printf "\n\t-p script specifies an asciimatics script to run in the visualizer pane"
-  printf "\n\t-q indicates quarter-height for cava window (with -f only)"
-  printf "\n\t-r indicates use retro terminal emulator"
+  printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-R indicates record tmux session with asciinema"
-  printf "\n\t-t indicates use tilix terminal emulator"
-  printf "\n\t-T indicates use a tmux session for terminal display"
+  printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nType 'man mpplus' for detailed usage info on mpplus"
-  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
+  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client"
+  printf "\nType 'man mppsplash' for detailed usage info on the mppsplash command\n"
   exit 1
 }
 
-download_art=
-music_directory=
 CAVA_COMMAND=cava
+CLIENT=
+DOWNLOAD_ART=
 FULLSCREEN=
 HALFHEIGHT=
+MUSIC_DIRECTORY=
 QRTRHEIGHT=
-CLIENT=
 RETRO=
+SPLASH=
 TILIX=
-TMUX=
-PYART=
+TMUX_MPC=
+TMUX_SPLASH=
 USAGE=
-while getopts "acC:Dd:fhkp:qrRtTu" flag; do
+
+while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
   case $flag in
     a)
+      MPPSPLASH="${MPPSPLASH} -a"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
+      ;;
+    A)
       have_uebz=`type -p ueberzug`
       [ "${have_uebz}" ] && {
-        TMUX=1
+        TMUX_MPC=1
         MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
       }
+      ;;
+    b)
+      MPPSPLASH="${MPPSPLASH} -b"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -b"
       ;;
     c)
       CLIENT=1
@@ -125,10 +155,10 @@ while getopts "acC:Dd:fhkp:qrRtTu" flag; do
       [ "${CLIENT}" ] && MPCPLUS="${CLIENT}"
       ;;
     D)
-      download_art=1
+      DOWNLOAD_ART=1
       ;;
     d)
-      music_directory="${OPTARG}"
+      MUSIC_DIRECTORY="${OPTARG}"
       ;;
     f)
       FULLSCREEN=1
@@ -157,9 +187,33 @@ while getopts "acC:Dd:fhkp:qrRtTu" flag; do
       done
       exit 0
       ;;
+    j)
+      MPPSPLASH="${MPPSPLASH} -j"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
+      ;;
+    J)
+      MPPSPLASH="${MPPSPLASH} -J"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -J"
+      ;;
+    m)
+      MPPSPLASH="${MPPSPLASH} -m"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l mpplus"
+      ;;
+    N)
+      MPPSPLASH="${MPPSPLASH} -C"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -t"
+      ;;
+    n)
+      MPPSPLASH="${MPPSPLASH} -c ${OPTARG}"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -c ${OPTARG}"
+      ;;
     p)
-      PYART=${OPTARG}
+      MPPSPLASH="${MPPSPLASH} -p"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
+      ;;
+    P)
       MPCPLUS_TMUX="${MPCPLUS_TMUX} -p ${OPTARG}"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l ${OPTARG}"
       ;;
     q)
       QRTRHEIGHT=1
@@ -180,9 +234,16 @@ while getopts "acC:Dd:fhkp:qrRtTu" flag; do
     R)
       have_nema=`type -p asciinema`
       [ "${have_nema}" ] && {
-        TMUX=1
         MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
+        MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -R"
       }
+      ;;
+    S)
+      SPLASH=1
+      ;;
+    s)
+      MPPSPLASH="${MPPSPLASH} -s ${OPTARG}"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -s ${OPTARG}"
       ;;
     t)
       type -p tilix > /dev/null || {
@@ -205,10 +266,22 @@ while getopts "acC:Dd:fhkp:qrRtTu" flag; do
     esac
 done
 
-[ "${download_art}" ] && {
-  if [ "${music_directory}" ]
+# The -T option says use tmux, -S says do asciimatics
+# If we have both then do asciimatics in tmux
+# If just the -T then do mpcplus in tmux
+[ "${TMUX}" ] && {
+  if [ "${SPLASH}" ]
   then
-    download_cover_art -d "${music_directory}"
+    TMUX_SPLASH=1
+  else
+    TMUX_MPC=1
+  fi
+}
+
+[ "${DOWNLOAD_ART}" ] && {
+  if [ "${MUSIC_DIRECTORY}" ]
+  then
+    download_cover_art -d "${MUSIC_DIRECTORY}"
   else
     download_cover_art
   fi
@@ -271,7 +344,8 @@ done
 # Begin visualizer startup section
 #
 # Do not start visualizer here if we are going to start a tmux session
-[ "${TMUX}" ] || {
+# or if we are displaying an asciimatics animation
+[ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
   if [ "${FULLSCREEN}" ]
   then
     if [ "${TILIX}" ]
@@ -348,20 +422,31 @@ done
 }
 # End visualizer startup section
 
-# Fullscreen tmux sessions
-[ "${TMUX}" ] && {
-  MPCPLUS="${MPCPLUS_TMUX}"
-  FULLSCREEN=1
-}
+# Fullscreen tmux sessions and asciimatics animations
+[ "${SPLASH}" ] || [ "${TMUX_MPC}" ] && FULLSCREEN=1
+
+# Set the command to use based on command line switches (-S, -T)
+MPCOMM="${MPCPLUS}"
+if [ "${SPLASH}" ]
+then
+  if [ "${TMUX_SPLASH}" ]
+  then
+    MPCOMM="${MPPSPLASH_TMUX}"
+  else
+    MPCOMM="${MPPSPLASH}"
+  fi
+else
+  [ "${TMUX_MPC}" ] && MPCOMM="${MPCPLUS_TMUX}"
+fi
 
 # Begin MPD client startup section
 if [ "${RETRO}" ]
 then
   if [ "${FULLSCREEN}" ]
   then
-    cool-retro-term --fullscreen -e "${MPCPLUS}" 2> /dev/null &
+    cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null &
   else
-    cool-retro-term -e "${MPCPLUS}" 2> /dev/null &
+    cool-retro-term -e "${MPCOMM}" 2> /dev/null &
   fi
 else
   if [ "${FULLSCREEN}" ]
@@ -372,7 +457,7 @@ else
             --full-screen \
             --window-style=borderless \
             --profile=MusicPlayer \
-            --command="${MPCPLUS}" 2> /dev/null &
+            --command="${MPCOMM}" 2> /dev/null &
     else
       xfce4-terminal --title "${MTITLE}" \
             --icon=audio-player \
@@ -380,7 +465,7 @@ else
             --hide-toolbar \
             --hide-scrollbar \
             --fullscreen \
-            --command="${MPCPLUS}" &
+            --command="${MPCOMM}" &
     fi
   else
     if [ "${TILIX}" ]
@@ -389,7 +474,7 @@ else
             --window-style=borderless \
             --geometry=90x20+150+25 \
             --profile=MusicPlayer \
-            --command="${MPCPLUS}" 2> /dev/null &
+            --command="${MPCOMM}" 2> /dev/null &
     else
       xfce4-terminal --title "${MTITLE}" \
           --icon=audio-player \
@@ -397,7 +482,7 @@ else
           --hide-toolbar \
           --hide-scrollbar \
           --geometry 90x20+150+25 \
-          --command="${MPCPLUS}" &
+          --command="${MPCOMM}" &
     fi
   fi
 fi

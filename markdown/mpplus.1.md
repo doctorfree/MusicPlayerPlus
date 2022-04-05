@@ -9,61 +9,98 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-a] [-c] [-C client] [[-D] [-d music_directory] [-f] [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
+		[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
+		[-q] [-r] [-R] [-S] [-t] [-T] [-u]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
 
+The *mpplus* command can also act as a front-end to the *mppsplash* and *mppsplash-tmux* commands when invoked with the `-S` and `-T` command line options.
+
 Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the `mpplus -k` command.
 
 # COMMAND LINE OPTIONS
-**-a**
-: Indicates display album cover art (implies tmux session)
+*MPCplus/Visualizer options:*
+
+**-A**
+: indicates display album cover art (implies tmux session)
 
 **-c**
-: Indicates launch cantata MPD client rather than mpcplus
+: indicates use cantata MPD client rather than mpcplus
 
-**-C client**
-: Indicates launch 'client' MPD client rather than mpcplus
-
-**-D**
-: Indicates download album cover art. In the absence of an accompanying `-d music_directory` argument, album cover art will be downloaded to the directory specified by the `music_directory` setting in `/etc/mpd.conf`
-
-**-d music_directory**
-: Use `music_directory` rather than the MPD music directory setting to download album cover art. Must be accompanied with the `-D` option.
+**-C 'client'**
+: indicates use 'client' MPD client rather than mpcplus
 
 **-f**
-: Indicates fullscreen display
+: indicates fullscreen display
 
 **-h**
-: Indicates half-height for cava window (with -f only)
+: indicates half-height for cava window (with -f only)
 
-**-k**
-: Indicates kill any previously started tmux sessions and asciimatics scripts
-
-**-p script**
-: Specifies an asciimatics script to run in the visualizer pane
-
-**-R**
-: Indicates record tmux session with asciinema
-
-**-T**
-: Indicates use a tmux session for terminal display
+**-P script**
+: specifies the ASCIImatics script to run in visualizer pane
 
 **-q**
-: Indicates quarter-height for cava window (with -f only)
+: indicates quarter-height for cava window (with -f only)
 
 **-r**
-: Indicates use retro terminal emulator
+: indicates use retro terminal emulator
 
 **-t**
-: Indicates use tilix terminal emulator
+: indicates use tilix terminal emulator
+
+*ASCIImatics animation options:*
+
+**-a**
+: indicates play audio during ASCIImatics display
+
+**-b**
+: indicates use backup audio during ASCIImatics display
+
+**-j**
+: indicates use Julia Set scenes in ASCIImatics display
+
+**-J**
+: indicates Julia Set with several runs using different parameters
+
+**-m**
+: indicates use MusicPlayerPlus scenes in ASCIImatics display
+
+**-n num**
+: specifies the number of times to cycle ASCIImatics scenes
+
+**-N**
+: indicates use alternate comments in Plasma ASCIImatics scenes
+
+**-p**
+: indicates use Plasma scenes in ASCIImatics display
+
+**-s song**
+: specifies a song to accompany an ASCIImatics animation
+
+**-S**
+: indicates display ASCIImatics splash animation
+
+*General options:*
+
+**-D**
+: indicates download album cover art
+
+**-d 'music_directory'**
+: specifies the music directory to use for downloaded album cover art (without this option -D will use the 'music_directory' setting in '/etc/mpd.conf'
+
+**-k**
+: indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+
+**-R**
+: indicates record tmux session with asciinema
+
+**-T**
+: indicates use a tmux session for either ASCIImatics or mpcplus
 
 **-u**
 : Displays this usage message and exits
-
-Type 'man mpplus' for detailed usage info on mpplus
-Type 'man mpcplus' for detailed usage info on the mpcplus MPD client
 
 # EXAMPLES
 **mpplus**
@@ -90,6 +127,9 @@ Type 'man mpcplus' for detailed usage info on the mpcplus MPD client
 **mpplus -R -T**
 : Creates an asciinema recording of `mpcplus` music player client and visualizer running in a tmux session
 
+**mpplus -S -j -a**
+: Launch `mppsplash` displaying the Julia Set asciimatics animation with audio
+
 **mpplus -d**
 : Download album cover art for any albums in the music library that do not already have cover art 
 
@@ -108,7 +148,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcpluskeys**(1), **cava**(1)
+**mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1), **cava**(1)
 
 Full documentation and sources at:
 

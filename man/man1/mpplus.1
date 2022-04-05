@@ -21,8 +21,9 @@
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-a] [-c] [-C client] [[-D] [-d music_directory] [-f]
-[-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
+\f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
+music_directory] [-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P
+script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -35,64 +36,97 @@ MPD client along with the cava spectrum visualizer.
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
 .PP
+The \f[I]mpplus\f[R] command can also act as a front-end to the
+\f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
+with the \f[V]-S\f[R] and \f[V]-T\f[R] command line options.
+.PP
 Occasionally a tmux session or asciimatics script will hang.
 Previously started tmux sessions and asciimatics scripts can be quickly
 and easily killed by executing the \f[V]mpplus -k\f[R] command.
 .SH COMMAND LINE OPTIONS
+.PP
+\f[I]MPCplus/Visualizer options:\f[R]
 .TP
-\f[B]-a\f[R]
-Indicates display album cover art (implies tmux session)
+\f[B]-A\f[R]
+indicates display album cover art (implies tmux session)
 .TP
 \f[B]-c\f[R]
-Indicates launch cantata MPD client rather than mpcplus
+indicates use cantata MPD client rather than mpcplus
 .TP
-\f[B]-C client\f[R]
-Indicates launch \[aq]client\[aq] MPD client rather than mpcplus
-.TP
-\f[B]-D\f[R]
-Indicates download album cover art.
-In the absence of an accompanying \f[V]-d music_directory\f[R] argument,
-album cover art will be downloaded to the directory specified by the
-\f[V]music_directory\f[R] setting in \f[V]/etc/mpd.conf\f[R]
-.TP
-\f[B]-d music_directory\f[R]
-Use \f[V]music_directory\f[R] rather than the MPD music directory
-setting to download album cover art.
-Must be accompanied with the \f[V]-D\f[R] option.
+\f[B]-C \[aq]client\[aq]\f[R]
+indicates use \[aq]client\[aq] MPD client rather than mpcplus
 .TP
 \f[B]-f\f[R]
-Indicates fullscreen display
+indicates fullscreen display
 .TP
 \f[B]-h\f[R]
-Indicates half-height for cava window (with -f only)
+indicates half-height for cava window (with -f only)
 .TP
-\f[B]-k\f[R]
-Indicates kill any previously started tmux sessions and asciimatics
-scripts
-.TP
-\f[B]-p script\f[R]
-Specifies an asciimatics script to run in the visualizer pane
-.TP
-\f[B]-R\f[R]
-Indicates record tmux session with asciinema
-.TP
-\f[B]-T\f[R]
-Indicates use a tmux session for terminal display
+\f[B]-P script\f[R]
+specifies the ASCIImatics script to run in visualizer pane
 .TP
 \f[B]-q\f[R]
-Indicates quarter-height for cava window (with -f only)
+indicates quarter-height for cava window (with -f only)
 .TP
 \f[B]-r\f[R]
-Indicates use retro terminal emulator
+indicates use retro terminal emulator
 .TP
 \f[B]-t\f[R]
-Indicates use tilix terminal emulator
+indicates use tilix terminal emulator
+.PP
+\f[I]ASCIImatics animation options:\f[R]
+.TP
+\f[B]-a\f[R]
+indicates play audio during ASCIImatics display
+.TP
+\f[B]-b\f[R]
+indicates use backup audio during ASCIImatics display
+.TP
+\f[B]-j\f[R]
+indicates use Julia Set scenes in ASCIImatics display
+.TP
+\f[B]-J\f[R]
+indicates Julia Set with several runs using different parameters
+.TP
+\f[B]-m\f[R]
+indicates use MusicPlayerPlus scenes in ASCIImatics display
+.TP
+\f[B]-n num\f[R]
+specifies the number of times to cycle ASCIImatics scenes
+.TP
+\f[B]-N\f[R]
+indicates use alternate comments in Plasma ASCIImatics scenes
+.TP
+\f[B]-p\f[R]
+indicates use Plasma scenes in ASCIImatics display
+.TP
+\f[B]-s song\f[R]
+specifies a song to accompany an ASCIImatics animation
+.TP
+\f[B]-S\f[R]
+indicates display ASCIImatics splash animation
+.PP
+\f[I]General options:\f[R]
+.TP
+\f[B]-D\f[R]
+indicates download album cover art
+.TP
+\f[B]-d \[aq]music_directory\[aq]\f[R]
+specifies the music directory to use for downloaded album cover art
+(without this option -D will use the \[aq]music_directory\[aq] setting
+in \[aq]/etc/mpd.conf\[aq]
+.TP
+\f[B]-k\f[R]
+indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+.TP
+\f[B]-R\f[R]
+indicates record tmux session with asciinema
+.TP
+\f[B]-T\f[R]
+indicates use a tmux session for either ASCIImatics or mpcplus
 .TP
 \f[B]-u\f[R]
 Displays this usage message and exits
-.PP
-Type \[aq]man mpplus\[aq] for detailed usage info on mpplus Type
-\[aq]man mpcplus\[aq] for detailed usage info on the mpcplus MPD client
 .SH EXAMPLES
 .TP
 \f[B]mpplus\f[R]
@@ -132,6 +166,10 @@ a tmux session displaying album cover art.
 Creates an asciinema recording of \f[V]mpcplus\f[R] music player client
 and visualizer running in a tmux session
 .TP
+\f[B]mpplus -S -j -a\f[R]
+Launch \f[V]mppsplash\f[R] displaying the Julia Set asciimatics
+animation with audio
+.TP
 \f[B]mpplus -d\f[R]
 Download album cover art for any albums in the music library that do not
 already have cover art
@@ -151,7 +189,8 @@ Submit bug reports online at:
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
 .SH SEE ALSO
 .PP
-\f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1), \f[B]cava\f[R](1)
+\f[B]mppsplash\f[R](1), \f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1),
+\f[B]cava\f[R](1)
 .PP
 Full documentation and sources at:
 .PP

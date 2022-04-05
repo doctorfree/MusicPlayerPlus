@@ -11,6 +11,10 @@ mppsplash-tmux - embeds `mppsplash` in a tmux session
 # SYNOPSIS
 **mppsplash-tmux** [-a] [-b] [-c num] [-d] [-l script] [-r script] [-R] [-s song] [-t] [-u]
 
+**NOTE:** `mppsplash-tmux` can be run by invoking `mpplus [-a] [-b] [-jJ] [-m] [-n num] [-N] [-p] [-R] -S -T`
+
+See `man mpplus` for details on how to front-end `mppsplash-tmux` with `mpplus`
+
 # DESCRIPTION
 The *mppsplash-tmux* command runs the *mppsplash* command in a tmux session. This enables automatic recording with *asciinema*, if desired, and simplifies the process of creating and managing a tmux session.
 
@@ -249,7 +253,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
+**mpplus**(1), **mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 

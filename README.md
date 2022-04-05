@@ -398,25 +398,38 @@ The usage messages for `mpplus`, `mpcplus`, and `cava` provide a brief
 summary of the command line options:
 
 ```
-Usage: mpplus [-a] [-c] [-C client] [-D] [-d music_directory] [-f]
-	          [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
-Where:
-	-a indicates display album cover art (implies tmux session)
+Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
+		[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
+		[-q] [-r] [-R] [-S] [-t] [-T] [-u]
+MPCplus/Visualizer options:
+	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-f indicates fullscreen display
+	-h indicates half-height for cava window (with -f only)
+	-P script specifies the ASCIImatics script to run in visualizer pane
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+ASCIImatics animation options:
+	-a indicates play audio during ASCIImatics display
+	-b indicates use backup audio during ASCIImatics display
+	-j indicates use Julia Set scenes in ASCIImatics display
+	-J indicates Julia Set with several runs using different parameters
+	-m indicates use MusicPlayerPlus scenes in ASCIImatics display
+	-n num specifies the number of times to cycle ASCIImatics scenes
+	-N indicates use alternate comments in Plasma ASCIImatics scenes
+	-p indicates use Plasma scenes in ASCIImatics display
+	-s song specifies a song to accompany an ASCIImatics animation
+	-S indicates display ASCIImatics splash animation
+General options:
 	-D indicates download album cover art
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '/etc/mpd.conf'
-	-f indicates fullscreen display
-	-h indicates half-height for cava window (with -f only)
-	-k indicates kill previously started tmux session and asciimatics scripts
-	-p script specifies an asciimatics script to run in the visualizer pane
-	-q indicates quarter-height for cava window (with -f only)
-	-r indicates use retro terminal emulator
+	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-R indicates record tmux session with asciinema
-	-t indicates use tilix terminal emulator
-	-T indicates use a tmux session for terminal display
+	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-u displays this usage message and exits
 ```
 
@@ -447,6 +460,23 @@ quick and easy control of MPD, searches, lyrics display, client navigation,
 and much more via the keyboard. View the
 [**mpcpluskeys man page**](markdown/mpcpluskeys.1.md) with the command
 `man mpcpluskeys`.
+
+```
+Usage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] [-m] [-p] [-s song] [-u]
+Where:
+	-A indicates use all effects
+	-a indicates play audio during ASCIImatics display
+	-b indicates use backup audio during ASCIImatics display
+	-C indicates use alternate comments in Plasma effect
+	-c num specifies the number of times to cycle
+	-d indicates enable debug mode
+	-j indicates use Julia Set effect
+	-J indicates Julia Set with several runs using different parameters
+	-m indicates use MusicPlayerPlus effect
+	-p indicates use Plasma effect
+	-s song specifies the audio file to play as accompaniment
+	-u displays this usage message and exits
+```
 
 ```
 Usage : cava [options]
