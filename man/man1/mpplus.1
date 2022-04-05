@@ -21,8 +21,8 @@
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-a] [-c] [-C client] [-d] [-f] [-h] [-k] [-p script]
-[-q] [-r] [-R] [-t] [-T] [-u]
+\f[B]mpplus\f[R] [-a] [-c] [-C client] [[-D] [-d music_directory] [-f]
+[-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -41,47 +41,55 @@ and easily killed by executing the \f[V]mpplus -k\f[R] command.
 .SH COMMAND LINE OPTIONS
 .TP
 \f[B]-a\f[R]
-indicates display album cover art (implies tmux session)
+Indicates display album cover art (implies tmux session)
 .TP
 \f[B]-c\f[R]
-indicates launch cantata MPD client rather than mpcplus
+Indicates launch cantata MPD client rather than mpcplus
 .TP
 \f[B]-C client\f[R]
-indicates launch \[aq]client\[aq] MPD client rather than mpcplus
+Indicates launch \[aq]client\[aq] MPD client rather than mpcplus
 .TP
-\f[B]-d\f[R]
-indicates download album cover art
+\f[B]-D\f[R]
+Indicates download album cover art.
+In the absence of an accompanying \f[V]-d music_directory\f[R] argument,
+album cover art will be downloaded to the directory specified by the
+\f[V]music_directory\f[R] setting in \f[V]/etc/mpd.conf\f[R]
+.TP
+\f[B]-d music_directory\f[R]
+Use \f[V]music_directory\f[R] rather than the MPD music directory
+setting to download album cover art.
+Must be accompanied with the \f[V]-D\f[R] option.
 .TP
 \f[B]-f\f[R]
-indicates fullscreen display
+Indicates fullscreen display
 .TP
 \f[B]-h\f[R]
-indicates half-height for cava window (with -f only)
+Indicates half-height for cava window (with -f only)
 .TP
 \f[B]-k\f[R]
-indicates kill any previously started tmux sessions and asciimatics
+Indicates kill any previously started tmux sessions and asciimatics
 scripts
 .TP
 \f[B]-p script\f[R]
-specifies an asciimatics script to run in the visualizer pane
+Specifies an asciimatics script to run in the visualizer pane
 .TP
 \f[B]-R\f[R]
-indicates record tmux session with asciinema
+Indicates record tmux session with asciinema
 .TP
 \f[B]-T\f[R]
-indicates use a tmux session for terminal display
+Indicates use a tmux session for terminal display
 .TP
 \f[B]-q\f[R]
-indicates quarter-height for cava window (with -f only)
+Indicates quarter-height for cava window (with -f only)
 .TP
 \f[B]-r\f[R]
-indicates use retro terminal emulator
+Indicates use retro terminal emulator
 .TP
 \f[B]-t\f[R]
-indicates use tilix terminal emulator
+Indicates use tilix terminal emulator
 .TP
 \f[B]-u\f[R]
-displays this usage message and exits
+Displays this usage message and exits
 .PP
 Type \[aq]man mpplus\[aq] for detailed usage info on mpplus Type
 \[aq]man mpcplus\[aq] for detailed usage info on the mpcplus MPD client

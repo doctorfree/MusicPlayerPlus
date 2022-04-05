@@ -398,15 +398,25 @@ The usage messages for `mpplus`, `mpcplus`, and `cava` provide a brief
 summary of the command line options:
 
 ```
-Usage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Usage: mpplus [-a] [-c] [-C client] [-D] [-d music_directory] [-f]
+	          [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
 Where:
+	-a indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-D indicates download album cover art
+	-d 'music_directory' specifies the music directory to use for
+		downloaded album cover art (without this option -D will use
+		the 'music_directory' setting in '/etc/mpd.conf'
 	-f indicates fullscreen display
 	-h indicates half-height for cava window (with -f only)
+	-k indicates kill previously started tmux session and asciimatics scripts
+	-p script specifies an asciimatics script to run in the visualizer pane
 	-q indicates quarter-height for cava window (with -f only)
 	-r indicates use retro terminal emulator
+	-R indicates record tmux session with asciinema
 	-t indicates use tilix terminal emulator
+	-T indicates use a tmux session for terminal display
 	-u displays this usage message and exits
 ```
 

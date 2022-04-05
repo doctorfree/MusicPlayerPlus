@@ -11,6 +11,8 @@ mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a tmux sess
 # SYNOPSIS
 **mpcplus-tmux** [-a] [-p script] [-r] [-u]
 
+**NOTE:** `mpcplus-tmux` can be run by invoking `mpplus [-a] [-p script] [-R]`
+
 # DESCRIPTION
 The *mpcplus-tmux* command opens several panes in a terminal window,
 executing the mpcplus MPD client in one pane, a visualizer in another pane,

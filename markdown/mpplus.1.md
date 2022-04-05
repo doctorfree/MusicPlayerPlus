@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-a] [-c] [-C client] [-d] [-f] [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
+**mpplus** [-a] [-c] [-C client] [[-D] [-d music_directory] [-f] [-h] [-k] [-p script] [-q] [-r] [-R] [-t] [-T] [-u]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -18,46 +18,49 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 # COMMAND LINE OPTIONS
 **-a**
-: indicates display album cover art (implies tmux session)
+: Indicates display album cover art (implies tmux session)
 
 **-c**
-: indicates launch cantata MPD client rather than mpcplus
+: Indicates launch cantata MPD client rather than mpcplus
 
 **-C client**
-: indicates launch 'client' MPD client rather than mpcplus
+: Indicates launch 'client' MPD client rather than mpcplus
 
-**-d**
-: indicates download album cover art
+**-D**
+: Indicates download album cover art. In the absence of an accompanying `-d music_directory` argument, album cover art will be downloaded to the directory specified by the `music_directory` setting in `/etc/mpd.conf`
+
+**-d music_directory**
+: Use `music_directory` rather than the MPD music directory setting to download album cover art. Must be accompanied with the `-D` option.
 
 **-f**
-: indicates fullscreen display
+: Indicates fullscreen display
 
 **-h**
-: indicates half-height for cava window (with -f only)
+: Indicates half-height for cava window (with -f only)
 
 **-k**
-: indicates kill any previously started tmux sessions and asciimatics scripts
+: Indicates kill any previously started tmux sessions and asciimatics scripts
 
 **-p script**
-: specifies an asciimatics script to run in the visualizer pane
+: Specifies an asciimatics script to run in the visualizer pane
 
 **-R**
-: indicates record tmux session with asciinema
+: Indicates record tmux session with asciinema
 
 **-T**
-: indicates use a tmux session for terminal display
+: Indicates use a tmux session for terminal display
 
 **-q**
-: indicates quarter-height for cava window (with -f only)
+: Indicates quarter-height for cava window (with -f only)
 
 **-r**
-: indicates use retro terminal emulator
+: Indicates use retro terminal emulator
 
 **-t**
-: indicates use tilix terminal emulator
+: Indicates use tilix terminal emulator
 
 **-u**
-: displays this usage message and exits
+: Displays this usage message and exits
 
 Type 'man mpplus' for detailed usage info on mpplus
 Type 'man mpcplus' for detailed usage info on the mpcplus MPD client
