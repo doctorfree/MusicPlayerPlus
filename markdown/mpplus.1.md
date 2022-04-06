@@ -10,13 +10,15 @@ mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
 **mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
-		[-q] [-r] [-R] [-S] [-t] [-T] [-u]
+		[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p]
+		[-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
 
 The *mpplus* command can also act as a front-end to the *mppsplash* and *mppsplash-tmux* commands when invoked with the `-S` and `-T` command line options.
+
+When invoked with the `-i` option, `mpplus` presents a selection menu and operates in interactive mode.
 
 Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the `mpplus -k` command.
 
@@ -88,7 +90,10 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : indicates download album cover art
 
 **-d 'music_directory'**
-: specifies the music directory to use for downloaded album cover art (without this option -D will use the 'music_directory' setting in '/etc/mpd.conf'
+: specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `/etc/mpd.conf`
+
+**-i**
+: indicates interactive mode with selection menus
 
 **-k**
 : indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
@@ -105,6 +110,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 # EXAMPLES
 **mpplus**
 : Launches `mpcplus` music player client running in xfce4 terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+
+**mpplus -i**
+: Launches `mpplus` in interactive mode with menu selections controlling actions rather than command line arguments
 
 **mpplus -r**
 : Launches `mpcplus` music player client running in cool-retro-term terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 

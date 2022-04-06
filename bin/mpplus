@@ -43,22 +43,16 @@
 # terminal emulator running mpcplus with direct invocation of cantata.
 # In addition, an alternate MPD client can be specified on the command line.
 
-VTITLE="Spectrum Visualizer"
-MTITLE="Music Player Plus"
-MPCPLUS="mpcplus"
-MPCPLUS_TMUX="mpcplus-tmux -f"
-MPPSPLASH="mppsplash"
-MPPSPLASH_TMUX="mppsplash-tmux"
-
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]"
-  printf "\n\t\t[-q] [-r] [-R] [-S] [-t] [-T] [-u]"
+  printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p]"
+  printf "\n\t\t[-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
+  printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-h indicates half-height for cava window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
   printf "\n\t-q indicates quarter-height for cava window (with -f only)"
@@ -90,29 +84,482 @@ usage() {
   exit 1
 }
 
-CAVA_COMMAND=cava
-CLIENT=
-DOWNLOAD_ART=
-FULLSCREEN=
-HALFHEIGHT=
-MUSIC_DIRECTORY=
-QRTRHEIGHT=
-RETRO=
-SPLASH=
-TILIX=
-TMUX_MPC=
-TMUX_SPLASH=
-USAGE=
+kill_tmux_sessions() {
+  SESSIONS="musicplayerplus mppsplash"
+  for session in ${SESSIONS}
+  do
+    ps -ef | grep tmux | grep ${session} > /dev/null && {
+      tmux kill-session -t ${session}
+    }
+  done
+  ASCIIS="asciijulia asciimpplus asciiplasma"
+  for ascii in ${ASCIIS}
+  do
+    ps -ef | grep -v grep | grep ${ascii} > /dev/null && {
+      ps -ef | grep -v grep | grep ${ascii} | while IFS= read -r line
+      do
+        pid=`echo "$line" | awk ' { print $2 } '`
+        kill ${pid}
+      done 
+    }
+  done
+}
 
-while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
+make_it_so() {
+  [ "${DOWNLOAD_ART}" ] && {
+    if [ "${MUSIC_DIRECTORY}" ]
+    then
+      download_cover_art -d "${MUSIC_DIRECTORY}"
+    else
+      download_cover_art
+    fi
+  }
+
+  # Begin visualizer startup section
+  #
+  # Do not start visualizer here if we are going to start a tmux session
+  # or if we are displaying an asciimatics animation
+  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
+    if [ "${FULLSCREEN}" ]
+    then
+      if [ "${TILIX}" ]
+      then
+        tilix --title="${VTITLE}" \
+              --full-screen \
+              --window-style=borderless \
+              --profile=Cava \
+              --command="${CAVA_COMMAND}" 2> /dev/null &
+      else
+        gnome-terminal -t "${VTITLE}" \
+              --profile=SmallFont \
+              --hide-menubar \
+              --full-screen \
+              -- ${CAVA_COMMAND} &
+      fi
+      [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
+        sleep 1
+        if [ "${TILIX}" ]
+        then
+          cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+        else
+          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+        fi
+        [ "${cavawin}" ] || {
+          if [ "${TILIX}" ]
+          then
+            cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+            [ "${cavawin}" ] || echo "Could not find cava window"
+          else
+            cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+            [ "${cavawin}" ] || echo "Could not find cava window"
+          fi
+        }
+        [ "${cavawin}" ] && {
+          winid=`echo ${cavawin} | awk ' { print $1 } '`
+          grav=`echo ${cavawin} | awk ' { print $2 } '`
+          xoff=`echo ${cavawin} | awk ' { print $3 } '`
+          yoff=`echo ${cavawin} | awk ' { print $4 } '`
+          width=`echo ${cavawin} | awk ' { print $5 } '`
+          height=`echo ${cavawin} | awk ' { print $6 } '`
+          [ "${winid}" ] && {
+            if [ "${HALFHEIGHT}" ]
+            then
+              height=$((height / 2))
+            else
+              height=$((height / 4))
+              # Fudge this to compensate for differing window decoration size
+              [ "${TILIX}" ] || height=$((height - 30))
+            fi
+            mvarg="${grav},${xoff},${yoff},${width},${height}"
+            wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
+            wmctrl -i -r "${winid}" -e "${mvarg}"
+          }
+        }
+      }
+    else
+      if [ "${TILIX}" ]
+      then
+        tilix --title="${VTITLE}" \
+              --window-style=borderless \
+              --geometry=360x16+150-0 \
+              --profile=Cava \
+              --command="${CAVA_COMMAND}" 2> /dev/null &
+      else
+        gnome-terminal -t "${VTITLE}" \
+              --profile=SmallFont \
+              --hide-menubar \
+              --geometry 360x16+150-0 \
+              -- ${CAVA_COMMAND} &
+      fi
+    fi
+    sleep 2
+  }
+  # End visualizer startup section
+
+  # Fullscreen tmux sessions and asciimatics animations
+  [ "${SPLASH}" ] || [ "${TMUX_MPC}" ] && FULLSCREEN=1
+
+  # Set the command to use based on command line switches (-S, -T)
+  MPCOMM="${MPCPLUS}"
+  if [ "${SPLASH}" ]
+  then
+    if [ "${TMUX_SPLASH}" ]
+    then
+      MPCOMM="${MPPSPLASH_TMUX}"
+    else
+      MPCOMM="${MPPSPLASH}"
+    fi
+  else
+    [ "${TMUX_MPC}" ] && MPCOMM="${MPCPLUS_TMUX}"
+  fi
+
+  # Begin MPD client startup section
+  if [ "${RETRO}" ]
+  then
+    if [ "${FULLSCREEN}" ]
+    then
+      cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null
+    else
+      cool-retro-term -e "${MPCOMM}" 2> /dev/null
+    fi
+  else
+    if [ "${FULLSCREEN}" ]
+    then
+      if [ "${TILIX}" ]
+      then
+        tilix --title="${MTITLE}" \
+              --full-screen \
+              --window-style=borderless \
+              --profile=MusicPlayer \
+              --command="${MPCOMM}" 2> /dev/null
+      else
+        xfce4-terminal --title "${MTITLE}" \
+              --icon=audio-player \
+              --hide-menubar \
+              --hide-toolbar \
+              --hide-scrollbar \
+              --fullscreen \
+              --command="${MPCOMM}"
+      fi
+    else
+      if [ "${TILIX}" ]
+      then
+        tilix --title="${MTITLE}" \
+              --window-style=borderless \
+              --geometry=90x20+150+25 \
+              --profile=MusicPlayer \
+              --command="${MPCOMM}" 2> /dev/null
+      else
+        xfce4-terminal --title "${MTITLE}" \
+            --icon=audio-player \
+            --hide-menubar \
+            --hide-toolbar \
+            --hide-scrollbar \
+            --geometry 90x20+150+25 \
+            --command="${MPCOMM}"
+      fi
+    fi
+  fi
+  # End MPD client startup section
+}
+
+show_ascii_menu() {
+  while true
+  do
+    SPLASH=1
+    if [ "${COVER_ART}" ]
+    then
+      coverstat="ON"
+    else
+      coverstat="OFF"
+    fi
+    if [ "${AUDIO}" ]
+    then
+      audiostat="ON"
+    else
+      audiostat="OFF"
+    fi
+    if [ "${RECORD}" ]
+    then
+      recordstat="ON"
+    else
+      recordstat="OFF"
+    fi
+    if [ "${TMUX}" ]
+    then
+      usetmux="ON"
+    else
+      usetmux="OFF"
+    fi
+    skip_it_so=
+    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    options=("julia set asciimatics animation" "mpplus asciimatics animation" "plasma asciimatics animation" "toggle audio (${audiostat})")
+    [ "${have_uebz}" ] && options+=("toggle show cover art (${coverstat})")
+    [ "${have_nema}" ] && options+=("toggle record tmux session (${recordstat})")
+    options+=("toggle use tmux (${usetmux})" "Main menu" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+              printf "Returning\n\n"
+              init_vars
+              break 2
+              ;;
+          "julia set asciimatics animation",*|*,"julia set asciimatics animation")
+              MPPSPLASH="${MPPSPLASH} -j"
+              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
+              break
+              ;;
+          "mpplus asciimatics animation",*|*,"mpplus asciimatics animation")
+              MPPSPLASH="${MPPSPLASH} -m"
+              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l mpplus"
+              break
+              ;;
+          "plasma asciimatics animation",*|*,"plasma asciimatics animation")
+              MPPSPLASH="${MPPSPLASH} -p"
+              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
+              break
+              ;;
+          "toggle show cover art"*,*|*,"toggle show cover art"*)
+              if [ "${COVER_ART}" ]
+              then
+                COVER_ART=
+              else
+                COVER_ART=1
+              fi
+              if [ "${COVER_ART}" ]
+              then
+                TMUX_MPC=1
+                MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+              else
+                TMUX_MPC=
+                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -a//"`
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "toggle audio"*,*|*,"toggle audio"*)
+              if [ "${AUDIO}" ]
+              then
+                AUDIO=
+              else
+                AUDIO=1
+              fi
+              if [ "${AUDIO}" ]
+              then
+                MPPSPLASH="${MPPSPLASH} -a"
+                MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
+              else
+                MPPSPLASH=`echo ${MPPSPLASH} | sed -e "s/ -a//"`
+                MPPSPLASH_TMUX=`echo ${MPPSPLASH_TMUX} | sed -e "s/ -a//"`
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "toggle record tmux session"*,*|*,"toggle record tmux session"*)
+              if [ "${RECORD}" ]
+              then
+                RECORD=
+              else
+                RECORD=1
+                TMUX=1
+              fi
+              if [ "${RECORD}" ]
+              then
+                MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -R"
+              else
+                MPPSPLASH_TMUX=`echo ${MPPSPLASH_TMUX} | sed -e "s/ -R//"`
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "toggle use tmux"*,*|*,"toggle use tmux"*)
+              if [ "${TMUX}" ]
+              then
+                TMUX=
+              else
+                TMUX=1
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+              printf "\nExiting\n"
+              exit 0
+              ;;
+      esac
+      REPLY=
+    done
+    [ "${skip_it_so}" ] || {
+      make_it_so
+      init_vars
+    }
+  done
+  init_vars
+}
+
+show_main_menu() {
+  while true
+  do
+    if [ "${FULLSCREEN}" ]
+    then
+      fullstat="ON"
+    else
+      fullstat="OFF"
+    fi
+    if [ "${RECORD}" ]
+    then
+      recordstat="ON"
+    else
+      recordstat="OFF"
+    fi
+    if [ "${TMUX}" ]
+    then
+      usetmux="ON"
+    else
+      usetmux="OFF"
+    fi
+    skip_it_so=
+    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    options=("music player plus cava")
+    [ "${have_retro}" ] && options+=("retro music player plus")
+    [ "${have_tilix}" ] && options+=("tilix music player plus")
+    [ "${have_cantata}" ] && options+=("music player plus cantata")
+    options+=("asciimatics animations" "download album cover art" "kill tmux sessions")
+    options+=("toggle use tmux (${usetmux})")
+    [ "${have_nema}" ] && options+=("toggle record tmux session (${recordstat})")
+    options+=("toggle fullscreen (${fullstat})" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+          "music player plus cava",*|*,"music player plus cava")
+              MPCPLUS="mpcplus"
+              break
+              ;;
+          "retro music player plus",*|*,"retro music player plus")
+              MPCPLUS="mpcplus"
+              RETRO=1
+              break
+              ;;
+          "tilix music player plus",*|*,"tilix music player plus")
+              MPCPLUS="mpcplus"
+              TILIX=1
+              break
+              ;;
+          "music player plus cantata",*|*,"music player plus cantata")
+              MPCPLUS="cantata"
+              break
+              ;;
+          "asciimatics animations",*|*,"asciimatics animations")
+              show_ascii_menu
+              skip_it_so=1
+              break
+              ;;
+          "download album cover art",*|*,"download album cover art")
+              DOWNLOAD_ART=1
+              break
+              ;;
+          "kill tmux sessions",*|*,"kill tmux sessions")
+              kill_tmux_sessions
+              skip_it_so=1
+              break
+              ;;
+          "toggle use tmux"*,*|*,"toggle use tmux"*)
+              if [ "${TMUX}" ]
+              then
+                TMUX=
+              else
+                TMUX=1
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "toggle record tmux session"*,*|*,"toggle record tmux session"*)
+              if [ "${RECORD}" ]
+              then
+                RECORD=
+              else
+                RECORD=1
+                TMUX=1
+              fi
+              if [ "${RECORD}" ]
+              then
+                MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
+              else
+                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -r//"`
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "toggle fullscreen"*,*|*,"toggle fullscreen"*)
+              if [ "${FULLSCREEN}" ]
+              then
+                FULLSCREEN=
+              else
+                FULLSCREEN=1
+              fi
+              skip_it_so=1
+              break
+              ;;
+          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+              printf "\nExiting\n"
+              exit 0
+              ;;
+      esac
+      REPLY=
+    done
+    [ "${skip_it_so}" ] || {
+      make_it_so
+      init_vars
+    }
+  done
+}
+
+init_vars() {
+  VTITLE="Spectrum Visualizer"
+  MTITLE="Music Player Plus"
+  MPCPLUS="mpcplus"
+  MPCPLUS_TMUX="mpcplus-tmux -f"
+  MPPSPLASH="mppsplash"
+  MPPSPLASH_TMUX="mppsplash-tmux"
+
+  AUDIO=
+  CAVA_COMMAND=cava
+  CLIENT=
+  COVER_ART=
+  DOWNLOAD_ART=
+  FULLSCREEN=
+  HALFHEIGHT=
+  INTERACTIVE=
+  MUSIC_DIRECTORY=
+  QRTRHEIGHT=
+  RECORD=
+  RETRO=
+  SPLASH=
+  TILIX=
+  TMUX_MPC=
+  TMUX_SPLASH=
+  USAGE=
+}
+
+init_vars
+have_uebz=`type -p ueberzug`
+have_cantata=`type -p cantata`
+have_retro=`type -p cool-retro-term`
+have_tilix=`type -p tilix`
+have_nema=`type -p asciinema`
+have_xfce4=`type -p xfce4-terminal`
+have_gnome=`type -p gnome-terminal`
+while getopts "AabcC:Dd:fhijJkmn:NpP:qrRSs:tTu" flag; do
   case $flag in
     a)
+      AUDIO=1
       MPPSPLASH="${MPPSPLASH} -a"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
       ;;
     A)
-      have_uebz=`type -p ueberzug`
       [ "${have_uebz}" ] && {
+        COVER_ART=1
         TMUX_MPC=1
         MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
       }
@@ -123,7 +570,7 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
       ;;
     c)
       CLIENT=1
-      type -p cantata > /dev/null || {
+      [ "${have_cantata}" ] || {
         echo "Option '-c' indicates use cantata MPD client."
         echo "However, cantata is not installed or not in your path."
         echo "You can install cantata using apt or dnf as follows:"
@@ -142,7 +589,6 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
         echo "You may be able to install ${CLIENT} using apt or dnf as follows:"
         printf "\n\n\tsudo apt install ${CLIENT}\nor"
         printf "\n\tsudo dnf install ${CLIENT}\n\n"
-        have_cantata=`type -p cantata`
         if [ "${have_cantata}" ]
         then
           echo "Continuing, using cantata rather than ${CLIENT}."
@@ -166,25 +612,11 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
     h)
       HALFHEIGHT=1
       ;;
+    i)
+      INTERACTIVE=1
+      ;;
     k)
-      SESSIONS="musicplayerplus mppsplash"
-      for session in ${SESSIONS}
-      do
-        ps -ef | grep tmux | grep ${session} > /dev/null && {
-          tmux kill-session -t ${session}
-        }
-      done
-      ASCIIS="asciijulia asciimpplus asciiplasma"
-      for ascii in ${ASCIIS}
-      do
-        ps -ef | grep -v grep | grep ${ascii} > /dev/null && {
-          ps -ef | grep -v grep | grep ${ascii} | while IFS= read -r line
-          do
-            pid=`echo "$line" | awk ' { print $2 } '`
-            kill ${pid}
-          done 
-        }
-      done
+      kill_tmux_sessions
       exit 0
       ;;
     j)
@@ -219,7 +651,7 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
       QRTRHEIGHT=1
       ;;
     r)
-      type -p cool-retro-term > /dev/null || {
+      [ "${have_retro}" ] || {
         echo "Option '-r' indicates use cool-retro-term terminal emulator."
         echo "However, cool-retro-term is not installed or not in your path."
         echo "You can install cool-retro-term using apt or dnf as follows:"
@@ -229,11 +661,12 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
         exit 1
       }
       RETRO=1
-      type -p tilix > /dev/null && TILIX=1
+      [ "${have_tilix}" ] && TILIX=1
       ;;
     R)
-      have_nema=`type -p asciinema`
       [ "${have_nema}" ] && {
+        RECORD=1
+        TMUX=1
         MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
         MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -R"
       }
@@ -246,7 +679,7 @@ while getopts "AabcC:Dd:fhjJkmn:NpP:qrRSs:tTu" flag; do
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -s ${OPTARG}"
       ;;
     t)
-      type -p tilix > /dev/null || {
+      [ "${have_tilix}" ] || {
         echo "Option '-t' indicates use tilix terminal emulator."
         echo "However, tilix is not installed or not in your path."
         echo "You can install tilix using apt or dnf as follows:"
@@ -278,38 +711,29 @@ done
   fi
 }
 
-[ "${DOWNLOAD_ART}" ] && {
-  if [ "${MUSIC_DIRECTORY}" ]
-  then
-    download_cover_art -d "${MUSIC_DIRECTORY}"
-  else
-    download_cover_art
-  fi
-}
-
 [ "${TILIX}" ] || {
   [ "${RETRO}" ] || {
-    type -p xfce4-terminal > /dev/null || {
+    [ "${have_xfce4}" ] || {
       echo "No option '-t' or '-r' indicates use xfce4-terminal"
       echo "terminal emulator. However, xfce4-terminal is either"
       echo "not installed or not in your path."
       echo "You can install xfce4-terminal using apt or dnf as follows:"
       printf "\n\n\tsudo apt install xfce4-terminal\nor"
       printf "\n\tsudo dnf install xfce4-terminal\n\n"
-      type -p tilix > /dev/null || usage
+      [ "${have_tilix}" ] || usage
       echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
     }
   }
   [ "${TILIX}" ] || {
-    type -p gnome-terminal > /dev/null || {
+    [ "${have_gnome}" ] || {
       echo "No option '-t' indicates use gnome-terminal terminal emulator."
       echo "However, gnome-terminal is not installed or not in your path."
       echo "You can install gnome-terminal using apt or dnf as follows:"
       printf "\n\n\tsudo apt install gnome-terminal\nor"
       printf "\n\tsudo dnf install gnome-terminal\n\n"
-      type -p tilix > /dev/null || usage
+      [ "${have_tilix}" ] || usage
       echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."
       TILIX=1
@@ -341,149 +765,6 @@ done
 
 [ "${USAGE}" ] && usage
 
-# Begin visualizer startup section
-#
-# Do not start visualizer here if we are going to start a tmux session
-# or if we are displaying an asciimatics animation
-[ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
-  if [ "${FULLSCREEN}" ]
-  then
-    if [ "${TILIX}" ]
-    then
-      tilix --title="${VTITLE}" \
-            --full-screen \
-            --window-style=borderless \
-            --profile=Cava \
-            --command="${CAVA_COMMAND}" 2> /dev/null &
-    else
-      gnome-terminal -t "${VTITLE}" \
-            --profile=SmallFont \
-            --hide-menubar \
-            --full-screen \
-            -- ${CAVA_COMMAND} &
-    fi
-    [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
-      sleep 1
-      if [ "${TILIX}" ]
-      then
-        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
-      else
-        cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
-      fi
-      [ "${cavawin}" ] || {
-        if [ "${TILIX}" ]
-        then
-          cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
-          [ "${cavawin}" ] || echo "Could not find cava window"
-        else
-          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
-          [ "${cavawin}" ] || echo "Could not find cava window"
-        fi
-      }
-      [ "${cavawin}" ] && {
-        winid=`echo ${cavawin} | awk ' { print $1 } '`
-        grav=`echo ${cavawin} | awk ' { print $2 } '`
-        xoff=`echo ${cavawin} | awk ' { print $3 } '`
-        yoff=`echo ${cavawin} | awk ' { print $4 } '`
-        width=`echo ${cavawin} | awk ' { print $5 } '`
-        height=`echo ${cavawin} | awk ' { print $6 } '`
-        [ "${winid}" ] && {
-          if [ "${HALFHEIGHT}" ]
-          then
-            height=$((height / 2))
-          else
-            height=$((height / 4))
-            # Fudge this to compensate for differing window decoration size
-            [ "${TILIX}" ] || height=$((height - 30))
-          fi
-          mvarg="${grav},${xoff},${yoff},${width},${height}"
-          wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
-          wmctrl -i -r "${winid}" -e "${mvarg}"
-        }
-      }
-    }
-  else
-    if [ "${TILIX}" ]
-    then
-      tilix --title="${VTITLE}" \
-            --window-style=borderless \
-            --geometry=360x16+150-0 \
-            --profile=Cava \
-            --command="${CAVA_COMMAND}" 2> /dev/null &
-    else
-      gnome-terminal -t "${VTITLE}" \
-            --profile=SmallFont \
-            --hide-menubar \
-            --geometry 360x16+150-0 \
-            -- ${CAVA_COMMAND} &
-    fi
-  fi
-  sleep 2
-}
-# End visualizer startup section
+[ "${INTERACTIVE}" ] && show_main_menu
 
-# Fullscreen tmux sessions and asciimatics animations
-[ "${SPLASH}" ] || [ "${TMUX_MPC}" ] && FULLSCREEN=1
-
-# Set the command to use based on command line switches (-S, -T)
-MPCOMM="${MPCPLUS}"
-if [ "${SPLASH}" ]
-then
-  if [ "${TMUX_SPLASH}" ]
-  then
-    MPCOMM="${MPPSPLASH_TMUX}"
-  else
-    MPCOMM="${MPPSPLASH}"
-  fi
-else
-  [ "${TMUX_MPC}" ] && MPCOMM="${MPCPLUS_TMUX}"
-fi
-
-# Begin MPD client startup section
-if [ "${RETRO}" ]
-then
-  if [ "${FULLSCREEN}" ]
-  then
-    cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null &
-  else
-    cool-retro-term -e "${MPCOMM}" 2> /dev/null &
-  fi
-else
-  if [ "${FULLSCREEN}" ]
-  then
-    if [ "${TILIX}" ]
-    then
-      tilix --title="${MTITLE}" \
-            --full-screen \
-            --window-style=borderless \
-            --profile=MusicPlayer \
-            --command="${MPCOMM}" 2> /dev/null &
-    else
-      xfce4-terminal --title "${MTITLE}" \
-            --icon=audio-player \
-            --hide-menubar \
-            --hide-toolbar \
-            --hide-scrollbar \
-            --fullscreen \
-            --command="${MPCOMM}" &
-    fi
-  else
-    if [ "${TILIX}" ]
-    then
-      tilix --title="${MTITLE}" \
-            --window-style=borderless \
-            --geometry=90x20+150+25 \
-            --profile=MusicPlayer \
-            --command="${MPCOMM}" 2> /dev/null &
-    else
-      xfce4-terminal --title "${MTITLE}" \
-          --icon=audio-player \
-          --hide-menubar \
-          --hide-toolbar \
-          --hide-scrollbar \
-          --geometry 90x20+150+25 \
-          --command="${MPCOMM}" &
-    fi
-  fi
-fi
-# End MPD client startup section
+make_it_so

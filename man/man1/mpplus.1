@@ -22,7 +22,7 @@ mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P
+music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P
 script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
@@ -39,6 +39,9 @@ in a tmux session and recording that session using \f[I]asciinema\f[R].
 The \f[I]mpplus\f[R] command can also act as a front-end to the
 \f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
 with the \f[V]-S\f[R] and \f[V]-T\f[R] command line options.
+.PP
+When invoked with the \f[V]-i\f[R] option, \f[V]mpplus\f[R] presents a
+selection menu and operates in interactive mode.
 .PP
 Occasionally a tmux session or asciimatics script will hang.
 Previously started tmux sessions and asciimatics scripts can be quickly
@@ -113,8 +116,11 @@ indicates download album cover art
 .TP
 \f[B]-d \[aq]music_directory\[aq]\f[R]
 specifies the music directory to use for downloaded album cover art
-(without this option -D will use the \[aq]music_directory\[aq] setting
-in \[aq]/etc/mpd.conf\[aq]
+(without this option -D will use the \f[V]music_directory\f[R] setting
+in \f[V]/etc/mpd.conf\f[R]
+.TP
+\f[B]-i\f[R]
+indicates interactive mode with selection menus
 .TP
 \f[B]-k\f[R]
 indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
@@ -133,6 +139,10 @@ Displays this usage message and exits
 Launches \f[V]mpcplus\f[R] music player client running in xfce4 terminal
 emulator with cava spectrum visualizer running in a gnome-terminal
 terminal emulator window.
+.TP
+\f[B]mpplus -i\f[R]
+Launches \f[V]mpplus\f[R] in interactive mode with menu selections
+controlling actions rather than command line arguments
 .TP
 \f[B]mpplus -r\f[R]
 Launches \f[V]mpcplus\f[R] music player client running in
