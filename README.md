@@ -399,13 +399,14 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-f] [-h] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
-		[-q] [-r] [-R] [-S] [-t] [-T] [-u]
+		[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
+		[-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
+	-i indicates start mpplus in interactive mode
 	-h indicates half-height for cava window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for cava window (with -f only)
@@ -421,6 +422,9 @@ ASCIImatics animation options:
 	-N indicates use alternate comments in Plasma ASCIImatics scenes
 	-p indicates use Plasma scenes in ASCIImatics display
 	-s song specifies a song to accompany an ASCIImatics animation
+		'song' can be the full pathname to an audio file or a
+		relative pathname to an audio file in the MPD music library
+		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art
@@ -475,6 +479,9 @@ Where:
 	-m indicates use MusicPlayerPlus effect
 	-p indicates use Plasma effect
 	-s song specifies the audio file to play as accompaniment
+		'song' can be the full pathname to an audio file or a relative
+		pathname to an audio file in the MPD music library or
+		$HOME/Music/
 	-u displays this usage message and exits
 ```
 

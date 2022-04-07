@@ -45,8 +45,8 @@
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p]"
-  printf "\n\t\t[-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]"
+  printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]"
+  printf "\n\t\t[-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -68,6 +68,9 @@ usage() {
   printf "\n\t-N indicates use alternate comments in Plasma ASCIImatics scenes"
   printf "\n\t-p indicates use Plasma scenes in ASCIImatics display"
   printf "\n\t-s song specifies a song to accompany an ASCIImatics animation"
+  printf "\n\t\t'song' can be the full pathname to an audio file or a"
+  printf "\n\t\trelative pathname to an audio file in the MPD music library"
+  printf "\n\t\tor $HOME/Music/"
   printf "\n\t-S indicates display ASCIImatics splash animation"
   printf "\nGeneral options:"
   printf "\n\t-D indicates download album cover art"

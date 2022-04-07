@@ -19,6 +19,9 @@ usage() {
   printf "\n\t-r script specifies a python script to run in the right visualizer pane"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-s song specifies audio file to use as accompaniment"
+  printf "\n\t\t'song' can be the full pathname to an audio file or a relative"
+  printf "\n\t\tpathname to an audio file in the MPD music library"
+  printf "\n\t\tor $HOME/Music/"
   printf "\n\t-t indicates use original plasma effect comments"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nDefaults: single pane, left pane plasma, right pane julia, recording disabled"
@@ -87,9 +90,17 @@ while getopts "abc:dl:r:Rs:tu" flag; do
               then
                 SONG="${HOME}/Music/${OPTARG}"
               else
-                custom_audio=
-                echo "Cannot locate ${OPTARG}"
-                echo "Using default song: ${SONG}"
+                mpd_music=`grep ^music_directory /etc/mpd.conf`
+                [ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`
+                mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+                if [ -f "${mpd_music}/${OPTARG}" ]
+                then
+                  SONG="${mpd_music}/${OPTARG}"
+                else
+                  custom_audio=
+                  echo "Cannot locate ${OPTARG}"
+                  echo "Using default song: ${SONG}"
+                fi
               fi
             fi
           fi
