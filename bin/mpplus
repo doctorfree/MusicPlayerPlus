@@ -199,7 +199,7 @@ make_it_so() {
   }
   # End visualizer startup section
 
-  # Fullscreen tmux sessions and asciimatics animations
+  # Fullscreen tmux sessions and ASCIImatics Animations
   [ "${SPLASH}" ] || [ "${TMUX_MPC}" ] && FULLSCREEN=1
 
   # Set the command to use based on command line switches (-S, -T)
@@ -296,10 +296,10 @@ show_ascii_menu() {
     fi
     skip_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
-    options=("julia set asciimatics animation" "mpplus asciimatics animation" "plasma asciimatics animation" "toggle audio (${audiostat})")
-    [ "${have_uebz}" ] && options+=("toggle show cover art (${coverstat})")
-    [ "${have_nema}" ] && options+=("toggle record tmux session (${recordstat})")
-    options+=("toggle use tmux (${usetmux})" "Main menu" "Quit")
+    options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
+    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
+    options+=("Toggle Use Tmux (${usetmux})" "Main menu" "Quit")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -308,22 +308,22 @@ show_ascii_menu() {
               init_vars
               break 2
               ;;
-          "julia set asciimatics animation",*|*,"julia set asciimatics animation")
+          "Julia Set ASCIImatics Animation",*|*,"Julia Set ASCIImatics Animation")
               MPPSPLASH="${MPPSPLASH} -j"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
               break
               ;;
-          "mpplus asciimatics animation",*|*,"mpplus asciimatics animation")
+          "MPPlus ASCIImatics Animation",*|*,"MPPlus ASCIImatics Animation")
               MPPSPLASH="${MPPSPLASH} -m"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l mpplus"
               break
               ;;
-          "plasma asciimatics animation",*|*,"plasma asciimatics animation")
+          "Plasma ASCIImatics Animation",*|*,"Plasma ASCIImatics Animation")
               MPPSPLASH="${MPPSPLASH} -p"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
               break
               ;;
-          "toggle show cover art"*,*|*,"toggle show cover art"*)
+          "Toggle Show Cover Art"*,*|*,"Toggle Show Cover Art"*)
               if [ "${COVER_ART}" ]
               then
                 COVER_ART=
@@ -341,7 +341,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "toggle audio"*,*|*,"toggle audio"*)
+          "Toggle Audio"*,*|*,"Toggle Audio"*)
               if [ "${AUDIO}" ]
               then
                 AUDIO=
@@ -359,7 +359,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "toggle record tmux session"*,*|*,"toggle record tmux session"*)
+          "Toggle Record Tmux Session"*,*|*,"Toggle Record Tmux Session"*)
               if [ "${RECORD}" ]
               then
                 RECORD=
@@ -376,10 +376,11 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "toggle use tmux"*,*|*,"toggle use tmux"*)
+          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
               if [ "${TMUX}" ]
               then
                 TMUX=
+                RECORD=
               else
                 TMUX=1
               fi
@@ -424,60 +425,61 @@ show_main_menu() {
     fi
     skip_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
-    options=("music player plus cava")
-    [ "${have_retro}" ] && options+=("retro music player plus")
-    [ "${have_tilix}" ] && options+=("tilix music player plus")
-    [ "${have_cantata}" ] && options+=("music player plus cantata")
-    options+=("asciimatics animations" "download album cover art" "kill tmux sessions")
-    options+=("toggle use tmux (${usetmux})")
-    [ "${have_nema}" ] && options+=("toggle record tmux session (${recordstat})")
-    options+=("toggle fullscreen (${fullstat})" "Quit")
+    options=("Music Player Plus Cava")
+    [ "${have_retro}" ] && options+=("Retro Music Player Plus")
+    [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
+    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
+    options+=("ASCIImatics Animations" "Download Album Cover Art" "Kill Tmux Sessions")
+    options+=("Toggle Use Tmux (${usetmux})")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
+    options+=("Toggle Fullscreen (${fullstat})" "Quit")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
-          "music player plus cava",*|*,"music player plus cava")
+          "Music Player Plus Cava",*|*,"Music Player Plus Cava")
               MPCPLUS="mpcplus"
               break
               ;;
-          "retro music player plus",*|*,"retro music player plus")
+          "Retro Music Player Plus",*|*,"Retro Music Player Plus")
               MPCPLUS="mpcplus"
               RETRO=1
               break
               ;;
-          "tilix music player plus",*|*,"tilix music player plus")
+          "Tilix Music Player Plus",*|*,"Tilix Music Player Plus")
               MPCPLUS="mpcplus"
               TILIX=1
               break
               ;;
-          "music player plus cantata",*|*,"music player plus cantata")
+          "Cantata Music Player Plus",*|*,"Cantata Music Player Plus")
               MPCPLUS="cantata"
               break
               ;;
-          "asciimatics animations",*|*,"asciimatics animations")
+          "ASCIImatics Animations",*|*,"ASCIImatics Animations")
               show_ascii_menu
               skip_it_so=1
               break
               ;;
-          "download album cover art",*|*,"download album cover art")
+          "Download Album Cover Art",*|*,"Download Album Cover Art")
               DOWNLOAD_ART=1
               break
               ;;
-          "kill tmux sessions",*|*,"kill tmux sessions")
+          "Kill Tmux Sessions",*|*,"Kill Tmux Sessions")
               kill_tmux_sessions
               skip_it_so=1
               break
               ;;
-          "toggle use tmux"*,*|*,"toggle use tmux"*)
+          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
               if [ "${TMUX}" ]
               then
                 TMUX=
+                RECORD=
               else
                 TMUX=1
               fi
               skip_it_so=1
               break
               ;;
-          "toggle record tmux session"*,*|*,"toggle record tmux session"*)
+          "Toggle Record Tmux Session"*,*|*,"Toggle Record Tmux Session"*)
               if [ "${RECORD}" ]
               then
                 RECORD=
@@ -494,7 +496,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "toggle fullscreen"*,*|*,"toggle fullscreen"*)
+          "Toggle Fullscreen"*,*|*,"Toggle Fullscreen"*)
               if [ "${FULLSCREEN}" ]
               then
                 FULLSCREEN=
