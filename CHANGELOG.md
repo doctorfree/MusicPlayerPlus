@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file.
 
+# MusicPlayerPlus-1.0.1r3 (2022-04-12)
+* Disable tmux recording when tmux is disabled
+* Improve interactive menu entries
+* If -s song argument is provided look for song in MPD music library as well
+* Added interactive mode with -i command line option
+* Added support for mpplus front-end to mppsplash and mppsplash-tmux
+* Add ability to download cover art to mpplus command
+* Add option to download_cover_art to specify alternate music directory
+* Add -d option to mpplus to download album cover art
+
 # MusicPlayerPlus-1.0.1r2 (2022-04-04)
 * Use MPlayer to play media during ASCIImatics animations
 * Use a signal handler in ASCIImatics animations to fade audio and cleanup

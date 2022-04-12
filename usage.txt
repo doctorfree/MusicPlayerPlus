@@ -1,15 +1,65 @@
 =============================================================================
 
-Usage: mpplus [-c] [-C client] [-f] [-h] [-q] [-r] [-t] [-u]
+Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
+		[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
+		[-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+MPCplus/Visualizer options:
+	-A indicates display album cover art (implies tmux session)
+	-c indicates use cantata MPD client rather than mpcplus
+	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-f indicates fullscreen display
+	-i indicates start mpplus in interactive mode
+	-h indicates half-height for cava window (with -f only)
+	-P script specifies the ASCIImatics script to run in visualizer pane
+	-q indicates quarter-height for cava window (with -f only)
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+ASCIImatics animation options:
+	-a indicates play audio during ASCIImatics display
+	-b indicates use backup audio during ASCIImatics display
+	-j indicates use Julia Set scenes in ASCIImatics display
+	-J indicates Julia Set with several runs using different parameters
+	-m indicates use MusicPlayerPlus scenes in ASCIImatics display
+	-n num specifies the number of times to cycle ASCIImatics scenes
+	-N indicates use alternate comments in Plasma ASCIImatics scenes
+	-p indicates use Plasma scenes in ASCIImatics display
+	-s song specifies a song to accompany an ASCIImatics animation
+		'song' can be the full pathname to an audio file or a
+		relative pathname to an audio file in the MPD music library
+		or /home/ronnie/Music/
+	-S indicates display ASCIImatics splash animation
+General options:
+	-D indicates download album cover art
+	-d 'music_directory' specifies the music directory to use for
+		downloaded album cover art (without this option -D will use
+		the 'music_directory' setting in '/etc/mpd.conf'
+	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+	-R indicates record tmux session with asciinema
+	-T indicates use a tmux session for either ASCIImatics or mpcplus
+	-u displays this usage message and exits
+
+=============================================================================
+
+Usage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] [-m] [-p] [-s song] [-u]
 Where:
-  -c indicates use cantata MPD client rather than mpcplus
-  -C 'client' indicates use 'client' MPD client rather than mpcplus
-  -f indicates fullscreen display
-  -h indicates half-height for cava window (with -f only)
-  -q indicates quarter-height for cava window (with -f only)
-  -r indicates use retro terminal emulator
-  -t indicates use tilix terminal emulator
-  -u displays this usage message and exits
+	-A indicates use all effects
+	-a indicates play audio during ASCIImatics display
+	-b indicates use backup audio during ASCIImatics display
+	-C indicates use alternate comments in Plasma effect
+	-c num specifies the number of times to cycle
+	-d indicates enable debug mode
+	-j indicates use Julia Set effect
+	-J indicates Julia Set with several runs using different parameters
+	-m indicates use MusicPlayerPlus effect
+	-p indicates use Plasma effect
+	-s song specifies the audio file to play as accompaniment
+		'song' can be the full pathname to an audio file or a relative
+		pathname to an audio file in the MPD music library or
+		/home/ronnie/Music/
+	-u displays this usage message and exits
+
+Default audio: /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav
+Without any options the MusicPlayerPlus effect will repeat
 
 =============================================================================
 
@@ -53,4 +103,4 @@ Keys:
         b         Cycle background color
         q         Quit
 
-as of 0.4.0 all options are specified in config file, see in '/home/username/.config/cava/' 
+As of 0.4.0 all options are specified in config file, see in '/home/username/.config/cava/' 

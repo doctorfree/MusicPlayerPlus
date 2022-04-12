@@ -1,4 +1,14 @@
 Changes in this release include:
+* Disable tmux recording when tmux is disabled
+* Improve interactive menu entries
+* If -s song argument is provided look for song in MPD music library as well
+* Added interactive mode with -i command line option
+* Added support for mpplus front-end to mppsplash and mppsplash-tmux
+* Add ability to download cover art to mpplus command
+* Add option to download_cover_art to specify alternate music directory
+* Add -d option to mpplus to download album cover art
+
+Changes in previous release include:
 
 * Use MPlayer to play media during ASCIImatics animations
 * Use a signal handler in ASCIImatics animations to fade audio and cleanup
@@ -6,9 +16,6 @@ Changes in this release include:
 * Added tmux session integration to `mpplus` command
 * Re-enable visualizer in `mpcplus` MPD client build
 * Cleanup tmux sessions, add ability to kill tmux sessions in `mpplus`
-
-Changes in previous release include:
-
 * Add capability to play audio while displaying ASCIImatics scenes
 * Add several ASCIImatics scenes including one during initialization
 * Rename `mpcava` to `mpplus`
@@ -29,12 +36,12 @@ Changes in previous release include:
 ## Installation
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.1-2.amd64.deb
+sudo apt install ./MusicPlayerPlus_1.0.1-3.amd64.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.1-2.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-1.0.1-3.x86_64.rpm
 ```
 
 ## Configuration
