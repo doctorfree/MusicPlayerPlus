@@ -1,4 +1,7 @@
 Changes in this release include:
+* Add `alsa_conf` command to configure ALSA sound system
+* Add management of MPD services through `mpplus` command
+
 * Disable tmux recording when tmux is disabled
 * Improve interactive menu entries
 * If -s song argument is provided look for song in MPD music library as well
@@ -7,9 +10,6 @@ Changes in this release include:
 * Add ability to download cover art to mpplus command
 * Add option to download_cover_art to specify alternate music directory
 * Add -d option to mpplus to download album cover art
-
-Changes in previous release include:
-
 * Use MPlayer to play media during ASCIImatics animations
 * Use a signal handler in ASCIImatics animations to fade audio and cleanup
 * Use a FIFO in ASCIImatics animations to communicate with MPlayer
@@ -36,12 +36,12 @@ Changes in previous release include:
 ## Installation
 Install the package on Debian based systems by executing the command
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.1-3.amd64.deb
+sudo apt install ./MusicPlayerPlus_1.0.2-1.amd64.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.1-3.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-1.0.2-1.x86_64.rpm
 ```
 
 ## Configuration

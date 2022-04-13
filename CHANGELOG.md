@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
+# MusicPlayerPlus-1.0.2r1 (2022-04-16)
+* Add `alsa_conf` command to configure ALSA sound system
+* Add management of MPD services through `mpplus` command
+
 # MusicPlayerPlus-1.0.1r3 (2022-04-12)
 * Disable tmux recording when tmux is disabled
 * Improve interactive menu entries
