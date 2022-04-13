@@ -1,0 +1,26 @@
+pcm.!default {
+  type asym
+  playback.pcm {
+    type plug
+    slave.pcm "output"
+  }
+  capture.pcm {
+    type plug
+    slave.pcm "input"
+  }
+}
+
+pcm.output {
+  type hw
+  card __AUDIO_OUT__
+}
+
+pcm.input {
+  type hw
+  card __AUDIO_IN__
+}
+
+ctl.!default {
+  type hw
+  card __AUDIO_OUT__
+}

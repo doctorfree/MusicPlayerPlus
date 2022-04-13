@@ -400,7 +400,7 @@ summary of the command line options:
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-f] [-h] [-i] [-jJ] [-k] [-m]
-		[-M enable|disable|restart|start|stop|status]
+		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q]
 		[-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 MPCplus/Visualizer options:
@@ -435,8 +435,10 @@ General options:
 		the 'music_directory' setting in '/etc/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
-		The specified action will be applied to both the MPD service
-		and the MPD socket service that listens for client connections
+	    or configure the ALSA sound system
+		MPD actions will be applied to both the MPD service
+		and the MPD socket service while ALSA configuration
+		will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-u displays this usage message and exits

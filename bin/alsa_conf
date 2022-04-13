@@ -1,0 +1,318 @@
+#!/bin/bash
+
+ASOUND_TMPL="/usr/share/doc/musicplayerplus/mpcplus/asound.conf.tmpl"
+ASOUND="/etc/asound.conf"
+CARDS="/proc/asound/cards"
+OUTSTR="__AUDIO_OUT__"
+INPSTR="__AUDIO_IN__"
+INPUT=
+OUTPUT=
+
+# Change these if you are not using a USB microphone or audio
+#
+# String to look for in /proc/asound/cards for audio output device
+OUTGREP="USB-Audio"
+# String to look for in /proc/asound/cards for audio input device
+INGREP="USB-Audio"
+
+usage() {
+    printf "\nUsage: alsa_conf [-c] [-e] [-l] [-n] [-o outfile] [-q] [-r] [-t template] [-u]" 
+    printf "\nWhere:"
+    printf "\n\t-c indicates perform a check and notify if update needed"
+    printf "\n\t-e indicates perform an update of /etc/asound.conf"
+    printf "\n\t-l indicates list audio input/output configured devices"
+    printf "\n\t-n indicates non-interactive execution (guess at settings)"
+    printf "\n\t-o 'outfile' specifies an alternate output file for generated asound.conf"
+    printf "\n\t-q indicates quiet execution"
+    printf "\n\t-r indicates restore original /etc/asound.conf"
+    printf "\n\t-t 'template' specifies an alternate asound.conf template to use"
+    printf "\n\t-u indicates display this usage message and exit"
+    printf "\n\nDefault generated output is the file /etc/asound.conf"
+    printf "\nDefault asound.conf template can be found in:"
+    printf "\n\t/usr/share/doc/musicplayerplus/mpcplus/asound.conf.tmpl\n\n"
+    exit 0
+}
+
+UPD=
+CHK=
+LST=
+REV=
+QUT=
+SEL=1
+while getopts celno:qrt:u flag; do
+    case $flag in
+        c)
+            CHK=1
+            ;;
+        e)
+            UPD=1
+            ;;
+        l)
+            LST=1
+            ;;
+        n)
+            SEL=
+            ;;
+        o)
+            ASOUND="${OPTARG}"
+            ;;
+        q)
+            QUT=1
+            ;;
+        r)
+            REV=1
+            ;;
+        t)
+            ASOUND_TMPL="${OPTARG}"
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "$LST" ] && {
+  INP=
+  OUT=
+  grep card /etc/asound.conf | while read card
+  do
+    [ "$INP" ] || {
+      echo "Audio Output:"
+      aplay -l | grep "$card"
+      INP=1
+      echo ""
+      continue
+    }
+    [ "$OUT" ] || {
+      echo "Audio Input:"
+      arecord -l | grep "$card"
+      OUT=1
+      echo ""
+      continue
+    }
+  done
+  exit 0
+}
+
+[ -f ${ASOUND_TMPL} ] || {
+  [ "${QUT}" ] || {
+    echo "Cannot locate ${ASOUND_TMPL}. Exiting."
+  }
+  exit 0
+}
+
+if [ "$REV" ]
+then
+  [ -f ${ASOUND}.orig ] && {
+    sudo cp ${ASOUND}.orig ${ASOUND}
+    sudo rm -f ${ASOUND}.orig
+  }
+else
+  # Present a selection dialog to allow user to choose audio input and output
+  echo ""
+  device_options=()
+  while read entry
+  do
+    devnum=`echo ${entry} | awk ' { print $1 } '`
+    [ "${devnum}" -eq "${devnum}" ] 2> /dev/null || continue
+    device=`echo ${entry} | awk -F ':' ' { print $2 } '`
+    device=`echo ${device} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+    device_options+=("${device}")
+  done < <(cat ${CARDS})
+  if [ "${SEL}" ]
+  then
+    device_options+=("Select For Me" "None" "Quit")
+    PS3="${BOLD}Please enter the device you wish to use for AUDIO OUTPUT (numeric or text): ${NORMAL}"
+    select opt in "${device_options[@]}"
+    do
+      case "$opt,$REPLY" in
+        [0-9]*,*|*,[0-9]*)
+          OUTPUT=${REPLY}
+          ((OUTPUT--))
+          break
+          ;;
+        "Select For Me",*|*,"Select For Me"|"select for me",*|*,"select for me")
+          OUTPUT=`grep ${OUTGREP} ${CARDS} | grep "DAC" | awk ' { print $1 } '`
+          [ "${OUTPUT}" ] || {
+            OUTPUT=`grep '\[Headphones' ${CARDS} | awk ' { print $1 } '`
+          }
+          [ "${OUTPUT}" ] || {
+            OUTPUT=`grep ${OUTGREP} ${CARDS} | grep "Audio Device" | awk ' { print $1 } '`
+          }
+          [ "${OUTPUT}" ] && {
+            OUTPUT=`echo ${OUTPUT} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+          }
+          [ "${OUTPUT}" ] || OUTPUT=1
+          ;;
+        "None",*|*,"None"|"none",*|*,"none")
+          OUTPUT=1
+          break
+          ;;
+        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          exit 0
+          ;;
+        *)
+          printf "\nInvalid entry. Please try again"
+          printf "\nEnter either a number or text of one of the menu entries\n"
+          ;;
+      esac
+    done
+
+    echo ""
+    PS3="${BOLD}Please enter the device you wish to use for AUDIO INPUT (numeric or text): ${NORMAL}"
+    select opt in "${device_options[@]}"
+    do
+      case "$opt,$REPLY" in
+        [0-9]*,*|*,[0-9]*)
+          INPUT=${REPLY}
+          ((INPUT--))
+          break
+          ;;
+        "Select For Me",*|*,"Select For Me"|"select for me",*|*,"select for me")
+          INPUT=`grep ${INGREP} ${CARDS} | grep "Webcam" | awk ' { print $1 } '`
+          [ "${INPUT}" ] || {
+            INPUT=`grep '\[Microphone' ${CARDS} | awk ' { print $1 } '`
+          }
+          [ "${INPUT}" ] || {
+            INPUT=`grep ${INGREP} ${CARDS} | grep "Audio Device" | awk ' { print $1 } '`
+          }
+          [ "${INPUT}" ] && {
+            INPUT=`echo ${INPUT} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+          }
+          [ "${INPUT}" ] || {
+            if [ "${OUTPUT}" == "0" ]
+            then
+              INPUT=1
+            else
+              INPUT=0
+            fi
+          }
+          ;;
+        "None",*|*,"None"|"none",*|*,"none")
+          if [ "${OUTPUT}" == "0" ]
+          then
+            INPUT=1
+          else
+            INPUT=0
+          fi
+          break
+          ;;
+        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          exit 0
+          ;;
+        *)
+          printf "\nInvalid entry. Please try again"
+          printf "\nEnter either a number or text of one of the menu entries\n"
+          ;;
+      esac
+    done
+  else
+    OUTPUT=`grep ${OUTGREP} ${CARDS} | grep "DAC" | awk ' { print $1 } '`
+    [ "${OUTPUT}" ] || {
+      OUTPUT=`grep '\[Headphones' ${CARDS} | awk ' { print $1 } '`
+    }
+    [ "${OUTPUT}" ] || {
+      OUTPUT=`grep ${OUTGREP} ${CARDS} | grep "Audio Device" | awk ' { print $1 } '`
+    }
+    [ "${OUTPUT}" ] && {
+      OUTPUT=`echo ${OUTPUT} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+    }
+    [ "${OUTPUT}" ] || OUTPUT=1
+
+    INPUT=`grep ${INGREP} ${CARDS} | grep "Webcam" | awk ' { print $1 } '`
+    [ "${INPUT}" ] || {
+      INPUT=`grep '\[Microphone' ${CARDS} | awk ' { print $1 } '`
+    }
+    [ "${INPUT}" ] || {
+      INPUT=`grep ${INGREP} ${CARDS} | grep "Audio Device" | awk ' { print $1 } '`
+    }
+    [ "${INPUT}" ] && {
+      INPUT=`echo ${INPUT} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+    }
+    [ "${INPUT}" ] || {
+      if [ "${OUTPUT}" == "0" ]
+      then
+        INPUT=1
+      else
+        INPUT=0
+      fi
+    }
+  fi
+
+  # Generate a new asound.conf from the template
+  cat ${ASOUND_TMPL} | \
+    sed -e "s/${INPSTR}/${INPUT}/" -e "s/${OUTSTR}/${OUTPUT}/" > /tmp/asound$$
+
+  SAME=
+  [ -f ${ASOUND} ] && {
+    diff /tmp/asound$$ ${ASOUND} > /dev/null
+    [ $? -eq 0 ] && SAME=1
+  }
+  if [ "${CHK}" ]
+  then
+    if [ -f ${ASOUND} ]
+    then
+      if [ "${SAME}" ]
+      then
+        [ "${QUT}" ] || {
+          echo "${ASOUND} is identical to a generated asound.conf. No need to update."
+        }
+        exit 0
+      else
+        [ "${QUT}" ] || {
+          echo "${ASOUND} differs with generated asound.conf as follows:"
+          diff /tmp/asound$$ ${ASOUND}
+        }
+        exit 1
+      fi
+    else
+      [ "${QUT}" ] || {
+        echo "No ${ASOUND} detected. Check not performed."
+        echo "Use 'alsa_conf -e' to generate and update ${ASOUND}"
+      }
+      exit 1
+    fi
+  else
+    if [ "${UPD}" ]
+    then
+      if [ -f ${ASOUND} ]
+      then
+        if [ "${SAME}" ]
+        then
+          [ "${QUT}" ] || {
+            echo "${ASOUND} is identical to a generated asound.conf. No need to update."
+          }
+        else
+          [ -f ${ASOUND}.orig ] || {
+            [ "${QUT}" ] || {
+              echo "Copying original ${ASOUND} to ${ASOUND}.orig"
+            }
+            sudo cp ${ASOUND} ${ASOUND}.orig
+          }
+          [ "${QUT}" ] || {
+            echo "Installing generated asound.conf as ${ASOUND}"
+          }
+          sudo cp /tmp/asound$$ ${ASOUND}
+        fi
+      else
+        sudo cp /tmp/asound$$ ${ASOUND}
+      fi
+    else
+      if [ "${SAME}" ]
+      then
+        [ "${QUT}" ] || {
+          echo "${ASOUND} is identical to a generated asound.conf. No need to update."
+        }
+      else
+        [ "${QUT}" ] || {
+          echo "Copying generated asound.conf to ${ASOUND}.gen$$"
+        }
+        sudo cp /tmp/asound$$ ${ASOUND}.gen$$
+      fi
+    fi
+  fi
+  rm -f /tmp/asound$$
+fi
+
+exit 0

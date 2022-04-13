@@ -50,7 +50,7 @@ PLEASE="Please enter your"
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m]"
-  printf "\n\t\t[-M enable|disable|restart|start|stop|status]"
+  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q]"
   printf "\n\t\t[-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
   printf "\nMPCplus/Visualizer options:"
@@ -85,8 +85,10 @@ usage() {
   printf "\n\t\tthe 'music_directory' setting in '/etc/mpd.conf'"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
-  printf "\n\t\tThe specified action will be applied to both the MPD service"
-  printf "\n\t\tand the MPD socket service that listens for client connections"
+  printf "\n\t    or configure the ALSA sound system"
+  printf "\n\t\tMPD actions will be applied to both the MPD service"
+  printf "\n\t\tand the MPD socket service while ALSA configuration"
+  printf "\n\t\twill update the ALSA configuration in '/etc/asound.conf'"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
   printf "\n\t-u displays this usage message and exits\n"
@@ -278,6 +280,10 @@ make_it_so() {
 mpd_services() {
   MPD_SERVICE_ACTION=$1
   case ${MPD_SERVICE_ACTION} in
+    alsaconf)
+      echo "Executing: sudo alsa_conf -e"
+      sudo alsa_conf -e
+      ;;
     restart)
       echo "Executing: sudo systemctl stop mpd mpd.socket"
       sudo systemctl stop mpd mpd.socket
@@ -314,7 +320,7 @@ show_services_menu() {
     printf "\n\tMusic Player Service is ${m_enabled} and ${m_active}"
     printf "\n\tMusic Player Socket Service is ${s_enabled} and ${s_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
-    options=("Enable Music Player Services" "Disable Music Player Services" "Start Music Player Services" "Stop Music Player Services" "Restart Music Player Services" "Get Status of Music Player Services")
+    options=("Configure ALSA Sound System" "Enable Music Player Services" "Disable Music Player Services" "Start Music Player Services" "Stop Music Player Services" "Restart Music Player Services" "Get Status of Music Player Services")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -323,6 +329,10 @@ show_services_menu() {
               printf "Returning\n\n"
               init_vars
               break 2
+              ;;
+          "Configure ALSA Sound System",*|*,"Configure ALSA Sound System")
+              mpd_services alsaconf
+              break
               ;;
           "Enable Music Player Services",*|*,"Enable Music Player Services")
               mpd_services enable
