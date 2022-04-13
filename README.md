@@ -399,8 +399,10 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P script]
-		[-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+		[-f] [-h] [-i] [-jJ] [-k] [-m]
+		[-M enable|disable|restart|start|stop|status]
+		[-n num] [-N] [-p] [-P script] [-q]
+		[-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -424,7 +426,7 @@ ASCIImatics animation options:
 	-s song specifies a song to accompany an ASCIImatics animation
 		'song' can be the full pathname to an audio file or a
 		relative pathname to an audio file in the MPD music library
-		or $HOME/Music/
+		or /home/ronnie/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art
@@ -432,6 +434,9 @@ General options:
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '/etc/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+	-M 'action' can be used to control the Music Player Daemon (MPD)
+		The specified action will be applied to both the MPD service
+		and the MPD socket service that listens for client connections
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-u displays this usage message and exits

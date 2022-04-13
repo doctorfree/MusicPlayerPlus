@@ -9,12 +9,14 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p]
-		[-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-f]
+		[-h] [-i] [-jJ] [-k] [-m] [-M enable|disable|start|stop|restart|status]
+		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
+
+The *mpplus* command can be used to control the *mpd* and *mpd.socket* system services when invoked with the `-M action` command line option. The Music Player Daemon (MPD) can be started, stopped, enabled, disabled, restarted, and status queried.
 
 The *mpplus* command can also act as a front-end to the *mppsplash* and *mppsplash-tmux* commands when invoked with the `-S` and `-T` command line options.
 
@@ -98,6 +100,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-k**
 : indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 
+**-M 'enable|disable|start|stop|restart|status'**
+: Enable, disable, start, stop, restart, or get the status of the MPD and MPD socket system services 
+
 **-R**
 : indicates record tmux session with asciinema
 
@@ -131,6 +136,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **mpplus -a -T**
 : Launches `mpcplus` music player client and visualizer running in a tmux session displaying album cover art. 
+
+**mpplus -M stop**
+: Stops the Music Player Daemon service and the associated MPD socket service
 
 **mpplus -R -T**
 : Creates an asciinema recording of `mpcplus` music player client and visualizer running in a tmux session

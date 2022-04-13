@@ -22,8 +22,9 @@ mpplus - Launch an MPD music player client and cava spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-n num] [-N] [-p] [-P
-script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
+music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M
+enable|disable|start|stop|restart|status] [-n num] [-N] [-p] [-P script]
+[-q] [-r] [-R] [-S] [-t] [-T] [-u]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -35,6 +36,12 @@ Alternately, mpplus can launch the cantata MPD client or any specified
 MPD client along with the cava spectrum visualizer.
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
+.PP
+The \f[I]mpplus\f[R] command can be used to control the \f[I]mpd\f[R]
+and \f[I]mpd.socket\f[R] system services when invoked with the
+\f[V]-M action\f[R] command line option.
+The Music Player Daemon (MPD) can be started, stopped, enabled,
+disabled, restarted, and status queried.
 .PP
 The \f[I]mpplus\f[R] command can also act as a front-end to the
 \f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
@@ -125,6 +132,10 @@ indicates interactive mode with selection menus
 \f[B]-k\f[R]
 indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 .TP
+\f[B]-M \[aq]enable|disable|start|stop|restart|status\[aq]\f[R]
+Enable, disable, start, stop, restart, or get the status of the MPD and
+MPD socket system services
+.TP
 \f[B]-R\f[R]
 indicates record tmux session with asciinema
 .TP
@@ -171,6 +182,10 @@ terminal emulator window.
 \f[B]mpplus -a -T\f[R]
 Launches \f[V]mpcplus\f[R] music player client and visualizer running in
 a tmux session displaying album cover art.
+.TP
+\f[B]mpplus -M stop\f[R]
+Stops the Music Player Daemon service and the associated MPD socket
+service
 .TP
 \f[B]mpplus -R -T\f[R]
 Creates an asciinema recording of \f[V]mpcplus\f[R] music player client

@@ -17,6 +17,8 @@ APT_NAMES="musicplayerplus"
 SRC="${HOME}/src"
 DEB_ARCH=amd64
 RPM_ARCH=x86_64
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 
 PKG_AVAILABLE=
 PKG_SELECTED=
