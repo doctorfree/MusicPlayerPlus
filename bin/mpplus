@@ -281,8 +281,8 @@ mpd_services() {
   MPD_SERVICE_ACTION=$1
   case ${MPD_SERVICE_ACTION} in
     alsaconf)
-      echo "Executing: sudo alsa_conf -e"
-      sudo alsa_conf -e
+      echo "Executing: sudo alsa_conf -e -m"
+      sudo alsa_conf -e -m
       ;;
     restart)
       echo "Executing: sudo systemctl stop mpd mpd.socket"

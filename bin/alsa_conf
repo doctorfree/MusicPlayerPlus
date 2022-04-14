@@ -16,11 +16,12 @@ OUTGREP="USB-Audio"
 INGREP="USB-Audio"
 
 usage() {
-    printf "\nUsage: alsa_conf [-c] [-e] [-l] [-n] [-o outfile] [-q] [-r] [-t template] [-u]" 
+    printf "\nUsage: alsa_conf [-c] [-e] [-l] [-m] [-n] [-o outfile] [-q] [-r] [-t template] [-u]"
     printf "\nWhere:"
     printf "\n\t-c indicates perform a check and notify if update needed"
     printf "\n\t-e indicates perform an update of /etc/asound.conf"
     printf "\n\t-l indicates list audio input/output configured devices"
+    printf "\n\t-m indicates invoked from another menu, alter choices accordingly"
     printf "\n\t-n indicates non-interactive execution (guess at settings)"
     printf "\n\t-o 'outfile' specifies an alternate output file for generated asound.conf"
     printf "\n\t-q indicates quiet execution"
@@ -36,10 +37,11 @@ usage() {
 UPD=
 CHK=
 LST=
+MNU=
 REV=
 QUT=
 SEL=1
-while getopts celno:qrt:u flag; do
+while getopts celmno:qrt:u flag; do
     case $flag in
         c)
             CHK=1
@@ -49,6 +51,9 @@ while getopts celno:qrt:u flag; do
             ;;
         l)
             LST=1
+            ;;
+        m)
+            MNU=1
             ;;
         n)
             SEL=
@@ -122,16 +127,16 @@ else
   done < <(cat ${CARDS})
   if [ "${SEL}" ]
   then
-    device_options+=("Select For Me" "None" "Quit")
+    if [ "${MNU}" ]
+    then
+      device_options+=("Select For Me" "None" "Back")
+    else
+      device_options+=("Select For Me" "None" "Quit")
+    fi
     PS3="${BOLD}Please enter the device you wish to use for AUDIO OUTPUT (numeric or text): ${NORMAL}"
     select opt in "${device_options[@]}"
     do
       case "$opt,$REPLY" in
-        [0-9]*,*|*,[0-9]*)
-          OUTPUT=${REPLY}
-          ((OUTPUT--))
-          break
-          ;;
         "Select For Me",*|*,"Select For Me"|"select for me",*|*,"select for me")
           OUTPUT=`grep ${OUTGREP} ${CARDS} | grep "DAC" | awk ' { print $1 } '`
           [ "${OUTPUT}" ] || {
@@ -149,8 +154,13 @@ else
           OUTPUT=1
           break
           ;;
-        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+        "Back",*|*,"Back"|"back",*|*,"back"|"Quit",*|*,"Quit"|"quit",*|*,"quit")
           exit 0
+          ;;
+        [0-9]*,*|*,[0-9]*)
+          OUTPUT=${REPLY}
+          ((OUTPUT--))
+          break
           ;;
         *)
           printf "\nInvalid entry. Please try again"
@@ -164,11 +174,6 @@ else
     select opt in "${device_options[@]}"
     do
       case "$opt,$REPLY" in
-        [0-9]*,*|*,[0-9]*)
-          INPUT=${REPLY}
-          ((INPUT--))
-          break
-          ;;
         "Select For Me",*|*,"Select For Me"|"select for me",*|*,"select for me")
           INPUT=`grep ${INGREP} ${CARDS} | grep "Webcam" | awk ' { print $1 } '`
           [ "${INPUT}" ] || {
@@ -198,8 +203,13 @@ else
           fi
           break
           ;;
-        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+        "Back",*|*,"Back"|"back",*|*,"back"|"Quit",*|*,"Quit"|"quit",*|*,"quit")
           exit 0
+          ;;
+        [0-9]*,*|*,[0-9]*)
+          INPUT=${REPLY}
+          ((INPUT--))
+          break
           ;;
         *)
           printf "\nInvalid entry. Please try again"
