@@ -1,7 +1,7 @@
 Changes in this release include:
+
 * Add `alsa_conf` command to configure ALSA sound system
 * Add management of MPD services through `mpplus` command
-
 * Disable tmux recording when tmux is disabled
 * Improve interactive menu entries
 * If -s song argument is provided look for song in MPD music library as well

@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-1.0.2r1 (2022-04-16)
+# MusicPlayerPlus-1.0.2r1 (2022-04-14)
 * Add `alsa_conf` command to configure ALSA sound system
 * Add management of MPD services through `mpplus` command
 
