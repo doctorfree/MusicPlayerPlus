@@ -81,9 +81,9 @@ MusicPlayerPlus adds the following commands to your system:
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:
-    * **asciijulia** : ASCIImatics animated zoom on a Julia Set
-    * **asciiplasma** : ASCIImatics animated plasma graphic
-    * **asciimpplus** : ASCIImatics animated MusicPlayerPlus splash screen
+    * **mppjulia** : ASCIImatics animated zoom on a Julia Set
+    * **mppplasma** : ASCIImatics animated plasma graphic
+    * **mpprocks** : ASCIImatics animated MusicPlayerPlus splash screen
 * **raise_cava** : raises the cava spectrum visualizer window
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **download_cover_art** : automatically downloads cover album art for your entire music directory
@@ -382,9 +382,9 @@ e.g. `mpplus -u`.
 ### Man Pages
 
 - [**mpplus**](markdown/mpplus.1.md) : Primary MusicPlayerPlus user interface
-- [**asciijulia**](markdown/asciijulia.1.md) : asciimatics animation of a Julia Set
-- [**asciimpplus**](markdown/asciimpplus.1.md) : asciimatics animation of MusicPlayerPlus intro
-- [**asciiplasma**](markdown/asciiplasma.1.md) : asciimatics animation with Plasma effect
+- [**mppjulia**](markdown/mppjulia.1.md) : asciimatics animation of a Julia Set
+- [**mpprocks**](markdown/mpprocks.1.md) : asciimatics animation of MusicPlayerPlus intro
+- [**mppplasma**](markdown/mppplasma.1.md) : asciimatics animation with Plasma effect
 - [**mpcinit**](markdown/mpcinit.1.md) : MusicPlayerPlus initialization
 - [**mpcplus-tmux**](markdown/mpcplus-tmux.1.md) : MusicPlayerPlus in a tmux session
 - [**mpcplus**](markdown/mpcplus.1.md) : MusicPlayerPlus MPD client

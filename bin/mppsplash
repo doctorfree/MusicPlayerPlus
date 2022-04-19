@@ -62,7 +62,7 @@ custom_audio=
 cycle=
 debug=
 longjulia=
-script="mpplus"
+script="rocks"
 switch_comments=
 while getopts "AabCc:djJmps:u" flag; do
   case $flag in
@@ -96,7 +96,7 @@ while getopts "AabCc:djJmps:u" flag; do
         script_args="-i"
         ;;
       m)
-        script="mpplus"
+        script="rocks"
         ;;
       p)
         script="plasma"
@@ -164,10 +164,10 @@ if [ "${all}" ]
 then
   [ "${cycle}" ] || cycle="-c 1"
   numcycles=`echo ${cycle} | awk ' { print $2 } '`
-  for script in julia mpplus plasma
+  for script in julia rocks plasma
   do
     set_cycles ${script} ${numcycles}
-    ascii${script} -c ${usecycle} ${script_args}
+    mpp${script} -c ${usecycle} ${script_args}
   done
 else
   if [ "${cycle}" ]
@@ -176,16 +176,16 @@ else
     set_cycles ${script} ${numcycles}
     if [ "${script}" == "julia" ] && [ "${longjulia}" ]
     then
-      ascii${script} -c ${usecycle} ${script_args} -x -0.4 -y -0.59
-      ascii${script} -c ${usecycle} ${script_args} -x 0.687 -y 0.312
-      ascii${script} -c ${usecycle} ${script_args}
-      ascii${script} -c ${usecycle} ${script_args} -x 0.54 -y 0.54
-      ascii${script} -c ${usecycle} ${script_args} -x 0.6 -y 0.55
-      ascii${script} -c ${usecycle} ${script_args} -x 0.0 -y 0.8
+      mpp${script} -c ${usecycle} ${script_args} -x -0.4 -y -0.59
+      mpp${script} -c ${usecycle} ${script_args} -x 0.687 -y 0.312
+      mpp${script} -c ${usecycle} ${script_args}
+      mpp${script} -c ${usecycle} ${script_args} -x 0.54 -y 0.54
+      mpp${script} -c ${usecycle} ${script_args} -x 0.6 -y 0.55
+      mpp${script} -c ${usecycle} ${script_args} -x 0.0 -y 0.8
     else
-      ascii${script} -c ${usecycle} ${script_args}
+      mpp${script} -c ${usecycle} ${script_args}
     fi
   else
-    ascii${script} ${script_args}
+    mpp${script} ${script_args}
   fi
 fi

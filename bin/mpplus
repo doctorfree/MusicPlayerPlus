@@ -106,7 +106,7 @@ kill_tmux_sessions() {
       tmux kill-session -t ${session}
     }
   done
-  ASCIIS="asciijulia asciimpplus asciiplasma"
+  ASCIIS="mppjulia mpprocks mppplasma"
   for ascii in ${ASCIIS}
   do
     ps -ef | grep -v grep | grep ${ascii} > /dev/null && {
@@ -418,7 +418,7 @@ show_ascii_menu() {
               ;;
           "MPPlus ASCIImatics Animation",*|*,"MPPlus ASCIImatics Animation")
               MPPSPLASH="${MPPSPLASH} -m"
-              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l mpplus"
+              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l rocks"
               break
               ;;
           "Plasma ASCIImatics Animation",*|*,"Plasma ASCIImatics Animation")
@@ -743,7 +743,7 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTu" flag; do
       ;;
     m)
       MPPSPLASH="${MPPSPLASH} -m"
-      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l mpplus"
+      MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l rocks"
       ;;
     M)
       mpd_services ${OPTARG}

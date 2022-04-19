@@ -26,7 +26,7 @@ Alternately, the visualizer pane can display a Python ASCIImatics visualization.
 : Indicates display album cover art
 
 **-p script**
-: Specifies a python script to run in the visualizer pane. Available scripts are "julia", "plasma", and "mpplus".
+: Specifies a python script to run in the visualizer pane. Available scripts are "julia", "plasma", and "rocks".
 
 **-r**
 : Indicates record tmux session with asciinema (album cover art not recorded)

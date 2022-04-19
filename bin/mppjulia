@@ -3,7 +3,7 @@
 # Animate a zoom bounce on a Julia Set using ASCII characters
 # Written by Ronald Record <ronaldrecord@gmail.com>
 #
-# Usage: asciijulia [-c int] [-i] [-x float -y float]
+# Usage: mppjulia [-c int] [-i] [-x float -y float]
 # Where -c int specifies how many times to cycle the zoom/bounce before exit
 #              without any -c argument the cycling continues until 'q' press
 #       -i show an info pane with starting coordinates
@@ -12,11 +12,11 @@
 #                     Default value for this is [-0.8, 0.156]
 #
 # Interesting zooms occur with these example invocations:
-#     asciijulia -x 0.687 -y 0.312
-#     asciijulia -x 0.54 -y 0.54
-#     asciijulia -x 0.6 -y 0.55
-#     asciijulia -x 0.0 -y 0.8
-#     asciijulia -x -0.4 -y -0.59
+#     mppjulia -x 0.687 -y 0.312
+#     mppjulia -x 0.54 -y 0.54
+#     mppjulia -x 0.6 -y 0.55
+#     mppjulia -x 0.0 -y 0.8
+#     mppjulia -x -0.4 -y -0.59
 
 from asciimatics.effects import Julia, Print, Stars
 from asciimatics.renderers import FigletText, Rainbow
@@ -30,7 +30,7 @@ import sys
 import time
 import argparse
 
-def asciijulia(screen, c):
+def mppjulia(screen, c):
     scenes = []
     center = (screen.width // 2, screen.height // 2)
 
@@ -157,7 +157,7 @@ if __name__ == "__main__":
 
     while True:
         try:
-            Screen.wrapper(asciijulia, arguments=[c])
+            Screen.wrapper(mppjulia, arguments=[c])
 
             if song is not None:
                 with open(fifo, "w") as mp_fifo:

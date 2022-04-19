@@ -2,6 +2,12 @@
 
 All notable changes to this project will be documented in this file.
 
+# MusicPlayerPlus-1.0.2r2 (2022-04-20)
+* Rename asciijulia to mppjulia to avoid conflict with Asciiville package
+* Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
+* Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
+* Added asciinema dependency
+
 # MusicPlayerPlus-1.0.2r1 (2022-04-14)
 * Add `alsa_conf` command to configure ALSA sound system
 * Add management of MPD services through `mpplus` command

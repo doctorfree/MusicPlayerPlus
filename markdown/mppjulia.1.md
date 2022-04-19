@@ -1,19 +1,19 @@
 ---
-title: ASCIIJULIA
+title: MPPJULIA
 section: 1
 header: User Manual
-footer: asciijulia 1.0.0
+footer: mppjulia 1.0.0
 date: March 27, 2022
 ---
 # NAME
-asciijulia - Display an ASCIImatics animated zoom on a Julia Set
+mppjulia - Display an ASCIImatics animated zoom on a Julia Set
 
 # SYNOPSIS
-**asciijulia** [-h] [-d] [-i] [-a AUDIO] [-c CYCLE] [-x XVALUE] [-y YVALUE]
+**mppjulia** [-h] [-d] [-i] [-a AUDIO] [-c CYCLE] [-x XVALUE] [-y YVALUE]
 
 # DESCRIPTION
-The *asciijulia* command plays one of the ASCIImatics animations included in
-MusicPlayerPlus. Command line options can be used to tell *asciijulia* to play
+The *mppjulia* command plays one of the ASCIImatics animations included in
+MusicPlayerPlus. Command line options can be used to tell *mppjulia* to play
 animations for a specified number of cycles, what complex number to use as the
 starting point for calculations, and which audio file to use as accompaniment.
 
@@ -40,26 +40,26 @@ starting point for calculations, and which audio file to use as accompaniment.
 : starting y value of 'c' for the Julia set
 
 # EXAMPLES
-**asciijulia**
-: Without options asciijulia will display an animated zoom on a Julia Set. These will continue until the 'q' key is pressed.
+**mppjulia**
+: Without options mppjulia will display an animated zoom on a Julia Set. These will continue until the 'q' key is pressed.
 
-**asciijulia -c 10**
+**mppjulia -c 10**
 : Plays the Julia Set ASCIImatics animation 10 times then exits 
 
-**asciijulia -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
+**mppjulia -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the Julia Set ASCIImatics animation 5 times accompanied by audio then exits 
 
-**asciijulia -x 0.687 -y 0.312**
+**mppjulia -x 0.687 -y 0.312**
 : Display an animated zoom on the Julia Set with starting complex coordinates [0.687, 0.312]
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-ASCIIJULIA is distributed under an Open Source license.
-See the file LICENSE in the ASCIIJULIA source distribution
+MPPJULIA is distributed under an Open Source license.
+See the file LICENSE in the MPPJULIA source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using ASCIIJULIA and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using MPPJULIA and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at:

@@ -111,8 +111,8 @@ tmux select-pane -t 0
 
 if [ "${PYART}" ]
 then
-  have_pyart=`type -p ascii${PYART}`
-  [ "${have_pyart}" ] && PYART="ascii${PYART}"
+  have_pyart=`type -p mpp${PYART}`
+  [ "${have_pyart}" ] && PYART="mpp${PYART}"
   tmux send-keys "${PYART}; exit" C-m
 else
   tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava; exit" C-m
