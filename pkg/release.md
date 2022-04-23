@@ -35,8 +35,15 @@ Changes in this release include:
 
 ## Installation
 Install the package on Debian based systems by executing the command
+
 ```bash
 sudo apt install ./MusicPlayerPlus_1.0.2-1.amd64.deb
+```
+
+or, on a Raspberry Pi:
+
+```bash
+sudo apt install ./MusicPlayerPlus_1.0.2-1.armhf.deb
 ```
 
 Install the package on RPM based systems by executing the command

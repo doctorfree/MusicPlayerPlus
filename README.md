@@ -163,6 +163,16 @@ or
 sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.amd64.deb
 ```
 
+or, on a Raspberry Pi:
+
+```console
+sudo apt install ./MusicPlayerPlus_<version>-<release>.armhf.deb
+```
+or
+```console
+sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.armhf.deb
+```
+
 **NOTE:** In some cases you may see a warning message when installing the
 Debian package. The message:
 
