@@ -2,7 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-1.0.2r2 (2022-04-20)
+# MusicPlayerPlus-1.0.2r2 (2022-07-01)
+* Add fzmp command and fzf dependency
+* Add support for Raspberry Pi
 * Rename asciijulia to mppjulia to avoid conflict with Asciiville package
 * Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
 * Rename asciimpplus to mpprocks to avoid conflict with Asciiville package

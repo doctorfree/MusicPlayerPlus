@@ -1,5 +1,15 @@
 Changes in this release include:
 
+* Add fzmp command and fzf dependency
+* Add support for Raspberry Pi
+* Rename asciijulia to mppjulia to avoid conflict with Asciiville package
+* Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
+* Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
+* Added asciinema dependency
+
+
+Previous changes in version 1.0.2 include:
+
 * Add `alsa_conf` command to configure ALSA sound system
 * Add management of MPD services through `mpplus` command
 * Disable tmux recording when tmux is disabled
@@ -37,18 +47,18 @@ Changes in this release include:
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.2-1.amd64.deb
+sudo apt install ./MusicPlayerPlus_1.0.2-2.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.2-1.armhf.deb
+sudo apt install ./MusicPlayerPlus_1.0.2-2.armhf.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.2-1.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-1.0.2-2.x86_64.rpm
 ```
 
 ## Configuration
