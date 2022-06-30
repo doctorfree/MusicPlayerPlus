@@ -90,15 +90,16 @@ ${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
-${SUDO} cp with-cover-art/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/catalog.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/config-cava ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/catalog.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/config-cava ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
-${SUDO} cp with-cover-art/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp with-cover-art/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/music"
 

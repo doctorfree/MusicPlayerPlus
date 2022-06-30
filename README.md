@@ -87,6 +87,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **raise_cava** : raises the cava spectrum visualizer window
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **download_cover_art** : automatically downloads cover album art for your entire music directory
+* **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
@@ -566,7 +567,7 @@ difficult to display graphical images. However, this limitation can be
 overcome using `tmux` and additional tools. In this way we can add album
 cover art to MusicPlayerPlus when using the character based `mpcplus` client.
 
-See [Adding album art to MusicPlayerPlus](with-cover-art/README.md) to get
+See [Adding album art to MusicPlayerPlus](config/README.md) to get
 started integrating album art in MusicPlayerPlus.
 
 An album cover art downloader is included in MusicPlayerPlus. To download

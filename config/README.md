@@ -350,4 +350,4 @@ to adjust the pane resize values.
 Now simply type `mpcplus-tmux` into the terminal to launch it.
 
 You can take a look at
-<a href="https://github.com/doctorfree/MusicPlayerPlus/tree/master/with-cover-art" target="_blank"> the complete config files</a>.
+<a href="https://github.com/doctorfree/MusicPlayerPlus/tree/master/config" target="_blank"> the complete config files</a>.

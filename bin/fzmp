@@ -1,0 +1,414 @@
+#!/usr/bin/env bash
+
+declare -r config_file="${XDG_CONFIG_DIR:-$HOME/.config}/mpcplus/fzmp.conf"
+
+usage() {
+  LESS=-FEXR less <<HELP
+fzmp [OPTIONS]
+
+OPTIONS:
+  -a --artist
+    search artist then filter by album (or F3 when running)
+  -A --all
+    search all songs in the library (or F2 when running)
+  -g --genre
+    list genres (or F4 when running)
+  -p --playlist
+    search the current playlist (or F1 when running)
+    playlist view has the following keybinds:
+    >       go to the next song in the playlist
+    <       go to the previous song in the playlist
+    Ctrl-d  delete the selected songs from the playlist
+    Ctrl-s  save current playlist
+    Ctrl-p  toggle play/pause
+  -P --playlists
+    list saved playlists (or F5 when running)
+  -h --help
+    print this help
+
+CONFIGURATION:
+  A configuration file can be defined at $config_file
+  If a line begins with '#' it is treated as a comment and ignored
+  The configuration file reads the following options:
+
+  default_view
+    Must be 'artists' 'songs' 'playlist' or 'genres'
+  full_song_format
+    A format string to be passed directly to \`mpc format -f\` in
+    'playlist' and 'all' views. Defaults to:
+    [[[%artist% / ][[(%date%) ]%album% / ][[%track% - ][%title%]]]|%file%]
+    For colorized output try:
+    [[[\\e\\[32m%artist%\\e\\[0m / ][\\e\\[31m[(%date%) ]%album%\\e\\[0m / ][\\e\\[34m[%track% - ][%title%]\\e\\[0m]]|%file%]
+  playlist_view_key (default F1)
+  track_view_key (default F2)
+  artist_view_key (default F3)
+  genre_view_key (default F4)
+    allows customizing which keys fire the different views
+  findadd_key
+    adds all songs under the cursor by artist/genre/album
+    (default ctrl-space)
+  fzf_options
+    Command line options to be passed directly to fzf.
+    Changing this will override the default options:
+      --height='100%' +s -e -i --reverse --cycle
+    To use the jump feature of fzf you can try:
+      --bind=\`:jump --height='100%' +s -e -i --reverse --cycle
+    It also helps to have a bind for toggle-all:
+      --bind=ctrl-t:toggle-all --bind=\`:jump --height=100% +s -e -i --reverse --cycle
+    individual sessions can override with the environment variable FZMP_FZF_OPTIONS
+    fzmp will also inherit options from FZF_DEFAULT_OPTS
+HELP
+}
+
+declare default_filter='filter_by_playlist'
+declare track_format='[[[%artist% / ][[(%date%) ]%album% / ][[%track% - ][%title%]]]|%file%]'
+declare -r album_listing="mpc find -f '%album%\t%track%\t%title%' artist {} | awk -F'\t' '{ if(album != \$1) { album=\$1; print album } printf \"  %2d. %s\n\", \$2, \$3 }'"
+declare -a config_err
+
+declare key_bindings
+declare -A bindings
+bindings=(
+  [playlist]='f1'
+  [track]='f2'
+  [artist]='f3'
+  [genre]='f4'
+  [playlists]='f5'
+  [findadd]='ctrl-space'
+)
+
+do_binding() {
+  local b
+  b=$(action_from_keybind "$1")
+  shift
+  case "$b" in
+    playlist) filter_by_playlist ;;
+    playlists) pick_playlist ;;
+    track) filter_by_songs ;;
+    artist) filter_by_artists ;;
+    genre) filter_by_genres ;;
+    *) [[ -n $1 ]] && { "$@"; return 0; } ;;
+  esac
+  return 1
+}
+
+action_from_keybind() {
+  for a in "${!bindings[@]}"; do
+    if [[ $1 == "${bindings[$a]}" ]]; then
+      printf '%s' "$a"
+      return 0
+    fi
+  done
+  return 1
+}
+
+declare -A colors
+colors[red]=$(tput setaf 1)
+colors[green]=$(tput setaf 2)
+colors[blue]=$(tput setaf 4)
+colors[reset]=$(tput sgr0)
+
+info() {
+  color green "$@" >&2
+}
+
+color() {
+  local c
+  c="$1"
+  shift
+  printf '%s' "${colors[$c]}"
+  printf '%s\n' "$@"
+  printf '%s' "${colors[reset]}"
+}
+
+err() {
+  color red "$@" >&2
+}
+
+die() {
+  [[ -n "$1" ]] && err "$*"
+  exit 1
+}
+
+has() {
+  local loud=0
+  if [[ $1 == '-v' ]]; then
+    loud=1
+    shift
+  fi
+  for c; do c="${c%% *}"
+    if ! command -v "$c" &> /dev/null; then
+      (( loud > 0 )) && err "$c not found"
+      return 1
+    fi
+  done
+}
+
+is_running() {
+  pgrep "$1" &> /dev/null
+}
+
+fzf() {
+  local opts
+  opts=( --reverse --cycle --height=100% )
+  [[ -v FZMP_FZF_OPTIONS ]] && opts=( $FZMP_FZF_OPTIONS )
+  if has fzf; then
+    command fzf \
+      --inline-info \
+      --ansi \
+      --no-clear \
+      "${opts[@]}" "$@"
+  elif has sk; then
+    command sk \
+      --inline-info \
+      --ansi \
+      "${opts[@]}" "$@"
+  else
+    err 'no filter found'
+  fi
+}
+
+parse_config_file() {
+  local line key val nr=0 e
+  while IFS= read -r line; do
+    (( ++nr ))
+    [[ -z "$line" || "$line" = '#'* ]] && continue
+    read -r key <<< "${line%% *}"
+    read -r val <<< "${line#* }"
+    if [[ -z "$val" ]]; then
+      config_err+=( "missing value for \"$key\" in config file on line $nr" )
+      continue
+    fi
+    case "$key" in
+      full_song_format) track_format="$val" ;;
+      fzf_options) FZMP_FZF_OPTIONS="$val" ;;
+      default_view)
+        if [[ "$val" =~ ^playlist$|^songs$|^artists$|^genres$|^playlists$ ]]; then
+          default_filter="filter_by_$val"
+        else
+          config_err+=( "unknown format \"$val\" in config file on line $nr" )
+          config_err+=( "default_view must be 'playlist' 'songs' 'artists' 'genres' or 'playlists'" )
+        fi ;;
+      playlist_view_key) bindings[playlist]="$val" ;;
+      artist_view_key) bindings[artist]="$val" ;;
+      track_view_key) bindings[track]="$val" ;;
+      genre_view_key) bindings[genre]="$val" ;;
+      playlists_view_key) bindings[playlists]="$val" ;;
+      findadd_key) bindings[findadd]="$val" ;;
+      *) config_err+=( "unknown key \"$key\" in config file on line $nr" )
+    esac
+  done < "$config_file"
+  if (( ${#config_err[@]} > 0 )); then
+    err 'there were errors parsing config file:'
+    for e in "${config_err[@]}"; do
+      err "  $e"
+    done
+  fi
+}
+
+filter_by_songs() {
+  local choice
+  mapfile -t choice < <(mpc search -f "%file%\t$track_format" filename '' |
+    fzf --prompt='songs > ' \
+      --multi \
+      --with-nth='2..' \
+      --delimiter='\t' \
+      --bind='ctrl-space:execute-silent:printf "%s\n" {+} | cut -f1 | mpc add' \
+      --expect="${key_bindings},enter" |
+    cut -f1)
+  case "${choice[0]}" in
+    'enter') printf '%s\n' "${choice[@]:1}" | add_songs play ;;
+    *) do_binding "${choice[0]}" || exit
+  esac
+}
+
+filter_by_genres() {
+  local choice
+  mapfile -t choice < <(mpc search -f '%genre%' genre '' |
+    awk 'NF' | sort | uniq -c | sort -rn |
+    fzf --prompt='genres > ' \
+      --preview='mpc find -f "%artist%" genre {2..} | sort -u' \
+      --bind="${bindings[findadd]}:execute-silent:mpc findadd genre {2..}" \
+      --expect="${key_bindings},enter" |
+    sed -r 's/^\s*[0-9]+\s*//')
+  (( ${#choice[@]} > 0 )) || die
+  case "${choice[0]}" in
+    enter) filter_by_artist_from_genre "${choice[1]}" ;;
+    *) do_binding "${choice[0]}" || "$default_filter" ;;
+  esac
+}
+
+filter_by_artist_from_genre() {
+  local artist genre choice
+  genre="$1"
+  mapfile -t choice < <(mpc find -f '%artist%' genre "$genre" |
+    sort -u | awk 'NF' | sort -u |
+    fzf --prompt="$genre > " \
+      --preview="$album_listing" \
+      --expect="${key_bindings},enter" \
+      --bind="${bindings[findadd]}:execute-silent:mpc findadd artist {}")
+  (( ${#choice[@]} > 0 )) || filter_by_genres
+  case "${choice[0]}" in
+    enter) filter_by_album_from_artist "${choice[1]}" ;;
+    *) do_binding "${choice[0]}" || "$filter_by_genres" ;;
+  esac
+}
+
+filter_by_artists() {
+  local choice
+  mapfile -t choice < <(mpc list artist |
+    fzf --prompt='artists > ' \
+      --preview="$album_listing" \
+      --bind="${bindings[findadd]}:execute-silent:mpc findadd artist {}" \
+      --expect="${key_bindings},enter")
+  (( ${#choice[@]} > 0 )) || die
+  case "${choice[0]}" in
+    'enter') filter_by_album_from_artist "${choice[1]}" ;;
+    *) do_binding "${choice[0]}" || "$default_filter" ;;
+  esac
+}
+
+filter_by_album_from_artist() {
+  local album artist choice
+  [[ -z "$1" ]] && filter_by_artists
+  artist="$1"
+  printf -v qartist '%q' "$1"
+  mapfile -t choice < <(mpc find -f '[(%date%)]\t[%album%]' artist "$artist" |
+    sort -h | uniq |
+    fzf --prompt="$artist > " \
+      --preview="mpc find -f '[[[%track% - ][%title%]]|%file%]' artist ${qartist} album {2}" \
+      --expect="${key_bindings},enter" \
+      --bind="${bindings[findadd]}:execute-silent:mpc findadd album {2..} artist ${qartist}" \
+      --delimiter='\t' |
+      cut -f2)
+  case "${choice[0]}" in
+    'enter') filter_songs_from_album "$artist" "${choice[1]}" ;;
+    *) do_binding "${choice[0]}" || filter_by_artists ;;
+  esac
+}
+
+filter_songs_from_album() {
+  local album artist choice
+  [[ -z "$1" || -z "$2" ]] && exit 255
+  artist="$1"
+  album="$2"
+  mapfile -t choice < <(mpc find -f '%file%\t[[[%track% - ][%title%]]|%file%]' artist "${artist}" album "${album}" |
+    fzf --prompt="$artist - $album > " \
+      --multi \
+      --with-nth='2..' \
+      --delimiter='\t' \
+      --expect="${key_bindings},enter" |
+    cut -f1)
+  case "${choice[0]}" in
+    'enter') printf '%s\n' "${choice[@]:1}" | add_songs play ;;
+    *) do_binding "${choice[0]}" || filter_by_album_from_artist "$artist" ;;
+  esac
+}
+
+filter_by_playlist() {
+  local choice
+  current_song=$(mpc current -f "$track_format")
+  mapfile -t choice < <(mpc playlist -f "%position%\t$track_format" |
+    fzf --prompt='playlist > ' \
+      --multi \
+      ${current_song:+--header="now playing: ${current_song}"} \
+      --delimiter='\t' \
+      --with-nth='2..' \
+      --bind='ctrl-p:execute-silent:mpc toggle' \
+      --expect="${key_bindings},>,<,ctrl-d,enter,ctrl-s" |
+    cut -f1) || die
+  case "${choice[0]}" in
+    '>') mpc -q next; filter_by_playlist ;;
+    '<') mpc -q prev; filter_by_playlist ;;
+    'enter') [[ -n "${choice[1]}" ]] && mpc -q play "${choice[@]:1}" && filter_by_playlist ;;
+    'ctrl-d') [[ -n "${choice[1]}" ]] && mpc -q del "${choice[@]:1}" && filter_by_playlist ;;
+    'ctrl-s') save_playlist; filter_by_playlist ;;
+    *) do_binding "${choice[0]}" || exit ;;
+  esac
+}
+
+save_playlist() {
+  local name playlists confirm
+  tput clear
+  # if [[ -z $(mpc playlist) ]]; then
+  #   color red 'cannot save empty playlist'
+  #   sleep 0.7
+  #   return 1
+  # fi
+  read -r -e -p 'Enter playlist name: ' name
+  [[ -z $name ]] && return 1
+  playlists=$(mpc lsplaylists)
+  if [[ $playlists = *"$name"* ]]; then
+    diff -s --suppress-common-lines --color=always --label="$name" --label='playlist' <(mpc playlist -f '%file%' "$name") <(mpc playlist -f '%file%')
+    read -r -n 1 -p 'Are you sure you want to overwrite this playlist? (press y) ' confirm || return
+    if [[ ${confirm,} = y ]]; then
+      mpc rm "$name"
+    else
+      return
+    fi
+  fi
+  mpc save "$name"
+}
+
+pick_playlist() {
+  local choice
+  mapfile -t choice < <(mpc lsplaylists |
+    fzf --prompt='playlists > ' \
+      --multi \
+      --preview='mpc playlist {1}' \
+      --delimiter='\t' \
+      --bind='ctrl-space:execute-silent:mpc load {1}' \
+      --expect="${key_bindings},ctrl-d,enter")
+  case "${choice[0]}" in
+    'enter') mpc playlist -f '%file%' "${choice[1]}" | add_songs play && filter_by_playlist ;;
+    'ctrl-d')
+      tput clear
+      read -r -n 1 -p 'Are you sure you want to delete this playlist? (press y) ' confirm
+      if [[ ${confirm} = y ]]; then
+        mpc rm "${choice[1]}"
+        pick_playlist
+      fi ;;
+    *) do_binding "${choice[0]}" || exit
+  esac
+}
+
+add_songs() {
+  local songs index
+  mapfile -t songs
+  (( "${#songs[@]}" > 0 )) || die
+  printf '%s\n' "${songs[@]}" | mpc -q add
+  [[ $1 == play ]] || return
+  index=$(mpc playlist | wc -l)
+  if (( ${#songs[@]} > 1 )); then
+    index=$(( index - ${#songs[@]} + 1))
+  fi
+  mpc -q play "$index"
+  filter_by_playlist
+}
+
+finish() {
+  tput rmcup
+}
+trap finish EXIT SIGINT SIGTERM
+
+parse_config_file
+IFS=',' key_bindings="${bindings[*]}"
+key_bindings="${key_bindings/,${bindings[findadd]}}"
+findadd_key="${bindings[findadd]}"
+
+while :; do
+  case "$1" in
+    -A|--all) default_filter='filter_by_songs'; shift ;;
+    -a|--artist) default_filter='filter_by_artists'; shift ;;
+    -p|--playlist) default_filter='filter_by_playlist'; shift ;;
+    -P|--playlists) default_filter='pick_playlist'; shift ;;
+    -g|--genre) default_filter='filter_by_genres'; shift ;;
+    -h|--help) usage; exit ;;
+    *) break
+  esac
+done
+
+has -v fzf mpc || die
+is_running mpd || [[ -v MPD_HOST ]] || die "can't connect to mpd"
+
+tput smcup
+"$default_filter"
