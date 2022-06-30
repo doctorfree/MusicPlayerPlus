@@ -402,6 +402,7 @@ e.g. `mpplus -u`.
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
 - [**mppsplash-tmux**](markdown/mppsplash-tmux.1.md) : MusicPlayerPlus asciimatics animations in a tmux session
 - [**mppsplash**](markdown/mppsplash.1.md) : MusicPlayerPlus asciimatics animations
+- [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
 
 ### Usage
 
