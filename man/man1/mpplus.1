@@ -24,7 +24,7 @@ mpplus - Launch an MPD music player client and cava spectrum visualizer
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
 music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M
 enable|disable|start|stop|restart|status] [-n num] [-N] [-p] [-P script]
-[-q] [-r] [-R] [-S] [-t] [-T] [-u]
+[-q] [-r] [-R] [-S] [-t] [-T] [-u] [-z opt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -141,6 +141,12 @@ indicates record tmux session with asciinema
 .TP
 \f[B]-T\f[R]
 indicates use a tmux session for either ASCIImatics or mpcplus
+.TP
+\f[B]-z opt\f[R]
+Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
+list/search/select MPD media.
+Valid values for \f[V]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
+\[aq]g\[aq], \[aq]p\[aq], or \[aq]P\[aq]
 .TP
 \f[B]-u\f[R]
 Displays this usage message and exits

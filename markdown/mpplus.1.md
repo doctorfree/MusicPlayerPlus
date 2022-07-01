@@ -10,8 +10,8 @@ mpplus - Launch an MPD music player client and cava spectrum visualizer
 
 # SYNOPSIS
 **mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-f]
-		[-h] [-i] [-jJ] [-k] [-m] [-M enable|disable|start|stop|restart|status]
-		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u]
+	[-h] [-i] [-jJ] [-k] [-m] [-M enable|disable|start|stop|restart|status]
+	[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u] [-z opt]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -108,6 +108,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-T**
 : indicates use a tmux session for either ASCIImatics or mpcplus
+
+**-z opt**
+: Specifies an `fzmp` option and invokes `fzmp` to list/search/select MPD media. Valid values for `opt` are 'a', 'A', 'g', 'p', or 'P'
 
 **-u**
 : Displays this usage message and exits

@@ -52,7 +52,7 @@ usage() {
   printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q]"
-  printf "\n\t\t[-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
+  printf "\n\t\t[-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -91,6 +91,9 @@ usage() {
   printf "\n\t\twill update the ALSA configuration in '/etc/asound.conf'"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
+  printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
+  printf "\n\t\tlist/search/select media in the MPD library."
+  printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
   printf "\n\t-u displays this usage message and exits\n"
   printf "\nType 'man mpplus' for detailed usage info on mpplus"
   printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client"
@@ -698,6 +701,7 @@ init_vars() {
   FULLSCREEN=
   HALFHEIGHT=
   INTERACTIVE=
+  FZMPOPT=
   MUSIC_DIRECTORY=
   QRTRHEIGHT=
   RECORD=
@@ -718,7 +722,7 @@ have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_xfce4=`type -p xfce4-terminal`
 have_gnome=`type -p gnome-terminal`
-while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTu" flag; do
+while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -866,6 +870,9 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTu" flag; do
     T)
       TMUX=1
       ;;
+    z)
+      FZMPOPT="${OPTARG}"
+      ;;
     u)
       USAGE=1
       ;;
@@ -938,6 +945,14 @@ done
 
 [ "${USAGE}" ] && usage
 
-[ "${INTERACTIVE}" ] && show_main_menu
-
-make_it_so
+if [ "${INTERACTIVE}" ]
+then
+  show_main_menu
+else
+  if [ "${FZMPOPT}" ]
+  then
+    fzmp -${FZMPOPT}
+  else
+    make_it_so
+  fi
+fi
