@@ -45,6 +45,132 @@ do
   }
 done
 
+create_new_profile() {
+  local proterm="$1"
+  local proname="$2"
+  local profont="$3"
+  if [ "${proterm}" == "gnome" ]
+  then
+    local profile_ids=($(dconf list $dconfdir/ | grep ^: |\
+        sed 's/\///g' | sed 's/://g'))
+  fi
+  if [ "${proterm}" == "tilix" ]
+  then
+    local profile_ids=($(dconf list $dconfdir/ | grep -v ^list |\
+        sed 's/\///g' | sed 's/://g'))
+  fi
+  local profile_ids_old="$(dconf read "$dconfdir"/list | tr -d "]")"
+  local profile_id="$(uuidgen)"
+  [ "${debug}" ] && {
+    echo "profile_ids_old=${profile_ids_old}"
+    echo "profile_id=${profile_id}"
+  }
+
+  if [ -z "$profile_ids_old" ]
+  then
+    if [ ${#profile_ids[@]} -gt 0 ]
+    then
+      for id in "${!profile_ids[@]}"
+      do
+        profile_ids[${id}]="'profile_ids[${id}]',"
+      done
+      dconf write $dconfdir/list "[${profile_ids[*]} '$profile_id']" 2> /dev/null
+      [ "${debug}" ] && {
+        echo "A: dconf write $dconfdir/list [${profile_ids[*]} '$profile_id']"
+      }
+    else
+      dconf write $dconfdir/list "['$profile_id']" 2> /dev/null
+      [ "${debug}" ] && {
+        echo "B: dconf write $dconfdir/list ['$profile_id']"
+      }
+    fi
+  else
+    dconf write $dconfdir/list "${profile_ids_old}, '$profile_id']" 2> /dev/null
+    [ "${debug}" ] && {
+      echo "C: dconf write $dconfdir/list ${profile_ids_old}, '$profile_id']"
+    }
+  fi
+
+  if [ "${proterm}" == "gnome" ]
+  then
+    profile_path="$dconfdir/:$profile_id"
+  fi
+  if [ "${proterm}" == "tilix" ]
+  then
+    profile_path="$dconfdir/$profile_id"
+  fi
+  dconf write $profile_path/visible-name "'$proname'" 2> /dev/null
+
+  # MusicPlayerPlus profiles want a semi-transparent background
+  dconf write $profile_path/background-color "'rgb(0,0,0)'" 2> /dev/null
+  dconf write $profile_path/foreground-color "'rgb(255,255,255)'" 2> /dev/null
+  dconf write $profile_path/cursor-shape "'underline'" 2> /dev/null
+  dconf write $profile_path/cursor-blink-mode "'off'" 2> /dev/null
+  dconf write $profile_path/use-theme-colors "false" 2> /dev/null
+  if [ "${proterm}" == "gnome" ]
+  then
+    dconf write $profile_path/use-theme-transparency "false" 2> /dev/null
+    dconf write $profile_path/use-transparent-background "true" 2> /dev/null
+  fi
+  dconf write $profile_path/background-transparency-percent "50" 2> /dev/null
+  dconf write $profile_path/use-system-font "false" 2> /dev/null
+  dconf write $profile_path/font "'Monospace ${profont}'" 2> /dev/null
+}
+
+# If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
+declare -a profiles
+dconfdir=/org/gnome/terminal/legacy/profiles:
+profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
+
+for profile_name in MusicPlayer Visualizer
+do
+  profile_exists=
+  fontsize=8
+  [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+  if [ "$profiles" = "" ]
+  then
+    create_new_profile gnome ${profile_name} ${fontsize}
+  else
+    for i in ${!profiles[*]}
+    do
+      visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
+      [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+      [ "$profile_exists" ] && break
+    done
+  fi
+
+  [ "$profile_exists" ] || {
+    create_new_profile gnome ${profile_name} ${fontsize}
+  }
+done
+
+# Create Tilix profiles, similar to Gnome-terminal's
+dconfdir=/com/gexperts/Tilix/profiles
+profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
+
+for profile_name in MusicPlayer Visualizer
+do
+  profile_exists=
+  fontsize=8
+  [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+
+  if [ "$profiles" = "" ]
+  then
+    create_new_profile tilix ${profile_name} ${fontsize}
+  else
+    for i in ${!profiles[*]}
+    do
+      visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
+      [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+      [ "$profile_exists" ] && break
+    done
+  fi
+
+  [ "$profile_exists" ] || {
+    create_new_profile tilix ${profile_name} ${fontsize}
+  }
+done
+
 [ -f /etc/mpd.conf ] || {
   echo "/etc/mpd.conf missing"
   echo "Check/reinstall mpd"

@@ -117,7 +117,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 # EXAMPLES
 **mpplus**
-: Launches `mpcplus` music player client running in xfce4 terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `mpcplus` music player client running in gnome terminal emulator with cava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
 **mpplus -i**
 : Launches `mpplus` in interactive mode with menu selections controlling actions rather than command line arguments

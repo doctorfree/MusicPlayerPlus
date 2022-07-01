@@ -23,8 +23,6 @@ MusicPlayerPlus components are used to manage and control MPD.
     1. [Start MPD](#start-mpd)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
-    1. [Gnome Terminal Emulator Profile](#gnome-terminal-emulator-profile)
-    1. [Tilix Terminal Emulator Profiles](#tilix-terminal-emulator-profiles)
 1. [Documentation](#documentation)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
     1. [Man Pages](#man-pages)
@@ -69,7 +67,6 @@ Integration is provided for:
 * [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
 * Enhanced key bindings for extended control of terminal windows
 * Several terminal emulators
-    * xfce4-terminal
     * gnome-terminal
     * tilix
     * cool-retro-term
@@ -358,69 +355,19 @@ The Cava spectrum visualizer looks better when the font used by the
 terminal emulator in which it is running is a small sized font. Some
 terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
-an enhanced visual presentation. To configure terminal emulator profiles
-launch the desired terminal emulator and create a new profile in the
-Preferences dialog.
+an enhanced visual presentation.
 
-There are three terminal profiles in two terminal emulators used by
-MusicPlayerPlus. The `gnome-terminal` emulator has a single profile
-called "SmallFont" and the `tilix` terminal emulator has two profiles
-called "Cava" and "MusicPlayer". To create these profiles:
+There are four terminal profiles in two terminal emulators used by
+MusicPlayerPlus. The `gnome-terminal` emulator and the `tilix` terminal
+emulator each have two custom profiles created during `mpcinit` initialization.
+These profiles are named "MusicPlayer" and "Visualizer".
 
-### Gnome Terminal Emulator Profile
-Launch `gnome-terminal`, click the `...` three dots in the Title Bar
-and then click `Preferences` in the dropdown menu. This will bring up
-a Preferences dialog window. Next to the `Profiles` entry on the left,
-click the `+` plus sign to add a new profile. Name the profile "SmallFont".
+The custom MusicPlayerPlus terminal profiles are used to provide font sizes
+and background transparencies that enhance the visual appeal of both the
+MusicPlayerPlus control window and the spectrum visualizer. 
 
-Under `Profiles` on the left side of the Preferences window, click on
-your new profile "SmallFont". In the `Text` tab of the "SmallFont" profile,
-check `Custom font` and select a font. Set the size of the font to 8 or
-smaller. A very small font size, say 1, may cause performance issues on
-large visualizer windows.
-
-While still in the "SmallFont" profile configuration dialog, click the
-`Colors` tab. Check `Use transparent background` and adjust the slider
-to halfway full. You may need to revisit this dialog to adjust the
-transparency level to suit your display and preference.
-
-I also disable the scroll bar in the `Scrolling` tab by unchecking
-`Show scrollbar` but this is optional. Scrolling is not likely to be
-needed in the spectrum visualizer window.
-
-### Tilix Terminal Emulator Profiles
-Launch `tilix`, click the `...` three dots in the Title Bar
-and then click `Preferences` in the dropdown menu. This will bring up
-a Preferences dialog window. At the lower left of the left pane,
-click the `+` plus sign to add a new profile. Name the profile "Cava".
-
-In the `General` tab of the "Cava" profile, check `Custom font` and
-select a font. Set the size of the font to 8 or smaller. A very small
-font size, say 1, may cause performance issues on large visualizer windows.
-
-While still in the "Cava" profile configuration dialog, click the
-`Colors` tab. Adjust the `Transparency` slider to halfway full.
-You may need to revisit this dialog to adjust the transparency level
-to suit your display and preference.
-
-I also disable the scroll bar in the `Scrolling` tab by unchecking
-`Show scrollbar` but this is optional. Scrolling is not likely to be
-needed in the spectrum visualizer window.
-
-Tilix is also used as the MPD client window for character based clients.
-An additional terminal profile is needed for this. Repeat the process
-described above to create the `Cava` tilix profile only this time create
-a new profile named `MusicPlayer`. The `MusicPlayer` tilix profile creation
-is exactly the same as the `Cava` profile creation but the name of the
-profile is different and the size of the font is different. Name the new
-profile `MusicPlayer` and set the font size to something like 32. You may
-need to adjust the font size subsequently. On my system, a music player
-client window with font size 32 aligns nicely with a spectrum visualizer
-window with font size 8. This will vary depending on your display device.
-
-Also set the transparency level for the `MusicPlayer` profile just as you
-did for the `Cava` profile, somewhere around half transparent in the `Color`
-tab of the profile config dialog.
+To modify these terminal emulator profiles, launch the desired terminal
+emulator and modify the desired profile in the Preferences dialog.
 
 ## Documentation
 
@@ -579,8 +526,7 @@ the `mpcplus` MPD client and `cava` spectrum visualizer. The `mpplus` command
 utilizes several different terminal emulators and can also be used to invoke
 any specified MPD client. Some example invocations of `mpplus` follow.
 
-Open the mpcplus client and cava visualizer in fullscreen mode. The client
-will open in the xfce4-terminal emulator and the visualizer in gnome-terminal:
+Open the mpcplus client and spectrum visualizer in fullscreen mode:
 
 `mpplus -f`
 

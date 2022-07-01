@@ -1,8 +1,8 @@
 #!/bin/bash
 #
-# mpplus - Run mpcplus and cava in separate terminal emulators,
+# mpplus - Run mpcplus and visualizer in separate terminal emulators,
 #          cantata and cava in separate windows, or a specified
-#          MPD client and cava in separate windows. Alternately,
+#          MPD client and visualizer in separate windows. Alternately,
 #          Run an ASCIImatics animation optionally accompanied
 #          by specified audio.
 #
@@ -12,32 +12,30 @@
 # March, 2022
 #
 # I am using two separate terminal emulators as I want a smaller
-# font for the cava terminal. The terminal command options are
+# font for the visualizer terminal. The terminal command options are
 # customized for my setup, you may need to adjust the geometry
-# to get the two windows to align as desired. I wanted the cava
+# to get the two windows to align as desired. I wanted the visualizer
 # terminal window at the bottom of the screen and aligned with
-# the mpcplus terminal window. Couldn't figure out how to set
-# the window title for gnome-terminal.
+# the mpcplus terminal window.
 #
 # If the "-t" option is specified then only a single terminal
-# emulator is used, tilix. Tilix is invoked twice with
-# different profiles, one for mpcplus and another for cava.
-# The profiles are named "MusicPlayer" and "Cava". 
+# emulator is used, tilix. Tilix is invoked twice with different
+# profiles, one for mpcplus and another for the visualizer.
+# The profiles are named "MusicPlayer" and "Visualizer". 
 #
 # In both types of invocations, with or without "-t", the terminal
 # profiles used have font sizee settings of 32 and 8 for mpcplus and
-# cava, respectively. This aligns the windows, on my system, when
+# visualizer, respectively. This aligns the windows, on my system, when
 # not in fullscreen mode.
 #
 # When using the cool-retro-term for mpcplus (-r option), adjust the
 # size of the cool-retro-term window manually so it aligns with the
-# cava window. I could not figure out how to specify a geometry for
-# the cool-retro-term window when invoked with "-e mpcplus".
+# visualizer window. I could not figure out how to specify a geometry
+# for the cool-retro-term window when invoked with "-e mpcplus".
 #
 # Note also that the key bindings I have configured for mpcplus
 # to dynamically set the transparency of the terminal window only
-# work when using xfce4-terminal for mpcplus. That is, without
-# the "-t" or "-r" arguments.
+# work when using xfce4-terminal for mpcplus.
 #
 # Cantata can be used as the MPD client, replacing the invocation of a
 # terminal emulator running mpcplus with direct invocation of cantata.
@@ -46,6 +44,8 @@
 BOLD=$(tput bold)
 NORMAL=$(tput sgr0)
 PLEASE="Please enter your"
+VTITLE="Spectrum Visualizer"
+MTITLE="Music Player Plus"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
@@ -59,9 +59,9 @@ usage() {
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-i indicates start mpplus in interactive mode"
-  printf "\n\t-h indicates half-height for cava window (with -f only)"
+  printf "\n\t-h indicates half-height for visualizer window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
-  printf "\n\t-q indicates quarter-height for cava window (with -f only)"
+  printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
   printf "\nASCIImatics animation options:"
@@ -144,11 +144,11 @@ make_it_so() {
         tilix --title="${VTITLE}" \
               --full-screen \
               --window-style=borderless \
-              --profile=Cava \
+              --profile=Visualizer \
               --command="${CAVA_COMMAND}" 2> /dev/null &
       else
-        gnome-terminal -t "${VTITLE}" \
-              --profile=SmallFont \
+        gnome-terminal --title="${VTITLE}" \
+              --profile=Visualizer \
               --hide-menubar \
               --full-screen \
               -- ${CAVA_COMMAND} &
@@ -165,10 +165,10 @@ make_it_so() {
           if [ "${TILIX}" ]
           then
             cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
-            [ "${cavawin}" ] || echo "Could not find cava window"
+            [ "${cavawin}" ] || echo "Could not find visualizer window"
           else
             cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
-            [ "${cavawin}" ] || echo "Could not find cava window"
+            [ "${cavawin}" ] || echo "Could not find visualizer window"
           fi
         }
         [ "${cavawin}" ] && {
@@ -199,11 +199,11 @@ make_it_so() {
         tilix --title="${VTITLE}" \
               --window-style=borderless \
               --geometry=360x16+150-0 \
-              --profile=Cava \
+              --profile=Visualizer \
               --command="${CAVA_COMMAND}" 2> /dev/null &
       else
-        gnome-terminal -t "${VTITLE}" \
-              --profile=SmallFont \
+        gnome-terminal --title="${VTITLE}" \
+              --profile=Visualizer \
               --hide-menubar \
               --geometry 360x16+150-0 \
               -- ${CAVA_COMMAND} &
@@ -250,13 +250,11 @@ make_it_so() {
               --profile=MusicPlayer \
               --command="${MPCOMM}" 2> /dev/null
       else
-        xfce4-terminal --title "${MTITLE}" \
-              --icon=audio-player \
+        gnome-terminal --title="${MTITLE}" \
+              --profile=MusicPlayer \
               --hide-menubar \
-              --hide-toolbar \
-              --hide-scrollbar \
-              --fullscreen \
-              --command="${MPCOMM}"
+              --full-screen \
+              -- ${MPCOMM}
       fi
     else
       if [ "${TILIX}" ]
@@ -267,13 +265,11 @@ make_it_so() {
               --profile=MusicPlayer \
               --command="${MPCOMM}" 2> /dev/null
       else
-        xfce4-terminal --title "${MTITLE}" \
-            --icon=audio-player \
-            --hide-menubar \
-            --hide-toolbar \
-            --hide-scrollbar \
-            --geometry 90x20+150+25 \
-            --command="${MPCOMM}"
+        gnome-terminal --title="${MTITLE}" \
+              --profile=MusicPlayer \
+              --hide-menubar \
+              --geometry=90x20+150+25 \
+              -- ${MPCOMM}
       fi
     fi
   fi
@@ -578,7 +574,8 @@ show_main_menu() {
     fi
     skip_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
-    options=("XFCE4 Music Player Plus")
+    options=()
+    [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
@@ -591,7 +588,7 @@ show_main_menu() {
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
-          "XFCE4 Music Player Plus",*|*,"XFCE4 Music Player Plus")
+          "GNOME Music Player Plus",*|*,"GNOME Music Player Plus")
               MPCPLUS="mpcplus"
               break
               ;;
@@ -686,8 +683,6 @@ show_main_menu() {
 }
 
 init_vars() {
-  VTITLE="Spectrum Visualizer"
-  MTITLE="Music Player Plus"
   MPCPLUS="mpcplus"
   MPCPLUS_TMUX="mpcplus-tmux -f"
   MPPSPLASH="mppsplash"
@@ -720,7 +715,6 @@ have_fzf=`type -p fzf`
 have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
-have_xfce4=`type -p xfce4-terminal`
 have_gnome=`type -p gnome-terminal`
 while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTz:u" flag; do
   case $flag in
@@ -893,13 +887,13 @@ done
 
 [ "${TILIX}" ] || {
   [ "${RETRO}" ] || {
-    [ "${have_xfce4}" ] || {
-      echo "No option '-t' or '-r' indicates use xfce4-terminal"
-      echo "terminal emulator. However, xfce4-terminal is either"
+    [ "${have_gnome}" ] || {
+      echo "No option '-t' or '-r' indicates use gnome-terminal"
+      echo "terminal emulator. However, gnome-terminal is either"
       echo "not installed or not in your path."
-      echo "You can install xfce4-terminal using apt or dnf as follows:"
-      printf "\n\n\tsudo apt install xfce4-terminal\nor"
-      printf "\n\tsudo dnf install xfce4-terminal\n\n"
+      echo "You can install gnome-terminal using apt or dnf as follows:"
+      printf "\n\n\tsudo apt install gnome-terminal\nor"
+      printf "\n\tsudo dnf install gnome-terminal\n\n"
       [ "${have_tilix}" ] || usage
       echo "Alternately, invoke mpplus with the '-t' option to use tilix."
       echo "Continuing with tilix as the terminal emulator."

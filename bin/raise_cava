@@ -18,11 +18,11 @@ cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
 }
 mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${MTITLE}"`
 [ "${mppwin}" ] || {
-  mppwin=`wmctrl -l -G -x | grep xfce4-terminal | grep "${MTITLE}"`
+  mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${MTITLE}"`
   [ "${mppwin}" ] || {
     mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "mpcplus"`
     [ "${mppwin}" ] || {
-      mppwin=`wmctrl -l -G -x | grep xfce4-terminal | grep "mpcplus"`
+      mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "mpcplus"`
     }
   }
 }
