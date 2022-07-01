@@ -369,6 +369,53 @@ show_services_menu() {
   init_vars
 }
 
+show_fzmp_menu() {
+  while true
+  do
+    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    options=("Search artist filtered by album")
+    options+=("Search all songs in library")
+    options+=("List genres in library")
+    options+=("Search current playlist")
+    options+=("List saved playlists")
+    options+=("Main menu" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+              printf "Returning\n\n"
+              init_vars
+              break 2
+              ;;
+          "Search artist"*,*|*,"Search artist"*)
+              fzmp -a
+              break
+              ;;
+          "Search all"*,*|*,"Search all"*)
+              fzmp -A
+              break
+              ;;
+          "List genre"*,*|*,"List genre"*)
+              fzmp -g
+              break
+              ;;
+          "Search current"*,*|*,"Search current"*)
+              fzmp -p
+              break
+              ;;
+          "List saved"*,*|*,"List saved"*)
+              fzmp -P
+              break
+              ;;
+          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+              printf "\nExiting\n"
+              exit 0
+              ;;
+      esac
+    done
+  done
+}
+
 show_ascii_menu() {
   while true
   do
@@ -534,6 +581,7 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     options+=("ASCIImatics Animations" "Download Album Cover Art" "Kill Tmux Sessions")
     options+=("Manage Music Player Services")
+    [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Fullscreen (${fullstat})" "Quit")
@@ -565,6 +613,11 @@ show_main_menu() {
               ;;
           "Manage Music Player Services",*|*,"Manage Music Player Services")
               show_services_menu
+              skip_it_so=1
+              break
+              ;;
+          "List"*,*|*,"List"*)
+              show_fzmp_menu
               skip_it_so=1
               break
               ;;
@@ -659,6 +712,7 @@ init_vars() {
 init_vars
 have_uebz=`type -p ueberzug`
 have_cantata=`type -p cantata`
+have_fzf=`type -p fzf`
 have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
