@@ -72,8 +72,8 @@ If a line begins with \[aq]#\[aq] it is treated as a comment and ignored
 The configuration file reads the following options:
 .TP
 \f[B]default_view\f[R]
-Must be \[aq]artists\[aq] \[aq]songs\[aq] \[aq]playlist\[aq] or
-\[aq]genres\[aq]
+Must be \[aq]artists\[aq] \[aq]songs\[aq] \[aq]playlist\[aq]
+\[aq]playlists\[aq] or \[aq]genres\[aq]
 .TP
 \f[B]full_song_format\f[R]
 A format string to be passed directly to \f[V]mpc format -f\f[R] in
@@ -109,6 +109,9 @@ For colorized output try:
 .TP
 \f[B]genre_view_key\f[R]
 (default F4)
+.TP
+\f[B]playlists_view_key\f[R]
+(default F5)
 .TP
 \f[B]findadd_key\f[R]
 Adds all songs under the cursor by artist/genre/album (default

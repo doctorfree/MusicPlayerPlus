@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+#
+# Written by Daniel F Gray
+# See https://github.com/DanielFGray/fzf-scripts
+#
+# Interactive fuzzy finder, fzf, usage and doc at
+# https://github.com/junegunn/fzf
 
 declare -r config_file="${XDG_CONFIG_DIR:-$HOME/.config}/mpcplus/fzmp.conf"
 
@@ -32,7 +38,7 @@ CONFIGURATION:
   The configuration file reads the following options:
 
   default_view
-    Must be 'artists' 'songs' 'playlist' or 'genres'
+    Must be 'artists' 'songs' 'playlist' 'playlists' or 'genres'
   full_song_format
     A format string to be passed directly to \`mpc format -f\` in
     'playlist' and 'all' views. Defaults to:

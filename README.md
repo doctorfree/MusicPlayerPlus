@@ -4,7 +4,7 @@ The MusicPlayerPlus project provides integration and extension of several
 audio packages designed to stream and play music. MusicPlayerPlus interacts
 with the Music Player Daemon (MPD). Outputs from the MPD streaming audio server
 are used as MusicPlayerPlus inputs for playback and visualization. In addition,
-MusicPlayerPlus components are used to manage, control, and update MPD.
+MusicPlayerPlus components are used to manage and control MPD.
 
 ## Table of contents
 
@@ -19,6 +19,7 @@ MusicPlayerPlus components are used to manage, control, and update MPD.
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [MPD Server Configuration](#mpd-server-configuration)
     1. [Client Configuration](#client-configuration)
+    1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
     1. [Start MPD](#start-mpd)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
@@ -54,6 +55,7 @@ The `mpplus` command can be used to invoke:
 * A spectrum visualizer
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
+* A fuzzy listing and searching of the audio library using `fzf`
 
 Integration is provided for:
 
@@ -71,6 +73,7 @@ Integration is provided for:
     * gnome-terminal
     * tilix
     * cool-retro-term
+* [fzf](https://github.com/junegunn/fzf), interactive fuzzy finder
 
 ### MusicPlayerPlus Commands
 
@@ -126,7 +129,6 @@ MusicPlayerPlus can be installed on Debian or RPM based Linux systems.
 It requires:
 
 * [MPD Music Player Daemon](https://www.musicpd.org/)
-* [Cava](https://github.com/karlstav/cava)
 * [Boost library](https://www.boost.org/)
 * [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
 * [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
@@ -284,6 +286,48 @@ the Client configuration performed by `mpcinit` is per-user.
 Each user needs to perform this step as well as the creation of
 terminal profiles described below.
 
+### Fuzzy Finder Configuration
+
+The `fzmp` command lists, searches, and selects media from the MPD
+library using the `fzf` fuzzy finder command line utility. A default
+`fzmp` configuration file for each user is created when the `mpcinit`
+command is executed. The `fzmp` configuration file is located at:
+
+```
+~/.config/mpcplus/fzmp.conf
+```
+
+The initial default `fzmp` configuration should suffice for most use cases.
+Some of the interactive key bindings may need to be modified if they are
+already in use by other utilities. For example, the default key binding to
+switch to playlist view is 'F1' but the `xfce4-terminal` command binds 'F1'
+by default to its help window. In this case either the `fzmp` playlist view
+key binding must be changed or the XFCE4 terminal help window shortcut must
+be disabled.
+
+To disable the XFCE4 terminal help window shortcut, in `xfce4-terminal` select:
+
+*Edit -> Preferences -> Advanced*
+
+Select the *Disable help window shortcut key (F1 by default)* and Close
+the Preferences dialog. The XFCE4 terminal help window shortcut will no
+longer be bound to 'F1' and no modification to the playlist view key binding
+for `fzmp` would be necessary.
+
+To modify the `fzmp` playlist view key binding, edit the `fzmp` configuration
+file `~/.config/mpcplus/fzmp.conf` and add a line like the following:
+
+```
+playlist_view_key F6
+```
+
+This revised configuration would change the playlist view key binding from
+'F1' to 'F6' and the XFCE4 terminal help window shortcut could remain enabled
+and bound to 'F1'.
+
+Several other `fzmp` bindings and options can be configured. See `man fzmp`
+for details.
+
 ### Start MPD
 
 If this is a fresh installation of MPD, start mpd by executing the command:
@@ -414,7 +458,7 @@ Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-f] [-h] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q]
-		[-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+		[-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -453,6 +497,9 @@ General options:
 		will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
+	-z fzmpopt specifies the fzmp option and invokes fzmp to
+		list/search/select media in the MPD library.
+		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
 	-u displays this usage message and exits
 ```
 
@@ -550,6 +597,21 @@ Open the mpcplus client in the cool-retro-term terminal and cava visualizer
 in gnome-terminal:
 
 `mpplus -r`
+
+Browse, list, search, and select media in the MPD library using the
+`fzf` fuzzy finder utility.
+
+Search artist then filter by album using `fzf`:
+
+`mpplus -z a`
+
+Search all songs in the library using `fzf`:
+
+`mpplus -z A`
+
+Search the current playlist using `fzf`:
+
+`mpplus -z p`
 
 The mpcplus MPD client can be opened directly without using mpplus.
 Similarly, the cava spectrum visualizer can be opened directly without mpplus.

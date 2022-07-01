@@ -60,7 +60,7 @@ If a line begins with '#' it is treated as a comment and ignored
 The configuration file reads the following options:
 
 **default_view**
-: Must be 'artists' 'songs' 'playlist' or 'genres'
+: Must be 'artists' 'songs' 'playlist' 'playlists' or 'genres'
 
 **full_song_format**
 : A format string to be passed directly to `mpc format -f` in 'playlist' and 'all' views. Defaults to:
@@ -86,6 +86,9 @@ The configuration file reads the following options:
 
 **genre_view_key**
 : (default F4)
+
+**playlists_view_key**
+: (default F5)
 
 **findadd_key**
 : Adds all songs under the cursor by artist/genre/album (default ctrl-space)
