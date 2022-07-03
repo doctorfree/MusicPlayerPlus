@@ -345,7 +345,7 @@ By default, these bindings are Alt-0 through Alt-9 to set the transparency
 of the terminal window in which mpcplus is running. Alt-1 sets the window
 to 90% transparent, Alt-2 to 80% and so on Alt-9 to 10% transparent, and
 Alt-0 to 100% opaque. These transparency setting bindings are useful when
-running mpcplus and cava in separate overlapping windows, the spectrum
+running mpcplus and mppcava in separate overlapping windows, the spectrum
 visualizer visible through and behind the mpcplus window.
 
 Alt-r raises/lowers the Cava window.

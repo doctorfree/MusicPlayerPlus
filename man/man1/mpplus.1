@@ -34,7 +34,7 @@ terminal emulators and window placements.
 It can be used to display these utilities juxtaposed in separate windows
 or fullscreen overlayed with transparency.
 Alternately, mpplus can launch the cantata MPD client or any specified
-MPD client along with a specified spectrum visualizer (\f[V]cava\f[R]
+MPD client along with a specified spectrum visualizer (\f[V]mppcava\f[R]
 spectrum visualizer is used by default).
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
@@ -72,13 +72,13 @@ indicates use \[aq]client\[aq] MPD client rather than mpcplus
 indicates fullscreen display
 .TP
 \f[B]-h\f[R]
-indicates half-height for cava window (with -f only)
+indicates half-height for mppcava window (with -f only)
 .TP
 \f[B]-P script\f[R]
 specifies the ASCIImatics script to run in visualizer pane
 .TP
 \f[B]-q\f[R]
-indicates quarter-height for cava window (with -f only)
+indicates quarter-height for mppcava window (with -f only)
 .TP
 \f[B]-r\f[R]
 indicates use retro terminal emulator
@@ -87,7 +87,7 @@ indicates use retro terminal emulator
 indicates use tilix terminal emulator
 .TP
 \f[B]-v \[aq]viz_comm\[aq]\f[R]
-indicates use visualizer \[aq]viz_comm\[aq] rather than cava
+indicates use visualizer \[aq]viz_comm\[aq] rather than mppcava
 .PP
 \f[I]ASCIImatics animation options:\f[R]
 .TP
@@ -159,7 +159,7 @@ Displays this usage message and exits
 .TP
 \f[B]mpplus\f[R]
 Launches \f[V]mpcplus\f[R] music player client running in gnome terminal
-emulator with cava spectrum visualizer running in a gnome-terminal
+emulator with mppcava spectrum visualizer running in a gnome-terminal
 terminal emulator window.
 .TP
 \f[B]mpplus -i\f[R]
@@ -168,27 +168,27 @@ controlling actions rather than command line arguments
 .TP
 \f[B]mpplus -r\f[R]
 Launches \f[V]mpcplus\f[R] music player client running in
-cool-retro-term terminal emulator with cava spectrum visualizer running
-in a gnome-terminal terminal emulator window.
+cool-retro-term terminal emulator with mppcava spectrum visualizer
+running in a gnome-terminal terminal emulator window.
 .TP
 \f[B]mpplus -c\f[R]
 Launches \f[V]cantata\f[R] music player client running in a separate
-window with cava spectrum visualizer running in a gnome-terminal
+window with mppcava spectrum visualizer running in a gnome-terminal
 terminal emulator window.
 .TP
 \f[B]mpplus -C cmus\f[R]
-Launches the \f[V]cmus\f[R] music player client with cava spectrum
+Launches the \f[V]cmus\f[R] music player client with mppcava spectrum
 visualizer running in a gnome-terminal terminal emulator window.
 .TP
 \f[B]mpplus -C mcg\f[R]
 Launches the CoverGrid music player client (\f[V]mcg\f[R]) running in a
-separate window with cava spectrum visualizer running in a
+separate window with mppcava spectrum visualizer running in a
 gnome-terminal terminal emulator window.
 .TP
 \f[B]mpplus -f -q -t\f[R]
 Launches \f[V]mpcplus\f[R] music player client in fullscreen mode with
-cava spectrum visualizer in quarter-screen mode, both running in a tilix
-terminal emulator window.
+mppcava spectrum visualizer in quarter-screen mode, both running in a
+tilix terminal emulator window.
 .TP
 \f[B]mpplus -a -T\f[R]
 Launches \f[V]mpcplus\f[R] music player client and visualizer running in
@@ -225,8 +225,7 @@ Submit bug reports online at:
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
 .SH SEE ALSO
 .PP
-\f[B]mppsplash\f[R](1), \f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1),
-\f[B]cava\f[R](1)
+\f[B]mppsplash\f[R](1), \f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
 .PP
 Full documentation and sources at:
 .PP

@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# raise_cava - raise the cava window
+# raise_cava - raise the mppcava window
 #
 
 VTITLE="Spectrum Visualizer"

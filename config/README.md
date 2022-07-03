@@ -6,7 +6,7 @@ has no built-in way of showing album art for the current playing song
 as rendering images via a terminal emulator is pretty tricky.
 
 Here you will learn how to include album art in your mpcplus client and
-include the cava spectrum visualizer while browsing songs. Luckily, you
+include the mppcava spectrum visualizer while browsing songs. Luckily, you
 will not have to copy and paste these files and setup the system yourself.
 The MusicPlayerPlus package contains all the configuration, scripts, dependencies,
 and a convenience startup command. To run `mpcplus` with spectrum visualization
@@ -187,10 +187,10 @@ And don't forget to make them executable
 
 As mentioned above, we use tmux to run multiple terminal based programs in a
 single window so that everything fits nicely (i.e. an instance of `mpcplus`,
-an instance of `cava`, and one terminal running our image rendering script).
+an instance of `mppcava`, and one terminal running our image rendering script).
 
 MusicPlayerPlus includes a command that starts the tmux session and configures
-the tmux panes. Start a tmux session displaying `mpcplus`, the `cava` spectrum
+the tmux panes. Start a tmux session displaying `mpcplus`, the `mppcava` spectrum
 visualizer, and album art in separate tmux panes by executing the command:
 
 ```
@@ -316,7 +316,7 @@ then
   [ "${have_pyart}" ] && PYART="ascii${PYART}"
   tmux send-keys "${PYART}" C-m
 else
-  tmux send-keys "cava -p ${HOME}/${MPCDIR}/cava-tmux.conf" C-m
+  tmux send-keys "mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf" C-m
 fi
 
 tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}

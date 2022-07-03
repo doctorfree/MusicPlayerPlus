@@ -84,7 +84,7 @@ MusicPlayerPlus adds the following commands to your system:
     * **mppjulia** : ASCIImatics animated zoom on a Julia Set
     * **mppplasma** : ASCIImatics animated plasma graphic
     * **mpprocks** : ASCIImatics animated MusicPlayerPlus splash screen
-* **raise_cava** : raises the cava spectrum visualizer window
+* **raise_cava** : raises the mppcava spectrum visualizer window
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **download_cover_art** : automatically downloads cover album art for your entire music directory
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
@@ -397,7 +397,7 @@ e.g. `mpplus -u`.
 
 ### Usage
 
-The usage messages for `mpplus`, `mpcplus`, and `cava` provide a brief
+The usage messages for `mpplus`, `mpcplus`, and `mppcava` provide a brief
 summary of the command line options:
 
 ```
@@ -417,7 +417,7 @@ MPCplus/Visualizer options:
 	-q indicates quarter-height for visualizer window (with -f only)
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
-	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than cava
+	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
 ASCIImatics animation options:
 	-a indicates play audio during ASCIImatics display
 	-b indicates use backup audio during ASCIImatics display
@@ -500,7 +500,7 @@ Where:
 ```
 
 ```
-Usage : cava [options]
+Usage : mppcava [options]
 Visualize audio input in terminal. 
 
 Options:
@@ -523,7 +523,7 @@ All options are specified in a config file. See `/home/username/.config/cava/`
 
 ### Example client invocations
 The `mpplus` command is intended to serve as the primary interface to invoke
-the `mpcplus` MPD client and `cava` spectrum visualizer. The `mpplus` command
+the `mpcplus` MPD client and `mppcava` spectrum visualizer. The `mpplus` command
 utilizes several different terminal emulators and can also be used to invoke
 any specified MPD client. Some example invocations of `mpplus` follow.
 
@@ -531,16 +531,16 @@ Open the mpcplus client and spectrum visualizer in fullscreen mode:
 
 `mpplus -f`
 
-Open the mpcplus client and cava visualizer in fullscreen mode using the
+Open the mpcplus client and mppcava visualizer in fullscreen mode using the
 tilix terminal emulator and displaying the visualizer using quarter-height:
 
 `mpplus -f -q -t`
 
-Open the cantata MPD graphical client and cava visualizer:
+Open the cantata MPD graphical client and mppcava visualizer:
 
 `mpplus -c`
 
-Open the mpcplus client in the cool-retro-term terminal and cava visualizer
+Open the mpcplus client in the cool-retro-term terminal and mppcava visualizer
 in gnome-terminal:
 
 `mpplus -r`
@@ -561,11 +561,11 @@ Search the current playlist using `fzf`:
 `mpplus -z p`
 
 The mpcplus MPD client can be opened directly without using mpplus.
-Similarly, the cava spectrum visualizer can be opened directly without mpplus.
+Similarly, the mppcava spectrum visualizer can be opened directly without mpplus.
 
 `mpcplus` # In one terminal window
 
-`cava`    # In another terminal window
+`mppcava`    # In another terminal window
 
 To test the mpcplus lyrics fetchers:
 

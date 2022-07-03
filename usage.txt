@@ -16,7 +16,7 @@ MPCplus/Visualizer options:
 	-q indicates quarter-height for visualizer window (with -f only)
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
-	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than cava
+	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
 ASCIImatics animation options:
 	-a indicates play audio during ASCIImatics display
 	-b indicates use backup audio during ASCIImatics display
@@ -98,7 +98,7 @@ Options:
 
 =============================================================================
 
-Usage : cava [options]
+Usage : mppcava [options]
 Visualize audio input in terminal. 
 
 Options:

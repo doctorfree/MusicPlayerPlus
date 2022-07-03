@@ -33,7 +33,8 @@ window, executing the mpcplus MPD client in one pane, a visualizer in
 another pane, and displaying album cover art in another pane.
 The album cover art automatically updates when another album is selected
 in the MPD client pane.
-The visualizer pane displays, by default, the cava spectrum visualizer.
+The visualizer pane displays, by default, the mppcava spectrum
+visualizer.
 Alternately, the visualizer pane can display a Python ASCIImatics
 visualization.
 .SH COMMAND LINE OPTIONS
@@ -59,11 +60,12 @@ cover art disabled, python art disabled, recording disabled
 .TP
 \f[B]mpcplus-tmux\f[R]
 Without options, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD client
-and cava spectrum visualizer in a tmux session.
+and mppcava spectrum visualizer in a tmux session.
 .TP
 \f[B]mpcplus-tmux -a\f[R]
 With the -a option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
-client, cava spectrum visualizer, and album cover art in a tmux session.
+client, mppcava spectrum visualizer, and album cover art in a tmux
+session.
 .TP
 \f[B]mpcplus-tmux -p plasma\f[R]
 With the -p plasma option, \f[I]mpcplus-tmux\f[R] displays the mpcplus
@@ -71,7 +73,7 @@ MPD client and plasma ASCIImatics display in a tmux session.
 .TP
 \f[B]mpcplus-tmux -r\f[R]
 With the -r option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
-client and cava spectrum visualizer in a tmux session and records the
+client and mppcava spectrum visualizer in a tmux session and records the
 session using asciinema.
 Recordings are stored in the user\[aq]s \f[V]$HOME/Videos/\f[R] folder.
 .SH TMUX USAGE

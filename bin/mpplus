@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # mpplus - Run mpcplus and visualizer in separate terminal emulators,
-#          cantata and cava in separate windows, or a specified
+#          cantata and mppcava in separate windows, or a specified
 #          MPD client and visualizer in separate windows. Alternately,
 #          Run an ASCIImatics animation optionally accompanied
 #          by specified audio.
@@ -46,7 +46,7 @@ NORMAL=$(tput sgr0)
 PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
-VISUALIZER=cava
+VISUALIZER=mppcava
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
@@ -65,7 +65,7 @@ usage() {
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
-  printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than cava"
+  printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava"
   printf "\nASCIImatics animation options:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup audio during ASCIImatics display"
