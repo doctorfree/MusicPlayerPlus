@@ -258,15 +258,15 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
             if (strncmp(ttyname(0), "/dev/ttys", 9) == 0)
                 inAtty = 0;
             if (inAtty) {
-                // checking if cava psf font is installed in FONTDIR
+                // checking if mppcava psf font is installed in FONTDIR
                 FILE *font_file;
-                font_file = fopen(FONTDIR "/cava.psf", "r");
+                font_file = fopen(FONTDIR "/mppcava.psf", "r");
                 if (font_file) {
                     fclose(font_file);
-                    system("setfont " FONTDIR "/cava.psf  >/dev/null 2>&1");
+                    system("setfont " FONTDIR "/mppcava.psf  >/dev/null 2>&1");
                 } else {
                     // if not it might still be available, we dont know, must try
-                    system("setfont cava.psf  >/dev/null 2>&1");
+                    system("setfont mppcava.psf  >/dev/null 2>&1");
                 }
                 system("setterm -blank 0");
             }

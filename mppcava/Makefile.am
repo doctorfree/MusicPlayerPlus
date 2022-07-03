@@ -16,7 +16,7 @@ if OSX
 else
     cava_LDADD = -lrt
     cava_font_dir = @FONT_DIR@
-    cava_font__DATA = cava.psf
+    cava_font__DATA = mppcava.psf
 endif
 
 if ALSA

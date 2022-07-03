@@ -354,11 +354,11 @@ Some terminal emulators are just slow. Cava will look best in a GPU based termin
 
 ### Font is changed in ttys after exit
 
-If you run cava in a TTY (like ctrl+alt+F2) the program will change the font to the included `cava.psf` (actually a slightly modified "unifont").
+If you run cava in a TTY (like ctrl+alt+F2) the program will change the font to the included `mppcava.psf` (actually a slightly modified "unifont").
 
 In console fonts it seems that only 256 Unicode characters are supported, probably because they are bitmap fonts. I could not find a font with Unicode characters 2581-2587 (the 1/8 - 7/8 blocks used on the top of each bar to increase resolution).
 
-So in `cava.psf`, the characters 1-7 are actually replaced by Unicode characters 2581-2587. When cava exits, it changes the font back. If cava exits abnormally and you notice that 1-7 are replaced by partial blocks, just change the font with `setfont`.
+So in `mppcava.psf`, the characters 1-7 are actually replaced by Unicode characters 2581-2587. When cava exits, it changes the font back. If cava exits abnormally and you notice that 1-7 are replaced by partial blocks, just change the font with `setfont`.
 
 Actually, `setfont` is supposed to return the default font, but this usually isn't set. I haven't found another way to get the current font. So cava sets the font to "Lat2-Fixed16" when interrupted. All major distros should have it. It will revert to your default font at reboot.
 
