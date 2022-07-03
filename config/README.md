@@ -316,7 +316,7 @@ then
   [ "${have_pyart}" ] && PYART="ascii${PYART}"
   tmux send-keys "${PYART}" C-m
 else
-  tmux send-keys "cava -p ${HOME}/${MPCDIR}/config-cava" C-m
+  tmux send-keys "cava -p ${HOME}/${MPCDIR}/cava-tmux.conf" C-m
 fi
 
 tmux resize-pane -t 0 -x ${WIDTH} -y ${HEIGHT}

@@ -18,22 +18,24 @@
 .hy
 .SH NAME
 .PP
-mpplus - Launch an MPD music player client and cava spectrum visualizer
+mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
 music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M
-enable|disable|start|stop|restart|status] [-n num] [-N] [-p] [-P script]
-[-q] [-r] [-R] [-S] [-t] [-T] [-u] [-z opt]
+alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
+[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
+[-z fzmpopt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
-mpcplus music player client and cava spectrum visualizer in various
+mpcplus music player client and a spectrum visualizer in various
 terminal emulators and window placements.
 It can be used to display these utilities juxtaposed in separate windows
 or fullscreen overlayed with transparency.
 Alternately, mpplus can launch the cantata MPD client or any specified
-MPD client along with the cava spectrum visualizer.
+MPD client along with a specified spectrum visualizer (\f[V]cava\f[R]
+spectrum visualizer is used by default).
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
 .PP
@@ -83,6 +85,9 @@ indicates use retro terminal emulator
 .TP
 \f[B]-t\f[R]
 indicates use tilix terminal emulator
+.TP
+\f[B]-v \[aq]viz_comm\[aq]\f[R]
+indicates use visualizer \[aq]viz_comm\[aq] rather than cava
 .PP
 \f[I]ASCIImatics animation options:\f[R]
 .TP

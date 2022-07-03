@@ -46,13 +46,14 @@ NORMAL=$(tput sgr0)
 PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
+VISUALIZER=cava
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
-  printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q]"
-  printf "\n\t\t[-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-z fzmpopt]"
+  printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
+  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -64,6 +65,7 @@ usage() {
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
+  printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than cava"
   printf "\nASCIImatics animation options:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup audio during ASCIImatics display"
@@ -145,39 +147,39 @@ make_it_so() {
               --full-screen \
               --window-style=borderless \
               --profile=Visualizer \
-              --command="${CAVA_COMMAND}" 2> /dev/null &
+              --command="${VISUALIZER}" 2> /dev/null &
       else
         gnome-terminal --title="${VTITLE}" \
               --profile=Visualizer \
               --hide-menubar \
               --full-screen \
-              -- ${CAVA_COMMAND} &
+              -- ${VISUALIZER} &
       fi
       [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
         sleep 1
         if [ "${TILIX}" ]
         then
-          cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+          viz_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
         else
-          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+          viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
         fi
-        [ "${cavawin}" ] || {
+        [ "${viz_win}" ] || {
           if [ "${TILIX}" ]
           then
-            cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${CAVA_COMMAND}"`
-            [ "${cavawin}" ] || echo "Could not find visualizer window"
+            viz_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+            [ "${viz_win}" ] || echo "Could not find visualizer window"
           else
-            cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${CAVA_COMMAND}"`
-            [ "${cavawin}" ] || echo "Could not find visualizer window"
+            viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VISUALIZER}"`
+            [ "${viz_win}" ] || echo "Could not find visualizer window"
           fi
         }
-        [ "${cavawin}" ] && {
-          winid=`echo ${cavawin} | awk ' { print $1 } '`
-          grav=`echo ${cavawin} | awk ' { print $2 } '`
-          xoff=`echo ${cavawin} | awk ' { print $3 } '`
-          yoff=`echo ${cavawin} | awk ' { print $4 } '`
-          width=`echo ${cavawin} | awk ' { print $5 } '`
-          height=`echo ${cavawin} | awk ' { print $6 } '`
+        [ "${viz_win}" ] && {
+          winid=`echo ${viz_win} | awk ' { print $1 } '`
+          grav=`echo ${viz_win} | awk ' { print $2 } '`
+          xoff=`echo ${viz_win} | awk ' { print $3 } '`
+          yoff=`echo ${viz_win} | awk ' { print $4 } '`
+          width=`echo ${viz_win} | awk ' { print $5 } '`
+          height=`echo ${viz_win} | awk ' { print $6 } '`
           [ "${winid}" ] && {
             if [ "${HALFHEIGHT}" ]
             then
@@ -200,13 +202,13 @@ make_it_so() {
               --window-style=borderless \
               --geometry=360x16+150-0 \
               --profile=Visualizer \
-              --command="${CAVA_COMMAND}" 2> /dev/null &
+              --command="${VISUALIZER}" 2> /dev/null &
       else
         gnome-terminal --title="${VTITLE}" \
               --profile=Visualizer \
               --hide-menubar \
               --geometry 360x16+150-0 \
-              -- ${CAVA_COMMAND} &
+              -- ${VISUALIZER} &
       fi
     fi
     sleep 2
@@ -689,7 +691,6 @@ init_vars() {
   MPPSPLASH_TMUX="mppsplash-tmux"
 
   AUDIO=
-  CAVA_COMMAND=cava
   CLIENT=
   COVER_ART=
   DOWNLOAD_ART=
@@ -716,7 +717,7 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
-while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTz:u" flag; do
+while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -863,6 +864,17 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTz:u" flag; do
       ;;
     T)
       TMUX=1
+      ;;
+    v)
+      viz_com=`echo "${OPTARG}" | awk ' { print $1 } '`
+      have_viz=`type -p ${viz_com}`
+      if [ "${have_viz}" ]
+      then
+        VISUALIZER="${OPTARG}"
+      else
+        echo "Specified visualizer ${OPTARG} not found."
+        echo "Using ${VISUALIZER} visualizer"
+      fi
       ;;
     z)
       FZMPOPT="${OPTARG}"

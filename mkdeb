@@ -140,7 +140,7 @@ ${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp config/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/catalog.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/config-cava ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/cava-tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus

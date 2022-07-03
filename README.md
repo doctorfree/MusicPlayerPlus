@@ -404,19 +404,20 @@ summary of the command line options:
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-f] [-h] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
-		[-n num] [-N] [-p] [-P script] [-q]
-		[-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-z fzmpopt]
+		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
+		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-i indicates start mpplus in interactive mode
-	-h indicates half-height for cava window (with -f only)
+	-h indicates half-height for visualizer window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
-	-q indicates quarter-height for cava window (with -f only)
+	-q indicates quarter-height for visualizer window (with -f only)
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
+	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than cava
 ASCIImatics animation options:
 	-a indicates play audio during ASCIImatics display
 	-b indicates use backup audio during ASCIImatics display
@@ -429,7 +430,7 @@ ASCIImatics animation options:
 	-s song specifies a song to accompany an ASCIImatics animation
 		'song' can be the full pathname to an audio file or a
 		relative pathname to an audio file in the MPD music library
-		or /home/ronnie/Music/
+		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art

@@ -6,15 +6,13 @@ footer: mpplus 2.0.1
 date: December 05, 2021
 ---
 # NAME
-mpplus - Launch an MPD music player client and cava spectrum visualizer
+mpplus - Launch an MPD music player client and spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-f]
-	[-h] [-i] [-jJ] [-k] [-m] [-M enable|disable|start|stop|restart|status]
-	[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-S] [-t] [-T] [-u] [-z opt]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
 
 # DESCRIPTION
-The *mpplus* command acts as a front-end for launching the mpcplus music player client and cava spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with the cava spectrum visualizer. Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
+The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with a specified spectrum visualizer (`cava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
 
 The *mpplus* command can be used to control the *mpd* and *mpd.socket* system services when invoked with the `-M action` command line option. The Music Player Daemon (MPD) can be started, stopped, enabled, disabled, restarted, and status queried.
 
@@ -53,6 +51,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-t**
 : indicates use tilix terminal emulator
+
+**-v 'viz_comm'**
+: indicates use visualizer 'viz_comm' rather than cava
 
 *ASCIImatics animation options:*
 
