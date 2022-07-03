@@ -10,7 +10,7 @@
 #
 # Fedora:
 # sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
-#    pulseaudio-libs-devel libtool
+#    pulseaudio-libs-devel libtool iniparser-devel
 #
 # Usage: ./build-mppcava.sh [-i]
 # Where -i indicates install mppcava after configuring and compiling
