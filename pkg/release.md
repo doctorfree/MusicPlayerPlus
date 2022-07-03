@@ -1,12 +1,17 @@
 Changes in this release include:
 
+* Add option to specify alternate spectrum visualizer
+* Create terminal profiles in mpcinit
+* Use gnome-terminal for default rather than xfce4-terminal
 * Add fzmp command and fzf dependency
-* Add support for Raspberry Pi
+* Add command line option to invoke fzmp
+* Add support for fzmp to interactive menu in mpplus
+* Add man page for fzmp
 * Rename asciijulia to mppjulia to avoid conflict with Asciiville package
 * Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
 * Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
 * Added asciinema dependency
-
+* Add support for Raspberry Pi
 
 Previous changes in version 1.0.2 include:
 
