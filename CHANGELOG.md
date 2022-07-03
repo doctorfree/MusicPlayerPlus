@@ -3,6 +3,7 @@
 All notable changes to this project will be documented in this file.
 
 # MusicPlayerPlus-1.0.2r2 (2022-07-04)
+* Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
 * Add option to specify alternate spectrum visualizer
 * Create terminal profiles in mpcinit
 * Use gnome-terminal for default rather than xfce4-terminal

@@ -1,5 +1,6 @@
 Changes in this release include:
 
+* Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
 * Add option to specify alternate spectrum visualizer
 * Create terminal profiles in mpcinit
 * Use gnome-terminal for default rather than xfce4-terminal
