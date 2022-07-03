@@ -2,17 +2,23 @@
 
 sudo rm -rf dist releases
 
-cd mpcplus
-[ -f Makefile ] && {
+for proj in mpcplus mppcava
+do
+  cd ${proj}
+  [ -f Makefile ] && {
     make clean
     make distclean
-}
+  }
 
-rm -f aclocal.m4 \
+  rm -f aclocal.m4 \
       compile \
       config.guess \
       config.h.in \
       config.sub \
+      config.log \
+      ar-lib \
+      config.c \
+      config.h \
       configure \
       depcomp \
       install-sh \
@@ -20,7 +26,7 @@ rm -f aclocal.m4 \
       Makefile.in \
       missing
 
-rm -f doc/Makefile.in \
+  rm -f doc/Makefile.in \
       m4/libtool.m4 \
       m4/lt~obsolete.m4 \
       m4/ltoptions.m4 \
@@ -29,8 +35,16 @@ rm -f doc/Makefile.in \
       man/Makefile.in \
       src/Makefile.in
 
-rm -rf src/curses/.deps \
+  rm -rf src/curses/.deps \
        src/.deps \
        src/screens/.deps \
        src/utility/.deps \
+       .deps \
+       input/.deps \
+       output/.deps \
        autom4te.cache
+  cd ..
+done
+
+rm -f mppcava/version
+rmdir mppcava/m4
