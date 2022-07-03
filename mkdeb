@@ -65,6 +65,20 @@ else
   cd ..
 fi
 
+# Build mppcava
+if [ -x build-mppcava.sh ]
+then
+  ./build-mppcava.sh -v
+else
+  cd mppcava
+  make clean
+  make distclean
+  [ -x ./configure ] || ./autogen.sh > /dev/null
+  ./configure --prefix=/usr > configure$$.out
+  make > make$$.out
+  cd ..
+fi
+
 ${SUDO} rm -rf dist
 mkdir dist
 
@@ -108,7 +122,8 @@ chmod 644 ${OUT_DIR}/DEBIAN/control
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus"
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
+           "${DESTDIR}/share/consolefonts"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -121,6 +136,8 @@ done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
+${SUDO} cp mppcava/cava ${OUT_DIR}/${DESTDIR}/bin/mppcava
+${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
