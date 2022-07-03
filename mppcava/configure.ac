@@ -1,4 +1,4 @@
-AC_INIT([cava], [m4_esyscmd_s([cat version])], [karl@stavestrand.no])
+AC_INIT([mppcava], [m4_esyscmd_s([cat version])], [karl@stavestrand.no])
 AM_INIT_AUTOMAKE([subdir-objects -Wall -Werror foreign])
 dnl AC_CONFIG_MACRO_DIRS([m4])
 AM_PROG_AR

@@ -94,7 +94,7 @@ Priority: optional
 Architecture: ${ARCH}
 Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), gnome-terminal, tilix (>= 1.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1), tmux, ffmpeg, inotify-tools, fzf, mpc, python3-dev, mplayer, asciinema
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
-Installed-Size: 78000
+Installed-Size: 79000
 Build-Depends: debhelper (>= 11)
 Provides: mpcplus-completion, mpd-client
 Suggests: desktop-file-utils
@@ -136,7 +136,7 @@ done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
-${SUDO} cp mppcava/cava ${OUT_DIR}/${DESTDIR}/bin/mppcava
+${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"

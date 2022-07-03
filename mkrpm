@@ -87,7 +87,7 @@ done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
-${SUDO} cp mppcava/cava ${OUT_DIR}/${DESTDIR}/bin/mppcava
+${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"

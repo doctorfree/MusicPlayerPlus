@@ -184,7 +184,7 @@ bool validate_config(struct config_params *p, struct error_s *error) {
         p->output = OUTPUT_NCURSES;
         p->bgcol = -1;
 #ifndef NCURSES
-        write_errorf(error, "cava was built without ncurses support, install ncursesw dev files "
+        write_errorf(error, "mppcava was built without ncurses support, install ncursesw dev files "
                             "and run make clean && ./configure && make again\n");
         return false;
 #endif
@@ -192,7 +192,7 @@ bool validate_config(struct config_params *p, struct error_s *error) {
     if (strcmp(outputMethod, "sdl") == 0) {
         p->output = OUTPUT_SDL;
 #ifndef SDL
-        write_errorf(error, "cava was built without sdl support, install sdl dev files "
+        write_errorf(error, "mppcava was built without sdl support, install sdl dev files "
                             "and run make clean && ./configure && make again\n");
         return false;
 #endif
@@ -606,7 +606,7 @@ bool load_config(char configPath[PATH_MAX], struct config_params *p, bool colors
         return false;
     }
     default:
-        write_errorf(error, "cava was built without '%s' input support\n",
+        write_errorf(error, "mppcava was built without '%s' input support\n",
                      input_method_names[p->input]);
         return false;
     }

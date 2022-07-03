@@ -384,6 +384,7 @@ e.g. `mpplus -u`.
 ### Man Pages
 
 - [**mpplus**](markdown/mpplus.1.md) : Primary MusicPlayerPlus user interface
+- [**mppcava**](markdown/mppcava.1.md) : Audio Spectrum Visualizer
 - [**mppjulia**](markdown/mppjulia.1.md) : asciimatics animation of a Julia Set
 - [**mpprocks**](markdown/mpprocks.1.md) : asciimatics animation of MusicPlayerPlus intro
 - [**mppplasma**](markdown/mppplasma.1.md) : asciimatics animation with Plasma effect
@@ -518,7 +519,7 @@ Keys:
         b         Cycle background color
         q         Quit
 
-All options are specified in a config file. See `/home/username/.config/cava/`
+All options are specified in a config file. See `$HOME/.config/mppcava/config`
 ```
 
 ### Example client invocations
@@ -565,7 +566,7 @@ Similarly, the mppcava spectrum visualizer can be opened directly without mpplus
 
 `mpcplus` # In one terminal window
 
-`mppcava`    # In another terminal window
+`mppcava` # In another terminal window
 
 To test the mpcplus lyrics fetchers:
 

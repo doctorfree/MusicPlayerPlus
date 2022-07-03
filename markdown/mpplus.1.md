@@ -168,7 +168,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
+**mppcava**(1), **mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 
