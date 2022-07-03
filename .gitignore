@@ -7,7 +7,6 @@ Makefile.in
 aclocal.m4
 autom4te.cache/
 compile
-config.*
 configure
 depcomp
 **/.dirstamp
@@ -21,6 +20,7 @@ stamp-h1
 archive/*
 dist/*
 mpcplus/src/mpcplus
+mpcplus/config.*
 mppcava/cava
 mppcava/*.so
 mppcava/*.so.0

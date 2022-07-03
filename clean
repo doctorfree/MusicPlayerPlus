@@ -17,8 +17,6 @@ do
       config.sub \
       config.log \
       ar-lib \
-      config.c \
-      config.h \
       configure \
       depcomp \
       install-sh \
@@ -46,5 +44,5 @@ do
   cd ..
 done
 
-rm -f mppcava/version
-rmdir mppcava/m4
+rm -f mppcava/version mpcplus/config.h
+[ -d mppcava/m4 ] && rmdir mppcava/m4
