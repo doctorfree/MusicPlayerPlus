@@ -220,7 +220,26 @@ mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
 }
 
 have_pip=`type -p pip`
-[ "${have_pip}" ] || sudo apt install python3-pip
+[ "${have_pip}" ] || {
+  plat=`uname -s`
+  if [ "$plat" == "Darwin" ]
+  then
+    python3 -m ensurepip --upgrade
+  else
+    debian=
+    [ -f /etc/os-release ] && . /etc/os-release
+    [ "${ID_LIKE}" == "debian" ] && debian=1
+    [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
+
+    if [ "${debian}" ]
+    then
+      sudo apt install python3-pip -y
+    else
+      sudo dnf install python3-pip -y
+    fi
+  fi
+}
+
 pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
 pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
 

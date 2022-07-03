@@ -21,7 +21,7 @@ archive/*
 dist/*
 mpcplus/src/mpcplus
 mpcplus/config.*
-mppcava/cava
+mppcava/mppcava
 mppcava/*.so
 mppcava/*.so.0
 mppcava/*.a

@@ -200,14 +200,14 @@ make_it_so() {
       then
         tilix --title="${VTITLE}" \
               --window-style=borderless \
-              --geometry=360x16+150-0 \
+              --geometry=390x16+150-0 \
               --profile=Visualizer \
               --command="${VISUALIZER}" 2> /dev/null &
       else
         gnome-terminal --title="${VTITLE}" \
               --profile=Visualizer \
               --hide-menubar \
-              --geometry 360x16+150-0 \
+              --geometry 390x16+150-0 \
               -- ${VISUALIZER} &
       fi
     fi
