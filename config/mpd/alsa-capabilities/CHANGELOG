@@ -1,0 +1,1164 @@
+commit cfc787a81de92cd0e4d1a4aa455e16cd376ac137 (HEAD -> master, tag: v2.2.2)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:50:56 2022 +0100
+
+    preparing new release
+
+commit b3c94c23bf9c7b2bd6cae83522612fe73b7e5d0c (origin/master, origin/HEAD)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:50:25 2022 +0100
+
+    shellchecked
+
+commit 93bcf9192596219941eebf043477079af5af08c1 (tag: v2.2.1)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:39:26 2022 +0100
+
+    preparing new release
+
+commit 30d3151f54784e5c3a511ff2271c95e120914a30
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:38:33 2022 +0100
+
+    bumped revision (commandline output changed)
+
+commit 777b6094199ae0e11f02584a7b1de89ebca51f3f (usbinfo)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:37:19 2022 +0100
+
+    proper parsing of lsusb output
+
+commit f65836b4caca7bdd13631491484f4acf3261d0e7
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sun Jan 23 15:23:13 2022 +0100
+
+    for uac types: get alsa_cardlabel from lsusb. Ditch device label in commandline output.
+
+commit ce0dbd7fb5c6e43773998771716eb984533015de (tag: v2.1.2)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 14:39:49 2022 +0100
+
+    preparing new release
+
+commit 49a8caea8f5eaad3d3250faf30ba7c85f5e3bb54
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 14:38:45 2022 +0100
+
+    fixed error parsing samplerates and formats in UAC streamfile
+
+commit 1915ac68c7865364131c0ae23e8a1acafa9ab5ba (tag: v2.1.1)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 14:03:50 2022 +0100
+
+    preparing new release
+
+commit d0272927c71d179c50a99c313e4cf40de7ad86f6
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 14:01:55 2022 +0100
+
+    preparing new release
+
+commit 8a2cfe64e33886f56d30a4878c1455eab354366b
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 14:01:23 2022 +0100
+
+    preparing new release
+
+commit dfc43b6f9911d2341b8bddd632f8b8304559d495
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 13:33:20 2022 +0100
+
+    preparing new release
+
+commit 05fb4dd992cd3f7d17719c5a867cdb1499d2fa75
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 13:31:25 2022 +0100
+
+    preparing new release
+
+commit a281d8965ce0cae4eb19e9e2875b79dd61ad6a08
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 13:26:49 2022 +0100
+
+    #18: bumped minor revision
+
+commit 3925e8cd48885819e06a925962011bda8353f605
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 13:25:16 2022 +0100
+
+    #18: added documentation
+
+commit fe6cf71d0c6b83b9494e878c3b4f9586e0626a28
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 12:30:22 2022 +0100
+
+    shellcheck SC2184
+
+commit 789df7c250259e83c5c1a4edd695046712b87675 (origin/issue18, issue18)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Sat Jan 22 12:18:32 2022 +0100
+
+    fix #18
+
+commit cde75809318e5d7450568c106835d5bbba839ef2 (tag: v2.1.0)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:56:31 2021 +0200
+
+    updated CHANGELOG
+
+commit 27c0a7ea3b91e472de4a13681450ca4ff9421f4d
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:56:12 2021 +0200
+
+    pasuspender typo; bumped medior revision
+
+commit f1c50f9a90c03d2fbdebef287cb665b04188a1d8 (tag: v2.0.9)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:52:55 2021 +0200
+
+    updated CHANGELOG
+
+commit fe8e528a5c4a247cc55404580bb59a6408514257
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:52:34 2021 +0200
+
+    bumped minor revision
+
+commit 4eb01771c5876054a2c13270c8277a50429f0bcb (tag: v2.0.8)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:51:35 2021 +0200
+
+    updated CHANGELOG
+
+commit 0fafbfea344d14f2b3e04412dc1b79edf7ea0c60 (inuse)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:40:42 2021 +0200
+
+    fixed output in use error display; added pasuspender to it; bumped minor revision
+
+commit 43957f05098c5d6fa645d9ff3c3b8c5deedca3b5 (tag: v2.0.7)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:09:05 2021 +0200
+
+    bumped minor revision
+
+commit eb8119a26eb4a73205e207ec2cf76789f5d357b7 (tag: v2.0.6)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 16:03:05 2021 +0200
+
+    git log --decorate > CHANGELOG
+
+commit df7e5c7c283a2f3aab712a5784bd47068f51ab58 (tag: v2.0.5)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:43:04 2021 +0200
+
+    sc2268
+
+commit 97c331328f63d416271e6ac49b87cf0cd72c2f08
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:40:18 2021 +0200
+
+    replaced [base] alpine docker gitlab runner with archlinux (alpine image has no pacman)
+
+commit edee1e21b38a02b25a81a699296e35890295675f (tag: v2.0.4)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:31:33 2021 +0200
+
+    replaced base/archlinux docker gitlab runner with alpine
+
+commit 83dd64eeda93d84868bb5ee927c220ca1fbcb41e
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:31:04 2021 +0200
+
+    added archive.org
+
+commit 2aac915e844fddc1c5c06370e00bb6237fc3f996
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:30:37 2021 +0200
+
+    bumped revision to v2.0.4; removed lacocina reference
+
+commit 41ab3a0a4bd5a47170add91ed180b7f1c9b333e7 (tag: v2.0.3, nonuac-samplerate-regression)
+Author: Ronald van Engelen <r.v.engelen+gitlab@gmail.com>
+Date:   Thu Sep 2 13:14:55 2021 +0200
+
+    fix format and samplerate detection using aplay; revert using a variable (pseudo_audio_file) instead of the (buggy!) usage of /dev/zero like in pre-v2 branches
+
+commit 0291ac2600364cdecd78df25588b5ef861e469ca
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 17:47:41 2020 +0000
+
+    Update README.md reflecting the unfortunate death of lacocina.nl last year, in the respectable age of 18 years. (I'm still somewhat alive though ;)
+
+commit fb83f5cee72dd90984eb0dbc839668fbf4945560
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Tue Sep 24 13:12:47 2019 +0200
+
+    CHANGELOG: updated
+
+commit c68d2b55ef2e4c6c9ca9508468d379162074f973
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Tue Sep 24 12:56:43 2019 +0200
+
+    alsa-capabilities:
+    
+    - added mute (alactl store/restore) functions to supress sounds when using OPT_SAMPLERATES
+    - fixed json output
+    
+    alsa-capabilities.1.md:
+    
+    - removed CAUTION for using the OPT_SAMPLERATES switch
+    
+    README.md:
+    
+    - removed CAUTION for using the OPT_SAMPLERATES switch
+    - updated json documentation
+
+commit 4237278b2b27e18eee13b19ee2c5f037fd7c96d4
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Sep 22 13:13:17 2019 +0200
+
+    .gitignore:
+    
+    - added .stash
+
+commit e815ca5b3609fcdac5cd309653f6d9d71fca732d
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Sep 22 13:08:36 2019 +0200
+
+    alsa-capabilities:
+    
+    - removed obsolete shellcheck exceptions
+    - removed PROFILE functionality
+    - reordered functions
+    - removed obsolete return_reversed... function
+    - added trap for unmuting in effect restoring previous alsa state
+
+commit 92bb6819be8027fbf150eade028a5abf84ea4b78
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Thu Sep 19 06:55:35 2019 +0200
+
+    housekeeping
+
+commit 30ba90db5344565e2c7bbf68215f98d7ad617240
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Tue Sep 17 10:05:41 2019 +0200
+
+    alsa-capabilities:
+    
+    - got rid of single return_reversed_aplay usage
+    - got rid of some res=$() constructs (and shellcheck exceptions)
+    - replaced single '[[:space:]]' in regexps by ' '
+    - clarified some human output sentences
+    - introduces alsa_mute and unmute functionality (using trap)
+
+commit e403a099ee05fd518388a6d82c281a5db7f358e6
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Sep 15 18:04:07 2019 +0200
+
+    alsa-capabilities:
+    
+    - inspired by neatbash trying to improve maintainability/radability:
+      - replaced most cases of `if [[ "${VAR}x" == "x" ]] then ...'
+        with                   `[[ ${VAR} ]] || ...'
+    - cleaned up and simplified main arrays
+      - separated big main loop (fetch_alsa_interfaces)
+      - fixed regex for CARD and DEV names and labels; get rid of complex
+        bracket handling
+      - consice filtering: three simple new
+        functions (apply_filter_...) (type, custom, hwaddress) don't operate
+        on main arrays (ALSA_...) but on new FILTERED_INDICE array; just
+        unset indice that don't match filter
+    - simplified terminal-output
+
+commit 20c363cf76cbf31cb6aeef80d42365aa2334628e
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Sep 15 14:19:25 2019 +0200
+
+    alsa-capabilities:
+    
+    further modifications of CMD_APLAY simplification
+
+commit e0f84762951f7ba0148038995230935c4affcb08
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Sep 15 14:04:32 2019 +0200
+
+    alsa-capabilities:
+    
+    integrated command_not_found function into return_alsa_interface
+    function and removed it.
+
+commit 23e7530e2314a9dfb52cfdacea7e105d8ddebbc4 (tag: v1.0.6)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:21:18 2019 +0200
+
+    preparing new release
+
+commit 79de7f6ea49e1dbaedefd666f65c65d61296a37f (tag: v1.0.5)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:11:44 2019 +0200
+
+    preparing new release
+
+commit b9308628c6bfbadd9778d679bcf79d96e5eeb2de (tag: v1.0.4)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:08:58 2019 +0200
+
+    preparing new release
+
+commit e094a9c6bc6c8a19f81dc1c5423c03920cf0e45d
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:08:36 2019 +0200
+
+    preparing new release
+
+commit e5eb5c48f2a9349304892357a1807ed580a2051a (tag: v1.0.3)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:03:43 2019 +0200
+
+    preparing new release
+
+commit 0570cf0cf89225a289a80232c8ff4cf8cb7b5634
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:02:58 2019 +0200
+
+    preparing new release
+
+commit 7b97c53a51826c82325c40a093bf78146c6a5a4c
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 17:01:05 2019 +0200
+
+    dists/arch/PKGBUILD: generate from Makefile and dists/arch/PKGBUILD.in
+
+commit 7dc7d5284ca12783f8ef0e378bf1fec4f41dca93 (tag: v1.0.2)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 14:09:10 2019 +0200
+
+    colorized output; added -n,--nocolor options; fixed error in determening type (analog, digital, uac); raised version to 1.0.2
+
+commit d92f7e9a8f2f97d891e0e1ad22037dcf6b7b4d41
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:54:43 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 32f3271e2355ae0eb2817e99dc01dba5590a27c3
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:51:09 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 49818422ec5f6eea5de4c0f1da4c3ac9f3681806
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:40:14 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 1be642f60100fd5eb4871bd524de0d744662a910
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:36:09 2019 +0200
+
+    README.md updated: some tweaks
+
+commit d359adc139e7b6eb68d24c20101c61dfb2502e01
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:23:28 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 142760b7fa2f18fc55250f5cea356965eebe070d
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:18:51 2019 +0200
+
+    README.md updated: some tweaks
+
+commit f8094296c930cd6b4387c051bda156f19e5fe06c
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:15:15 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 356b5eaf84a34d6761e0caf3131152407ba7c606
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:14:05 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 0f789d764f938a44758bc57b2c05bb6d5f8802d9
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:08:59 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 12840cd27ac420c4a8bd751f6911c3e88ddf02e3
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:08:18 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 30bb924f61c8f55bb088f1567e05eda7dd4ceec7
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:07:27 2019 +0200
+
+    README.md updated: some tweaks
+
+commit 5a70453aad3767288721f53a890119047453875f
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 11:01:53 2019 +0200
+
+    README.md updated to better match manpage
+
+commit d67be310cd423e36540bea87d1121015d02dff8c
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 09:31:08 2019 +0200
+
+    PKGBUILD: Arch package builds and installs
+
+commit 59b1a32521a1d1895325a14798d5406bb0958fe8
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 09:09:08 2019 +0200
+
+    shasum updated
+
+commit 8c11ffeb681077b54d5374c874be44101e002ab6 (tag: v1.0.1)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 09:06:50 2019 +0200
+
+    raised version to 1.0.1 to incorporate Makefile in tarball (needed for PKGBUILD)
+
+commit 45f2b589defcec5a4719da9245b5590977a3beae
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 08:56:50 2019 +0200
+
+    added PKGBUILD: experimental Arch package build script
+
+commit 4ed51a5c81f2443771cfc10db909840d1e595928
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Fri Sep 13 08:15:04 2019 +0200
+
+    prepare for packaging; added man page source (alsa-capabilities.1.md) and a Makefile to build the manpage and a CHANGELOG
+
+commit 78042b6cdf276afcb698408820c8ebec94d82c57
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 12 07:47:09 2019 +0000
+
+    Updated .gitlab-ci.yml: indentation
+
+commit 215be4a7bef27bad010b35d1d47762ab5b8a80d9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 12 07:46:40 2019 +0000
+
+    Updated .gitlab-ci.yml: added explanation
+
+commit 41c34fc45cfca22514e085c982ddd93117746d4c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 12 07:37:49 2019 +0000
+
+    Updated .gitlab-ci.yml: only execute runner when alsa-capabilities or runner yaml have changed (take 2)
+
+commit a82c3deb4008af825fa2d9ca24eec1552f067753
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 12 07:36:14 2019 +0000
+
+    Updated .gitlab-ci.yml: only execute runner when script or runner yaml has changed
+
+commit a77d4d0747aeee54bb56822f53c34cf483de178b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Sep 11 22:25:58 2019 +0000
+
+    Updated README.md: link added and fixed
+
+commit 980498c45e682e6bf4e64e123a6f61340c3cd7fc
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Sep 11 22:23:27 2019 +0000
+
+    Updated README.md: information moved from mpd-configure
+
+commit 72d0521459460e8a1af824c47e9a5fcc02110405 (tag: v1.0)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 11 21:58:28 2019 +0200
+
+    updated version and urls
+
+commit 4fdd74620b95cce60387f0b230a1fdb0496c2f5c
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 11 20:19:14 2019 +0200
+
+    gitlab shellcheck pipeline added
+
+commit cf7f19ed3527f076ee82ad8581211b4b55b2e794
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Sep 11 18:17:10 2019 +0000
+
+    Add GPL
+
+commit 38f55d2d00b13c7fa3c5e017199d53f885208e09
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Sep 11 18:15:15 2019 +0000
+
+    Add README.md
+
+commit b5049ee3b1aad68823a2da4e834ed23aa00826bb
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 11 11:04:29 2019 +0200
+
+    alsa-capabilities:
+    
+    - fixes formats which contain spaces; closes issue:38
+    - shellchecked again
+    - colorized debugging output
+    - test if DEBUG is set inside debug function, to improve readability
+    - bumped version to v0.9.10
+
+commit 9d6b07329a3e52b2f34b5a77772570c81c5f6449
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jan 16 11:24:53 2019 +0100
+
+    get rid of pasuspender/pulseaudio; fixes issue #37
+
+commit f9acc8336d13a3df40f78774e989f3428aace69a
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Jan 13 21:23:02 2019 +0100
+
+    fixed situation with non-working pulseaudio setup
+
+commit 6ddee91efb1bcdecb3a597ee3a3c954d5533779f
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jun 6 10:01:49 2018 +0200
+
+    migrated from github due to Microsoft deal
+
+commit acad08fd20f87fa139386ba93d8443ff226469fe
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 3 16:27:57 2018 +0100
+
+    issue #34: shellchecked, version raised
+
+commit b5d8968a55e6ab9ed93c131842b9a19d37c11326
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 3 10:14:26 2018 +0100
+
+    issue #34: handle cases where snd_{pcm,ctl}_card_info_get_name(info) returns an mepty string between square brackets, like with the hifiberry DAC bug
+
+commit c434c8fe5e57ca871d3300ed5cc5622b1ab6f1b3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Oct 20 08:53:46 2017 +0200
+
+    shellchecked
+
+commit 2a26218192deae7f5eace6053475bb3d73e8959d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Oct 19 14:12:34 2017 +0200
+
+    associative array turned in two indexed arrays to preserve order of output fields
+
+commit df1c6e6f87547121be27e46023d35f6c56b68266
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Oct 19 13:13:32 2017 +0200
+
+    handling of enconding formats and sample rates fixed
+
+commit 6846d9758a54043a9bee59161a8966cb3cc020f7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Oct 18 08:54:09 2017 +0200
+
+    fixed json indentation; start numbering cards in normal output at 1 insteads of 0; fix samplerate unit to Hz instead of Khz in normal output
+
+commit e9e8939e65b9de004bf89843f119dcfc73486348
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 23:40:05 2017 +0200
+
+    saving some sub processes
+
+commit efde051b04c99a86fd3cd0d73be022f94a74149e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 23:15:44 2017 +0200
+
+    some restyling
+
+commit 400b260bb0807ed3f14c1eed4f436a6cd3f0a3b4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 20:04:59 2017 +0200
+
+    fixed last sound card in json output
+
+commit 26a5dcc364888aaf3bb1e674d5de2d04687ef716
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 19:53:36 2017 +0200
+
+    cleaned up debugging a bit
+
+commit b3f4dbe05986337d6119dd6bf752b9722f07510d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 17:36:12 2017 +0200
+
+    added -j/--json argument to print json formatted output to stdout (indentation needs work)
+
+commit 20b61086834215d4fa9241b33832b97bfa0ea532
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 13:11:16 2017 +0200
+
+    print output to separate function
+
+commit a3028283da47d7903fddaaa8b10b7002e43ef8d9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:13:25 2016 +0100
+
+    fixed application name with the help function and added version info
+
+commit 5cfebc92041b3cfac75440e46e322b7807c6b97d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:07:05 2016 +0100
+
+    v0.9.3
+
+commit d5212513654136bdfc46304bfcacc2f27f40dab7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:06:39 2016 +0100
+
+    v0.9.2
+
+commit 1cb418860fab1d49b9c2f939d6ad419111277918
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Nov 30 16:58:53 2016 +0100
+
+    shellchecked and simplified/speeded up detection of sample rate support
+
+commit 028c88656a7b016b8757f9a270976c2e107959eb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Nov 30 09:01:54 2016 +0100
+
+    fixed, cleaned up and documented checking sample rates based on video base rate
+
+commit 470e1bced205e52b705174eabcdbb48aa5153a61
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 10 12:47:51 2016 +0100
+
+    fixed issue #28: replaced ps command with reading /proc/pid and renamed function
+
+commit 8b5b3b6dff98c56d9a1f893eb03cca37ba3ba79f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Feb 6 12:17:06 2016 +0100
+
+    which replaced by type -p
+
+commit a09b42dc2fa62043c99011b13024ea2056c920fd
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Feb 2 09:37:34 2016 +0100
+
+    always show the real hwparams file
+
+commit 943a67b10daa00f585df98c0a7e58215e85ef948
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 26 08:37:29 2016 +0100
+
+    got rid of pulseaudio helper functions; replaced with pasuspender
+
+commit 706f1e25311f80841f7a9e46e8a3cca7d1a5ba7d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 20 01:10:38 2016 +0100
+
+    reenabled OPT_SAMPLERATES for non-uac
+
+commit a6783bf832dd8b335b1aca07a59058cc00702ab2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 20 01:05:27 2016 +0100
+
+    reenabled OPT_SAMPLERATES for uac
+
+commit 36c7267580bf3217d1ef40bcc3375e87ae4d8243
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 19 15:38:49 2016 +0100
+
+    fixed regression bug issue #27
+
+commit ade99662acdea170bca6f672c0338c41e7c5cbb8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:23:41 2016 +0100
+
+    rewrote samplerate detection: finishing up
+
+commit ec754d2b55e1d2edcc4bc1c8cc69766dd6fd72e7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:21:00 2016 +0100
+
+    rewrote samplerate detection
+
+commit 79bb304a32d9a86053ddb04d83f6d53c6f3752c9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:19:36 2016 +0100
+
+    rewrote samplerate detection
+
+commit cff7e45a11cc5f1c29d3b8bd055c9441c223a389
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 15:32:39 2016 +0100
+
+    fixed pulseaudio handler; still have to fix backup/restore for pa client conf
+
+commit 5f5d56f562313d7ce88582b1f2599ff4bd1009a6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 08:01:36 2016 +0100
+
+    in between
+
+commit 069015ce799f5e212a431d86bc8bc181363c8c09
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 00:31:56 2016 +0100
+
+    minor enhancements for pulseaudio helper
+
+commit d6b7ec4645073692c0ed99c3bef138467fe0d6b9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:17:06 2016 +0100
+
+    enhanced displaying of usage of custom filter in case of invalid limit value
+
+commit b2694a4256af48eb563869fc6d873a6ca22240b2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:07:47 2016 +0100
+
+    enhanced displaying of invalid or empty limit filter
+
+commit 5f88b35f706da706c6ea773cbd1ba906409dacd4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:06:31 2016 +0100
+
+    enhanced displaying of invalid or empty limit filter
+
+commit 5281da37caf21dbcd322781bfda4454ac728e99c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 12:47:24 2016 +0100
+
+    fixed displaying of limit type items
+
+commit 6f412b219ad3688bbc28b4b276f7288d99492928
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 12:31:26 2016 +0100
+
+    added commandline parameters
+
+commit ae722d3b80a9ec8825539635d22379983c5ba062
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 10:00:16 2016 +0100
+
+    translated sample rate information in to logical functions
+
+commit e46f3277d2cc917f529d4d5297fae5b38df9a34a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 09:46:20 2016 +0100
+
+    added some information about sample rates
+
+commit 98d71d141c5b7e414013c9435b209f5bafbdbf5f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 09:34:56 2016 +0100
+
+    enhanced usage info
+
+commit 1009051a5b0abeb0215ba0c591b07a6ff5486254
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 03:16:58 2016 +0100
+
+    enhanced usage info
+
+commit 92ddc3933027404940df95fff57af7f781b81fb5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 03:09:47 2016 +0100
+
+    fixed long options, replacing getopts with manual loop
+
+commit 02da35c218aafdbb227c95e108e81f13e7864f59
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 11:15:36 2016 +0100
+
+    bumped version to 0.9
+
+commit ac24c1914970130eb6e58bb44163e58adfef0dda
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 18:54:46 2016 +0100
+
+    major cleanup of functionality to write to file
+
+commit 9333b74e6023c2a6b5aa1fd2f50d205521140dcc
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 12:30:45 2016 +0100
+
+    fixed handling of locked device situation for non-root users
+
+commit 27e0e107183452900922602425a6986bf459cdc3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 16:57:48 2016 +0100
+
+    minor enhancements to get_samplerates
+
+commit d8f7de268366ff9ac490d6d6de1a552063990e3e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 15:29:41 2016 +0100
+
+    some optimalizations for sample rates
+
+commit 35f2391403d355ccc65688a01a4d2aca35352318
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 14:39:39 2016 +0100
+
+    remove obsolete locking function
+
+commit 8c06e67df23daef962d2d1affb7cd16a848b4a77
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 09:48:49 2016 +0100
+
+    better flow and get sample rates for uac interfaces directly from streamfile
+
+commit b95eed28c517037aa92d3f9f6fac0b7a0a70369a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 07:53:52 2016 +0100
+
+    moved local (msg_alsa_*) variables to global (MSG_ALSA_*) ones
+
+commit 3edc01ea79dae9e0c113a713039960de78a684a4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:35:11 2016 +0100
+
+    bumped version
+
+commit dfa501c757441098453472e86c98be4e202a2aec
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:26:08 2016 +0100
+
+    added -s option to display sample rates for each supported format (very slow)
+
+commit a01eb4f388978114171b6f6a4691ade4aa646d0f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 25 16:11:32 2015 +0100
+
+    geen idee
+
+commit dddd4defe10e6ab03c5287e9a5b5b393933d96c3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 22 12:59:47 2015 +0100
+
+    cleaning up a bit
+
+commit 68a722ee1d0f45bfad16af9e45d43e0775c864e8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 22 12:08:09 2015 +0100
+
+    (sloppy) pulseaudio functions moved to own script
+
+commit 00c1f95ef8f028543a8fee423dba2c2f7723b771
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 19:38:59 2015 +0100
+
+    issue #16: fixed isplay
+
+commit e0362d5283d3a5f482f7f143a1e2082baf9faeb8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 17:47:31 2015 +0100
+
+    issue #16: sloppy implementation of handle_doublebrackets
+
+commit f176ddfb30ad679642dc49d116f2a3b91622236d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 17:00:39 2015 +0100
+
+    issue #16: added function to handle aplay output lines with brackets inside card/device names
+
+commit 056ac806b326c2d53048d70ad573d8964cd9157a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 15:19:42 2015 +0100
+
+    debugging enhancements
+
+commit 499578ca1becb0baf785b04b62cea5b3a7a66246
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 16:13:52 2015 +0100
+
+    documented the sample script for advanced usage of alsa-capabilities
+
+commit 83922b82911047c615c4b13d045d028de658906d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 15:08:43 2015 +0100
+
+    Speed optimizations and enhancements
+     - only run fuse and ps when needed
+     - added PROFILE option to get timing information
+     - made the script two times faster:
+       * 0.122s on an atom N2800@1.7GHz with a single uac 2 dac
+       * 0.130s on a dual core i5-6400@2.7GHz with 3 pcm interfaces
+         and an external uac2 dac)
+     - introduced some unused functions to get proper handling of multiple
+       codecs and fetching the sample rates
+
+commit 3582ea9916b592fe1bb6bbb54ae7ce0f41f5f1c6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 14:02:44 2015 +0100
+
+    some cleanups for the previous commit
+
+commit 5ac47d482838b7fb595aac96b1dc00e12e70d4fb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 13:55:03 2015 +0100
+
+    made usb endpoint matching more robust; added references to kernel sources
+
+commit 33b04cf4025250d17a25a54db0e2651bccb5b52a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 12:18:54 2015 +0100
+
+    function integrated in inline code
+
+commit 5ed4fc5afc8f4f213e665977aa403d74c7f29b2e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 09:54:01 2015 +0100
+
+    aplay moved to its own function, adding enhancements in dealing with errors
+
+commit f8cd6688e0b4a5c4db621546654fa10c79069e9d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 08:36:33 2015 +0100
+
+    issue #15: removed unnecessary variable initialization; see commit:6659341
+
+commit ab31bcc0e35034367b7103d4c7d42ce9c6b9aab2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 12:12:07 2015 +0100
+
+    issue #15: latest enhancements to the regular expressions based on aplay.c
+
+commit 6b70424d3f7b9c2b39d9624ecbcb00fecff36e53
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 12:10:06 2015 +0100
+
+    issue #15: some minor enhancements to the regular expressions based on aplay.c
+
+commit f9664a7317eb1c98def2117749d0b48ee80452c3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 11:00:38 2015 +0100
+
+    issue #15: some fixes to prevent unitialized variables
+
+commit 4d84e9d04a3b3cfe78eaf2f78958721997374670
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 10:55:25 2015 +0100
+
+    issue #15: some minor enhancements to the regular expressions
+
+commit cd3caa77fd38d28b4c0a446d72dec9d474718607
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 13:54:44 2015 +0100
+
+    first working version
+
+commit 7a32d7c93ad0b7a2cb21fda3a706f6dc2bd6db65
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 11:37:43 2015 +0100
+
+    added -a option to filter on "hw:x,y" alsa interface
+
+commit f9ebc4abc49dae2f556a87baffe515ed0b6eeba8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 10:54:00 2015 +0100
+
+    first try for mpd-monitor
+
+commit 8224249eceaa89aa88d92538c1249ca491e4086c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 9 14:48:01 2015 +0100
+
+    fixed some serious errors
+
+commit c3c64c7746bd66239c3cfa8f1020f9d5ba50694f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Nov 19 09:35:01 2015 +0100
+
+    issue #11: replace associative array UO_EP_LABELS with simple array and string filtering
+
+commit f38316683e7ad675246ffaa9dfff4027551cbc23
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 17:04:41 2015 +0200
+
+    added empty string (scenario pipe curl output to bash)
+
+commit 37897a6a5ad75869c16f1375720b312ce3c7e179
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:58:05 2015 +0200
+
+    clearer seperation display and logic
+
+commit 9ed21e18ee369713e758a44e1ebe17431a791e39
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:21:11 2015 +0200
+
+    typo in fetch_alsa_outputinterfaces
+
+commit 85aafa2450faefe16a52e35c134f47cdd2f16205
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:19:48 2015 +0200
+
+    reversed other condition in get_locking_process
+
+commit 1016ad17c9cdc4bd77dc84a4ed2dd41bd463df70
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:18:42 2015 +0200
+
+    reversed condition in get_locking_process
+
+commit 88ce30055403d24669a6820e97f22ce3ea35fa19
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:17:47 2015 +0200
+
+    fixed get_locking_process
+
+commit 394dcbbb649daa34bd0c415c8c1782f92b06551e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:47:03 2015 +0200
+
+    added clarification
+
+commit a655fc03220d819260f80810be4e4656fb87ffa9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:45:54 2015 +0200
+
+    check for no soundcards or other alsa error: typo
+
+commit 19bd23c84fdcff6db981c8d50f535bda0fc54d6c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:45:10 2015 +0200
+
+    check for no soundcards or other alsa error
+
+commit 39411b1a1650bb1ca93a9dd26703fa94ca86b0d5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:39:00 2015 +0200
+
+    cechk for empty alsa output
+
+commit 656320fd987f41f2fe284558f5c30bf96e0b0de7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:22:42 2015 +0200
+
+    some text updates
+
+commit e38e012de0e95641aebc763b293eec3b80727186
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:19:24 2015 +0200
+
+    really default to empty string
+
+commit a67c03996b3f374fc47de0ce9c235b1130c14496
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:18:50 2015 +0200
+
+    default to empty string
+
+commit 3ff81574971d0506c557c18d356c9e83914ee4df
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:17:49 2015 +0200
+
+    make no aplay fatal
+
+commit 90f3cee91756e99e4668e1a20d08a35a20055168
+Merge: be6dff0 0996c22
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed May 13 15:07:29 2015 +0200
+
+    merged conflicts
+
+commit be6dff00b81f03ba1c1b11381e27f2cacf7ef585
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed May 13 15:05:03 2015 +0200
+
+    added exception for lack of /dev/urandom
+
+commit 0996c2230514970b8eeeb0507e6cb6ece0a4e3a4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 20:34:36 2015 +0200
+
+    better handling of uac class determination
+
+commit 4c6f26d0a88da02d2d8bc7467cf6c8ad581de23d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 20:27:05 2015 +0200
+
+    fixed output of usage of character device
+
+commit 0ff8785deaf37511023dfd3fa41256655d18ffd8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 18:06:23 2015 +0200
+
+    fixed random device checking and usage of fuser and ps
+
+commit 9b1317b9d188889d733df5748cf205cb7b8c6862
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 17:35:31 2015 +0200
+
+    more robust error checking; still not done though with checking access to devices
+
+commit e1a2a7d7fb9821c6dcd83b509421749e43b599dd
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 5 11:29:38 2015 +0100
+
+    added some clarification about the compatibility with regard to issue #10
+
+commit 6e5e432f13561e01d0ed2a4711e9d41f63e72c23
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 5 10:58:50 2015 +0100
+
+    double semi columns after last item in case statement removed for greater portability. See issue #10
+
+commit 9e0f34bf47c81e250a4ad483a7267d69c237d7e9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 26 12:18:13 2015 +0100
+
+    addition to ugly temporary hack to fix issue #8. Unset bash options -u and -e.
+
+commit 19ba9569738e4907bcd2eea325aae9a2db803f84
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Oct 13 10:14:39 2014 +0200
+
+    * Added `set -u' and `set -e' to make the script more robust.
+    * with those options set, identified and fixed some problems regarding
+      unitialized variables and erronous return values caused by
+      terminating procedures with the test `[[ ! -z "${DEBUG}" ]] && debug
+      ...` which return false if DEBUG isn't set.
+
+commit 24e214dc286698db8156278dc5dee69d79e2bbeb
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 17:38:25 2014 +0200
+
+    (re) implemented pulseaudio handling
+
+commit fc00bac65373c5da19520af9db70fa568f23b120
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 07:28:28 2014 +0200
+
+    prelimenary
+
+commit 71d3fc8af80f26653cb47eb85701ecc0b3ccd255
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:06:21 2014 +0200
+
+    removed a temporary debug statement
+
+commit d380f11c21570002e984994999dc4af65fc19962
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:02:59 2014 +0200
+
+    Small fix
+    * `alsa-capabilities`: fixed the error which caused the script to not
+      display the process that had exclusive access ton an interface
+
+commit 5854e589a1ebd97fe71f3a224e3cf2314c92fd19
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 18:06:18 2014 +0200
+
+    Major update and rewrite
+     * moved `tests/detect-alsa-output-capabilities.sh` to `alsa-capabilities`
+     * modified `alsa-capabilities` to make it suitable to be sourced or
+       run from the command line
+     * added simple and regexp filtering to `alsa-capabilities`
+     * removed alsa interface detection logic out of `mpd-configure`. This
+       is now done sourcing `alsa-capabilities`.
+     * modified `mpd-configure` to not write to a file by default (see
+       updated `README`)

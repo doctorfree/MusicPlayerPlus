@@ -17,8 +17,8 @@ MusicPlayerPlus components are used to manage and control MPD.
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
-    1. [MPD Server Configuration](#mpd-server-configuration)
     1. [Client Configuration](#client-configuration)
+    1. [MPD Server Configuration](#mpd-server-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
     1. [Start MPD](#start-mpd)
     1. [Initialize Music Database](#initialize-music-database)
@@ -109,13 +109,16 @@ Additional detail and info can be found in the
 ## Quickstart
 
 * Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
-* Edit `/etc/mpd.conf` and set the `music_directory` entry to the location of your music library (must be done with `sudo`, e.g. `sudo vi /etc/mpd.conf`)
 * Run the `mpcinit` command (must be done as your normal user, no need for `sudo`)
+* Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
 * Verify the `mpd` service is running and if not then start it:
-    * `systemctl status mpd`
-    * `sudo systemctl start mpd`
+    * `systemctl --user is-active mpd.service`
+    * `systemctl --user start mpd.service`
 * Update the MPD client database:
-    * `mpplus` then type `u`
+    * `mpc update`
+* Optionally, verify the `mpd` service is enabled and if not enable it
+    * `systemctl --user is-enabled mpd.service`
+    * `systemctl --user enable mpd.service`
 * Play music with `mpplus`
     * See the [online mpcpluskeys cheat sheet](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpcpluskeys.1) or `man mpcpluskeys` for help navigating the `mpplus` windows
     * See the [online mpplus man page](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpplus.1) or `man mpplus` for different ways to invoke the `mpplus` command
@@ -205,39 +208,64 @@ sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
-be configured by editing the MPD configuration file `/etc/mpd.conf`.
+be configured by editing the MPD configuration file `~/.config/mpd/mpd.conf`.
 In addition, it is recommended to setup custom profiles in some
 of the terminal emulators to enhance the spectrum visualization.
 
-Minimal post installation configuration required is the configuration of
-your music directory in `/etc/mpd.conf` and execution of the command `mpcinit`.
+Minimal post installation configuration required is the execution
+of the command `mpcinit`.
+
+### Client Configuration
+Initialize the `mpcplus` client configuration by executing the command:
+
+```
+mpcinit
+```
+
+Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
+and `~/.config/mpcplus/bindings` and make any desired changes.
+
+The client configuration performed by `mpcinit` includes the configuration
+of an MPD user service. The configuration, files, and folders used by
+this user level MPD service are stored in `~/.config/mpd/`. Examine the
+generated MPD configuration file `~/.config/mpd/mpd.conf`.
 
 ### MPD Server Configuration
-Edit `/etc/mpd.conf`, uncomment the `music_directory` entry and
+
+**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform
+an automated MPD user configuration and systemd service activation.
+This is performed by the `mpcinit` command. MusicPlayerPlus 1.0.2r2
+and later installations need not perform the following manual procedures
+but users may wish to review the automated MPD configuration by
+following these steps.
+
+Edit `~/.config/mpd/mpd.conf`, uncomment the `music_directory` entry and
 set the value to the location of your music library. For example,
 
 ```
-music_directory		"/u/audio/Music"
+music_directory		"~/.config/mpd/music"
 ```
 
-Adjust the `audio_output` settings in `mpd.conf`. MPD must have at least
-one `audio_output` configured and in order to use the spectrum visualizer
-as configured by default it is necessary to configure a second `audio_output`
-in MPD.
+The `music_directory` location must be writeable by your user.
 
-A FIFO `audio_output` is used as a data source for the Cava spectrum visualizer.
-To configure this output, add the following to `/etc/mpd.conf`:
+Adjust the `audio_output` settings in `~/.config/mpd/mpd.conf`.
+MPD must have at least one `audio_output` configured and in order
+to use the spectrum visualizer as configured by default it is necessary
+to configure a second `audio_output` in MPD.
+
+A FIFO `audio_output` is used as a data source for the spectrum visualizer.
+To configure this output, add the following to `~/.config/mpd/mpd.conf`:
 
 ```
 audio_output {
     type            "fifo"
     name            "Visualizer feed"
-    path            "/tmp/mpd.fifo"
+    path            "~/.config/mpd/mpd.fifo"
     format          "44100:16:2"
 }
 ```
 
-An example ALSA `audio_output` configuration in `/etc/mpd.conf`:
+An example ALSA `audio_output` configuration in `~/.config/mpd/mpd.conf`:
 
 ```
 audio_output {
@@ -266,22 +294,6 @@ audio_output {
 MPD is a powerful and flexible music player server with many configuration
 options. Additional MPD configuration may be desired. See the
 [MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)
-
-### Client Configuration
-After configuring the MPD music_directory in `/etc/mpd.conf`, initialize
-the `mpcplus` client configuration by executing the command:
-
-```
-mpcinit
-```
-
-Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
-and `~/.config/mpcplus/bindings` and make any desired changes.
-
-While the MPD Server configuration changes above are system-wide,
-the Client configuration performed by `mpcinit` is per-user.
-Each user needs to perform this step as well as the creation of
-terminal profiles described below.
 
 ### Fuzzy Finder Configuration
 
@@ -437,7 +449,7 @@ General options:
 	-D indicates download album cover art
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '/etc/mpd.conf'
+		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system

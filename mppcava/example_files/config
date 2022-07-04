@@ -66,7 +66,7 @@ higher_cutoff_freq = 20000
 ; source = hw:Loopback,1
 
 method = fifo
-source = /tmp/mpd.fifo
+source = ~/.config/mpd/mpd.fifo
 sample_rate = 44100
 sample_bits = 16
 

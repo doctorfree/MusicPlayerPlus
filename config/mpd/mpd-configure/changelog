@@ -1,0 +1,2208 @@
+commit cfac512b73ae13e97dfd9d409975cebbbfac21ab (HEAD -> master, origin/master, origin/HEAD)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 11 11:15:01 2019 +0200
+
+    simple shellcheck pipeline enabled (checks only alsa-capabilities)
+
+commit d3ef29b5eb9f93b5ab4cc6575035b3b1ce9a17a2 (tag: v0.9.10)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 11 11:04:29 2019 +0200
+
+    alsa-capabilities:
+    
+    - fixes formats which contain spaces; closes issue:38
+    - shellchecked again
+    - colorized debugging output
+    - test if DEBUG is set inside debug function, to improve readability
+    - bumped version to v0.9.10
+
+commit 9673004508bb8fb3a957960e515a8538889ba866 (tag: v0.9.9)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Thu Sep 5 02:36:11 2019 +0200
+
+    moved LICENSE to copying; added GPL3 to LICENSE
+
+commit 36f079121a954ed45f87fab091fd1e402585f768
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Thu Sep 5 00:01:59 2019 +0200
+
+    removed mpd-monitor and referenced the new mpd-monitor project on gitlab
+
+commit 1cfb3cacd176182380f11825c784e7d651ff6f99
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Sep 4 23:57:18 2019 +0200
+
+    reversed symlink to/from markdown version
+
+commit f2ad2c0a6240c641934ec40cd9e84143b569e547
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jan 16 11:24:53 2019 +0100
+
+    get rid of pasuspender/pulseaudio; fixes issue #37
+
+commit d4a02fac8fbe70947fc6f7b1221754a24db6bb6c
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Jan 13 21:23:02 2019 +0100
+
+    fixed situation with non-working pulseaudio setup
+
+commit 995fc124029944ecdcbee17c7168fb26b69369f8
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jan 9 11:14:01 2019 +0100
+
+    based on https://alsa.opensrc.org/Udev
+
+commit e2f41379ae76440fa5800a34907604244e689d77
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jan 9 11:13:13 2019 +0100
+
+    a lot of fixed
+
+commit 1dd710b6873ba8c22773e87b9454eb03fde08798
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Mon Nov 12 18:22:43 2018 +0100
+
+    added neighbor plugins (since 0.21)
+
+commit c572c641187f70054b01b7641bbb0ca9e28a50b2
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Mon Nov 12 09:27:42 2018 +0100
+
+    percentage without bc and query mpd without mpc
+
+commit 2b186f2d2c0388fed7e9ad38114cdc40f854b9c1
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Nov 11 18:21:32 2018 +0100
+
+    fixed local usage
+
+commit a1948630bdab378d4329bd0c3cbaa8bc84ad6193
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Nov 11 16:46:40 2018 +0100
+
+    replaced funky netcat with bash builtin sockets as per https://superuser.com/a/1122119/955505
+
+commit a7bdd9cad6832aadd375892ae826eb5aecece195
+Merge: 6281081 33c1632
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Nov 11 14:46:32 2018 +0000
+
+    Merge branch 'mpd-monitor' into 'master'
+    
+    Mpd monitor
+    
+    See merge request ronalde/mpd-configure!34
+
+commit 33c1632a941a6b42309848e86c6445d19186f27c (origin/mpd-monitor)
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Nov 11 15:44:54 2018 +0100
+
+    shellchecked
+
+commit 52620a2cb4d3b5129efafb35d62f7d5f012888fb
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Nov 11 14:57:31 2018 +0100
+
+    bitrates corrected
+
+commit df443796e99ded6ba7b918d29eb0715302ea3581
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sun Nov 11 00:39:49 2018 +0100
+
+    a few bits further
+
+commit e18594e2462b64753cde7b36aa941d481e9a88f9
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Sat Nov 10 17:33:50 2018 +0100
+
+    a bit further
+
+commit 62810811f59eafc43fbc77305a0ec526ef6897f6
+Author: Ronald van Engelen <ronalde+gitlab@lacocina.nl>
+Date:   Wed Jun 6 10:01:49 2018 +0200
+
+    migrated from github due to Microsoft deal
+
+commit 272254608d83cc60d053978399a07af99b199f27 (tag: v0.9.8)
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Mar 26 09:29:46 2018 +0200
+
+    bumped version
+
+commit 6fdcefcbc50b4237e9f5c9cd38d3c4321d5123e1 (tag: v0.9.7)
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Mar 26 09:28:07 2018 +0200
+
+    changed version
+
+commit 2fcde61ba3436fa14034b422c4e76070478b41fa (origin/readlink-busybox)
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Mar 15 18:19:19 2018 +0100
+
+    issue #36: replace readlink -e with readlink -f and file command
+
+commit f02579ce40d2ec0329c889e4725b227c13176890 (tag: v0.9.5, tag: v0.9.4)
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 3 16:27:57 2018 +0100
+
+    issue #34: shellchecked, version raised
+
+commit f4af055ad28c28e8fc162e6233a9905ac2438a8e (origin/hifiberry)
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 3 10:14:26 2018 +0100
+
+    issue #34: handle cases where snd_{pcm,ctl}_card_info_get_name(info) returns an mepty string between square brackets, like with the hifiberry DAC bug
+
+commit 2f8db8d41430eecfd1a9fecbb31e9786d038cdbf
+Merge: 237505a 3c93481
+Author: Ronald van Engelen <ronalde@users.noreply.github.com>
+Date:   Fri Oct 20 09:04:28 2017 +0200
+
+    Merge pull request #33 from ronalde/jsonoutput
+    
+    Jsonoutput
+
+commit 3c93481f9e89d9151c2a88e29df18b6b02dca2da
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Oct 20 08:53:46 2017 +0200
+
+    shellchecked
+
+commit f91e5c346990e8d3c1ea2f9374c02501d307a3c2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Oct 19 14:12:34 2017 +0200
+
+    associative array turned in two indexed arrays to preserve order of output fields
+
+commit b7597793bfab244bb78c28331251ccdf8cd69115
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Oct 19 13:13:32 2017 +0200
+
+    handling of enconding formats and sample rates fixed
+
+commit c425a4ef368ef2c48321e88cc65b5dc9bba73a2d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Oct 18 08:54:09 2017 +0200
+
+    fixed json indentation; start numbering cards in normal output at 1 insteads of 0; fix samplerate unit to Hz instead of Khz in normal output
+
+commit 652b1ea97ef2a120ed47f95f8898bd25471af906
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 23:40:05 2017 +0200
+
+    saving some sub processes
+
+commit a2fe92e2d2eef3a8fc046350725e3c6d9f011f84
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 23:15:44 2017 +0200
+
+    some restyling
+
+commit 89e028c3df2037e2f522c661a2b47331066428f9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:33:02 2017 +0200
+
+    clarified json examples
+
+commit 0afbb5a4ece5571291b6dfaabc49679bf747dd21
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:32:18 2017 +0200
+
+    clarified json examples
+
+commit 6ad9406a7c258517476e58780025991459417ec3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:29:20 2017 +0200
+
+    cleaning up
+
+commit d93334a994301adf1603e404462783b601921590
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:28:44 2017 +0200
+
+    cleaning up
+
+commit abacbdf5c3fb7ade8e05d32ce8eb2c9bac771cc5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:27:49 2017 +0200
+
+    cleaning up
+
+commit cf08be4b04c7e4bce5b5524c73a949329c0132ba
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:26:42 2017 +0200
+
+    clarified json examples
+
+commit 3770919a10a5368cb8af84b53ebec840de81e2ce
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:25:46 2017 +0200
+
+    clarified json examples
+
+commit beb98c5ab3e862ba428cbd73006517215ce4b3ad
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 22:21:59 2017 +0200
+
+    sample output prettified using json-server
+
+commit 7e75b1b5c4f8f70c2b97197796ca3acd20db0391
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 20:04:59 2017 +0200
+
+    fixed last sound card in json output
+
+commit ab59f6f18546f504b7cda9abae6c215e10ffeb43
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 20:04:43 2017 +0200
+
+    sample output prettified using json-server
+
+commit 85ff6f3a09b5bbb31ef0d476fbeecb347576423b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 19:57:27 2017 +0200
+
+    output fixed by using pasuspender
+
+commit 02410bdbd002432ed1147bb66807fd0c2fc81a53
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 19:56:04 2017 +0200
+
+    README updated with json feature for alsa-capabilities
+
+commit 110fe3c3c6b7c854ef470cc31cac801f9fa8c269
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 19:53:36 2017 +0200
+
+    cleaned up debugging a bit
+
+commit 59d6ccacbc22be23d8a9f56f4bca2852765e6483
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 19:53:14 2017 +0200
+
+    README updated with json feature
+
+commit 2cef47f5b62cfbb0eea3ddba6d90ce82509c3708
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 17:36:12 2017 +0200
+
+    added -j/--json argument to print json formatted output to stdout (indentation needs work)
+
+commit 7bd98292c483e2da71c392272b16e2b90b900590
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 13:11:16 2017 +0200
+
+    print output to separate function
+
+commit 237505a83d9ccebcb7b2edb7dcd4f70a545b69d8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Oct 17 13:03:06 2017 +0200
+
+    some cleanup
+
+commit 8ef2c5de05cfff8fba09c4f6fefe08fb69e8a5b2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Sep 29 10:51:27 2017 +0200
+
+    preparing for multiple mpd alsa output devices
+
+commit 4091c4de5c08c70a182dd87ac4ae2fad0d93ba2d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Sep 29 08:57:48 2017 +0200
+
+    fixed regex to match alternate physical bit widths (like S24_3LE)
+
+commit 06054f8a25e4977cee3b5201aef3d055485e80c1
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 10:50:46 2017 +0200
+
+    some formatting
+
+commit 3f7c2d27238b5f669797bcc698de22526dda18f8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 10:50:08 2017 +0200
+
+    some formatting
+
+commit d42244fa759db329b17f19ee75e14d2bb3779743
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 10:06:18 2017 +0200
+
+    fixed(?) unit conversion
+
+commit 3fba9b70e9fc543dbf75be671b3a50936e2f0a21
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 10:03:35 2017 +0200
+
+    fixed(?) unit conversion
+
+commit 22dabe24371b0092ee8be744685968358774b367
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 09:57:18 2017 +0200
+
+    fixed problem with using bc
+
+commit 98c642974d81e9e4927391c3c48f29065d9f1e6b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 09:41:30 2017 +0200
+
+    fixed problem with using bc
+
+commit 284254bc54b97b4db6bca5dbaa38667f9172c420
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 09:27:55 2017 +0200
+
+    fixed regex to match alternate physical bit widths (like S24_3LE)
+
+commit f20d13b31bbc8a09f92fae732807d0b6e77f7b14
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Sep 28 09:22:02 2017 +0200
+
+    fixed reversed alsa card and dev numbers
+
+commit 1e3b2c38d206b4b6fe30c30201f21613e5c58c71
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 08:29:04 2017 +0200
+
+    human_bytes fixed
+
+commit d328af88e99f848c91fdb190e4dd28c59877073f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 08:27:31 2017 +0200
+
+    run_func fixed
+
+commit d1ae429d69be1dd19e409f598dbc4c3f22182215
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 08:25:41 2017 +0200
+
+    run_func fixed
+
+commit 8fa81650b2e40bca0f348f17ac71c01cf84aea25
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 02:55:53 2017 +0200
+
+    really fail
+
+commit 681b0c294ea662f583fcb9b95a2a187a1b90e656
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 02:54:43 2017 +0200
+
+    really fail
+
+commit b5c5c18f2f10073b0314265e9a7e1ff34152e1e7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 02:37:55 2017 +0200
+
+    fail on missing commands
+
+commit 56ff01b078a1c89c8fbde74dfd58c2f070b13c5e
+Merge: 52939ea 3a3837a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 02:35:44 2017 +0200
+
+    Merge branch 'master' of github.com:ronalde/mpd-configure
+
+commit 52939ea84ccd13d4b7e30fcab5bafb65de268100
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 02:35:34 2017 +0200
+
+    check whether netcat is gnu or bsd, check for bc
+
+commit 3a3837a1a80f629253c7d5b4ec16ce10d94e5805
+Author: Ronald van Engelen <ronalde@users.noreply.github.com>
+Date:   Mon May 29 01:52:47 2017 +0200
+
+    added mpd-monitor arguments
+
+commit b9901d87c7e57d76d9f7e47930a1f6648e952edf
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 01:45:21 2017 +0200
+
+    moved lcd in place of mpd-monitor
+
+commit eee887da87f3cd2ace0bf96961dc298cbf7b3db3
+Merge: 1a4820a 7b2cf4c
+Author: Ronald van Engelen <ronalde@users.noreply.github.com>
+Date:   Mon May 29 01:43:32 2017 +0200
+
+    Merge pull request #32 from ronalde/lcd
+    
+    Lcd
+
+commit 7b2cf4c051208afefca8b20d7e4c67f47665a3b0 (origin/lcd)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 29 01:42:09 2017 +0200
+
+    with flex remote alsa host
+
+commit 97fae4cb80bef188a3b522b70c167fde24ceda28
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 15 12:12:51 2017 +0200
+
+    started with mpd ouput handling
+
+commit 1780751a07225be188c2cfaf3942acf3d2b6c097
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 15 11:28:07 2017 +0200
+
+    some bitperfect cloring in output
+
+commit 7546cae06dd9aabb6adeccd281ce61973aed6b19
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 15 10:50:26 2017 +0200
+
+    command line arguments added
+
+commit 1a4820a0ba4d9317ca807ac8232cd26e9299926e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 15:57:15 2017 +0200
+
+    fixed non commented comment
+
+commit 73ccdd326feced39d4cb99b9e282c0b7f917af0b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 15:52:53 2017 +0200
+
+    #31 a bit more explanation
+
+commit a6400dc6757373c1f7a8f7a0dff4311ad5ea572e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 15:39:14 2017 +0200
+
+    #31 set default auto_update_depth to the maximum the file system supports
+
+commit e46f372ccbd016e09dc2fa428945d43e78bda29a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 15:20:51 2017 +0200
+
+    no idea
+
+commit bbb91c18cfb4b405b5afea43cf0fa5f548362620
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 15:20:37 2017 +0200
+
+    playlistlength fixed (and cleaned up some stale code)
+
+commit 0cdd8513215d0ab45f49b421bd18381635e95cc5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 12:41:06 2017 +0200
+
+    made executable
+
+commit 8b0ec61c6f8b8b3815481757752f868323495619
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 12:40:27 2017 +0200
+
+    basically working
+
+commit a512b4789d29fd4430ca809a16ebb154f93f930d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun May 14 12:00:53 2017 +0200
+
+    remote usage message simplified
+
+commit 9407952bd2220a592f8cb37a26b209491737a601
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 7 15:49:07 2017 +0100
+
+    updated changelog and urls in README; renamed fifo
+
+commit b261abd212f3f0a281f6623ca83f80763dd8cd2a (origin/database-proxy)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 9 15:49:19 2016 +0100
+
+    isolated db_file and added database (proxy) plugin
+
+commit 1b05a563845751bb207ed537da93a7d97fefd97d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 5 17:14:03 2016 +0100
+
+    working again
+
+commit 490eb9dc5d569399fb9de77eea7870c4fee05eaa
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:13:25 2016 +0100
+
+    fixed application name with the help function and added version info
+
+commit 0b63506c233a5786e64b61bc6e702f682ed4ad84 (tag: v0.9.3)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:07:05 2016 +0100
+
+    v0.9.3
+
+commit 5952a179520e042775fb36f15089c6124635385f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 1 09:06:39 2016 +0100
+
+    v0.9.2
+
+commit 29842654d40082f5a926e6651e3b1635d040f1a4 (tag: v0.9.2, origin/shellcheck)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Nov 30 16:58:53 2016 +0100
+
+    shellchecked and simplified/speeded up detection of sample rate support
+
+commit 92c17ffde0806cff8b3b1fdebb0b84a9d018bf1f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Nov 30 09:01:54 2016 +0100
+
+    fixed, cleaned up and documented checking sample rates based on video base rate
+
+commit f117e4179e4e34c0fac166f213ed6f1b96825b4d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Mar 11 09:46:04 2016 +0100
+
+    added fifo audio output for visualization purposes
+
+commit 792263c88c5ec45afc699cccbc66b6c152e85a02
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 10 12:47:51 2016 +0100
+
+    fixed issue #28: replaced ps command with reading /proc/pid and renamed function
+
+commit 20be7798e84c9f5309cc7877e30ac38bea2e771d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Feb 6 12:17:06 2016 +0100
+
+    which replaced by type -p
+
+commit e46a873ca40e0002d06103e8dff0da9eb3a95963
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Feb 6 12:14:49 2016 +0100
+
+    which replaced by type -p
+
+commit e6a6bd5267093ab0366e352839ac0472b91e8149
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Feb 2 09:37:34 2016 +0100
+
+    always show the real hwparams file
+
+commit 3eea4adcc94de136d51e3cc607f98eddea4a6869
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 26 10:45:16 2016 +0100
+
+    updated
+
+commit 375075468daf50dca380c03eab995db6a57d72e9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 26 08:37:29 2016 +0100
+
+    got rid of pulseaudio helper functions; replaced with pasuspender
+
+commit 565d5746862fc919446f64cb48b51f5e80394b8f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 23 13:26:43 2016 +0100
+
+    moved
+
+commit a2577b42de1ecf671a4646dece1b7192a0febed7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 23 13:21:45 2016 +0100
+
+    moved test script out of the way
+
+commit 6c0bc3ab7428f7d8e082867d2e8ddf9adac91ed4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 20 01:10:38 2016 +0100
+
+    reenabled OPT_SAMPLERATES for non-uac
+
+commit 1951dbf28d1bcc07058de64523d6d94b6b4e30c7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 20 01:05:27 2016 +0100
+
+    reenabled OPT_SAMPLERATES for uac
+
+commit 6df6acab09786d7bcf62977920dcdad28ef35722
+Merge: f4e519e 4a72293
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 20 00:54:01 2016 +0100
+
+    Merge branch 'master' of github.com:ronalde/mpd-configure
+
+commit f4e519eff4fcb23794dfc649c9a3e086a63f0bde
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 19 15:38:49 2016 +0100
+
+    fixed regression bug issue #27
+
+commit 4a72293d10915f1008ddd209a2c04555914f5177 (tag: v0.9.1)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 19 15:38:49 2016 +0100
+
+    fixed regression bug issue #27
+
+commit 1dc9b200e7b5c01d2dabbc211bf6d5a3c0092490
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:23:41 2016 +0100
+
+    rewrote samplerate detection: finishing up
+
+commit ee505ba5d2fa5afadd8f47d73186aecfb09c610c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:21:00 2016 +0100
+
+    rewrote samplerate detection
+
+commit b6400b5ed798f4c98edba3333fa6b6bb1af343ed
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 19:19:36 2016 +0100
+
+    rewrote samplerate detection
+
+commit 59a583e3beef34904c535004ab55db3ec8c2f0d7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 15:32:39 2016 +0100
+
+    fixed pulseaudio handler; still have to fix backup/restore for pa client conf
+
+commit 76596fd2dbdec4f4ca9c7321a9d34aff72dd486d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 08:01:36 2016 +0100
+
+    in between
+
+commit 3511c0dd8c91b01a74ba928e1f75659c87b9a91f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 00:31:56 2016 +0100
+
+    minor enhancements for pulseaudio helper
+
+commit c3a9e3996edce540139ffad3eb9c9a26c250cca6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 00:22:13 2016 +0100
+
+    updated debug and removed inform functions
+
+commit 062f10354b0a61d95cfadf447851e27357d1e078
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 14 00:09:57 2016 +0100
+
+    fixed variable
+
+commit f55def40ff593b97d74583771836b3fd23b6c3f5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Jan 13 18:29:28 2016 +0100
+
+    updated links
+
+commit ce3acdc8e5ebe05ae7689fd07eb3642a24363906
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 11 11:33:20 2016 +0100
+
+    Debian uses different path
+
+commit 67a614b50c8ecabd65f7c7ce1d02ebdabbdb86a4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 17:47:07 2016 +0100
+
+    minor fixes
+
+commit d7052eedc8d4a9469f0dcbd7befe7c94f666e638
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 14:06:55 2016 +0100
+
+    a few clarifications
+
+commit 3119f4d41e08b75fc959e1c1763e9ff1b6a657ea
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:17:06 2016 +0100
+
+    enhanced displaying of usage of custom filter in case of invalid limit value
+
+commit 11275e0cf0a739613f21cf58ef61a9c008eee9db
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:07:47 2016 +0100
+
+    enhanced displaying of invalid or empty limit filter
+
+commit 8955628dffe01e935aa3d0f63354529b7ddb575e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 13:06:31 2016 +0100
+
+    enhanced displaying of invalid or empty limit filter
+
+commit 67df88d05cc977ff7e1a7df66b38a665b8fee739
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Jan 9 12:47:24 2016 +0100
+
+    fixed displaying of limit type items
+
+commit 3581c3cf9f9832406d3a4c5f70b346a55f06f1f6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:26:12 2016 +0100
+
+    typo fixed
+
+commit 75872315887abfde32604d2e3dd8474a05901752
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:25:18 2016 +0100
+
+    added possibility to rerun script
+
+commit 279eb9b1e5841bf9da65470a83f63a5019db65cd
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:22:01 2016 +0100
+
+    forgot to specify file to read
+
+commit ddfb64c650d65b13be6d1beddb46b3ff8ba57ef9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:20:26 2016 +0100
+
+    fixed return value
+
+commit 400d8b71e5fb31aaacb68d556a3f743fa5c54d32
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:17:16 2016 +0100
+
+    moved detection of default mpd.conf
+
+commit b82590589734a8b0023d98a5250f46af5660b668
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:14:53 2016 +0100
+
+    fixed variable
+
+commit 43f959c9cde8d37550b34e88ccc3452e8df8d551
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:09:36 2016 +0100
+
+    moved detection of default mpd.conf
+
+commit 44e8ddf93052d898239e44455a7d95d50933c657
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 16:05:38 2016 +0100
+
+    added option for non-default path to mpd.conf added
+
+commit a85870c7a15a07193edd66a517f1274a18a0ba82
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 12:55:28 2016 +0100
+
+    updated with `git log --decorate >changelog`
+
+commit 37ada6eb939a04837154bcdd556897ff734f3d4c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 12:39:33 2016 +0100
+
+    cleanup of preferences
+
+commit cf117be5fe29a991e8a6be34b76af94d4f9e8366
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 12:31:26 2016 +0100
+
+    added commandline parameters
+
+commit 2c40856d2cfc32e614bbaa13e8dcf9be1f669cb0
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 11:34:33 2016 +0100
+
+    reordered LTSP information
+
+commit 97871bf0727c0e9151304a38872eaa50a590b794
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 11:26:17 2016 +0100
+
+    added example for usage as a systemd service
+
+commit a34a71b3690cf63b9e2e1de540e1c2ff0fec75e2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 11:21:37 2016 +0100
+
+    fixed OPT_QUIET and enhanced succesful exit message
+
+commit 7521d0a5295d9958ca1a0fbc6ae4b8b69609bdeb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 10:27:44 2016 +0100
+
+    added internal links and some extra background information
+
+commit d032d53b02899826081649a532115df5163ccde8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 10:01:37 2016 +0100
+
+    updated with `git log --decorate >changelog`
+
+commit df55384422585b279c462705eb26bba7499a6194
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 10:00:16 2016 +0100
+
+    translated sample rate information in to logical functions
+
+commit ba0b6892a29a5dae141ca9ba415e7e9f3c31fda9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 09:46:20 2016 +0100
+
+    added some information about sample rates
+
+commit 2f6286c23ece60aa275ff73f7ca9b8532272e0b1
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 09:34:56 2016 +0100
+
+    enhanced usage info
+
+commit c33cf2715ab483ff0b39a320e181dcafec17c853
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 03:16:58 2016 +0100
+
+    enhanced usage info
+
+commit 41be9cab1767737a1716a8e54339531748e3a96d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Jan 8 03:09:47 2016 +0100
+
+    fixed long options, replacing getopts with manual loop
+
+commit 0bd540a6ba809cf39125610337e2573394c73b91
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 12:16:21 2016 +0100
+
+    updated sample bash script
+
+commit 53ea17460878065d2ac6abb8c545ad59895dcc40
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 12:15:40 2016 +0100
+
+    updated sample bash script
+
+commit 74afd8f313fae82eb958d47c6587055a54025c61
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 12:03:44 2016 +0100
+
+    almost bitten in the foot
+
+commit 0ce13d7555bed636f72a511396c9dc78e7c64854
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 12:03:04 2016 +0100
+
+    updated documentation on using python and bash examples
+
+commit 7635fde4d0558516dd0f7169fd24ee77ebbbac20
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 11:59:38 2016 +0100
+
+    updated python example to use python 3 and fix running it from another directory
+
+commit c236f8eef26814b1e51ad415770b833380e37cae
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 11:24:27 2016 +0100
+
+    added download instructions
+
+commit 19fffba2a6ffcc573112d801e9fb86fedd701732 (tag: v0.9)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 11:15:36 2016 +0100
+
+    bumped version to 0.9
+
+commit 581cd254083e478d7855c93e8ae17b43135c1fc7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 11:14:08 2016 +0100
+
+    a few more updates
+
+commit 9e4b701e78d8c1f4e675744cfdf6cd14d813d18b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 10:57:41 2016 +0100
+
+    a few more updates
+
+commit dd1d5b361fd071dd2be59d15ad5aef69dcc7b2f6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 10:54:05 2016 +0100
+
+    a few more updates
+
+commit 512930f9c23667a82c29c52584331d42eddc3419
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 10:44:51 2016 +0100
+
+    fixed issue #25: replaced OVERWRITE_EXISTING_CONFFILE with SKIP_BACKUP and rewrote README
+
+commit 418df88a7af6e40da243dfd9138aadd6e11b1bf2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 09:57:09 2016 +0100
+
+    rewrote address selection, addressing issue #25
+
+commit f70a63fdda99bf60def2f640203a8fb0ad6bacce
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 04:15:17 2016 +0100
+
+    updated with example usage of mpd-configure
+
+commit f2489301ea43f2a91fe9154bd317ac4e60f20ba6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 04:00:40 2016 +0100
+
+    shortened default zeroconf name (no fqdn) and cap to maximum allowed characters (64)
+
+commit 7f52e9e61fae1893669dc4e8b206ab0123589dfa
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 03:29:18 2016 +0100
+
+    fixing up
+
+commit fc59101942f0dd341c635ef5c73fdeae0b9d14cf
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Jan 7 03:14:04 2016 +0100
+
+    major enhancements to robustness: writing and backing up conf file fixes; CONF_MPDCONFFILE, DISABLE_PROMPTS and OVERWRITE_EXISTING_CONFFILE fixed.
+
+commit 2529bb12dfa9646f9c087d0219a90916f2fa8f6b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 19:31:07 2016 +0100
+
+    added backup function
+
+commit 6cfbdf8e12b6199a093620f275d37769abb66f75 (tag: v0.8)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 18:54:46 2016 +0100
+
+    major cleanup of functionality to write to file
+
+commit 8dce53599a2acd40fa509d3dddfdc199da1cacc6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 15:36:34 2016 +0100
+
+    function renamed to avoid conflicts with function with same name in alsa-capabilities
+
+commit 15ae22e8e1d2116f8faf213c00572d6acef52a02
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 15:24:23 2016 +0100
+
+    better handling of empty or invalid input after prompt
+
+commit 5616336990515a950dbf701a63d11698f9982b64
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 13:43:50 2016 +0100
+
+    some enhancements and typos fixed
+
+commit a3340429bdf6661e59548e6ea85cbf34e05e9444
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 13:37:18 2016 +0100
+
+    issue #20: fixed. function get_mpd_musicdir existed and worked but was not called
+
+commit de71c5b53aec2d2072c2d389d2ca8eeb48a1b78b (tag: v0.7)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Jan 5 12:30:45 2016 +0100
+
+    fixed handling of locked device situation for non-root users
+
+commit 1357b1e61de60cc6fae22e61a27e777877ff75e6
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 16:57:48 2016 +0100
+
+    minor enhancements to get_samplerates
+
+commit 6e1b12330bb59b43d3e00469938d176516374d31
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 15:29:41 2016 +0100
+
+    some optimalizations for sample rates
+
+commit 9c4600af79238cd9c22360cb90a509b4600cadcb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 14:39:39 2016 +0100
+
+    remove obsolete locking function
+
+commit 622a1feb29f3c0e202596e1e07e4ad0431164362 (tag: v0.6)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 09:48:49 2016 +0100
+
+    better flow and get sample rates for uac interfaces directly from streamfile
+
+commit 1183c4e0e4c201e643f02e66fc38b3f3831f26eb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 4 07:53:52 2016 +0100
+
+    moved local (msg_alsa_*) variables to global (MSG_ALSA_*) ones
+
+commit 67ddc71fd912a9a2dbb055d9b6c5f3943db9d3b0
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:38:11 2016 +0100
+
+    explained how to use options when running from stdin using wget
+
+commit 7f0d8329ec067a2c53612d3f962a6362de181ff8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:35:11 2016 +0100
+
+    bumped version
+
+commit 87e4d39cb4ead479fc94835f6e216a979a07080e (tag: v0.5)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:33:54 2016 +0100
+
+    typo fixed
+
+commit 2d9229820a3cb4e9a3ade5beb049c379d34910fa
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:31:34 2016 +0100
+
+    working
+
+commit 73f1c8ec39149da5d84a65416bf466b8c544d8ba
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:31:07 2016 +0100
+
+    added -s option to display sample rates for each supported format (very slow)
+
+commit 7539ef96206a9dfbe57bba790827139fb864407e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Jan 3 16:26:08 2016 +0100
+
+    added -s option to display sample rates for each supported format (very slow)
+
+commit fc04c871ab79ad68ce2647e7486393de0ce33ec6 (origin/formats)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 30 03:56:03 2015 +0100
+
+    working but slow
+
+commit f56bdf754a1d8f2305bd1e80c3c278c845c4e857
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 25 16:11:32 2015 +0100
+
+    geen idee
+
+commit 5ab6ccb8c002961d63135ce9354293f1b274da02
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 22 12:59:47 2015 +0100
+
+    cleaning up a bit
+
+commit d5b5350b158b2ca008290b0d9a25807e5f41213e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 22 12:08:09 2015 +0100
+
+    (sloppy) pulseaudio functions moved to own script
+
+commit 60759370916bd97154dab876ce504c8d9de116c8 (tag: v0.4, origin/towards1.0)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 23:21:36 2015 +0100
+
+    cleanup
+
+commit 2c6070a659a41e612eee17d223631761d4b933fd
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 19:38:59 2015 +0100
+
+    issue #16: fixed isplay
+
+commit 8ede458e928b47335d7146e7270ee55c91481804
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 17:52:20 2015 +0100
+
+    added script which converts alsa alsa-test.sh results from db to testfiles mimicing aplay -l output
+
+commit 806310ce6e1a9458e4ec82c28e9adf74c08f1c9e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 17:47:31 2015 +0100
+
+    issue #16: sloppy implementation of handle_doublebrackets
+
+commit 1a7a2fbbcc4e28d6e562296237c8409cf7662973
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 17:00:39 2015 +0100
+
+    issue #16: added function to handle aplay output lines with brackets inside card/device names
+
+commit 9c624612152e98f1bdb35996c44bf15cc6bb9ca9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 21 15:19:42 2015 +0100
+
+    debugging enhancements
+
+commit 85104340476e422018654c1bd944425b04a6919c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 16:33:05 2015 +0100
+
+    updated path to alsa-capabilities to reflect move to ./examples sub directory
+
+commit b884cfe34150b7fab61a12ee9f34bd565c430dce
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 16:13:52 2015 +0100
+
+    documented the sample script for advanced usage of alsa-capabilities
+
+commit ad1bbb750b99e9dac280b678c0891d613033df9d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 16:12:32 2015 +0100
+
+    added a sample script for advanced usage of alsa-capabilities
+
+commit eff30e4af8143bd484a2f7f0570ef70a34d08554 (tag: v0.3)
+Merge: aac3ede f5cf01d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 15:21:59 2015 +0100
+
+    Merge branch 'towards1.0'
+
+commit aac3ede3984e830067e1960e64045601e8a3e3c7
+Merge: d5d5378 e9b23f3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 15:18:54 2015 +0100
+
+    Merge branch 'issue12'
+
+commit f5cf01d23f4bc2dd751ee3d9f0aa893d7ce9d118
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 19 15:08:43 2015 +0100
+
+    Speed optimizations and enhancements
+     - only run fuse and ps when needed
+     - added PROFILE option to get timing information
+     - made the script two times faster:
+       * 0.122s on an atom N2800@1.7GHz with a single uac 2 dac
+       * 0.130s on a dual core i5-6400@2.7GHz with 3 pcm interfaces
+         and an external uac2 dac)
+     - introduced some unused functions to get proper handling of multiple
+       codecs and fetching the sample rates
+
+commit b35d904fc9268cf4c04051c7ca0ab01d81a1af4d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 14:02:44 2015 +0100
+
+    some cleanups for the previous commit
+
+commit b98eeb077ac653c67d4c1e142f60e5a3f2701e3f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 13:55:03 2015 +0100
+
+    made usb endpoint matching more robust; added references to kernel sources
+
+commit 1cb97f3cf07c7dbde552c1513e21945324df79a1
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 12:18:54 2015 +0100
+
+    function integrated in inline code
+
+commit a4c3ed759cd3eeb668f92718def3845270cad506
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 09:54:01 2015 +0100
+
+    aplay moved to its own function, adding enhancements in dealing with errors
+
+commit d5d5378e34fc0580a02a0dcbd25d23c01ce4e3b3
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 17 08:36:33 2015 +0100
+
+    issue #15: removed unnecessary variable initialization; see commit:6659341
+
+commit cd2e103042ba4586c0d630567f4bfca712b73816 (tag: v0.2-3)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 12:12:07 2015 +0100
+
+    issue #15: latest enhancements to the regular expressions based on aplay.c
+
+commit b67783e10d63b024d13b48631a2bee1a0db29e3b (tag: v0.2-2)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 12:10:06 2015 +0100
+
+    issue #15: some minor enhancements to the regular expressions based on aplay.c
+
+commit 45c086a027cb1396a3e0862ac2c8d521b0327fb1 (tag: v0.2-1)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 11:00:38 2015 +0100
+
+    issue #15: some fixes to prevent unitialized variables
+
+commit 66593415d9791cb523713ee97b320b14be66247c (tag: v0.2-0)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 10:55:25 2015 +0100
+
+    issue #15: some minor enhancements to the regular expressions
+
+commit e9b23f3c1d4e1ce1ae8a3744f329dac9b02b1341
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 16 10:22:41 2015 +0100
+
+    got rid of the fuzz with global/local arrays
+
+commit 4fdacb537871d115c2de2ea1a6d463cc6c0dc3b9
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 15 10:04:55 2015 +0100
+
+    wont change
+
+commit dc41ab59bb1199d72025b77f1e5ec0c7f9eead7f
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Tue Dec 15 09:28:14 2015 +0100
+
+    before tweaks
+
+commit c6c189f85dbd433cb7c118e3733d2580b547ec47
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 14 16:55:36 2015 +0100
+
+    removed all soxi functions and references
+
+commit 6ce2bf18270c14691ba7ef2bc05b5b7402440fc4
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 14 16:49:35 2015 +0100
+
+    for now done with file info
+
+commit 3b28e100863f3c1e5e312ffd2950ba2fc40d4710
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Dec 14 16:25:39 2015 +0100
+
+    almost there; still some work on filtering commented cmpd confs
+
+commit ea61bb98cdc580ddd6fd4e6d6107cbb108f55695
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sun Dec 13 15:08:11 2015 +0100
+
+    trying better file info
+
+commit 4c630ce27e8c7e1b0bcebf8a64f4a5cec7d9d4ee
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 12 15:35:51 2015 +0100
+
+    getting there; start with a list of enabled outputs, put them in an array. TODO: check if they are alsa outputs, etc.
+
+commit d2c347296813de690ae0b7bc0dedbc590f0f58c0
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Sat Dec 12 14:09:21 2015 +0100
+
+    new procedure for multiple alsa output devices; currently uses only the first one
+
+commit 26b54fdd1682d3028b77ec22e505fbfeb114facc
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 15:20:34 2015 +0100
+
+    almost there
+
+commit 5091e7cca8c13a58bf5f8a96ca5c3ad68ee22e34
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 12:23:53 2015 +0100
+
+    formatting
+
+commit c90aa6a3ca2cf124f51709c4ce6ea56a4b0de884
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 12:22:43 2015 +0100
+
+    added some detection for non-local mpd, closes #14
+
+commit 271da9eb6e416563105061bea8555be87c477801
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 11:18:33 2015 +0100
+
+    updated for mpd-monitor
+
+commit 879309b49356a8a926e02f2781eb8657e59b814d
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 11:17:54 2015 +0100
+
+    updated for mpd-monitor
+
+commit 2e53680e9a50953120f993e5585ac64ce0ad57eb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 11:13:18 2015 +0100
+
+    better description
+
+commit b1d621263dc335623dcb7bca3058ca5875c91bc2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri Dec 11 11:11:59 2015 +0100
+
+    fixed; proper outpur, no mpc dependancy
+
+commit badaffee4c1cd0750e3e54ac4dc7bb633d52954b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 13:56:25 2015 +0100
+
+    removed dummy function
+
+commit 8226ea5020485749a6a6bd5b333fab4e34eee351
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 13:54:44 2015 +0100
+
+    first working version
+
+commit a58348fb53152ea04bc8616ee186ec15523001f2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 11:37:43 2015 +0100
+
+    added -a option to filter on "hw:x,y" alsa interface
+
+commit 4b79427026e72c5fe7f99c81183b55578fbc4465
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 10:55:51 2015 +0100
+
+    updated remote git branch
+
+commit 94588b3336339b42cf9311742059f9f01c22d2bd
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Dec 10 10:54:00 2015 +0100
+
+    first try for mpd-monitor
+
+commit 5f5c57863235bcd26ffe9239751e9bd33cc0ae8e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed Dec 9 14:48:01 2015 +0100
+
+    fixed some serious errors
+
+commit dff06756ccfc62fc7c4e3eaa2912dc72da2d018a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Nov 19 09:35:01 2015 +0100
+
+    issue #11: replace associative array UO_EP_LABELS with simple array and string filtering
+
+commit 68f7a5e199ae6878ed0a8063ef65c0ef3c358d3e (tag: v0.1)
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 17:32:12 2015 +0200
+
+    fixed typo
+
+commit ce5047de6250c33187d93dae24add31e99d6da4a
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 17:29:56 2015 +0200
+
+    updated url
+
+commit 9c10a34ea3caf17d9f33f8bf723e4af82caf81a8
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 17:28:57 2015 +0200
+
+    added instruction to run directly from url
+
+commit 667da1d81ff4f9d758f5428ff5e444b993b0f70c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 17:04:41 2015 +0200
+
+    added empty string (scenario pipe curl output to bash)
+
+commit ac818c42ae2ce7135347ba17d35d03ebbdc6a4ae
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:58:05 2015 +0200
+
+    clearer seperation display and logic
+
+commit 878c4ff50207ea4db6388b14233692fc5da30d8b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:21:11 2015 +0200
+
+    typo in fetch_alsa_outputinterfaces
+
+commit f2b24aef6ed44c1fc9d36824f8baebef861e0a44
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:19:48 2015 +0200
+
+    reversed other condition in get_locking_process
+
+commit 0aaadf02eebdfabfb20f37dbc71c3f9c7f358aeb
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:18:42 2015 +0200
+
+    reversed condition in get_locking_process
+
+commit 3243549173d0f180eab9728345d27019ea26e3ae
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 16:17:47 2015 +0200
+
+    fixed get_locking_process
+
+commit 08ba06bccc82690b43b082768ca8db72611e8fce
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:47:03 2015 +0200
+
+    added clarification
+
+commit 4a1ead56379c50ce6f5048581424330e32b83a76
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:45:54 2015 +0200
+
+    check for no soundcards or other alsa error: typo
+
+commit fa54ab100fd02a9d89fee92d0d60df9a0e6bcce2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:45:10 2015 +0200
+
+    check for no soundcards or other alsa error
+
+commit c6618f5df809aa6c503bd9b2b6025a18fcaff3f7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:39:00 2015 +0200
+
+    cechk for empty alsa output
+
+commit eb834346aaaeed4f7d4400120303bae37d662961
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:22:42 2015 +0200
+
+    some text updates
+
+commit 7c61ece56b5c4bc48c557cf5d216bf2f60f35bd2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:19:24 2015 +0200
+
+    really default to empty string
+
+commit e33409966b7d175a7623253e70117b0819034778
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:18:50 2015 +0200
+
+    default to empty string
+
+commit f3e4bd4a513decc625401df81287f0e75439d15e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:17:49 2015 +0200
+
+    make no aplay fatal
+
+commit 9ba9cfc1868f9ded0ae9f8db21807330edd3ea46
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Wed May 13 15:14:38 2015 +0200
+
+    new year
+
+commit 95c97f4b3b931a44cc693e9e42ce8e1066551ca4
+Merge: 371a9c9 3d1f845
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed May 13 15:07:29 2015 +0200
+
+    merged conflicts
+
+commit 371a9c9ae78a61479cea737e9d71f8d75e87e13c
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed May 13 15:05:03 2015 +0200
+
+    added exception for lack of /dev/urandom
+
+commit 3d1f845b4d282f8c7ea63bc47d03125636d70d86
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 11 15:56:52 2015 +0200
+
+    smaal change in network port HANDLING
+
+commit 3a9b9b8c6dae8da2accedd929636484e1e426d9e
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 11 13:16:55 2015 +0200
+
+    using ls -fR instead of find or bash globbing, see http://stackoverflow.com/questions/1427032/fast-linux-file-count-for-a-large-number-of-files
+
+commit a2b7c0c96b2080e9621413f31744288e2f5eacb7
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 11 13:10:51 2015 +0200
+
+    fixed syntax error for bash globbing
+
+commit 352378c3c8bc5f9e2c559c4827c9bbf9b68d0e8b
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon May 11 13:03:09 2015 +0200
+
+    modified to work with newer alsa-capabilities and added a lot of debugging info
+
+commit e7af30e369916256aacfcb4768a65beb1eff6355
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 20:34:36 2015 +0200
+
+    better handling of uac class determination
+
+commit 0db803ff8b015e75dd940b16ff47429cd2ce5553
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 20:27:05 2015 +0200
+
+    fixed output of usage of character device
+
+commit ec0c5db6bc7bcfebc6d22a183b7f13bc0d2d15a5
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 18:06:23 2015 +0200
+
+    fixed random device checking and usage of fuser and ps
+
+commit 567eda96150d866eccc3c9afc822dbf176dba8b2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Fri May 8 17:35:31 2015 +0200
+
+    more robust error checking; still not done though with checking access to devices
+
+commit db3b6731f9fc2b7809e1028bed6f4ab0d4aaa97c
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 5 11:29:38 2015 +0100
+
+    added some clarification about the compatibility with regard to issue #10
+
+commit 47457998b4f3321a694be51614803d0ff65ebbf2
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Thu Mar 5 10:58:50 2015 +0100
+
+    double semi columns after last item in case statement removed for greater portability. See issue #10
+
+commit 345def316339976e78ef176f4242a316cf505089
+Author: Ronald van Engelen <ronalde+github@lacocina.nl>
+Date:   Mon Jan 26 12:18:13 2015 +0100
+
+    addition to ugly temporary hack to fix issue #8. Unset bash options -u and -e.
+
+commit 91b49cf1b9626659cb777cdb42e2c40499766f7d
+Author: Naomi Rommen <naoom@lacocina.nl>
+Date:   Wed Nov 12 09:31:06 2014 +0100
+
+    ugly temporary hack to fix issue #8. Unset bash options -u and -e which were introduced by commit:226a9f729c4034df1245b7c29f21d12f9ee8811c
+
+commit 226a9f729c4034df1245b7c29f21d12f9ee8811c
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Oct 13 10:14:39 2014 +0200
+
+    * Added `set -u' and `set -e' to make the script more robust.
+    * with those options set, identified and fixed some problems regarding
+      unitialized variables and erronous return values caused by
+      terminating procedures with the test `[[ ! -z "${DEBUG}" ]] && debug
+      ...` which return false if DEBUG isn't set.
+
+commit afcb715b77b087ca981afd686a0422382c8fc6a9
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 17:38:25 2014 +0200
+
+    (re) implemented pulseaudio handling
+
+commit ce089f0089093c8c056968c998b7abba508c6905
+Merge: 065f662 f3ea3a8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 11:51:55 2014 +0200
+
+    Merge branch 'master' into pulsehandler
+
+commit f3ea3a862499c6ee10fd0be305f6ed946fc9a140
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 07:33:27 2014 +0200
+
+    syntax error fixed, fixes #7
+
+commit 065f66202f017a7b3dfe74998ecba28926a13cc0
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 15 07:28:28 2014 +0200
+
+    prelimenary
+
+commit c29b67559a0ebbffaee16a2e66ea77d153f746a5
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sun May 11 13:29:27 2014 +0200
+
+    Fixes for output alsa configuration
+    
+    - moved some options inside `audio output { ... }`
+    - added `dsd_usb` option for DoP support
+
+commit 417e8090b2bd23ca1790c67081fe767db65e6ef8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sun May 11 12:51:53 2014 +0200
+
+    todo removed
+
+commit af0ff624d00eec6c8ab581816f99dc4de2a2bc14
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sun May 11 12:48:34 2014 +0200
+
+    minor tweaks regarding G_CLIENTLIMITS_MAXPLAYLISTLENGTH
+
+commit 55b35e059dcc9c6330ba7397554969089740533a
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 15:00:36 2014 +0200
+
+    formatting
+
+commit 31ead6c9af4db22bff5b05850c963c61bb3e2bc5
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 14:59:17 2014 +0200
+
+    small error in hostname
+
+commit 750e1ec3659f839089df6562d5acf800873b29dc
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 14:56:47 2014 +0200
+
+    diverse fixes
+
+commit 1e1ae27354ebd829d29e27ef6eeba2199af27c7a
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 12:25:57 2014 +0200
+
+    Final fixes of auto configuration stuff
+    
+    . fixes #3
+    . fixes #5
+
+commit abd870267930944d76850dee1ac5f3c3dec8b6b8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:36:57 2014 +0200
+
+    typos
+
+commit 44219382b73c6ee6311c05782870b45b93b19583
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:36:02 2014 +0200
+
+    typos
+
+commit c38b28a2a7e2d35f82a16ff1005a5336f1fd45ba
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:32:25 2014 +0200
+
+    typos
+
+commit 6c5ac50f8b68a43877162812460a9241d850a352
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:31:01 2014 +0200
+
+    typos
+
+commit 6957f7ce3293e6f7eb11805d1f7cc1df21a99c7d
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:27:32 2014 +0200
+
+    for github rendering
+
+commit 36b84f141c6149205b3e433972bc80b24312f4dc
+Merge: a082c98 748338d
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:25:34 2014 +0200
+
+    resolving merge
+
+commit a082c988f99bad9fdbfff34018490313236ddc56
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat May 10 11:21:41 2014 +0200
+
+    updated mpd-configure.conf and README to refelct changes
+
+commit 92811af3dc04eba1f47196762d465c795d306ebf
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri May 9 19:41:05 2014 +0200
+
+    working sofar
+
+commit e158f33673596453fdc571a2a57fa591ccb07570
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri May 9 11:20:54 2014 +0200
+
+    Configuration snippets overhaul
+    
+    - closes #4
+
+commit 748338ddb24e93fabe9ec9ffd85d0975b96ae95e
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 8 16:38:15 2014 +0200
+
+    updated with \`git log --decorate >changelog\`
+
+commit 057b86e1456fd3e87d9ff148785c64f99e3c35c6
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu May 8 16:23:33 2014 +0200
+
+    removed example lastfm plugin
+
+commit 0d59e8dd420bc61db28eeb16e99da4769dcf3b5a
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 22 10:59:20 2014 +0200
+
+    documented conf snippets
+
+commit 376ea826a7a97be675e83e8f7d7be647c46fe051
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 15:36:06 2014 +0200
+
+    added example
+
+commit 767de396a76219aea35c800f794b027ff322a5f1
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 15:34:33 2014 +0200
+
+    fixed formatting
+
+commit bac2981d2178e02488b39f6e3874ceeb71e86de3
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 15:33:57 2014 +0200
+
+    fixed formatting
+
+commit 33e3cadf0b689062c1de82b0bab72b40826fd1a5
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 14:41:08 2014 +0200
+
+    example custom script and usage for python added
+
+commit 9fc6ef00c1cfd85b88edfe54c71bd8e9e96dc302
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 13:58:51 2014 +0200
+
+    updated README to reflect changing to confs-enabled based configuration snippets
+
+commit 5b09f1b556fc5fa94de71383dac2cfe538b86213
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 13:51:38 2014 +0200
+
+    obsolete, already settings defined in general.conf
+
+commit 39ec2aec7ba31b8df8e3266d8d36d7d7b17c7eaa
+Merge: a044382 cfeddd9
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 13:44:33 2014 +0200
+
+    Merge branch 'confsnippets'
+
+commit a04438210314f8eb6486051bfebcf3176d482ef8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 13:42:46 2014 +0200
+
+    small bugfix: fixed write_conffile and really_write
+
+commit cfeddd91450621ba651d95bcb450e5f6c3b53a41
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Apr 21 13:40:19 2014 +0200
+
+    configuration snippets in seperate files
+
+commit cbe4b7c9523566131cdc1559e125d6d8a95bd4f9
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:33:09 2014 +0200
+
+    some more cross selling
+
+commit dc5b086766fede0eb0ebe2a5e6b453eb867883e4
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:30:42 2014 +0200
+
+    small typo fixed in README
+
+commit 72c2cf2f376f4cf38cd01745ad3002092a7aca18
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:29:18 2014 +0200
+
+    small typo fixed in README
+
+commit 8c27db27e4b2f23f6a72ef4b10af372b31baf324
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:06:21 2014 +0200
+
+    removed a temporary debug statement
+
+commit 31d50779040704a61087915a2eed6dc2d7ebebda
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 19:02:59 2014 +0200
+
+    Small fix
+    * `alsa-capabilities`: fixed the error which caused the script to not
+      display the process that had exclusive access ton an interface
+
+commit 78be6cae1d730480d80eaa6ee2d2ce32b4abab83
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Apr 18 18:06:18 2014 +0200
+
+    Major update and rewrite
+     * moved `tests/detect-alsa-output-capabilities.sh` to `alsa-capabilities`
+     * modified `alsa-capabilities` to make it suitable to be sourced or
+       run from the command line
+     * added simple and regexp filtering to `alsa-capabilities`
+     * removed alsa interface detection logic out of `mpd-configure`. This
+       is now done sourcing `alsa-capabilities`.
+     * modified `mpd-configure` to not write to a file by default (see
+       updated `README`)
+
+commit 245e625d23f9cfe48899fdfad81ca419d4246086
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Apr 9 08:48:45 2014 +0200
+
+    typo
+
+commit 58a8ac92e48f80924b0485f3ae269efe211cefad
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 16:09:07 2014 +0200
+
+    replaced "echo -e" with "printf"
+
+commit 6b151f4119b37338d30f384a45183526f65c5004
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 16:02:31 2014 +0200
+
+    some minor tweaks
+
+commit ace470209d2eb8a7fbe8a6d248428e46c29ef977
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 16:00:59 2014 +0200
+
+    and saved some shell spawns more
+
+commit c0b80db40596e54a5b5ee26e7c749436d9a64467
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 14:25:36 2014 +0200
+
+    saved a few shell spawns
+
+commit 65866d17ed2fb78df1f1b1b70377c2ab7a89ebf9
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 13:50:09 2014 +0200
+
+    small display improvements
+
+commit 35b16d2cd0d85c04c5bfb92c1bbd42332e3398bc
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Tue Apr 8 12:58:29 2014 +0200
+
+    Additional functionality:
+     - one may now monitor (`watch`) the `hw_params` file for a non-UAC
+       digital audio interface
+    Improvements:
+     - `fetch_alsadevices_list`: put the display (`summarize`) and prompt
+       (`prompt_watch`) functionality in their own functions
+     - `alsa_device_busy`: improved the handling of failed `lsof` attempts
+       when a program
+       (other than pulseaudio) has the alsa hw device in use: now it
+       informs the user and advices to run the script as root
+     - improved the display and naming of the results (see global vars and
+       `summarize`)
+    Cleanup:
+     - adhere to the bash styleguide (function prefix for functions)
+
+commit eb8fb72c69f743ea7f6618a5119235419feb9eba
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Sat Apr 5 11:20:11 2014 +0200
+
+    * accidently deleted the dollar sign
+
+commit fa31614f0c191d7eef4c2c1ad38e5c8d9f7de22c
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 18:46:10 2014 +0200
+
+    added tests/samples/cat-stevens-wild-world-hdtracks-32-96.wav to .gitignore
+
+commit 027cdcf5e734f3857350be923885d297719311e7
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 18:45:41 2014 +0200
+
+    added tests/samples/cat-stevens-wild-world-hdtracks-24-96.wav to .gitignore
+
+commit 35c483df49aaa899d3b122f39be58f7356286f88
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 18:45:20 2014 +0200
+
+    added tests/samples/cat-stevens-wild-world-hdtracks-24-192.wav to .gitignore
+
+commit 18c1097cbcc73a28a6fd1d5c3c4b72738c6c7279
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 18:42:34 2014 +0200
+
+    added sample to .gitignore
+
+commit 097faaf51c1f744bd0cc65eee4ebf4250faec77c
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 18:14:13 2014 +0200
+
+    added latest commits
+
+commit 6e7199149ad643d27e33376bc8ecdc2553538b0a
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 17:40:50 2014 +0200
+
+    Small fixes
+    
+    * check if the preferences file (`mpd-configure.conf`) is present
+      before trying to source it
+    * simpler messages when done
+
+commit e5d8487f2355021fa8425367441776dcbad8ddd9
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 17:26:59 2014 +0200
+
+    Documentation fix
+    
+    * removed and changed non existing example variables
+    * changed paths to Debian defaults
+    * added example of using a command (`HOSTNAME="$(hostname)"`)
+
+commit f190d84554dc9113453e6de7b3c954b2e59c4537
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 17:17:49 2014 +0200
+
+    Small fix
+    
+    * added MPD_MUSICDIR: fixes the case when there's no XDG dirs and no
+      music dir specified
+
+commit 870ad15337889d3686d32df6803e6127373cbb54
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 17:09:59 2014 +0200
+
+    Bugfixes:
+    
+    * added SCRIPT_DIR: needed when script is called from another
+      directory
+    * added ALSA_OUTPUT_DISPLAY: fixes the display of card details in case
+      there's only one or USER_PROMPTS is set.
+
+commit b2c24e50bb3d3ad95395ced140fad0c0a22edf98
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 14:40:16 2014 +0200
+
+    reflected changes in commit:cb6d162ca4d48222b48c77414076f56ccb8062ae
+
+commit fc051ccab1582446b1ffca40342a78df4f1ae6d4
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 14:20:16 2014 +0200
+
+    Bugfixes:
+    
+    * replaced the alsa output device detection and selection mechanisms
+      with those from
+      https://github.com/ronalde/mpd-configure/detect-alsa-output-capabilities.sh
+      This makes it possible for the user to choose a device when multiple
+      devices are available.
+    * added a `APLAY_LIMIT_FILTER` variable which pre-filters the
+      available output devices. The resulting filtered list is the input
+      for the rest of the script, including the `APLAY_PREFERRED_FILTER`
+      filter which still works
+    * incorporated the contents of the `mpdconfigure-*` files in to the main
+      script, which were sourced in earlier versions
+    * removed the volume control functions because they didn't work
+      properly and didn't fit in the scripts typical usage
+
+commit a49772754fcee265dac349823a1ed15b100c847c
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Apr 3 11:20:34 2014 +0200
+
+    Cleaned up a bit according to http://mywiki.wooledge.org/BashGuide/Practices
+
+commit 1982570e54966f48af75d286d3e5805951b1f869
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Apr 2 18:01:13 2014 +0200
+
+    rewritten to minimize user interaction and handling of pulseaudio.
+
+commit c8446f42d8c39ce92c12db7d57076ed5aec5bb2e
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Apr 2 11:29:51 2014 +0200
+
+    rewritten to fix a problem watching the stream
+
+commit ee60836065f314b45b41617d05cdd9ca66c90511
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Mar 20 17:28:42 2014 +0100
+
+    house keeping
+
+commit e0324f8342d0aaadf490c9ca12d825126b580330
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Thu Mar 20 12:58:22 2014 +0100
+
+    script added to detect capabilities of an alsa digital audio output device; see: http://lacocina.nl/2013/04/19/alsa-highres/
+
+commit 7e93e531f8180a0d49fc74fdf8591a601d2c2854
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 15 18:52:06 2014 +0100
+
+    fixed last commit
+
+commit 7c4c6df81d2cffe43e80e037eb170d43bba0d2ce
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 15 18:50:31 2014 +0100
+
+    fixed last commit
+
+commit 8f9038f1b9f3e277988a75467df624f6781a38a0
+Merge: 1c75a79 58f3224
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 15 18:45:16 2014 +0100
+
+    Merge branch 'master' of github.com:ronalde/mpd-configure
+
+commit 1c75a79d5c522aa316241233759fef8d7bba545a
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 15 16:24:34 2014 +0100
+
+    option ZEROCONF_NAME added
+
+commit 58f322429accce3659e28f081f52a63c763a116d
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Jan 15 16:24:34 2014 +0100
+
+    option ZEROCONF_NAME added
+
+commit bcaeade075a7d7810d3bbc66c6c351cdea69be70
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Fri Nov 15 12:41:51 2013 +0100
+
+    mixer fixes
+
+commit bd9290eb7d45302a3b47be897ded8c823c400de2
+Merge: 4379d90 7409ec8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Nov 11 15:07:40 2013 +0100
+
+    TODO and changelog added
+
+commit 4379d9083681c006b5e183f89a5be1542f2cf729
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Nov 11 15:02:12 2013 +0100
+
+    TODO and changelog added
+
+commit 7409ec8b8fc404db4a1a7235339ea55906d12cc5
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Mon Nov 11 15:02:12 2013 +0100
+
+    TODO and changelog added
+
+commit 4215d82c9828e94a056236822d3d234799e79ec8
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 16:28:37 2013 +0200
+
+    prevent resampling and format conversion
+
+commit 1df45f4e0ab780d4a29b4796c6d823f02ffc09a1
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 16:09:03 2013 +0200
+
+    DRYRUN and DEBUG usage examples updated
+
+commit 01cfbd7feaf5aa9123d1679e0ecd4bb958dcd826
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 16:07:43 2013 +0200
+
+    DRYRUN and DEBUG usage examples
+
+commit a83f7039fa2246d644ad9b2ddcd3b62b3313602b
+Merge: b3b8de9 69d979f
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 16:00:57 2013 +0200
+
+    merge conflicts fixed
+
+commit b3b8de9ab3bd219fe5024b826525c4e682defc26
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 11:26:48 2013 +0200
+
+    - alsa card detection improved
+    - alsa volume control fixed
+    - handling of paths improved
+    - debug and dry-run handling fixed
+
+commit 69d979fed6a4e425c4c274f2e8ca91b5da982f93
+Merge: 6ee9f12 3bcb00f
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 13:42:14 2013 +0200
+
+    Merge branch 'master' of https://github.com/ronalde/mpd-configure
+    
+    Conflicts:
+            mpd-configure
+            mpdconfigure-alsa-functions
+            mpdconfigure-common-functions
+
+commit 6ee9f12c9464f6846a459056c9f10bccb9e4f8a6
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 11:26:48 2013 +0200
+
+    - alsa card detection improved
+    - handling of paths improved
+    - debug and dry-run handling fixed
+
+commit 3bcb00f362948125764efccce564f59e2212990e
+Author: Ronald van Engelen <ronalde@lacocina.nl>
+Date:   Wed Sep 18 11:26:48 2013 +0200
+
+    - alsa card detection improved
+    - handling of paths improved
+    - debug and dry-run handling fixed
+
+commit 5146749c1423144fcf94419c87f8dd7bed7b19f4
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Fri Apr 19 09:58:56 2013 +0200
+
+    Minor fixes
+
+commit 6dcc344e36ea24242bd75d3f1bd83c8018ea88c0
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Fri Apr 19 09:55:39 2013 +0200
+
+    Trying to make it more readable
+
+commit 961fa199622de521b8d4c45158e6296f0ce9748e
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Fri Apr 19 09:44:36 2013 +0200
+
+    - Added explanation which mpd.conf parameters will be modified by which preferebnce in mpdconfigure.conf
+    - Fixed using "USB Audio" as the default PREFERREDALSADEVICE.
+
+commit 864c9e62b7341acdd9e8906f7a41ac1fbfdef6f6
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Fri Apr 19 09:14:41 2013 +0200
+
+    more readable and consistent description of parameters
+
+commit e886daf88c6c834d79b01e8f2aef3627a5595e81
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 10:43:03 2013 +0200
+
+    fixed the mpd upstream url
+
+commit fe6f53e7ae823af8c5439a691a90abd27f27b13b
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 10:20:12 2013 +0200
+
+    GPL added
+
+commit b24759ba3431e59a18cb877294b0743581d0a913
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 10:00:30 2013 +0200
+
+    default settings comply with README
+
+commit 8b4ee1db53725a7cb97e61e0478a28b3602ea1f6
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 09:02:06 2013 +0200
+
+    specified bash to make the code more readable in git web view
+
+commit 618abe116b8ddfe96575d597864bf6fecc705195
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:59:52 2013 +0200
+
+    more rest in the README
+
+commit e71619764232bc28bbb71be650f1900db744e47f
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:56:29 2013 +0200
+
+    more rest in the README
+
+commit c7793495ad77920f316d9ac0cf7a17cec5c869d2
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:54:06 2013 +0200
+
+    more rest in the README
+
+commit a2ca46265dde86d726dbaa7130c7b314608fb94f
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:41:23 2013 +0200
+
+    more rest in the README
+
+commit 87abad0415b1d3ed9fa46d7686e27899b1473c51
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:33:28 2013 +0200
+
+    clarifications for non-ltsp-specific usage
+
+commit ffa91451acc9c25b75ff172cccb442a80157a925
+Author: Ronald van Engelen <r.v.engelen@gmail.com>
+Date:   Thu Apr 18 08:16:37 2013 +0200
+
+    first working version
+
+commit 0d8546bd271d79c4e545825b2293845c753f8bb9
+Author: ronalde <r.v.engelen@gmail.com>
+Date:   Wed Apr 17 22:34:02 2013 -0700
+
+    Initial commit

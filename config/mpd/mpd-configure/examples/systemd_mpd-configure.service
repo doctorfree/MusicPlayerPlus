@@ -1,0 +1,47 @@
+## Sample systemd service file for mpd-configure which updates
+## /etc/mpd.conf prior to starting the mpd.service.
+##
+## This file should be copied to
+## /usr/lib/systemd/system/mpd-configure.service
+## or, on Debian based ditros to:
+## /lib/systemd/system/mpd-configure.service
+## after which it should be made known by running:
+## systemctl daemon-reload
+## 
+## This example assumes the scripts are downloaded to
+## /var/lib/mpd/mpd-configure and that its config file
+## (/var/lib/mpd/mpd-configure/mpd-configure.conf) is empty (or has
+## proper settings).
+## Also make sure that the `User` specified below has access to the
+## target file specified by `CONF_MPD_CONFFILE`.
+## In this example the first available USB Audio Class playback device
+## recognized by alsa will be used.
+## 
+## After copying the file it can be managed using systemd. For example
+## to start it manually:
+##  systemctl start mpd-configure
+## or
+##  systemctl restart mpd
+## 
+## To enable it to start on boot:
+##  systemctl enable mpd-configure
+
+[Unit]
+Description=Automatic configuration for mpd
+## make sure sound and network are working
+After=network.target sound.target
+## make sure it runs before mpd is started
+Before=mpd.service
+## instruct systemd that mpd should be started, without it being a
+## forced requirement. This way the mpd-configure.service remains
+## independent from the succesful starting of the mpd.service.
+Wants=mpd.service
+
+[Service]
+Environment="CONF_MPD_MUSICDIR=/srv/media/music"
+Environment="CONF_MPD_HOMEDIR=/var/lib/mpd"
+ExecStart=/var/lib/mpd/mpd-configure/mpd-configure \
+ --limit usb --noprompts --nobackup --quiet --output /etc/mpd.conf
+
+[Install]
+WantedBy=default.target

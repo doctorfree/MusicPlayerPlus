@@ -569,7 +569,7 @@ bool load_config(char configPath[PATH_MAX], struct config_params *p, bool colors
         break;
 #endif
     case INPUT_FIFO:
-        p->audio_source = strdup(iniparser_getstring(ini, "input:source", "/tmp/mpd.fifo"));
+        p->audio_source = strdup(iniparser_getstring(ini, "input:source", "~/.config/mpd/mpd.fifo"));
         p->fifoSample = iniparser_getint(ini, "input:sample_rate", 44100);
         p->fifoSampleBits = iniparser_getint(ini, "input:sample_bits", 16);
         break;

@@ -6,7 +6,8 @@
 # Also setup default tmux configuration for this user
 # Install required pip modules if not already installed
 
-CONFDIR=/usr/share/doc/musicplayerplus/mpcplus
+MPPCDIR=/usr/share/doc/musicplayerplus
+CONFDIR=${MPPCDIR}/mpcplus
 WITHART="album_cover.sh catalog.conf cava-tmux.conf \
          cover_obs.sh default_cover.png fzmp.conf"
 
@@ -171,41 +172,70 @@ do
   }
 done
 
-[ -f /etc/mpd.conf ] || {
-  echo "/etc/mpd.conf missing"
-  echo "Check/reinstall mpd"
-  exit 1
-}
-
-mpd_music=`grep ^music_directory /etc/mpd.conf`
-[ "${mpd_music}" ] || mpd_music=`grep \#music_directory /etc/mpd.conf`
-mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-[ "${mpd_music}" ] || {
-  echo "Could not detect any music_directory setting in /etc/mpd.conf"
-  echo "Manual configuration of /etc/mpd.conf and ${HOME}/${MPCDIR}/config required"
-  exit 1
-}
-
-mpc_custom=1
-mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
-[ "${mpc_music}" ] || {
-  mpc_music=`grep \#mpd_music_dir ${HOME}/${MPCDIR}/config`
-  mpc_custom=
-}
-mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
-[ "${mpd_music}" == "${mpc_music}" ] || {
-  if [ "${mpc_custom}" ]
+# If there is no user MPD config
+# then copy the MusicPlayerPlus MPD config folder
+# into the user's home and setup user MPD service
+MPDCONFDIR="${HOME}/.config/mpd"
+MPDCONF="${MPDCONFDIR}/mpd.conf"
+[ -f ${MPDCONF} ] || {
+  if [ -d ${MPDCONFDIR} ]
   then
-    cat ${HOME}/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
   else
-    cat ${HOME}/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    cp -a ${MPPCDIR}/mpd ${MPDCONFDIR}
   fi
-  cp /tmp/newconf$$ ${HOME}/${MPCDIR}/config
-  rm -f /tmp/newconf$$
-  cat ${HOME}/${MPCDIR}/catalog.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/catalog$$
-  cp /tmp/catalog$$ ${HOME}/${MPCDIR}/catalog.conf
-  rm -f /tmp/catalog$$
 }
+
+mpd_music=`grep ^music_directory ${MPDCONF}`
+[ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+if [ "${mpd_music}" ]
+then
+  mpc_custom=1
+  mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
+  [ "${mpc_music}" ] || {
+    mpc_music=`grep \#mpd_music_dir ${HOME}/${MPCDIR}/config`
+    mpc_custom=
+  }
+  mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
+  [ "${mpd_music}" == "${mpc_music}" ] || {
+    if [ "${mpc_custom}" ]
+    then
+      cat ${HOME}/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    else
+      cat ${HOME}/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/newconf$$
+    fi
+    cp /tmp/newconf$$ ${HOME}/${MPCDIR}/config
+    rm -f /tmp/newconf$$
+    cat ${HOME}/${MPCDIR}/catalog.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/catalog$$
+    cp /tmp/catalog$$ ${HOME}/${MPCDIR}/catalog.conf
+    rm -f /tmp/catalog$$
+  }
+
+  # Disable and stop any system-wide MPD service
+  systemctl is-active --quiet mpd.service
+  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
+  systemctl is-enabled --quiet mpd.service
+  [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.service
+
+  # Enable and activate the MPD user service
+  systemctl --user is-active --quiet mpd.service
+  if [ $? -eq 0 ]
+  then
+    # User service is active, restart to pickup any config changes
+    systemctl --user restart --quiet mpd.service
+  else
+    systemctl --user start --quiet mpd.service
+  fi
+  systemctl --user is-enabled --quiet mpd.service
+  [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
+  have_mpc=`type -p mpc`
+  [ "${have_mpc}" ] && mpc update --quiet
+else
+  echo "WARNING:"
+  echo "Could not detect any music_directory setting in ${MPDCONF}"
+  echo "Manual configuration of ${MPDCONF} and ${HOME}/${MPCDIR}/config required"
+fi
 
 # Setup default tmux configuration for this user unless terminal-overrides has already been set
 [ -f ${CONFDIR}/tmux.conf ] && {
