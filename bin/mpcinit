@@ -186,6 +186,16 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
   fi
 }
 
+CONF=${HOME}/.config
+FIFS="mpcplus/catalog.conf mpcplus/cava-tmux.conf mpcplus/config mppcava/config"
+for cnf in ${FIFS}
+do
+  [ -f ${CONF}/${cnf} ] || continue
+  cat ${CONF}/${cnf} | sed -e "s/\/home\/USERNAME/$HOME/" > /tmp/cnf$$
+  cp /tmp/cnf$$ ${CONF}/${cnf}
+  rm -f /tmp/cnf$$
+done
+
 mpd_music=`grep ^music_directory ${MPDCONF}`
 [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
 mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
