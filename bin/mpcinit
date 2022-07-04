@@ -195,9 +195,9 @@ then
   [ -d "${mpd_music}" ] || {
     if [ -d "${HOME}/Music" ]
     then
-      ln -s "${HOME}/Music" "${mpd_music}"
+      ln -s ${HOME}/Music ${mpd_music}
     else
-      mkdir -p "${mpd_music}"
+      mkdir -p ${mpd_music}
     fi
   }
   mpc_custom=1
