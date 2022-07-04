@@ -46,6 +46,15 @@ do
   }
 done
 
+[ -f ${HOME}/.config/mppcava/config ] || {
+  if [ -d ${HOME}/.config/mppcava ]
+  then
+    cp ${MPPCDIR}/mppcava/config ${HOME}/.config/mppcava/config
+  else
+    cp -a ${MPPCDIR}/mppcava ${HOME}/.config/mppcava
+  fi
+}
+
 create_new_profile() {
   local proterm="$1"
   local proname="$2"
@@ -191,7 +200,7 @@ FIFS="mpcplus/catalog.conf mpcplus/cava-tmux.conf mpcplus/config mppcava/config"
 for cnf in ${FIFS}
 do
   [ -f ${CONF}/${cnf} ] || continue
-  cat ${CONF}/${cnf} | sed -e "s/\/home\/USERNAME/$HOME/" > /tmp/cnf$$
+  cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
   cp /tmp/cnf$$ ${CONF}/${cnf}
   rm -f /tmp/cnf$$
 done

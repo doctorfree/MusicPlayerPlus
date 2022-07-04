@@ -168,6 +168,7 @@ ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus/mppcava.conf
 
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpd"
+${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava"
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/music"
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
