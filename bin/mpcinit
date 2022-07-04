@@ -191,6 +191,15 @@ mpd_music=`grep ^music_directory ${MPDCONF}`
 mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 if [ "${mpd_music}" ]
 then
+  # Create mpd_music directory if it does not exist
+  [ -d "${mpd_music}" ] || {
+    if [ -d "${HOME}/Music" ]
+    then
+      ln -s "${HOME}/Music" "${mpd_music}"
+    else
+      mkdir -p "${mpd_music}"
+    fi
+  }
   mpc_custom=1
   mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
   [ "${mpc_music}" ] || {
@@ -215,8 +224,12 @@ then
   # Disable and stop any system-wide MPD service
   systemctl is-active --quiet mpd.service
   [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
+  systemctl is-active --quiet mpd.socket
+  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.socket
   systemctl is-enabled --quiet mpd.service
   [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.service
+  systemctl is-enabled --quiet mpd.socket
+  [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.socket
 
   # Enable and activate the MPD user service
   systemctl --user is-active --quiet mpd.service

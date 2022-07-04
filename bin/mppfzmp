@@ -1,0 +1,30 @@
+#!/bin/bash
+
+MTITLE="MusicPlayerPlus Fuzzy Finder"
+MPCOMM="fzmp -a"
+
+have_fzmp=`type -p fzmp`
+[ "${have_fzmp}" ] || exit 1
+
+have_gnome=`type -p gnome-terminal`
+have_tilix=`type -p tilix`
+
+if [ "${have_tilix}" ]
+then
+  tilix --title="${MTITLE}" \
+        --window-style=borderless \
+        --geometry=90x20+150+25 \
+        --profile=MusicPlayer \
+        --command="${MPCOMM}" 2> /dev/null
+else
+  if [ "${have_gnome}" ]
+  then
+    gnome-terminal --title="${MTITLE}" \
+        --profile=MusicPlayer \
+        --hide-menubar \
+        --geometry=90x20+150+25 \
+        -- ${MPCOMM}
+  else
+    ${MPCOMM}
+  fi
+fi

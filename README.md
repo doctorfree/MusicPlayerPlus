@@ -291,6 +291,15 @@ audio_output {
 }  
 ```
 
+Output with PipeWire can also be configured:
+
+```
+audio_output {
+    type  "pipewire"
+    name  "PipeWire Sound Server"
+}
+```
+
 MPD is a powerful and flexible music player server with many configuration
 options. Additional MPD configuration may be desired. See the
 [MPD User's Manual](https://mpd.readthedocs.io/en/stable/user.html)

@@ -187,6 +187,7 @@ the **mpcplus** music player client.
 -   `[ Alt-8 ]` - Set xfce4-terminal window transparency to 20%
 -   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
 -   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
+-   `[ Alt-f ]` - Open the fuzzy finder to search/select media
 -   `[ Alt-r ]` - Raise/lower the Cava terminal window
 
 # KEYS - TINY TAG EDITOR
