@@ -189,15 +189,17 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
 mpd_music=`grep ^music_directory ${MPDCONF}`
 [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
 mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+# Need to expand the tilda to $HOME
+exp_music="${mpd_music/#\~/$HOME}"
 if [ "${mpd_music}" ]
 then
   # Create mpd_music directory if it does not exist
-  [ -d "${mpd_music}" ] || {
+  [ -d "${exp_music}" ] || {
     if [ -d "${HOME}/Music" ]
     then
-      ln -s ${HOME}/Music ${mpd_music}
+      ln -s ${HOME}/Music ${exp_music}
     else
-      mkdir -p ${mpd_music}
+      mkdir -p ${exp_music}
     fi
   }
   mpc_custom=1
