@@ -1,9 +1,14 @@
 Changes in this release include:
 
+* Add support for Raspberry Pi
 * Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
+* Check if DISPLAY can be used and if not execute in console mode using tmux
+* Configure MPD with user systemd service using configuration in `~/.config/mpd/`
+* Add `Alt-f` mpcplus key binding to search music library using `fzf`
+* Configure MPD user service in mpcinit, move MPD fifo to user MPD config dir
 * Add option to specify alternate spectrum visualizer
 * Create terminal profiles in mpcinit
-* Use gnome-terminal for default rather than xfce4-terminal
+* Use gnome-terminal as default rather than xfce4-terminal
 * Add fzmp command and fzf dependency
 * Add command line option to invoke fzmp
 * Add support for fzmp to interactive menu in mpplus
@@ -12,7 +17,6 @@ Changes in this release include:
 * Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
 * Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
 * Added asciinema dependency
-* Add support for Raspberry Pi
 
 Previous changes in version 1.0.2 include:
 
