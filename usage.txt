@@ -29,7 +29,7 @@ ASCIImatics animation options:
 	-s song specifies a song to accompany an ASCIImatics animation
 		'song' can be the full pathname to an audio file or a
 		relative pathname to an audio file in the MPD music library
-		or $HOME/Music/
+		or /home/ronnie/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art
@@ -39,9 +39,7 @@ General options:
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
-		MPD actions will be applied to both the MPD service
-		and the MPD socket service while ALSA configuration
-		will update the ALSA configuration in '/etc/asound.conf'
+		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-z fzmpopt specifies the fzmp option and invokes fzmp to

@@ -347,8 +347,20 @@ Several other `fzmp` bindings and options can be configured. See `man fzmp`
 for details.
 
 ### Start MPD
+**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform
+an automated MPD user configuration and systemd service activation.
+Initialization with `mpcinit` for these installations should automatically
+start the user MPD service. No further action should be required for
+MusicPlayerPlus v1.0.2r2 or later installations.
 
-If this is a fresh installation of MPD, start mpd by executing the command:
+Status of the MPD service can be checked with:
+
+```
+systemctl --user status mpd.service
+```
+
+Installation and initialization of MusicPlayerPlus prior to v1.0.2r2
+will need to start mpd as a system-wide service by executing the commands:
 
 `sudo systemctl start mpd`
 
@@ -356,20 +368,25 @@ If you want MPD to start automatically on subsequent reboots, run:
 
 `sudo systemctl enable mpd`
 
-And if you want MPD to start automatically when a client tries to connect:
+Alternatively, if you want MPD to start automatically when a client
+attempts to connect:
 
 `sudo systemctl enable mpd.socket`
 
 ### Initialize Music Database
-To initialize the music database, after configuring MPD as described above,
-launch an MPD client and update the database. The `mpcplus` MPD client can
-be used for this or the standard `mpc` MPD client can be used.
+**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform an
+automated MPD music database initialization during execution of `mpcinit`.
 
-After launching the MPD client make sure the MPD client window has focus
-and type `u`. This should trigger a database update. If your music library
-is large this process can take several minutes to complete. Once the music
-database has been updated you should see the songs, albums, and playlists
-in your music library appear in the MPD client view.
+For versions of MusicPlayerPlus prior to v1.0.2r2, initialize the music
+database with an MPD client and update the database. The `mpcplus` MPD
+client can be used for this or the standard `mpc` MPD client can be used.
+With `mpcplus`, launch the `mpcplus` MPD client, verify the client window
+has focus, and type `u` to update the database. With `mpc` simply execute
+the command `mpc update`.
+
+If your music library is very large this process can take several minutes
+to complete. Once the music database has been updated you should see the
+songs, albums, and playlists in your music library appear in the client view.
 
 ### Terminal Emulator Profiles
 The Cava spectrum visualizer looks better when the font used by the
@@ -452,19 +469,17 @@ ASCIImatics animation options:
 	-s song specifies a song to accompany an ASCIImatics animation
 		'song' can be the full pathname to an audio file or a
 		relative pathname to an audio file in the MPD music library
-		or $HOME/Music/
+		or /home/ronnie/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
+		the 'music_directory' setting in '/etc/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
-		MPD actions will be applied to both the MPD service
-		and the MPD socket service while ALSA configuration
-		will update the ALSA configuration in '/etc/asound.conf'
+		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
@@ -668,10 +683,10 @@ settings, run the command `alsa_audio_test -u`
 Another source of problems to investigate is the Music Player Daemon (MPD).
 This is the music streaming server that MusicPlayerPlus connects to. MPD
 is run as a system service that runs automatically. You can check the status
-of the MPD service by running the command `systemctl status mpd`. You can
-restart the MPD service with `sudo systemctl restart mpd`. If the issue is
-not resolved by a restart or reboot, check the MPD log file at
-`/var/log/mpd/mpd.log` looking for recent failures and exceptions.
+of the MPD service by running the command `systemctl --user status mpd`.
+You can restart the MPD service with `systemctl --user restart mpd.service`.
+If the issue is not resolved by a restart or reboot, check the MPD log file
+at `$HOME/.config/mpd/log` looking for recent failures and exceptions.
 
 It may be the case that the root of a problem is a missing dependency.
 MusicPlayerPlus should have installed any missing dependencies but one

@@ -47,6 +47,7 @@ PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 VISUALIZER=mppcava
+CONSOLE_MODE=
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
@@ -88,9 +89,7 @@ usage() {
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"
-  printf "\n\t\tMPD actions will be applied to both the MPD service"
-  printf "\n\t\tand the MPD socket service while ALSA configuration"
-  printf "\n\t\twill update the ALSA configuration in '/etc/asound.conf'"
+  printf "\n\t\tALSA configuration will update the ALSA configuration in '/etc/asound.conf'"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
@@ -211,7 +210,7 @@ make_it_so() {
               -- ${VISUALIZER} &
       fi
     fi
-    sleep 2
+    sleep 1
   }
   # End visualizer startup section
 
@@ -233,45 +232,50 @@ make_it_so() {
   fi
 
   # Begin MPD client startup section
-  if [ "${RETRO}" ]
+  if [ "${CONSOLE_MODE}" ]
   then
-    if [ "${FULLSCREEN}" ]
-    then
-      cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null
-    else
-      cool-retro-term -e "${MPCOMM}" 2> /dev/null
-    fi
+    ${MPCOMM}
   else
-    if [ "${FULLSCREEN}" ]
+    if [ "${RETRO}" ]
     then
-      if [ "${TILIX}" ]
+      if [ "${FULLSCREEN}" ]
       then
-        tilix --title="${MTITLE}" \
-              --full-screen \
-              --window-style=borderless \
-              --profile=MusicPlayer \
-              --command="${MPCOMM}" 2> /dev/null
+        cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null
       else
-        gnome-terminal --title="${MTITLE}" \
-              --profile=MusicPlayer \
-              --hide-menubar \
-              --full-screen \
-              -- ${MPCOMM}
+        cool-retro-term -e "${MPCOMM}" 2> /dev/null
       fi
     else
-      if [ "${TILIX}" ]
+      if [ "${FULLSCREEN}" ]
       then
-        tilix --title="${MTITLE}" \
-              --window-style=borderless \
-              --geometry=90x20+150+25 \
-              --profile=MusicPlayer \
-              --command="${MPCOMM}" 2> /dev/null
+        if [ "${TILIX}" ]
+        then
+          tilix --title="${MTITLE}" \
+                --full-screen \
+                --window-style=borderless \
+                --profile=MusicPlayer \
+                --command="${MPCOMM}" 2> /dev/null
+        else
+          gnome-terminal --title="${MTITLE}" \
+                --profile=MusicPlayer \
+                --hide-menubar \
+                --full-screen \
+                -- ${MPCOMM}
+        fi
       else
-        gnome-terminal --title="${MTITLE}" \
-              --profile=MusicPlayer \
-              --hide-menubar \
-              --geometry=90x20+150+25 \
-              -- ${MPCOMM}
+        if [ "${TILIX}" ]
+        then
+          tilix --title="${MTITLE}" \
+                --window-style=borderless \
+                --geometry=90x20+150+25 \
+                --profile=MusicPlayer \
+                --command="${MPCOMM}" 2> /dev/null
+        else
+          gnome-terminal --title="${MTITLE}" \
+                --profile=MusicPlayer \
+                --hide-menubar \
+                --geometry=90x20+150+25 \
+                -- ${MPCOMM}
+        fi
       fi
     fi
   fi
@@ -285,24 +289,13 @@ mpd_services() {
       echo "Executing: sudo alsa_conf -e -m"
       sudo alsa_conf -e -m
       ;;
-    restart)
-      echo "Executing: sudo systemctl stop mpd mpd.socket"
-      sudo systemctl stop mpd mpd.socket
-      sleep 1
-      echo "Executing: sudo systemctl start mpd.socket mpd"
-      sudo systemctl start mpd.socket mpd
-      ;;
-    start|enable|restart)
-      echo "Executing: sudo systemctl ${MPD_SERVICE_ACTION} mpd.socket mpd"
-      sudo systemctl ${MPD_SERVICE_ACTION} mpd.socket mpd
-      ;;
-    stop|disable)
-      echo "Executing: sudo systemctl ${MPD_SERVICE_ACTION} mpd mpd.socket"
-      sudo systemctl ${MPD_SERVICE_ACTION} mpd mpd.socket
+    start|stop|disable|enable|restart)
+      echo "Executing: systemctl --user ${MPD_SERVICE_ACTION} mpd.service"
+      systemctl --user ${MPD_SERVICE_ACTION} mpd.service
       ;;
     status)
-      echo "Executing: systemctl --full ${MPD_SERVICE_ACTION} mpd.socket mpd"
-      systemctl --full ${MPD_SERVICE_ACTION} mpd.socket mpd
+      echo "Executing: systemctl --user --full ${MPD_SERVICE_ACTION} mpd.service"
+      systemctl --user --full ${MPD_SERVICE_ACTION} mpd.service
       ;;
     *)
       echo "Unrecognized MPD service action: ${MPD_SERVICE_ACTION}"
@@ -313,13 +306,10 @@ mpd_services() {
 show_services_menu() {
   while true
   do
-    systemctl is-active mpd >/dev/null 2>&1 && m_active="active" || m_active="inactive"
-    systemctl is-active mpd.socket >/dev/null 2>&1 && s_active="active" || s_active="inactive"
-    systemctl is-enabled mpd >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
-    systemctl is-enabled mpd.socket >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
-    printf "\nCurrent status of Music Player Services:"
-    printf "\n\tMusic Player Service is ${m_enabled} and ${m_active}"
-    printf "\n\tMusic Player Socket Service is ${s_enabled} and ${s_active}\n\n"
+    systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
+    systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
+    printf "\nCurrent status of Music Player Service:"
+    printf "\n\tMusic Player Service is ${m_enabled} and ${m_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
     options=("Configure ALSA Sound System" "Enable Music Player Services" "Disable Music Player Services" "Start Music Player Services" "Stop Music Player Services" "Restart Music Player Services" "Get Status of Music Player Services")
     options+=("Main menu" "Quit")
@@ -710,6 +700,28 @@ init_vars() {
 }
 
 init_vars
+if [ "${DISPLAY}" ]
+then
+  have_xdpy=`type -p xdpyinfo`
+  if [ "${have_xdpy}" ]
+  then
+    xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+  else
+    if [ "${have_gnome}" ]
+    then
+      gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+    else
+      echo ""
+    fi
+  fi
+  [ $? -eq 0 ] || {
+    CONSOLE_MODE=1
+    TMUX_MPC=1
+  }
+else
+  CONSOLE_MODE=1
+  TMUX_MPC=1
+fi
 have_uebz=`type -p ueberzug`
 have_cantata=`type -p cantata`
 have_fzf=`type -p fzf`
@@ -717,6 +729,7 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
+
 while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
   case $flag in
     a)
@@ -726,9 +739,11 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
       ;;
     A)
       [ "${have_uebz}" ] && {
-        COVER_ART=1
-        TMUX_MPC=1
-        MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+        [ "${CONSOLE_MODE}" ] || {
+          COVER_ART=1
+          TMUX_MPC=1
+          MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+        }
       }
       ;;
     b)
