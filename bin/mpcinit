@@ -243,14 +243,14 @@ then
   }
 
   # Disable and stop any system-wide MPD service
-  systemctl is-active --quiet mpd.service
-  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
-  systemctl is-active --quiet mpd.socket
-  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.socket
   systemctl is-enabled --quiet mpd.service
   [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.service
   systemctl is-enabled --quiet mpd.socket
   [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.socket
+  systemctl is-active --quiet mpd.service
+  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
+  systemctl is-active --quiet mpd.socket
+  [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.socket
 
   # Enable and activate the MPD user service
   systemctl --user is-active --quiet mpd.service

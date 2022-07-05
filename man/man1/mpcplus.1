@@ -25,12 +25,13 @@
 .SH DESCRIPTION
 .PP
 \f[I]mpcplus\f[R] is an NCurses client for MPD (Music Player Daemon),
-inspired by ncmpc and configured to integrate with the Cava spectrum
-visualizer.
+inspired by ncmpc and configured to integrate with \f[V]mppcava\f[R], a
+customized fork of the Cava spectrum visualizer.
 .PP
 Read more about MPD at <http://www.musicpd.org>
 .PP
-Read more about Cava at <https://github.com/karlstav/cava>
+Read more about Cava at
+<https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme>
 .SH COMMAND LINE OPTIONS
 .PP
 Mandatory arguments to long options are mandatory for short options as
@@ -1020,15 +1021,18 @@ An example bindings file with default values can be found usually in
 /usr/share/doc/mpcplus (the exact location may depend on your operating
 system or configure prefix).
 .PP
-Mpcplus includes bindings to integrate with the Cava spectrum
-visualizer.
+Mpcplus includes bindings to integrate with \f[V]mppcava\f[R], a
+customized fork of the Cava spectrum visualizer.
 By default, these bindings are Alt-0 through Alt-9 to set the
 transparency of the terminal window in which mpcplus is running.
 Alt-1 sets the window to 90% transparent, Alt-2 to 80% and so on Alt-9
 to 10% transparent, and Alt-0 to 100% opaque.
-These transparency setting bindings are useful when running mpcplus and
-mppcava in separate overlapping windows, the spectrum visualizer visible
-through and behind the mpcplus window.
+These transparency setting bindings are useful when running
+\f[V]mpcplus\f[R] and \f[V]mppcava\f[R] in separate overlapping windows,
+the spectrum visualizer visible through and behind the mpcplus window.
+.PP
+Alt-f opens a terminal window or tmux pane running the fuzzy media
+finder \f[V]fzmp\f[R].
 .PP
 Alt-r raises/lowers the Cava window.
 .PP

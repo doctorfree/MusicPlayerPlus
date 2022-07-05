@@ -20,6 +20,9 @@ terminal using ALSA, pulseaudio or fifo buffer for input.
 This program is not intended for scientific use. It's written to look
 responsive and aesthetic when used to visualize music. 
 
+Read more about `mppcava` at
+https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
+
 # CONTROLS
 
 NOTE: only works in ncurses output mode.

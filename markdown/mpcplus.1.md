@@ -12,12 +12,14 @@ date: March 24, 2022
 **mpcplus** [options]
 
 # DESCRIPTION
-*mpcplus* is an NCurses client for MPD (Music Player Daemon), inspired by ncmpc
-and configured to integrate with the Cava spectrum visualizer.
+*mpcplus* is an NCurses client for MPD (Music Player Daemon), inspired by
+ncmpc and configured to integrate with `mppcava`, a customized fork of the
+Cava spectrum visualizer.
 
 Read more about MPD at http://www.musicpd.org
 
-Read more about Cava at https://github.com/karlstav/cava
+Read more about Cava at
+https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
 
 # COMMAND LINE OPTIONS
 Mandatory arguments to long options are mandatory for short options as well.
@@ -340,13 +342,15 @@ file is found, mpcplus uses the defaults. An example bindings file with default
 values can be found usually in /usr/share/doc/mpcplus (the exact location may
 depend on your operating system or configure prefix).
 
-Mpcplus includes bindings to integrate with the Cava spectrum visualizer.
-By default, these bindings are Alt-0 through Alt-9 to set the transparency
-of the terminal window in which mpcplus is running. Alt-1 sets the window
-to 90% transparent, Alt-2 to 80% and so on Alt-9 to 10% transparent, and
-Alt-0 to 100% opaque. These transparency setting bindings are useful when
-running mpcplus and mppcava in separate overlapping windows, the spectrum
-visualizer visible through and behind the mpcplus window.
+Mpcplus includes bindings to integrate with `mppcava`, a customized fork of
+the Cava spectrum visualizer. By default, these bindings are Alt-0 through
+Alt-9 to set the transparency of the terminal window in which mpcplus is running.
+Alt-1 sets the window to 90% transparent, Alt-2 to 80% and so on Alt-9 to 10%
+transparent, and Alt-0 to 100% opaque. These transparency setting bindings are
+useful when running `mpcplus` and `mppcava` in separate overlapping windows,
+the spectrum visualizer visible through and behind the mpcplus window.
+
+Alt-f opens a terminal window or tmux pane running the fuzzy media finder `fzmp`.
 
 Alt-r raises/lowers the Cava window.
 
