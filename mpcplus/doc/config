@@ -34,7 +34,7 @@
 ## Needed for tag editor and file operations to work.
 ##
 #mpd_music_dir = ~/music
-mpd_music_dir = /u/audio/Music
+mpd_music_dir = ~/.config/mpd/music
 #
 #mpd_crossfade_time = 5
 #
@@ -72,7 +72,7 @@ mpd_music_dir = /u/audio/Music
 ## visualizer.
 ##
 #
-visualizer_data_source = /home/USERNAME/.config/mpd/mpd.fifo
+visualizer_data_source = ~/.config/mpd/mpd.fifo
 #
 ##
 ## Note: Below parameter is needed for mpcplus to determine which output
@@ -455,8 +455,9 @@ screen_switcher_mode = media_library, playlist, browser
 ##
 ## Note: You can define startup screen by choosing screen from the list above.
 ##
-startup_screen = playlist
-#startup_screen = media_library
+#startup_screen = browser
+#startup_screen = playlist
+startup_screen = media_library
 #
 ##
 ## Note: You can define startup slave screen by choosing screen from the list

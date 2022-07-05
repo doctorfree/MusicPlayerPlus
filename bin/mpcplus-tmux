@@ -103,8 +103,12 @@ tmux send-keys "clear" C-m
 
 tmux split-window -v -p $((100 - ART_HEIGHT))
 tmux select-pane -t 1
-#tmux send-keys "mpcplus --config=${HOME}/${MPCDIR}/catalog.conf; exit" C-m
-tmux send-keys "mpcplus; exit" C-m
+if [ "${ART}" ]
+then
+  tmux send-keys "mpcplus --config=${HOME}/${MPCDIR}/config-art.conf; exit" C-m
+else
+  tmux send-keys "mpcplus; exit" C-m
+fi
 tmux send-keys 1
 
 tmux select-pane -t 0

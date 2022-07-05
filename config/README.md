@@ -170,7 +170,7 @@ in the directory of the current song.
 Here I chose a render size of 400 x 400, but it can be anything.
 
 Tell mpcplus to execute it every time the song changes by adding this to
-`~/.config/mpcplus/catalog.conf`
+`~/.config/mpcplus/config-art.conf`
 
 ```
     execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"
@@ -305,7 +305,7 @@ tmux send-keys "clear" C-m
 
 tmux split-window -v
 tmux select-pane -t 1
-tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/catalog.conf'" C-m
+tmux send-keys "mpcplus --config='${HOME}/${MPCDIR}/config-art.conf'" C-m
 tmux send-keys 1
 
 tmux select-pane -t 0

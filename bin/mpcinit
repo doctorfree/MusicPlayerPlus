@@ -8,7 +8,7 @@
 
 MPPCDIR=/usr/share/doc/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
-WITHART="album_cover.sh catalog.conf cava-tmux.conf \
+WITHART="album_cover.sh config-art.conf cava-tmux.conf \
          cover_obs.sh default_cover.png fzmp.conf"
 
 [ -f ${CONFDIR}/config ] || {
@@ -196,7 +196,7 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
 }
 
 CONF=${HOME}/.config
-FIFS="mpcplus/catalog.conf mpcplus/cava-tmux.conf mpcplus/config mppcava/config"
+FIFS="mpcplus/cava-tmux.conf mppcava/config"
 for cnf in ${FIFS}
 do
   [ -f ${CONF}/${cnf} ] || continue
@@ -237,9 +237,9 @@ then
     fi
     cp /tmp/newconf$$ ${HOME}/${MPCDIR}/config
     rm -f /tmp/newconf$$
-    cat ${HOME}/${MPCDIR}/catalog.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/catalog$$
-    cp /tmp/catalog$$ ${HOME}/${MPCDIR}/catalog.conf
-    rm -f /tmp/catalog$$
+    cat ${HOME}/${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/config-art$$
+    cp /tmp/config-art$$ ${HOME}/${MPCDIR}/config-art.conf
+    rm -f /tmp/config-art$$
   }
 
   # Disable and stop any system-wide MPD service
