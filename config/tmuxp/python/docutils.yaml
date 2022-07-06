@@ -1,0 +1,28 @@
+session_name: docutils
+start_directory: ~/study/reST/docutils
+before_script: ./bootstrap_env.sh -c "pip install -e ~/study/reST/docutils/trunk/docutils" docutils
+shell_command_before: source ~/.tmuxp/python/bootstrap_env.sh docutils
+windows:
+- window_name: docutils
+  focus: true
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: sandbox-setuptools
+  focus: true
+  start_directory: trunk/sandbox/gitpull/setuptools
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  options:
+    main-pane-height: 35
+  layout: main-horizontal

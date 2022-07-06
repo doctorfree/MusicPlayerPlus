@@ -1,0 +1,72 @@
+session_name: sqlalchemy
+start_directory: ~/study/sqlalchemy/sqlalchemy
+before_script: ./bootstrap_env.sh -c "pip install -e $PWD" sqlalchemy
+shell_command_before: source ~/.tmuxp/python/bootstrap_env.sh sqlalchemy
+windows:
+- window_name: sqlalchemy
+  focus: true
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  start_directory: lib/sqlalchemy
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: test-utils
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  start_directory: lib/sqlalchemy/testing
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: tests
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  start_directory: test
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: sqlamp
+  start_directory: ~/study/sqlalchemy/sqlamp
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: sqlalchemy_traversal
+  start_directory: ~/study/sqlalchemy/sqlalchemy_traversal
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  options:
+    main-pane-height: 35
+  layout: main-horizontal
+- window_name: sqlalchemy-orm-tree
+  start_directory: ~/study/sqlalchemy/sqlalchemy-orm-tree
+  panes:
+  - shell_command:
+    - pane
+    focus: true
+  - pane
+  - pane
+  options:
+    main-pane-height: 35
+  layout: main-horizontal

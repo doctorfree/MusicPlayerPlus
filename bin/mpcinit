@@ -55,6 +55,26 @@ done
   fi
 }
 
+if [ -d ${HOME}/.config/tmuxp ]
+then
+  for tmc in ${MPPCDIR}/tmuxp/*
+  do
+    tmcbase=`basename "${tmc}"`
+    if [ -d "${tmc}" ]
+    then
+      [ -d "${HOME}/.config/tmuxp/${tmcbase}" ] || {
+        cp -a "${tmc}" "${HOME}/.config/tmuxp/${tmcbase}"
+      }
+    else
+      [ -f "${HOME}/.config/tmuxp/${tmcbase}" ] || {
+        cp "${tmc}" "${HOME}/.config/tmuxp/${tmcbase}"
+      }
+    fi
+  done
+else
+  cp -a ${MPPCDIR}/tmuxp ${HOME}/.config/tmuxp
+fi
+
 create_new_profile() {
   local proterm="$1"
   local proname="$2"

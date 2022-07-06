@@ -1,17 +1,15 @@
 session_name: ${SESSION}
-options:
-  main-pane-height: ${MAIN_PANE_HEIGHT}
 windows:
   - window_name: mpcplus
     focus: true
     panes:
     - shell_command:
-      - mpcplus
+      - mpcplus; exit
       focus: true
     - shell_command:
-      - mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf
+      - ${VIZCOMM}; exit
   - window_name: fzmp
     panes:
     - shell_command:
-      - fzmp -a
+      - fzmp -a; exit
       focus: true
