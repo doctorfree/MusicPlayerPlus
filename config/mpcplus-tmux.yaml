@@ -1,22 +1,17 @@
-session_name: musicplayerplus
+session_name: ${SESSION}
 options:
   main-pane-height: ${MAIN_PANE_HEIGHT}
 windows:
-  - window_name: mpplus
+  - window_name: mpcplus
     focus: true
     panes:
     - shell_command:
-      - echo hello
-      - echo 'this pane should be selected on load'
+      - mpcplus
       focus: true
     - shell_command:
-      - cd /var/log
-      - echo hello
+      - mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf
   - window_name: fzmp
-    shell_command_before: cd /var/log
     panes:
-    - pane
     - shell_command:
-      - echo 'this pane should be focused, when window switched to first time'
+      - fzmp -a
       focus: true
-    - pane
