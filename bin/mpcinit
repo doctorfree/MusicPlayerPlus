@@ -9,7 +9,7 @@
 MPPCDIR=/usr/share/doc/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
 WITHART="album_cover.sh config-art.conf cava-tmux.conf \
-         cover_obs.sh default_cover.png fzmp.conf"
+         cover_obs.sh default_cover.png fzmp.conf mpcplus-tmux.yaml"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
