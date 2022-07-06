@@ -137,6 +137,8 @@ fi
 
 tmux new-window "fzmp -a"
 
+tmux select-window -t ${SESSION}:0
+
 if [ "${RECORD}" ]
 then
   tmux d
