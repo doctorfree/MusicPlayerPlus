@@ -306,6 +306,7 @@ have_pip=`type -p pip`
 
 pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
 pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
+pip list | grep tmuxp > /dev/null || python -m pip install tmuxp
 
 printf "\nMusicPlayerPlus Initialization Complete\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"

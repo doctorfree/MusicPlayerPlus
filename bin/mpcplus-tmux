@@ -135,6 +135,8 @@ else
   tmux select-pane -t 1
 fi
 
+tmux new-window "fzmp -a"
+
 if [ "${RECORD}" ]
 then
   tmux d

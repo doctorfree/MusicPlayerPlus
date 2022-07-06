@@ -1,0 +1,22 @@
+session_name: musicplayerplus
+options:
+  main-pane-height: ${MAIN_PANE_HEIGHT}
+windows:
+  - window_name: mpplus
+    focus: true
+    panes:
+    - shell_command:
+      - echo hello
+      - echo 'this pane should be selected on load'
+      focus: true
+    - shell_command:
+      - cd /var/log
+      - echo hello
+  - window_name: fzmp
+    shell_command_before: cd /var/log
+    panes:
+    - pane
+    - shell_command:
+      - echo 'this pane should be focused, when window switched to first time'
+      focus: true
+    - pane
