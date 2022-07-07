@@ -2,7 +2,7 @@ session_name: mppsplash
 global_options:
   status: off
 windows:
-  - window_name: mppsplash
+  - window_name: MusicPlayerPlus Splash
     panes:
     - shell_command:
       - mppsplash; exit

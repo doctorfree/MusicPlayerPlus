@@ -1,6 +1,6 @@
 session_name: musicplayerplus
 windows:
-  - window_name: mpcplus
+  - window_name: MusicPlayerPlus
     focus: true
     layout: main-horizontal
     panes:
@@ -11,7 +11,7 @@ windows:
       - mppcava -p ${HOME}/.config/mppcava/tmux.conf; exit
     options:
       main-pane-height: 20
-  - window_name: fzmp
+  - window_name: Fuzzy Finder
     panes:
     - shell_command:
       - fzmp -a; exit

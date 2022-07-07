@@ -1,6 +1,6 @@
 session_name: ${SESSION}
 windows:
-  - window_name: mpcplus
+  - window_name: MusicPlayerPlus
     focus: true
     layout: main-horizontal
     panes:
@@ -11,7 +11,7 @@ windows:
       - ${VIZCOMM}; exit
     options:
       main-pane-height: ${MAIN_PANE_HEIGHT}
-  - window_name: fzmp
+  - window_name: Fuzzy Finder
     panes:
     - shell_command:
       - ${FZFCOMM}; exit

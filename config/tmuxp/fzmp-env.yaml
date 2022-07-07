@@ -1,12 +1,12 @@
-session_name: fzmp
+session_name: ${SESSION}
 windows:
   - window_name: Fuzzy Finder
     layout: main-horizontal
     panes:
     - shell_command:
-      - fzmp -a; exit
+      - ${FZFCOMM}; exit
       focus: true
     - shell_command:
-      - mppcava -p ${HOME}/.config/mppcava/tmux.conf; exit
+      - ${VIZCOMM}; exit
     options:
-      main-pane-height: 20
+      main-pane-height: ${MAIN_PANE_HEIGHT}
