@@ -1,10 +1,16 @@
 # MusicPlayerPlus
 
-The MusicPlayerPlus project provides integration and extension of several
-audio packages designed to stream and play music. MusicPlayerPlus interacts
-with the Music Player Daemon (MPD). Outputs from the MPD streaming audio server
-are used as MusicPlayerPlus inputs for playback and visualization. In addition,
-MusicPlayerPlus components are used to manage and control MPD.
+Character based console and terminal window music player *plus* album cover art
+*plus* media fuzzy finder using `fzf` *plus* `tmux` sessions managed by `tmuxp`
+*plus* character based spectrum visualizer `mppcava` *plus* Music Player Daemon
+and ALSA configuration management *plus* `asciimatics` animations *plus*
+`asciinema` text-based terminal session recording.
+
+The MusicPlayerPlus project provides integration and extension of several audio
+packages designed to stream and play music. MusicPlayerPlus interacts with the
+Music Player Daemon (MPD). Outputs from the MPD streaming audio server are used
+as MusicPlayerPlus inputs for playback and visualization. MusicPlayerPlus
+components are used to manage and control MPD and ALSA configuration.
 
 ## Table of contents
 
