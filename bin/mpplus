@@ -85,7 +85,7 @@ usage() {
   printf "\n\t-D indicates download album cover art"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
-  printf "\n\t\tthe 'music_directory' setting in '/etc/mpd.conf'"
+  printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"

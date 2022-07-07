@@ -160,6 +160,7 @@ ${SUDO} cp config/config-art.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp config/mpcplus-art.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp config/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
@@ -167,7 +168,7 @@ ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpd"
 ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava"
-${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava/defaults.conf
+${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava/template.conf
 ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/tmuxp
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/music"
 

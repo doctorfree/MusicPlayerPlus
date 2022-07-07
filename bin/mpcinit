@@ -8,7 +8,8 @@
 
 MPPCDIR=/usr/share/doc/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
-CFGS="album_cover.sh config-art.conf cover_obs.sh default_cover.png fzmp.conf"
+CFGS="album_cover.sh config-art.conf cover_obs.sh \
+      default_cover.png fzmp.conf mpcplus-art.sh"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -44,14 +45,14 @@ do
     cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
   }
 done
+chmod 755 ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/*.sh
 
+[ -d ${HOME}/.config/mppcava ] || mkdir -p ${HOME}/.config/mppcava
 [ -f ${HOME}/.config/mppcava/config ] || {
-  if [ -d ${HOME}/.config/mppcava ]
-  then
-    cp ${MPPCDIR}/mppcava/config ${HOME}/.config/mppcava/config
-  else
-    cp -a ${MPPCDIR}/mppcava ${HOME}/.config/mppcava
-  fi
+  cp ${MPPCDIR}/mppcava/config ${HOME}/.config/mppcava/config
+}
+[ -f ${HOME}/.config/mppcava/tmux.conf ] || {
+  cp ${MPPCDIR}/mppcava/tmux.conf ${HOME}/.config/mppcava/tmux.conf
 }
 
 if [ -d ${HOME}/.config/tmuxp ]
@@ -323,9 +324,15 @@ have_pip=`type -p pip`
   fi
 }
 
-pip list | grep ueberzug > /dev/null || python -m pip install ueberzug
-pip list | grep asciimatics > /dev/null || python -m pip install asciimatics
-pip list | grep tmuxp > /dev/null || python -m pip install tmuxp
+for pkg in asciimatics sacad tmuxp ueberzug
+do
+  if pip list | grep ${pkg} > /dev/null
+  then
+    python -m pip install --upgrade ${pkg}
+  else
+    python -m pip install ${pkg}
+  fi
+done
 
 printf "\nMusicPlayerPlus Initialization Complete\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"

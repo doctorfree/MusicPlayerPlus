@@ -109,7 +109,6 @@ then
 else
   tmux send-keys "mpcplus; exit" C-m
 fi
-tmux send-keys 1
 
 tmux select-pane -t 0
 [ "${ART}" ] && tmux split-window -h -p $((100 - ART_WIDTH))
