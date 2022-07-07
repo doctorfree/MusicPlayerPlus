@@ -2,15 +2,19 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-1.0.2r2 (2022-07-05)
+# MusicPlayerPlus-1.0.2r2 (2022-07-08)
 * Add support for Raspberry Pi
 * Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
 * Check if DISPLAY can be used and if not execute in console mode using tmux
 * Configure MPD with user systemd service using configuration in `~/.config/mpd/`
 * Add `Alt-f` mpcplus key binding to search music library using `fzf`
+* Additional custom tmux key bindings
 * Configure MPD user service in mpcinit, move MPD fifo to user MPD config dir
 * Add option to specify alternate spectrum visualizer
 * Create terminal profiles in mpcinit
+* Add support for `tmuxp` tmux session manager
+* Add `tmuxp` configuration files in `~/.config/tmuxp/`
+* Convert mppsplash-tmux and mpcplus-tmux to use `tmuxp`
 * Use gnome-terminal as default rather than xfce4-terminal
 * Add fzmp command and fzf dependency
 * Add command line option to invoke fzmp
