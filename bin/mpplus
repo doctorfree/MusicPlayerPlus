@@ -232,7 +232,7 @@ make_it_so() {
   fi
 
   # Begin MPD client startup section
-  if [ "${CONSOLE_MODE}" ]
+  if [ "${CONSOLE_MODE}" ] || [ "${TMUX_MPC}" ]
   then
     ${MPCOMM}
   else
@@ -429,7 +429,7 @@ show_ascii_menu() {
     else
       recordstat="OFF"
     fi
-    if [ "${TMUX}" ]
+    if [ "${USE_TMUX}" ]
     then
       usetmux="ON"
     else
@@ -506,7 +506,7 @@ show_ascii_menu() {
                 RECORD=
               else
                 RECORD=1
-                TMUX=1
+                USE_TMUX=1
               fi
               if [ "${RECORD}" ]
               then
@@ -518,12 +518,12 @@ show_ascii_menu() {
               break
               ;;
           "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
-              if [ "${TMUX}" ]
+              if [ "${USE_TMUX}" ]
               then
-                TMUX=
+                USE_TMUX=
                 RECORD=
               else
-                TMUX=1
+                USE_TMUX=1
               fi
               skip_it_so=1
               break
@@ -558,7 +558,7 @@ show_main_menu() {
     else
       recordstat="OFF"
     fi
-    if [ "${TMUX}" ]
+    if [ "${USE_TMUX}" ]
     then
       usetmux="ON"
     else
@@ -623,12 +623,12 @@ show_main_menu() {
               break
               ;;
           "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
-              if [ "${TMUX}" ]
+              if [ "${USE_TMUX}" ]
               then
-                TMUX=
+                USE_TMUX=
                 RECORD=
               else
-                TMUX=1
+                USE_TMUX=1
               fi
               skip_it_so=1
               break
@@ -639,7 +639,7 @@ show_main_menu() {
                 RECORD=
               else
                 RECORD=1
-                TMUX=1
+                USE_TMUX=1
               fi
               if [ "${RECORD}" ]
               then
@@ -853,7 +853,7 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
     R)
       [ "${have_nema}" ] && {
         RECORD=1
-        TMUX=1
+        USE_TMUX=1
         MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
         MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -R"
       }
@@ -878,7 +878,7 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
       TILIX=1
       ;;
     T)
-      TMUX=1
+      USE_TMUX=1
       ;;
     v)
       viz_com=`echo "${OPTARG}" | awk ' { print $1 } '`
@@ -903,7 +903,7 @@ done
 # The -T option says use tmux, -S says do asciimatics
 # If we have both then do asciimatics in tmux
 # If just the -T then do mpcplus in tmux
-[ "${TMUX}" ] && {
+[ "${USE_TMUX}" ] && {
   if [ "${SPLASH}" ]
   then
     TMUX_SPLASH=1

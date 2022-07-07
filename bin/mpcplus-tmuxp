@@ -80,7 +80,7 @@ then
   have_pyart=`type -p mpp${PYART}`
   [ "${have_pyart}" ] && export VIZCOMM="mpp${PYART}"
 else
-  export VIZCOMM="mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf"
+  export VIZCOMM="mppcava -p ${HOME}/.config/mppcava/tmux.conf"
 fi
 
 tmuxp load mpcplus

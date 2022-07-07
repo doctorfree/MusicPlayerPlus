@@ -1,4 +1,6 @@
 session_name: ${SESSION}
+global_options:
+  status: off
 windows:
   - window_name: mppsplash
     panes:

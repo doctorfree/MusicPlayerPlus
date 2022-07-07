@@ -120,7 +120,7 @@ then
   [ "${have_pyart}" ] && PYART="mpp${PYART}"
   tmux send-keys "${PYART}; exit" C-m
 else
-  tmux send-keys "mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf; exit" C-m
+  tmux send-keys "mppcava -p ${HOME}/.config/mppcava/tmux.conf; exit" C-m
 fi
 
 

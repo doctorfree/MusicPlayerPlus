@@ -8,8 +8,7 @@
 
 MPPCDIR=/usr/share/doc/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
-WITHART="album_cover.sh config-art.conf cava-tmux.conf \
-         cover_obs.sh default_cover.png fzmp.conf"
+CFGS="album_cover.sh config-art.conf cover_obs.sh default_cover.png fzmp.conf"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -39,7 +38,7 @@ fi
   cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
 }
 
-for cfg in ${WITHART}
+for cfg in ${CFGS}
 do
   [ -f ${HOME}/${MPCDIR}/${cfg} ] || {
     cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
@@ -216,7 +215,7 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
 }
 
 CONF=${HOME}/.config
-FIFS="mpcplus/cava-tmux.conf mppcava/config"
+FIFS="mppcava/tmux.conf mppcava/config"
 for cnf in ${FIFS}
 do
   [ -f ${CONF}/${cnf} ] || continue

@@ -9,6 +9,29 @@ have_fzmp=`type -p fzmp`
 have_gnome=`type -p gnome-terminal`
 have_tilix=`type -p tilix`
 
+if [ "${DISPLAY}" ]
+then
+  have_xdpy=`type -p xdpyinfo`
+  if [ "${have_xdpy}" ]
+  then
+    xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+  else
+    if [ "${have_gnome}" ]
+    then
+      gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+    else
+      echo ""
+    fi
+  fi
+  [ $? -eq 0 ] || {
+    have_gnome=
+    have_tilix=
+  }
+else
+  have_gnome=
+  have_tilix=
+fi
+
 if [ "${have_tilix}" ]
 then
   tilix --title="${MTITLE}" \

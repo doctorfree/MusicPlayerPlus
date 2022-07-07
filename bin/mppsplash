@@ -69,14 +69,14 @@ while getopts "AabCc:djJmps:u" flag; do
       A)
         all=1
         ;;
+      a)
+        audio=1
+        ;;
       b)
         audio=1
         TMPSONG=${SONG}
         SONG=${ALTSONG}
         ALTSONG=${TMPSONG}
-        ;;
-      a)
-        audio=1
         ;;
       C)
         switch_comments=1
