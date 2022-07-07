@@ -1,0 +1,6 @@
+session_name: ${SESSION}
+windows:
+  - window_name: mppsplash
+    panes:
+    - shell_command:
+      - ${SPLASHCOMM}; exit

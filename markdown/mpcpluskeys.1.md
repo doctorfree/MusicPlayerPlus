@@ -177,6 +177,8 @@ the **mpcplus** music player client.
 
 # KEYS - TERMINAL WINDOWS
 
+-   `[ Alt-f ]` - Open the fuzzy finder to search/select media
+-   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
 -   `[ Alt-1 ]` - Set xfce4-terminal window transparency to 90%
 -   `[ Alt-2 ]` - Set xfce4-terminal window transparency to 80%
 -   `[ Alt-3 ]` - Set xfce4-terminal window transparency to 70%
@@ -187,8 +189,14 @@ the **mpcplus** music player client.
 -   `[ Alt-8 ]` - Set xfce4-terminal window transparency to 20%
 -   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
 -   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
--   `[ Alt-f ]` - Open the fuzzy finder to search/select media
--   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
+
+# KEYS - TMUX SESSIONS
+
+-   `[ Alt-Right ]` - Next window
+-   `[ Alt-Left ]`  - Previous window
+-   `[ Alt-n ]`     - Next window
+-   `[ Alt-p ]`     - Previous window
+-   `[ Alt-x ]`     - Kill session
 
 # KEYS - TINY TAG EDITOR
 

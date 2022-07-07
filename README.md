@@ -29,6 +29,7 @@ MusicPlayerPlus components are used to manage and control MPD.
     1. [Usage](#usage)
     1. [Example client invocations](#example-client-invocations)
     1. [Adding Album Cover Art](#adding-album-cover-art)
+    1. [Custom key bindings](#custom-key-bindings)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
 1. [Screenshots](#screenshots)
@@ -49,7 +50,7 @@ The `mpplus` command can be used to invoke:
 
 * The lightweight character based MPD client, `mpcplus`
 * One or more terminal emulators running an MPD client and visualizer
-* A tmux session
+* A tmux session, optionally using the tmux session manager `tmuxp`
 * A spectrum visualizer
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
@@ -65,7 +66,8 @@ Integration is provided for:
 * [asciimatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
 * [asciinema](https://asciinema.org/) - automatically create ascii character based video clips
 * [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
-* Enhanced key bindings for extended control of terminal windows
+* [tmuxp](https://github.com/tmux-python/tmuxp), a tmux session manager
+* Enhanced key bindings for extended control of terminal windows and tmux sessions
 * Several terminal emulators
     * gnome-terminal
     * tilix
@@ -80,6 +82,9 @@ MusicPlayerPlus adds the following commands to your system:
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
+* **mpcplus-tmuxp** : runs mpcplus and a visualizer in a tmux session using `tmuxp`
+* **mpsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
+* **mpsplash-tmuxp** : runs mppsplash, a visualizer, in a tmux session using `tmuxp`
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:
     * **mppjulia** : ASCIImatics animated zoom on a Julia Set
     * **mppplasma** : ASCIImatics animated plasma graphic
@@ -632,6 +637,38 @@ mpplus -d
 
 Cover art for each album is saved as the file `cover.jpg` in the album folder.
 Existing cover art is preserved.
+
+### Custom key bindings
+
+A few custom key bindings are configured during MusicPlayerPlus initialization
+with the `mpcinit` command. These are purely for convenience and can be altered or
+removed if desired.
+
+Tmux custom key bindings are defined in `$HOME/.tmux.conf`.
+MusicPlayerPlus custom key bindings for tmux sessions include the following:
+
+-   `[ Alt-Right ]` - Next window
+-   `[ Alt-Left ]`  - Previous window
+-   `[ Alt-n ]`     - Next window
+-   `[ Alt-p ]`     - Previous window
+-   `[ Alt-x ]`     - Kill session
+
+Custom key bindings are also defined for the `mpcplus` music player client command.
+Mpcplus custom key bindings are defined in `$HOME/.config/mpcplus/bindings`.
+MusicPlayerPlus custom key bindings for `mpcplus` include the following:
+
+-   `[ Alt-f ]` - Open the fuzzy finder to search/select media
+-   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
+-   `[ Alt-1 ]` - Set xfce4-terminal window transparency to 90%
+-   `[ Alt-2 ]` - Set xfce4-terminal window transparency to 80%
+-   `[ Alt-3 ]` - Set xfce4-terminal window transparency to 70%
+-   `[ Alt-4 ]` - Set xfce4-terminal window transparency to 60%
+-   `[ Alt-5 ]` - Set xfce4-terminal window transparency to 50%
+-   `[ Alt-6 ]` - Set xfce4-terminal window transparency to 40%
+-   `[ Alt-7 ]` - Set xfce4-terminal window transparency to 30%
+-   `[ Alt-8 ]` - Set xfce4-terminal window transparency to 20%
+-   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
+-   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
 
 ## Removal
 

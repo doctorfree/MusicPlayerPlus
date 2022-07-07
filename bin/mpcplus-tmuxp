@@ -4,6 +4,17 @@
 
 export SESSION=musicplayerplus
 
+have_tmuxp=`type -p tmuxp`
+[ "${have_tmuxp}" ] || {
+  echo ""
+  echo "ERROR: Could not find 'tmuxp' in PATH."
+  echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
+  echo "or verify it is in your execution PATH."
+  echo "Alternately, use tmux directly by invoking the 'mpcplus-tmux' command"
+  echo ""
+  exit 1
+}
+
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
@@ -38,7 +49,7 @@ usage() {
   else
     printf "\n\trecording disabled"
   fi
-  printf "\nType 'man mpcplus-tmuxp' for detailed usage info on mpcplus-tmuxp"
+  printf "\nType 'man mpcplus-tmux' for detailed usage info on mpcplus-tmux"
   printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
   exit 1
 }
@@ -72,7 +83,7 @@ else
   export VIZCOMM="mppcava -p ${HOME}/${MPCDIR}/cava-tmux.conf"
 fi
 
-tmuxp load mpcplus-tmux
+tmuxp load mpcplus
 
 if [ "${RECORD}" ]
 then
