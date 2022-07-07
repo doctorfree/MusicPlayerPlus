@@ -218,8 +218,6 @@ After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
 be configured by editing the MPD configuration file `~/.config/mpd/mpd.conf`.
-In addition, it is recommended to setup custom profiles in some
-of the terminal emulators to enhance the spectrum visualization.
 
 Minimal post installation configuration required is the execution
 of the command `mpcinit`.
@@ -241,9 +239,9 @@ generated MPD configuration file `~/.config/mpd/mpd.conf`.
 
 ### MPD Server Configuration
 
-**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform
+**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
-This is performed by the `mpcinit` command. MusicPlayerPlus 1.0.2r2
+This is performed by the `mpcinit` command. MusicPlayerPlus 1.0.3r1
 and later installations need not perform the following manual procedures
 but users may wish to review the automated MPD configuration by
 following these steps.
@@ -356,11 +354,11 @@ Several other `fzmp` bindings and options can be configured. See `man fzmp`
 for details.
 
 ### Start MPD
-**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform
+**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
 Initialization with `mpcinit` for these installations should automatically
 start the user MPD service. No further action should be required for
-MusicPlayerPlus v1.0.2r2 or later installations.
+MusicPlayerPlus v1.0.3r1 or later installations.
 
 Status of the MPD service can be checked with:
 
@@ -368,7 +366,7 @@ Status of the MPD service can be checked with:
 systemctl --user status mpd.service
 ```
 
-Installation and initialization of MusicPlayerPlus prior to v1.0.2r2
+Installation and initialization of MusicPlayerPlus prior to v1.0.3r1
 will need to start mpd as a system-wide service by executing the commands:
 
 `sudo systemctl start mpd`
@@ -383,10 +381,10 @@ attempts to connect:
 `sudo systemctl enable mpd.socket`
 
 ### Initialize Music Database
-**NOTE:** MusicPlayerPlus version 1.0.2 release 2 and later perform an
+**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform an
 automated MPD music database initialization during execution of `mpcinit`.
 
-For versions of MusicPlayerPlus prior to v1.0.2r2, initialize the music
+For versions of MusicPlayerPlus prior to v1.0.3r1, initialize the music
 database with an MPD client and update the database. The `mpcplus` MPD
 client can be used for this or the standard `mpc` MPD client can be used.
 With `mpcplus`, launch the `mpcplus` MPD client, verify the client window
@@ -484,7 +482,7 @@ General options:
 	-D indicates download album cover art
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '/etc/mpd.conf'
+		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system

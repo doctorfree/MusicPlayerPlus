@@ -1,4 +1,4 @@
-Changes in this release include:
+Changes in version 1.0.3 release 1 include:
 
 * Add support for Raspberry Pi
 * Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
@@ -61,26 +61,24 @@ Previous changes in version 1.0.2 include:
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.2-2.amd64.deb
+sudo apt install ./MusicPlayerPlus_1.0.3-1.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_1.0.2-2.armhf.deb
+sudo apt install ./MusicPlayerPlus_1.0.3-1.armhf.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.2-2.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-1.0.3-1.x86_64.rpm
 ```
 
 ## Configuration
-Edit `/etc/mpd.conf` and set the `music_directory`.
+Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
 
 Execute the `mpcinit` command.
-
-Execute the `mpcplus` command and type `u` to initiate a database update.
 
 See the [MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme) for additional configuration info.
 

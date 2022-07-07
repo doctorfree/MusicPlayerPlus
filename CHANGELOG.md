@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-1.0.2r2 (2022-07-08)
+# MusicPlayerPlus-1.0.3r1 (2022-07-08)
 * Add support for Raspberry Pi
 * Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
 * Check if DISPLAY can be used and if not execute in console mode using tmux

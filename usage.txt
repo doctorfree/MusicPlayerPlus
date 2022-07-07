@@ -35,7 +35,7 @@ General options:
 	-D indicates download album cover art
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '/etc/mpd.conf'
+		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
