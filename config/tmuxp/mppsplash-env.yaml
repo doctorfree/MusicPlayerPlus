@@ -1,8 +1,8 @@
-session_name: mppsplash
+session_name: ${SESSION}
 global_options:
   status: off
 windows:
   - window_name: mppsplash
     panes:
     - shell_command:
-      - mppsplash; exit
+      - ${SPLASHCOMM}; exit

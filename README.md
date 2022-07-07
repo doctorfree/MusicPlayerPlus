@@ -82,8 +82,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
-* **mpsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
-* **mpsplash-tmuxp** : runs mppsplash, a visualizer, in a tmux session using `tmuxp`
+* **mppsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:
     * **mppjulia** : ASCIImatics animated zoom on a Julia Set
     * **mppplasma** : ASCIImatics animated plasma graphic

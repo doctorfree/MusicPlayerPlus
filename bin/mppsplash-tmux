@@ -1,32 +1,41 @@
 #!/bin/bash
 #
-# mppsplash-tmuxp - display ASCIImatics splash screens in a tmux session using tmuxp
+# mppsplash-tmux - display ASCIImatics splash screens in a tmux session using tmuxp
 MUSEDIR=/usr/share/doc/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
+MPCDIR=".config/mpcplus"
 MPDCONF=~/.config/mpd/mpd.conf
 export SESSION=mppsplash
 
+ARGS="$*"
 have_tmuxp=`type -p tmuxp`
 [ "${have_tmuxp}" ] || {
-  echo ""
-  echo "ERROR: Could not find 'tmuxp' in PATH."
-  echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
-  echo "or verify it is in your execution PATH."
-  echo "Alternately, use tmux directly by invoking the 'mppsplash-tmux' command"
-  echo ""
-  exit 1
+  if [ -x ${HOME}/${MPCDIR}/mppsplash-dual.sh ]
+  then
+    ${HOME}/${MPCDIR}/mppsplash-dual.sh ${ARGS}
+    exit 0
+  else
+    echo ""
+    echo "ERROR: Could not find 'tmuxp' in PATH."
+    echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
+    echo "or verify it is in your execution PATH."
+    echo ""
+    exit 1
+  fi
 }
 
 usage() {
-  printf "\nUsage: mppsplash-tmuxp [-a] [-b] [-c num] [-l script] "
-  printf "[-R] [-s song] [-t] [-u]"
+  printf "\nUsage: mppsplash-tmux [-a] [-b] [-c num] [-d] [-l script] "
+  printf "[-r script] [-R] [-s song] [-t] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
   printf "\n\t-b indicates use backup song during ASCIImatics display"
   printf "\n\t-c num specifies number of cycles ASCIImatics effects should run"
+  printf "\n\t-d indicates dual window panes, run two scripts"
   printf "\n\t-l script specifies a python script to run in the visualizer pane"
+  printf "\n\t-r script specifies a python script to run in the right visualizer pane"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-s song specifies audio file to use as accompaniment"
   printf "\n\t\t'song' can be the full pathname to an audio file or a relative"
@@ -56,7 +65,7 @@ KILLME=
 RECORD=
 PYLEFT=plasma
 USAGE=
-while getopts "abc:l:Rs:tu" flag; do
+while getopts "abc:dl:r:Rs:tu" flag; do
     case $flag in
         a)
           AUDIO=1
@@ -69,6 +78,12 @@ while getopts "abc:l:Rs:tu" flag; do
           ;;
         c)
           CYCLE="-c ${OPTARG}"
+          ;;
+        d|r)
+          [ -x ${HOME}/${MPCDIR}/mppsplash-dual.sh ] && {
+            ${HOME}/${MPCDIR}/mppsplash-dual.sh ${ARGS}
+            exit 0
+          }
           ;;
         l)
           PYLEFT=${OPTARG}
@@ -160,10 +175,9 @@ have_left=`type -p ${PYLEFT}`
 
 export SPLASHCOMM="mppsplash ${left_script_args} ${script_args}"
 
-tmuxp load mppsplash
+tmuxp load mppsplash-env
 
-if [ "${RECORD}" ]
-then
+[ "${RECORD}" ] && {
   tmux d
   VID_DIR=$HOME/Videos
   [ -d ${VID_DIR} ] || mkdir ${VID_DIR}
@@ -172,4 +186,4 @@ then
   echo "Recording this ${SESSION} session with asciinema"
   asciinema rec --command "tmux attach -t ${SESSION}" \
                 ${REC_DIR}/${SESSION}-$(date +%F--%H%M).cast
-fi
+}
