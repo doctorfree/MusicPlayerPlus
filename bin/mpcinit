@@ -8,8 +8,8 @@
 
 MPPCDIR=/usr/share/doc/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
-CFGS="album_cover.sh config-art.conf cover_obs.sh \
-      default_cover.png fzmp.conf mpcplus-art.sh"
+CFGS="album_cover.sh config-art.conf cover_obs.sh default_cover.png \
+      fzmp.conf mpcplus-art.sh mppsplash-dual.sh"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
