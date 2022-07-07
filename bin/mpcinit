@@ -45,7 +45,7 @@ do
     cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
   }
 done
-chmod 755 ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/*.sh
+chmod 755 ${HOME}/${MPCDIR}/*.sh
 
 [ -d ${HOME}/.config/mppcava ] || mkdir -p ${HOME}/.config/mppcava
 [ -f ${HOME}/.config/mppcava/config ] || {
@@ -328,9 +328,9 @@ for pkg in asciimatics sacad tmuxp ueberzug
 do
   if pip list | grep ${pkg} > /dev/null
   then
-    python -m pip install --upgrade ${pkg}
+    python -m pip install --upgrade ${pkg} > /dev/null 2>&1
   else
-    python -m pip install ${pkg}
+    python -m pip install ${pkg} > /dev/null 2>&1
   fi
 done
 
