@@ -1,0 +1,18 @@
+session_name: ${SESSION}
+windows:
+  - window_name: mpcplus
+    focus: true
+    layout: main-horizontal
+    panes:
+    - shell_command:
+      - mpcplus; exit
+      focus: true
+    - shell_command:
+      - ${VIZCOMM}; exit
+    options:
+      main-pane-height: ${MAIN_PANE_HEIGHT}
+  - window_name: fzmp
+    panes:
+    - shell_command:
+      - ${FZFCOMM}; exit
+      focus: true

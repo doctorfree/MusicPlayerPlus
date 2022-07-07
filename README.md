@@ -50,7 +50,7 @@ The `mpplus` command can be used to invoke:
 
 * The lightweight character based MPD client, `mpcplus`
 * One or more terminal emulators running an MPD client and visualizer
-* A tmux session, optionally using the tmux session manager `tmuxp`
+* A tmux session using the tmux session manager `tmuxp`
 * A spectrum visualizer
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
@@ -82,7 +82,6 @@ MusicPlayerPlus adds the following commands to your system:
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
 * **mpcinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
-* **mpcplus-tmuxp** : runs mpcplus and a visualizer in a tmux session using `tmuxp`
 * **mpsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
 * **mpsplash-tmuxp** : runs mppsplash, a visualizer, in a tmux session using `tmuxp`
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:

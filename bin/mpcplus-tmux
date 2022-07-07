@@ -1,19 +1,8 @@
 #!/bin/bash
 #
-# mpcplus-tmuxp - run the mpcplus MPD client, spectrum visualizer using tmuxp
+# mpcplus-tmux - run the mpcplus MPD client, spectrum visualizer using tmuxp
 
 export SESSION=musicplayerplus
-
-have_tmuxp=`type -p tmuxp`
-[ "${have_tmuxp}" ] || {
-  echo ""
-  echo "ERROR: Could not find 'tmuxp' in PATH."
-  echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
-  echo "or verify it is in your execution PATH."
-  echo "Alternately, use tmux directly by invoking the 'mpcplus-tmux' command"
-  echo ""
-  exit 1
-}
 
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
@@ -28,9 +17,27 @@ else
   fi
 fi
 
+USE_TMUXP=1
+have_tmuxp=`type -p tmuxp`
+[ "${have_tmuxp}" ] || {
+  if [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ]
+  then
+    USE_TMUXP=
+  else
+    echo ""
+    echo "ERROR: Could not find 'tmuxp' in PATH."
+    echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
+    echo "or verify it is in your execution PATH."
+    echo ""
+    exit 1
+  fi
+}
+
 usage() {
-  printf "\nUsage: mpcplus-tmuxp [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-f] [-p script] [-r] [-u]"
   printf "\nWhere:"
+  printf "\n\t-a indicates display album cover art"
+  printf "\n\t-f indicates we have been invoked from a fullscreen window"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
@@ -57,10 +64,19 @@ usage() {
 PYART=
 RECORD=
 USAGE=
-while getopts "p:ru" flag; do
+ARGS="$*"
+while getopts "afp:ru" flag; do
     case $flag in
+        a)
+          [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ] && USE_TMUXP=
+          ;;
+        f)
+          ;;
         p)
           PYART=${OPTARG}
+          [ "${PYART}" == "rocks" ] || [ "${PYART}" == "mpprocks" ] && {
+            [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ] && USE_TMUXP=
+          }
           ;;
         r)
           have_nema=`type -p asciinema`
@@ -75,18 +91,26 @@ shift $(( OPTIND - 1 ))
 
 [ "${USAGE}" ] && usage
 
-if [ "${PYART}" ]
-then
+[ "${USE_TMUXP}" ] || {
+  ${HOME}/${MPCDIR}/mpcplus-art.sh ${ARGS}
+  exit 0
+}
+
+FZFCOMM="fzmp -a"
+MAIN_PANE_HEIGHT=20
+VIZCOMM="mppcava -p ${HOME}/.config/mppcava/tmux.conf"
+[ "${PYART}" ] && {
   have_pyart=`type -p mpp${PYART}`
-  [ "${have_pyart}" ] && export VIZCOMM="mpp${PYART}"
-else
-  export VIZCOMM="mppcava -p ${HOME}/.config/mppcava/tmux.conf"
-fi
+  [ "${have_pyart}" ] && {
+    VIZCOMM="mpp${PYART}"
+    MAIN_PANE_HEIGHT=10
+  }
+}
+export FZFCOMM MAIN_PANE_HEIGHT VIZCOMM
 
-tmuxp load mpcplus
+tmuxp load mpcplus-env
 
-if [ "${RECORD}" ]
-then
+[ "${RECORD}" ] && {
   tmux d
   VID_DIR=$HOME/Videos
   [ -d ${VID_DIR} ] || mkdir ${VID_DIR}
@@ -94,6 +118,4 @@ then
   [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
   echo "Recording this ${SESSION} session with asciinema"
   asciinema rec --command "tmux attach -t ${SESSION}" ${REC_DIR}/${SESSION}-$(date +%F--%H%M).cast
-else
-  tmux a #
-fi
+}
