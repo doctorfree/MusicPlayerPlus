@@ -476,7 +476,7 @@ ASCIImatics animation options:
 	-s song specifies a song to accompany an ASCIImatics animation
 		'song' can be the full pathname to an audio file or a
 		relative pathname to an audio file in the MPD music library
-		or /home/ronnie/Music/
+		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
 	-D indicates download album cover art
