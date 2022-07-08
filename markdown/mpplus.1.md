@@ -93,7 +93,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : indicates download album cover art
 
 **-d 'music_directory'**
-: specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `/etc/mpd.conf`
+: specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
 
 **-i**
 : indicates interactive mode with selection menus
