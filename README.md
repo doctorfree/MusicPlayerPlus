@@ -36,7 +36,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Custom key bindings](#custom-key-bindings)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
-1. [Remote control](#remote-control)
+1. [Infrared remote control of MPD](#infrared-remote-control-of-mpd)
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
 
@@ -772,7 +772,7 @@ Even if you do manage to resolve an issue, it may still be helpful to
 report the issue at https://github.com/doctorfree/MusicPlayerPlus/issues
 so that a fix may be incorporated in the next release.
 
-## Remote control
+## Infrared remote control of MPD
 
 Advanced users may wish to add remote control capabilities to MusicPlayerPlus.
 Getting IR remote control of MPD working is pretty geeky and fun. Also cool.
