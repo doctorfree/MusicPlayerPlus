@@ -25,7 +25,7 @@ The following `tmuxp` configuration files are included with MusicPlayerPlus:
 - **[fzmp-env.yaml](fzmp-env.yaml)** - run the MusicPlayerPlus Fuzzy Finder and Spectrum Visualizer in a Tmux session using environment variables for session and command ssettings:
 
 ```
-SESSION=fzmp FZFCOMM="fzmp -a" VIZCOMM=mppcava tmuxp load fzmp-env
+SESSION=fzmp FZFCOMM="fzmp -a" VIZCOMM=mppcava MAIN_PANE_HEIGHT=16 tmuxp load fzmp-env
 ```
 
 - **[fzmp-tmux.yaml](fzmp-tmux.yaml)** - run the MusicPlayerPlus Fuzzy Finder and Spectrum Visualizer without gradient colors in a Tmux session:
@@ -43,7 +43,7 @@ tmuxp load fzmp
 - **[mpcplus-env.yaml](mpcplus-env.yaml)** - run the MusicPlayerPlus MPD client `mpcplus`, Fuzzy Finder, and Spectrum Visualizer in a Tmux session using environment variables for session and command ssettings:
 
 ```
-SESSION=mpcplus FZFCOMM="fzmp -a" MAIN_PANE_HEIGHT=14 VIZCOMM=mppcava tmuxp load mpcplus-env
+SESSION=mpcplus FZFCOMM="fzmp -a" MAIN_PANE_HEIGHT=16 VIZCOMM=mppcava tmuxp load mpcplus-env
 ```
 
 - **[mpcplus-tmux.yaml](mpcplus-tmux.yaml)** - run the MusicPlayerPlus MPD client `mpcplus`, Fuzzy Finder, and Spectrum Visualizer without gradient colors in a Tmux session. This tmuxp config is used by the `mpcplus-tmux` command:
