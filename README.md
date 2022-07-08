@@ -1,10 +1,13 @@
 # MusicPlayerPlus
 
-Character based console and terminal window music player ***plus*** album cover art
-***plus*** media fuzzy finder using `fzf` ***plus*** `tmux` sessions managed by `tmuxp`
-***plus*** character based spectrum visualizer `mppcava` ***plus*** Music Player Daemon
-and ALSA configuration management ***plus*** `asciimatics` animations ***plus***
-`asciinema` text-based terminal session recording.
+MusicPlayerPlus is a character-based console and terminal window music player
+- ***plus*** album cover art
+- ***plus*** media fuzzy finder using `fzf`
+- ***plus*** `tmux` sessions managed by `tmuxp`
+- ***plus*** character based spectrum visualizer `mppcava`
+- ***plus*** Music Player Daemon and ALSA configuration management
+- ***plus*** `asciimatics` animations
+- ***plus*** `asciinema` text-based terminal session recording.
 
 The MusicPlayerPlus project provides integration and extension of several audio
 packages designed to stream and play music. MusicPlayerPlus interacts with the
