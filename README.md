@@ -4,16 +4,10 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** album cover art
 - ***plus*** media fuzzy finder using `fzf`
 - ***plus*** `tmux` sessions managed by `tmuxp`
-- ***plus*** character based spectrum visualizer `mppcava`
+- ***plus*** character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
-- ***plus*** `asciimatics` animations
+- ***plus*** `asciimatics` color ASCII animations
 - ***plus*** `asciinema` text-based terminal session recording.
-
-The MusicPlayerPlus project provides integration and extension of several audio
-packages designed to stream and play music. MusicPlayerPlus interacts with the
-Music Player Daemon (MPD). Outputs from the MPD streaming audio server are used
-as MusicPlayerPlus inputs for playback and visualization. MusicPlayerPlus
-components are used to manage and control MPD and ALSA configuration.
 
 ## Table of contents
 
@@ -34,6 +28,7 @@ components are used to manage and control MPD and ALSA configuration.
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [Documentation](#documentation)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
+    1. [README for tmuxp configs](#readme-for-tmuxp-configs)
     1. [Man Pages](#man-pages)
     1. [Usage](#usage)
     1. [Example client invocations](#example-client-invocations)
@@ -46,10 +41,16 @@ components are used to manage and control MPD and ALSA configuration.
 
 ## Overview
 
+The MusicPlayerPlus project provides integration and extension of several audio
+packages designed to stream and play music. MusicPlayerPlus interacts with the
+Music Player Daemon (MPD). Outputs from the MPD streaming audio server are used
+as MusicPlayerPlus inputs for playback and visualization. MusicPlayerPlus
+components are used to manage and control MPD and ALSA configuration.
+
 MusicPlayerPlus integrations and extensions are primarily aimed at the
-character based terminal user. They enable an easy to use seamlessly
+character-based terminal user. They enable an easy to use seamlessly
 integrated control of audio streaming, playing, and visualization in
-a lightweight character based environment.
+a lightweight character-based environment.
 
 Audio streaming is provided by the Music Player Daemon (MPD).
 At the core of MusicPlayerPlus is the `mpplus` command which acts as
@@ -57,7 +58,7 @@ a front-end for a variety of terminal and/or `tmux` sessions.
 
 The `mpplus` command can be used to invoke:
 
-* The lightweight character based MPD client, `mpcplus`
+* The lightweight character-based MPD client, `mpcplus`
 * One or more terminal emulators running an MPD client and visualizer
 * A tmux session using the tmux session manager `tmuxp`
 * A spectrum visualizer
@@ -68,12 +69,12 @@ The `mpplus` command can be used to invoke:
 Integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
-* [mpcplus](mpcplus/README.md), character based Music Player Plus MPD client
+* [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
 * [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
-* [asciimatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character based animation effects
-* [asciinema](https://asciinema.org/) - automatically create ascii character based video clips
+* [asciimatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character-based animation effects
+* [asciinema](https://asciinema.org/) - automatically create ascii character-based video clips
 * [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
 * [tmuxp](https://github.com/tmux-python/tmuxp), a tmux session manager
 * Enhanced key bindings for extended control of terminal windows and tmux sessions
@@ -429,6 +430,9 @@ e.g. `mpplus -u`.
 ### README for mpcplus MPD client
 - [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
 
+### README for tmuxp configs
+- [**config/tmuxp/README.md**](config/tmuxp/README.md) - How to invoke the MusicPlayerPlus provided `tmuxp` session configurations
+
 ### Man Pages
 
 - [**mpplus**](markdown/mpplus.1.md) : Primary MusicPlayerPlus user interface
@@ -619,10 +623,10 @@ To test the mpcplus lyrics fetchers:
 `mpcplus --test-lyrics-fetchers`
 
 ### Adding Album Cover Art
-The `mpcplus` MPD client is a character based application. As such, it is
+The `mpcplus` MPD client is a character-based application. As such, it is
 difficult to display graphical images. However, this limitation can be
 overcome using `tmux` and additional tools. In this way we can add album
-cover art to MusicPlayerPlus when using the character based `mpcplus` client.
+cover art to MusicPlayerPlus when using the character-based `mpcplus` client.
 
 See [Adding album art to MusicPlayerPlus](config/README.md) to get
 started integrating album art in MusicPlayerPlus.
@@ -665,6 +669,9 @@ MusicPlayerPlus custom key bindings for tmux sessions include the following:
 
 The tmux prefix key is remapped from `Ctrl-b` to `Ctrl-a` and the status bar
 is configured to display a `Ctrl` message when the prefix key is pressed.
+
+The MusicPlayerPlus tmux customization enables tmux mouse mode. The mouse can
+be used to select and resize tmux panes and windows.
 
 There are hundreds of tmux key bindings. To view the currently configured
 tmux key bindings, execute the command `tmux list-keys`.
