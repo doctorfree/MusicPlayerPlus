@@ -455,7 +455,7 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-f] [-h] [-i] [-jJ] [-k] [-m]
+		[-g] [-f] [-h] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
 		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
@@ -464,6 +464,7 @@ MPCplus/Visualizer options:
 	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
+	-g indicates do not use gradient colors for spectrum visualizer
 	-i indicates start mpplus in interactive mode
 	-h indicates half-height for visualizer window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
