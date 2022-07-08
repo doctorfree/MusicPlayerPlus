@@ -7,6 +7,6 @@ windows:
       - fzmp -a; exit
       focus: true
     - shell_command:
-      - mppcava; exit
+      - mppcava -p ${HOME}/.config/mppcava/config-tmux; exit
     options:
       main-pane-height: 20

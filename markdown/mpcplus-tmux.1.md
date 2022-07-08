@@ -9,9 +9,9 @@ date: March 26, 2022
 mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a tmux session
 
 # SYNOPSIS
-**mpcplus-tmux** [-a] [-p script] [-r] [-u]
+**mpcplus-tmux** [-a] [-f] [-g] [-p script] [-r] [-u]
 
-**NOTE:** `mpcplus-tmux` can be run by invoking `mpplus [-a] [-p script] [-R]`
+**NOTE:** `mpcplus-tmux` can be run by invoking `mpplus [-a] [-g] [-p script] [-R]`
 
 # DESCRIPTION
 The *mpcplus-tmux* command opens several panes in a terminal window,
@@ -22,8 +22,17 @@ The visualizer pane displays, by default, the `mppcava` spectrum visualizer.
 Alternately, the visualizer pane can display a Python ASCIImatics visualization.
 
 # COMMAND LINE OPTIONS
+
+Defaults: cover art disabled, ascii art disabled, recording disabled
+
 **-a**
 : Indicates display album cover art
+
+**-f**
+: Indicates we have been invoked from a fullscreen window
+
+**-g**
+: Indicates do not use gradient colors for spectrum visualizer
 
 **-p script**
 : Specifies a python script to run in the visualizer pane. Available scripts are "julia", "plasma", and "rocks".
@@ -70,7 +79,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcpluskeys**(1)
+**mpcplus**(1), **mpcpluskeys**(1), **mpplus**(1)
 
 Full documentation and sources at:
 

@@ -48,10 +48,11 @@ VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
+USE_GRAD=1
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-f] [-h] [-i] [-jJ] [-k] [-m]"
+  printf "\n\t\t[-g] [-f] [-h] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
   printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]"
@@ -60,6 +61,7 @@ usage() {
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
+  printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-h indicates half-height for visualizer window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
@@ -676,7 +678,12 @@ show_main_menu() {
 
 init_vars() {
   MPCPLUS="mpcplus"
-  MPCPLUS_TMUX="mpcplus-tmux -f"
+  if [ "${USE_GRAD}" ]
+  then
+    MPCPLUS_TMUX="mpcplus-tmux -f"
+  else
+    MPCPLUS_TMUX="mpcplus-tmux -f -g"
+  fi
   MPPSPLASH="mppsplash"
   MPPSPLASH_TMUX="mppsplash-tmux"
 
@@ -730,7 +737,7 @@ have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
 
-while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
+while getopts "AabcC:Dd:fghijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -790,6 +797,9 @@ while getopts "AabcC:Dd:fhijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
       ;;
     f)
       FULLSCREEN=1
+      ;;
+    g)
+      USE_GRAD=
       ;;
     h)
       HALFHEIGHT=1

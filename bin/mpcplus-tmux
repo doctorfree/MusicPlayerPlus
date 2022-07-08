@@ -34,10 +34,11 @@ have_tmuxp=`type -p tmuxp`
 }
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-f] [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-f] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art"
   printf "\n\t-f indicates we have been invoked from a fullscreen window"
+  printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
@@ -61,16 +62,20 @@ usage() {
   exit 1
 }
 
+USE_GRAD=1
 PYART=
 RECORD=
 USAGE=
 ARGS="$*"
-while getopts "afp:ru" flag; do
+while getopts "afgp:ru" flag; do
     case $flag in
         a)
           [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ] && USE_TMUXP=
           ;;
         f)
+          ;;
+        g)
+          USE_GRAD=
           ;;
         p)
           PYART=${OPTARG}
@@ -99,7 +104,12 @@ shift $(( OPTIND - 1 ))
 numrows=`tput lines`
 MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
 FZFCOMM="fzmp -a"
-VIZCOMM="mppcava -p ${HOME}/.config/mppcava/tmux.conf"
+if [ "${USE_GRAD}" ]
+then
+  VIZCOMM="mppcava"
+else
+  VIZCOMM="mppcava -p ${HOME}/.config/mppcava/config-tmux"
+fi
 [ "${PYART}" ] && {
   have_pyart=`type -p mpp${PYART}`
   [ "${have_pyart}" ] && {

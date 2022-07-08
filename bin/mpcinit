@@ -51,8 +51,8 @@ chmod 755 ${HOME}/${MPCDIR}/*.sh
 [ -f ${HOME}/.config/mppcava/config ] || {
   cp ${MPPCDIR}/mppcava/config ${HOME}/.config/mppcava/config
 }
-[ -f ${HOME}/.config/mppcava/tmux.conf ] || {
-  cp ${MPPCDIR}/mppcava/tmux.conf ${HOME}/.config/mppcava/tmux.conf
+[ -f ${HOME}/.config/mppcava/config-tmux ] || {
+  cp ${MPPCDIR}/mppcava/config-tmux ${HOME}/.config/mppcava/config-tmux
 }
 
 if [ -d ${HOME}/.config/tmuxp ]
@@ -216,7 +216,7 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
 }
 
 CONF=${HOME}/.config
-FIFS="mppcava/tmux.conf mppcava/config"
+FIFS="mppcava/config-tmux mppcava/config"
 for cnf in ${FIFS}
 do
   [ -f ${CONF}/${cnf} ] || continue

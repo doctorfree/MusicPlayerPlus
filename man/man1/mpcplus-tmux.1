@@ -22,10 +22,10 @@ mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a
 tmux session
 .SH SYNOPSIS
 .PP
-\f[B]mpcplus-tmux\f[R] [-a] [-p script] [-r] [-u]
+\f[B]mpcplus-tmux\f[R] [-a] [-f] [-g] [-p script] [-r] [-u]
 .PP
 \f[B]NOTE:\f[R] \f[V]mpcplus-tmux\f[R] can be run by invoking
-\f[V]mpplus [-a] [-p script] [-R]\f[R]
+\f[V]mpplus [-a] [-g] [-p script] [-R]\f[R]
 .SH DESCRIPTION
 .PP
 The \f[I]mpcplus-tmux\f[R] command opens several panes in a terminal
@@ -38,9 +38,17 @@ visualizer.
 Alternately, the visualizer pane can display a Python ASCIImatics
 visualization.
 .SH COMMAND LINE OPTIONS
+.PP
+Defaults: cover art disabled, ascii art disabled, recording disabled
 .TP
 \f[B]-a\f[R]
 Indicates display album cover art
+.TP
+\f[B]-f\f[R]
+Indicates we have been invoked from a fullscreen window
+.TP
+\f[B]-g\f[R]
+Indicates do not use gradient colors for spectrum visualizer
 .TP
 \f[B]-p script\f[R]
 Specifies a python script to run in the visualizer pane.
@@ -97,7 +105,7 @@ Submit bug reports online at:
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
 .SH SEE ALSO
 .PP
-\f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
+\f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1), \f[B]mpplus\f[R](1)
 .PP
 Full documentation and sources at:
 .PP

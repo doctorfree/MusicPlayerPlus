@@ -19,10 +19,11 @@ else
 fi
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-f] [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-f] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art"
   printf "\n\t-f indicates we have been invoked from a fullscreen window"
+  printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
@@ -58,8 +59,9 @@ ART_HEIGHT=42
 ALBUM_COVER="${HOME}/${MPCDIR}/album_cover.sh"
 PYART=
 RECORD=
+USE_GRAD=1
 USAGE=
-while getopts "afp:ru" flag; do
+while getopts "afgp:ru" flag; do
     case $flag in
         a)
           have_uebz=`type -p ueberzug`
@@ -69,6 +71,9 @@ while getopts "afp:ru" flag; do
           ART_WIDTH=10
           ART_HEIGHT=35
           ALBUM_COVER="${HOME}/${MPCDIR}/album_cover.sh -f"
+          ;;
+        g)
+          USE_GRAD=
           ;;
         p)
           PYART=${OPTARG}
@@ -119,9 +124,13 @@ then
   [ "${have_pyart}" ] && PYART="mpp${PYART}"
   tmux send-keys "${PYART}; exit" C-m
 else
-  tmux send-keys "mppcava -p ${HOME}/.config/mppcava/tmux.conf; exit" C-m
+  if [ "${USE_GRAD}" ]
+  then
+    tmux send-keys "mppcava; exit" C-m
+  else
+    tmux send-keys "mppcava -p ${HOME}/.config/mppcava/config-tmux; exit" C-m
+  fi
 fi
-
 
 if [ "${ART}" ]
 then
