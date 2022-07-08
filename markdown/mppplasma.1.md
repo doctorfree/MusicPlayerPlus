@@ -43,7 +43,7 @@ which audio file to use as accompaniment, and which comments to use.
 **mppplasma -c 10**
 : Plays the Plasma ASCIImatics animation 10 times then exits 
 
-**mppplasma -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
+**mppplasma -a /usr/share/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the Plasma ASCIImatics animation 5 times accompanied by audio then exits 
 
 # AUTHORS

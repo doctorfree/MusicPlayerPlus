@@ -46,7 +46,7 @@ starting point for calculations, and which audio file to use as accompaniment.
 **mppjulia -c 10**
 : Plays the Julia Set ASCIImatics animation 10 times then exits 
 
-**mppjulia -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
+**mppjulia -a /usr/share/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the Julia Set ASCIImatics animation 5 times accompanied by audio then exits 
 
 **mppjulia -x 0.687 -y 0.312**

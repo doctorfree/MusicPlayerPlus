@@ -54,7 +54,7 @@ When mpcplus starts, it tries to read settings from
 $XDG_CONFIG_HOME/mpcplus/config and $HOME/.mpcplus/config files. If no
 configuration is found, mpcplus uses its default configuration. An example
 configuration file containing all default values is provided with mpcplus and
-can be usually found in /usr/share/doc/mpcplus (the exact location may depend on
+can be usually found in /usr/share/mpcplus (the exact location may depend on
 your operating system or configure prefix).
 
 Note: Configuration option values can either be enclosed in quotation marks or not.
@@ -338,7 +338,7 @@ Supported configuration options:
 When mpcplus starts, it tries to read bindings from
 $XDG_CONFIG_HOME/mpcplus/bindings and ~/.mpcplus/bindings files. If no bindings
 file is found, mpcplus uses the defaults. An example bindings file with default
-values can be found usually in /usr/share/doc/mpcplus (the exact location may
+values can be found usually in /usr/share/mpcplus (the exact location may
 depend on your operating system or configure prefix).
 
 Mpcplus includes bindings to integrate with `mppcava`, a customized fork of

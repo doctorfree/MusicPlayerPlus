@@ -6,10 +6,11 @@
 # Also setup default tmux configuration for this user
 # Install required pip modules if not already installed
 
-MPPCDIR=/usr/share/doc/musicplayerplus
+MPPCDIR=/usr/share/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
-CFGS="album_cover.sh config-art.conf cover_obs.sh default_cover.png \
-      fzmp.conf mpcplus-art.sh mppsplash-dual.sh"
+SCPTDIR=${MPPCDIR}/scripts
+CFGS="config-art.conf default_cover.png fzmp.conf"
+SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 
 [ -f ${CONFDIR}/config ] || {
     echo "${CONFDIR}/config does not exist."
@@ -43,9 +44,16 @@ for cfg in ${CFGS}
 do
   [ -f ${HOME}/${MPCDIR}/${cfg} ] || {
     cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    chmod 644 ${HOME}/${MPCDIR}/${cfg}
   }
 done
-chmod 755 ${HOME}/${MPCDIR}/*.sh
+for scp in ${SCPS}
+do
+  [ -f ${HOME}/${MPCDIR}/${scp} ] || {
+    cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+    chmod 755 ${HOME}/${MPCDIR}/${scp}
+  }
+done
 
 [ -d ${HOME}/.config/mppcava ] || mkdir -p ${HOME}/.config/mppcava
 [ -f ${HOME}/.config/mppcava/config ] || {

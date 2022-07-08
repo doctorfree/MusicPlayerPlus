@@ -36,6 +36,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Custom key bindings](#custom-key-bindings)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
+1. [Remote control](#remote-control)
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
 
@@ -770,6 +771,106 @@ failed, open an issue at
 Even if you do manage to resolve an issue, it may still be helpful to
 report the issue at https://github.com/doctorfree/MusicPlayerPlus/issues
 so that a fix may be incorporated in the next release.
+
+## Remote control
+
+Advanced users may wish to add remote control capabilities to MusicPlayerPlus.
+Getting IR remote control of MPD working is pretty geeky and fun. Also cool.
+
+This can be accomplished on most Linux systems using LIRC. To get started, see the
+[ArchLinux Step-by-step LIRC setup guide](https://wiki.archlinux.org/title/LIRC/Quick_start_guide)
+for USB IR receiver with universal remote control.
+
+The only prerequisites are a USB IR receiver, preferably an MCE model, and
+an old universal remote control you have lying around the house.
+
+The hard part is getting the remote control device talking to the IR receiver
+since there are a number of different protocols and devices supported. The
+guide linked above has pretty good step-by-step procedures for establishing
+communication between the remote and the receiver.
+
+Once the hardware is successfully communicating, you can control MPD with `lirc`
+and `mpc` by configuring lirc. For example, add the following to `~/.lircrc`:
+
+```
+## irexec
+begin
+     prog = irexec
+     button = play_pause
+     config = mpc toggle
+     repeat = 0
+end
+
+begin
+     prog = irexec
+     button = stop
+     config = mpc stop
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = previous
+     config = mpc prev
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = next
+     config = mpc next
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = volup
+     config = mpc volume +2
+     repeat = 1
+end
+begin
+     prog = irexec
+     button = voldown
+     config = mpc volume -2
+     repeat = 1
+end
+begin
+     prog = irexec
+     button = pbc
+     config = mpc random
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = pdvd
+     config = mpc update
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = right
+     config = mpc seek +00:00:05
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = left
+     config = mpc seek -00:00:05
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = up
+     config = mpc seek +1%
+     repeat = 0
+end
+begin
+     prog = irexec
+     button = down
+     config = mpc seek -1%
+     repeat = 0
+end
+```
+
+A guide for configuring `lirc` to control MPD using `mpc` can be found at
+https://wiki.archlinux.org/title/Music_Player_Daemon/Tips_and_tricks#Control_MPD_with_lirc
 
 ## Screenshots
 

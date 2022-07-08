@@ -40,7 +40,7 @@ accompaniment, and specify the font used in the Cycle effect.
 **mpprocks -c 10**
 : Plays the MusicPlayerPlus ASCIImatics animation 10 times then exits 
 
-**mpprocks -a /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
+**mpprocks -a /usr/share/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the MusicPlayerPlus ASCIImatics animation 5 times accompanied by audio then exits 
 
 **mpprocks -f big**

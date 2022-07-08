@@ -46,7 +46,7 @@ Default generated output is the file */etc/asound.conf*
 
 Default asound.conf template can be found in:
 
-	*/usr/share/doc/musicplayerplus/mpcplus/asound.conf.tmpl*
+	*/usr/share/musicplayerplus/mpcplus/asound.conf.tmpl*
 
 # EXAMPLES
 **alsa_conf -c -q**

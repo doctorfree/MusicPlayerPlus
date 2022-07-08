@@ -69,7 +69,7 @@ Where:
 	-u displays this usage message and exits
 
 Default audio:
-    /usr/share/doc/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav
+    /usr/share/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav
 
 Without any options the MusicPlayerPlus effect will repeat
 

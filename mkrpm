@@ -74,7 +74,9 @@ mkdir ${OUT_DIR}
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus"
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
+           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
+           "${DESTDIR}/share/${PKG}/mpcplus"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -98,31 +100,33 @@ ${SUDO} cp CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
-${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
-${SUDO} cp config/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/config-art.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/mpcplus-art.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/mppsplash-dual.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp config/config-art.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
-${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+#${SUDO} cp share/scripts/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+#${SUDO} cp share/scripts/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+#${SUDO} cp share/scripts/mpcplus-art.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+#${SUDO} cp share/scripts/mppsplash-dual.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+#${SUDO} cp share/scripts/setup-xterm24.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 
-${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpd"
-${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava"
-${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mppcava/template.conf
-${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/tmuxp
-${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/music"
+${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+
+${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
+${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
+${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf
+${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp
+${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/${PKG}/music"
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
@@ -139,7 +143,8 @@ ${SUDO} chmod 644 ${OUT_DIR}/${DESTDIR}/share/menu/*
 ${SUDO} chmod 755 ${OUT_DIR}/${DESTDIR}/bin/* \
                   ${OUT_DIR}/${DESTDIR}/bin \
                   ${OUT_DIR}/${DESTDIR}/share/man \
-                  ${OUT_DIR}/${DESTDIR}/share/man/*
+                  ${OUT_DIR}/${DESTDIR}/share/man/* \
+                  ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts/*
 ${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
 
 echo "Building ${PKG_NAME}_${PKG_VER} rpm package"

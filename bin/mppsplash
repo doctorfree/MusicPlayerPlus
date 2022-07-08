@@ -2,7 +2,7 @@
 #
 # mppsplash - display MusicPlayerPlus splash screen using ASCIImatics
 #
-MUSEDIR=/usr/share/doc/musicplayerplus/music
+MUSEDIR=/usr/share/musicplayerplus/music
 SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
