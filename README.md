@@ -777,17 +777,26 @@ so that a fix may be incorporated in the next release.
 Advanced users may wish to add remote control capabilities to MusicPlayerPlus.
 Getting IR remote control of MPD working is pretty geeky and fun. Also cool.
 
-This can be accomplished on most Linux systems using LIRC. To get started, see the
+This can be accomplished on most Linux systems using LIRC (Linux Infrared
+Remote Control). LIRC setup and usage is described at
+https://wiki.archlinux.org/title/LIRC
+
+To get started, see the
 [ArchLinux Step-by-step LIRC setup guide](https://wiki.archlinux.org/title/LIRC/Quick_start_guide)
 for USB IR receiver with universal remote control.
 
 The only prerequisites are a USB IR receiver, preferably an MCE model, and
 an old universal remote control you have lying around the house.
 
+A long list of LIRC supported remotes with corresponding LIRC configurations
+can be found at the
+[LIRC Remotes Databass](http://lirc-remotes.sourceforge.net/remotes-table.html).
+
+
 The hard part is getting the remote control device talking to the IR receiver
-since there are a number of different protocols and devices supported. The
-guide linked above has pretty good step-by-step procedures for establishing
-communication between the remote and the receiver.
+since there are a number of different protocols and devices supported.
+The LIRC setup guide linked above has pretty good step-by-step procedures for
+establishing communication between the remote and the receiver.
 
 Once the hardware is successfully communicating, you can control MPD with `lirc`
 and `mpc` by configuring lirc. For example, add the following to `~/.lircrc`:
