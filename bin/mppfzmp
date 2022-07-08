@@ -2,6 +2,7 @@
 
 MTITLE="MusicPlayerPlus Fuzzy Finder"
 MPCOMM="fzmp -a"
+SCRIPTS="/usr/share/musicplayerplus/scripts"
 
 have_fzmp=`type -p fzmp`
 [ "${have_fzmp}" ] || exit 1
@@ -11,19 +12,20 @@ have_tilix=`type -p tilix`
 
 if [ "${DISPLAY}" ]
 then
-  have_xdpy=`type -p xdpyinfo`
-  if [ "${have_xdpy}" ]
+  status=0
+  if [ -x ${SCRIPTS}/check_tty.sh ]
   then
-    xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+    ${SCRIPTS}/check_tty.sh
+    status=$?
   else
-    if [ "${have_gnome}" ]
-    then
-      gnome-terminal --quiet -- echo "" > /dev/null 2>&1
-    else
-      echo ""
-    fi
+    have_tty=`type -p tty`
+    [ "${have_tty}" ] && {
+      tty=$(tty)
+      echo "${tty}" | grep /dev/tty > /dev/null && status=1
+      echo "${tty}" | grep /dev/con > /dev/null && status=1
+    }
   fi
-  [ $? -eq 0 ] || {
+  [ ${status} -eq 0 ] || {
     have_gnome=
     have_tilix=
   }

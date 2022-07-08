@@ -49,6 +49,8 @@ MTITLE="Music Player Plus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
 USE_GRAD=1
+MPP_DIR="/usr/share/musicplayerplus"
+SCRIPTS="${MPP_DIR}/scripts"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
@@ -709,19 +711,20 @@ init_vars() {
 init_vars
 if [ "${DISPLAY}" ]
 then
-  have_xdpy=`type -p xdpyinfo`
-  if [ "${have_xdpy}" ]
+  status=0
+  if [ -x ${SCRIPTS}/check_tty.sh ]
   then
-    xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+    ${SCRIPTS}/check_tty.sh
+    status=$?
   else
-    if [ "${have_gnome}" ]
-    then
-      gnome-terminal --quiet -- echo "" > /dev/null 2>&1
-    else
-      echo ""
-    fi
+    have_tty=`type -p tty`
+    [ "${have_tty}" ] && {
+      tty=$(tty)
+      echo "${tty}" | grep /dev/tty > /dev/null && status=1
+      echo "${tty}" | grep /dev/con > /dev/null && status=1
+    }
   fi
-  [ $? -eq 0 ] || {
+  [ ${status} -eq 0 ] || {
     CONSOLE_MODE=1
     TMUX_MPC=1
   }
