@@ -102,7 +102,7 @@ tmux send-keys "clear" C-m
 [ "${ART}" ] && tmux send-keys "${ALBUM_COVER}" C-m
 
 tmux split-window -v -p $((100 - ART_HEIGHT))
-tmux select-pane -t 1
+tmux select-pane -t 2
 if [ "${ART}" ]
 then
   tmux send-keys "mpcplus --config=${HOME}/${MPCDIR}/config-art.conf; exit" C-m
@@ -110,7 +110,7 @@ else
   tmux send-keys "mpcplus; exit" C-m
 fi
 
-tmux select-pane -t 0
+tmux select-pane -t 1
 [ "${ART}" ] && tmux split-window -h -p $((100 - ART_WIDTH))
 
 if [ "${PYART}" ]
@@ -127,16 +127,16 @@ if [ "${ART}" ]
 then
 # tmux resize-pane -t 0 -x "${ART_WIDTH}\%" -y "${ART_HEIGHT}\%"
 # tmux set-hook client-resized "resize-pane -t 0 -x \"${ART_WIDTH}\\\%\" -y \"${ART_HEIGHT}\\\%\""
-  tmux select-pane -t 2
+  tmux select-pane -t 3
 else
 # tmux resize-pane -t 0 -x "100\%" -y "${ART_HEIGHT}\%"
 # tmux set-hook client-resized "resize-pane -t 0 -x \"100\\\%\" -y \"${ART_HEIGHT}\\\%\""
-  tmux select-pane -t 1
+  tmux select-pane -t 2
 fi
 
 tmux new-window "fzmp -a"
 
-tmux select-window -t ${SESSION}:0
+tmux select-window -t ${SESSION}:1
 
 if [ "${RECORD}" ]
 then

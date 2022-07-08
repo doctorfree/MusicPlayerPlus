@@ -192,11 +192,19 @@ the **mpcplus** music player client.
 
 # KEYS - TMUX SESSIONS
 
--   `[ Alt-Right ]` - Next window
--   `[ Alt-Left ]`  - Previous window
--   `[ Alt-n ]`     - Next window
--   `[ Alt-p ]`     - Previous window
--   `[ Alt-x ]`     - Kill session
+-   `[ Alt-PgDn ]`     - Next window
+-   `[ Shift-Right ]`  - Next window
+-   `[ Alt-PgUp ]`     - Previous window
+-   `[ Shift-Left ]`   - Previous window
+-   `[ Alt-x ]`        - Prompt to kill session
+-   `[ Alt-X ]`        - Kill session
+-   `[ Alt-Left ]`     - Move pane focus to left
+-   `[ Alt-Right ]`    - Move pane focus to right
+-   `[ Alt-Up ]`       - Move pane focus up
+-   `[ Alt-Down ]`     - Move pane focus down
+
+When `mpcplus` is executed in a `tmux` session `Shift-Right Arrow` will switch
+to a tmux window running the fuzzy media finder `fzmp`.
 
 # KEYS - TINY TAG EDITOR
 

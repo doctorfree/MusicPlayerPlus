@@ -649,11 +649,22 @@ removed if desired.
 Tmux custom key bindings are defined in `$HOME/.tmux.conf`.
 MusicPlayerPlus custom key bindings for tmux sessions include the following:
 
--   `[ Alt-Right ]` - Next window
--   `[ Alt-Left ]`  - Previous window
--   `[ Alt-n ]`     - Next window
--   `[ Alt-p ]`     - Previous window
--   `[ Alt-x ]`     - Kill session
+-   `[ Alt-PgDn ]`     - Next window
+-   `[ Shift-Right ]`  - Next window
+-   `[ Alt-PgUp ]`     - Previous window
+-   `[ Shift-Left ]`   - Previous window
+-   `[ Alt-x ]`        - Prompt to kill session
+-   `[ Alt-X ]`        - Kill session
+-   `[ Alt-Left ]`     - Move pane focus to left
+-   `[ Alt-Right ]`    - Move pane focus to right
+-   `[ Alt-Up ]`       - Move pane focus up
+-   `[ Alt-Down ]`     - Move pane focus down
+
+The tmux prefix key is remapped from `Ctrl-b` to `Ctrl-a` and the status bar
+is configured to display a `Ctrl` message when the prefix key is pressed.
+
+There are hundreds of tmux key bindings. To view the currently configured
+tmux key bindings, execute the command `tmux list-keys`.
 
 Custom key bindings are also defined for the `mpcplus` music player client command.
 Mpcplus custom key bindings are defined in `$HOME/.config/mpcplus/bindings`.

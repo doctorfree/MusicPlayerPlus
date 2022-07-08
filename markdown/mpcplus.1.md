@@ -349,9 +349,12 @@ transparent, and Alt-0 to 100% opaque. These transparency setting bindings are
 useful when running `mpcplus` and `mppcava` in separate overlapping windows,
 the spectrum visualizer visible through and behind the mpcplus window.
 
-Alt-f opens a terminal window or tmux pane running the fuzzy media finder `fzmp`.
+Alt-f opens a terminal window running the fuzzy media finder `fzmp`.
 
-Alt-r raises/lowers the Cava window.
+Alt-r raises/lowers the spectrum visualizer window.
+
+When `mpcplus` is executed in a `tmux` session `Shift-Right Arrow` will switch
+to a tmux window running the fuzzy media finder `fzmp`.
 
 You can view current keybindings by pressing F1.
 

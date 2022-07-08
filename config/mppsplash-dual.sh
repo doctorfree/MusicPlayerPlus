@@ -169,7 +169,7 @@ tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
 [ "${DUAL}" ] && tmux split-window -h -p 50
 
-tmux select-pane -t 0
+tmux select-pane -t 1
 have_left=`type -p ${PYLEFT}`
 [ "${have_left}" ] || {
   tmux kill-session -t ${SESSION}
@@ -187,7 +187,7 @@ tmux send-keys "mppsplash ${left_script_args} ${script_args}; tmux kill-session 
     echo "${PYRIGHT} not found. Exiting."
     exit 1
   }
-  tmux select-pane -t 1
+  tmux select-pane -t 2
 
   # Start the right pane script
   tmux send-keys "mppsplash ${right_script_args} ${script_args}; tmux kill-session -t ${SESSION}" C-m

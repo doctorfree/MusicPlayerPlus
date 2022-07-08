@@ -96,14 +96,15 @@ shift $(( OPTIND - 1 ))
   exit 0
 }
 
+numrows=`tput lines`
+MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
 FZFCOMM="fzmp -a"
-MAIN_PANE_HEIGHT=20
 VIZCOMM="mppcava -p ${HOME}/.config/mppcava/tmux.conf"
 [ "${PYART}" ] && {
   have_pyart=`type -p mpp${PYART}`
   [ "${have_pyart}" ] && {
     VIZCOMM="mpp${PYART}"
-    MAIN_PANE_HEIGHT=10
+    MAIN_PANE_HEIGHT=$((${numrows} / 2))
   }
 }
 export FZFCOMM MAIN_PANE_HEIGHT VIZCOMM
