@@ -17,6 +17,7 @@ Changes in version 1.0.3 release 1 include:
 * Add command line option to invoke fzmp
 * Add support for fzmp to interactive menu in mpplus
 * Add man page for fzmp
+* Add mpcplus cheat sheet
 * Rename asciijulia to mppjulia to avoid conflict with Asciiville package
 * Rename asciiplasma to mppplasma to avoid conflict with Asciiville package
 * Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
