@@ -59,6 +59,9 @@ Previous changes in version 1.0.2 include:
 * Additional terminal support
 
 ## Installation
+
+Download the [latest Debian or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
+
 Install the package on Debian based systems by executing the command
 
 ```bash
@@ -77,9 +80,12 @@ sudo yum localinstall ./MusicPlayerPlus-1.0.3-1.x86_64.rpm
 ```
 
 ## Configuration
-Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
 
 Execute the `mpcinit` command.
+
+Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
+
+If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then re-run `mpcinit`.
 
 See the [MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme) for additional configuration info.
 
