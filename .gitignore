@@ -43,3 +43,4 @@ tools/*
 *.un~
 Session.vim
 .netrwhist
+tmux*log
