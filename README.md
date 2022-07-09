@@ -431,7 +431,7 @@ to complete. Once the music database has been updated you should see the
 songs, albums, and playlists in your music library appear in the client view.
 
 ### Terminal Emulator Profiles
-The Cava spectrum visualizer looks better when the font used by the
+The `mppcava` spectrum visualizer looks better when the font used by the
 terminal emulator in which it is running is a small sized font. Some
 terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
@@ -870,13 +870,13 @@ bind-key -r -T prefix       C-Left            resize-pane -L
 bind-key -r -T prefix       C-Right           resize-pane -R
 ```
 
-This means you can resize a pane by `<prefix>` `Alt ↓`. The default
-MusicPlayerPlus tmux prefix is `Ctrl-a` so in order to resize the `mpcplus`
-pane using the keyboard, type `Ctrl-a` then type `Alt ↓`. You can repeat
-`Alt ↓` several times without needing to re-type the `Ctrl-a` prefix if you
-type it fast enough (about a second). If the display of `Ctrl` on the tmux
-status line disappears and you still need to resize the `mpcplus` pane,
-then you will need to re-type the prefix key `Ctrl-a`.
+This means you can resize a pane by `<prefix>` `Alt ↓` (tmux prefix followed
+by "Alt-DownArrow"). The default MusicPlayerPlus tmux prefix is `Ctrl-a` so in
+order to resize the `mpcplus` pane using the keyboard, type `Ctrl-a` then type
+`Alt ↓`. You can repeat `Alt ↓` several times without needing to re-type the
+`Ctrl-a` prefix if you type it fast enough (about a second). If the display of 
+`Ctrl` on the tmux status line disappears and you still need to resize the
+`mpcplus` pane, then you will need to re-type the prefix key `Ctrl-a`.
 
 This issue has only been detected on Fedora Linux over SSH. However, it may
 occur with other systems and may not be exclusive to either SSH or Fedora.
