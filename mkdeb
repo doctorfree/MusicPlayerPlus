@@ -92,7 +92,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: ${ARCH}
-Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), gnome-terminal, tilix (>= 1.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1), tmux, ffmpeg, inotify-tools, fzf, mpc, python3-dev, mplayer, asciinema
+Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), gnome-terminal, tilix (>= 1.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1), tmux, ffmpeg, inotify-tools, fzf, mpc, python3-dev, python3-pip, mplayer, asciinema
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 79000
 Build-Depends: debhelper (>= 11)

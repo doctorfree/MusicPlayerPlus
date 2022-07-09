@@ -373,35 +373,29 @@ fi
 }
 
 have_pip=`type -p pip`
-[ "${have_pip}" ] || {
-  plat=`uname -s`
-  if [ "$plat" == "Darwin" ]
-  then
-    python3 -m ensurepip --upgrade
-  else
-    debian=
-    [ -f /etc/os-release ] && . /etc/os-release
-    [ "${ID_LIKE}" == "debian" ] && debian=1
-    [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
-
-    if [ "${debian}" ]
+if [ "${have_pip}" ]
+then
+  for pkg in asciimatics sacad tmuxp ueberzug
+  do
+    if pip list | grep ${pkg} > /dev/null
     then
-      sudo apt install python3-pip -y
+      python -m pip install --upgrade ${pkg} > /dev/null 2>&1
     else
-      sudo dnf install python3-pip -y
+      python -m pip install ${pkg} > /dev/null 2>&1
     fi
-  fi
-}
-
-for pkg in asciimatics sacad tmuxp ueberzug
-do
-  if pip list | grep ${pkg} > /dev/null
-  then
-    python -m pip install --upgrade ${pkg} > /dev/null 2>&1
-  else
-    python -m pip install ${pkg} > /dev/null 2>&1
-  fi
-done
+  done
+else
+  echo "WARNING: Python pip module not found."
+  echo "Pip is required to install several MusicPlayerPlus components."
+  echo ""
+  echo "Install the Python pip module with:"
+  printf "\n\tsudo apt install python3-pip\n"
+  echo "or"
+  printf "\n\tsudo dnf install python3-pip\n"
+  echo ""
+  echo "After verifying that pip is installed,"
+  echo "rerun the 'mpcinit' MusicPlayer initialization."
+fi
 
 printf "\nMusicPlayerPlus Initialization Complete\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"

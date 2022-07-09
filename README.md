@@ -123,15 +123,42 @@ Additional detail and info can be found in the
 
 ## Quickstart
 
+### Required setup
+
 * Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
 * Run the `mpcinit` command (must be done as your normal user, no need for `sudo`)
+
+### Optional additional setup steps
+
+For many installations, installing the MusicPlayerPlus package and initializing
+the user configuration with the `mpcinit` command is all that need be done.
+
+However, you may need to modify the MPD and `mpcplus` music directory setting.
+
+The `mpcinit` command sets the MPD and `mpcplus` music directory to:
+
+`~/.config/mpd/music/`
+
+and, if it did not previously exist, links that directory to `$HOME/Music`.
+
+If your media library resides in another location then perform the following
+steps and re-run `mpcinit`:
+
 * Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
+* Re-run the `mpcinit` command
+
+Any time the MPD music directory is manually modified, for example if the
+music library is moved to a different location, re-run `mpcinit`.
+
+Once the music directory has been set correctly and `mpcinit` has completed
+initialization, some system checks can optionally be performed.
+
 * Verify the `mpd` service is running and if not then start it:
     * `systemctl --user is-active mpd.service`
     * `systemctl --user start mpd.service`
 * Update the MPD client database:
     * `mpc update`
-* Optionally, verify the `mpd` service is enabled and if not enable it
+* Verify the `mpd` service is enabled and if not enable it
     * `systemctl --user is-enabled mpd.service`
     * `systemctl --user enable mpd.service`
 * Play music with `mpplus`
