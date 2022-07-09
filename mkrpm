@@ -111,6 +111,8 @@ ${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/config-art.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
+${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
 #${SUDO} cp share/scripts/album_cover.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 #${SUDO} cp share/scripts/cover_obs.sh ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts

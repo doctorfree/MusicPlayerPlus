@@ -18,7 +18,7 @@ Cava spectrum visualizer.
 
 Read more about MPD at http://www.musicpd.org
 
-Read more about Cava at
+Read more about `mppcava` at
 https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
 
 # COMMAND LINE OPTIONS
@@ -53,9 +53,9 @@ Mandatory arguments to long options are mandatory for short options as well.
 When mpcplus starts, it tries to read settings from
 $XDG_CONFIG_HOME/mpcplus/config and $HOME/.mpcplus/config files. If no
 configuration is found, mpcplus uses its default configuration. An example
-configuration file containing all default values is provided with mpcplus and
-can be usually found in /usr/share/mpcplus (the exact location may depend on
-your operating system or configure prefix).
+configuration file containing all default values is provided with
+MusicPlayerPlus and can be found in
+[/usr/share/musicplayerplus/mpcplus/config](https://github.com/doctorfree/MusicPlayerPlus/blob/master/mpcplus/doc/config)
 
 Note: Configuration option values can either be enclosed in quotation marks or not.
  - If they are enclosed, the leftmost and the rightmost quotation marks are treated as delimiters, therefore it is not necessary to escape quotation marks you use within the value itself.
@@ -338,8 +338,8 @@ Supported configuration options:
 When mpcplus starts, it tries to read bindings from
 $XDG_CONFIG_HOME/mpcplus/bindings and ~/.mpcplus/bindings files. If no bindings
 file is found, mpcplus uses the defaults. An example bindings file with default
-values can be found usually in /usr/share/mpcplus (the exact location may
-depend on your operating system or configure prefix).
+values can be found in
+[/usr/share/musicplayerplus/mpcplus/mpcplus-cheat-sheet.md](https://github.com/doctorfree/MusicPlayerPlus/tree/master/share/mpcplus-cheat-sheet.md)
 
 Mpcplus includes bindings to integrate with `mppcava`, a customized fork of
 the Cava spectrum visualizer. By default, these bindings are Alt-0 through
