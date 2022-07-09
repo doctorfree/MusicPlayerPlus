@@ -27,6 +27,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [Documentation](#documentation)
+    1. [README for MusicPlayerPlus configuration](#readme-for-musicplayerplus-configuration)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
     1. [README for tmuxp configs](#readme-for-tmuxp-configs)
     1. [Man Pages](#man-pages)
@@ -427,6 +428,9 @@ user interface for MusicPlayerPlus and the manual page for `mpplus` can be
 viewed with the command `man mpplus`. Most commands also have
 help/usage messages that can be viewed with the **-u** argument option,
 e.g. `mpplus -u`.
+
+### README for MusicPlayerPlus configuration
+- [**config/README.md**](config/README.md) - Overview and details of the MusicPlayerPlus configuration
 
 ### README for mpcplus MPD client
 - [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
