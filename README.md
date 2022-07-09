@@ -35,8 +35,10 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Example client invocations](#example-client-invocations)
     1. [Adding Album Cover Art](#adding-album-cover-art)
     1. [Custom key bindings](#custom-key-bindings)
+    1. [Tmux session exit issues](#tmux-session-exit-issues)
 1. [Removal](#removal)
 1. [Troubleshooting](#troubleshooting)
+    1. [Known issues](#known-issues)
 1. [Infrared remote control of MPD](#infrared-remote-control-of-mpd)
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
@@ -699,6 +701,8 @@ MusicPlayerPlus custom key bindings for tmux sessions include the following:
 -   `[ Alt-Right ]`    - Move pane focus to right
 -   `[ Alt-Up ]`       - Move pane focus up
 -   `[ Alt-Down ]`     - Move pane focus down
+-   `[ Prefix q ]`     - Prompt to kill session
+-   `[ Prefix Q ]`     - Kill session
 
 The tmux prefix key is remapped from `Ctrl-b` to `Ctrl-a` and the status bar
 is configured to display a `Ctrl` message when the prefix key is pressed.
@@ -725,6 +729,26 @@ MusicPlayerPlus custom key bindings for `mpcplus` include the following:
 -   `[ Alt-8 ]` - Set xfce4-terminal window transparency to 20%
 -   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
 -   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
+
+#### Tmux session exit issues
+
+In addition to the `Alt-x` and `Alt-X` key bindings above to kill the current
+tmux session, MusicPlayerPlus tmux key bindings include `Ctrl-a q` and
+`Ctrl-a Q` which also are mapped to `kill-session` in a similar manner. This
+is because some terminal emulators, in particular iTerm2, may already have key
+bindings for the `Alt` key or the Meta key may be something other than `Alt`.
+
+In a MusicPlayerPlus tmux session, if `Alt-x` and `Alt-X` do not initiate
+a `kill-session` then use the configured tmux prefix key (e.g. `Ctrl-a`)
+followed by `q` or `Q` to exit the current tmux session.
+
+If a MusicPlayerPlus tmux session has been initiated over SSH using the
+Terminal app on macOS then it may be necessary to configure the Terminal
+profile in use to "Use Option as Meta key" in order to recognize the custom
+tmux key bindings using the `Alt` key. To configure the Terminal app profile
+in this manner, go to `Terminal -> Preferences -> Profiles`. Select the 
+profile you are using (usually "Basic Default") and select the `Keyboard` tab.
+Click the "Use Option as Meta key" checkbox and exit Terminal preferences.
 
 ## Removal
 
@@ -802,6 +826,60 @@ failed, open an issue at
 Even if you do manage to resolve an issue, it may still be helpful to
 report the issue at https://github.com/doctorfree/MusicPlayerPlus/issues
 so that a fix may be incorporated in the next release.
+
+### Known issues
+
+#### Tmux key bindings in iTerm2 terminal emulator
+
+The `iTerm2` terminal emulator has built-in support for tmux. Several of
+the iTerm2 built-in tmux key bindings conflict with and override the default
+tmux key bindings and the MusicPlayerPlus custom tmux key bindings.
+
+Unless you are quite familiar with iTerm2 and its tmux implementation, we do
+not recommend using iTerm2 with MusicPlayerPlus when running tmux sessions.
+
+MusicPlayerPlus support for iTerm2 may be forthcoming in future releases but
+at this time iTerm2 is not a supported MusicPlayerPlus terminal emulator.
+
+#### Tmux sessions over SSH to Fedora systems
+
+A tmux session initiated over SSH to a Fedora Linux system may size the
+tmux panes incorrectly. This issue is not yet understood but will hopefully
+be addressed in a future release of MusicPlayerPlus. If, for example, a
+`mpplus` or `mpcplus-tmux` tmux session displays the `mpcplus` pane with
+a small height while the spectrum visualizer pane consumes most of the session
+window, then the `mpcplus` pane will need to be resized manually.
+
+Tmux panes can be resized either using keyboard shortcuts or with the mouse.
+
+To resize the `mpcplus` tmux pane using the mouse, click and drag the bottom
+of the upper pane in the session window. Drag the pane border down until the
+`mpcplus` display of music media appears.
+
+To resize the `mpcplus` tmux pane using keyboard shortcuts, use one of the
+default tmux key bindings:
+
+```
+bind-key -r -T prefix       M-Up              resize-pane -U 5
+bind-key -r -T prefix       M-Down            resize-pane -D 5
+bind-key -r -T prefix       M-Left            resize-pane -L 5
+bind-key -r -T prefix       M-Right           resize-pane -R 5
+bind-key -r -T prefix       C-Up              resize-pane -U
+bind-key -r -T prefix       C-Down            resize-pane -D
+bind-key -r -T prefix       C-Left            resize-pane -L
+bind-key -r -T prefix       C-Right           resize-pane -R
+```
+
+This means you can resize a pane by `<prefix>` `Alt ↓`. The default
+MusicPlayerPlus tmux prefix is `Ctrl-a` so in order to resize the `mpcplus`
+pane using the keyboard, type `Ctrl-a` then type `Alt ↓`. You can repeat
+`Alt ↓` several times without needing to re-type the `Ctrl-a` prefix if you
+type it fast enough (about a second). If the display of `Ctrl` on the tmux
+status line disappears and you still need to resize the `mpcplus` pane,
+then you will need to re-type the prefix key `Ctrl-a`.
+
+This issue has only been detected on Fedora Linux over SSH. However, it may
+occur with other systems and may not be exclusive to either SSH or Fedora.
 
 ## Infrared remote control of MPD
 
