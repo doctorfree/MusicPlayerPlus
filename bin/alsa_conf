@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ASOUND_TMPL="/usr/share/musicplayerplus/mpcplus/asound.conf.tmpl"
+ASOUND_TMPL="/usr/share/musicplayerplus/asound.conf.tmpl"
 ASOUND="/etc/asound.conf"
 CARDS="/proc/asound/cards"
 OUTSTR="__AUDIO_OUT__"
@@ -30,7 +30,7 @@ usage() {
     printf "\n\t-u indicates display this usage message and exit"
     printf "\n\nDefault generated output is the file /etc/asound.conf"
     printf "\nDefault asound.conf template can be found in:"
-    printf "\n\t/usr/share/musicplayerplus/mpcplus/asound.conf.tmpl\n\n"
+    printf "\n\t/usr/share/musicplayerplus/asound.conf.tmpl\n\n"
     exit 0
 }
 

@@ -299,11 +299,11 @@ else
   echo "Manual configuration of ${MPDCONF} and ${HOME}/${MPCDIR}/config required"
 fi
 
-# Setup default tmux configuration for this user unless terminal-overrides has already been set
-[ -f ${CONFDIR}/tmux.conf ] && {
+# Setup default tmux configuration for this user
+[ -f ${MPPCDIR}/tmux.conf ] && {
   if [ -f ${HOME}/.tmux.conf ]
   then
-    diff -b ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf > /dev/null || {
+    diff -b ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf > /dev/null || {
       echo ""
       echo "MusicPlayerPlus includes extensive configuration for tmux."
       echo "An existing $HOME/.tmux.conf has been detected."
@@ -322,10 +322,10 @@ fi
         read -p "Append/Backup/Overwrite/Skip tmux configuration? (a/b/o/s) " customize
         case $customize in
           [Aa]* )
-              cat ${CONFDIR}/tmux.conf >> ${HOME}/.tmux.conf
+              cat ${MPPCDIR}/tmux.conf >> ${HOME}/.tmux.conf
               echo ""
               echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${CONFDIR}/tmux.conf"
+              echo "The file ${MPPCDIR}/tmux.conf"
               echo "was appended to $HOME/.tmux.conf"
               echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
               echo "Please review these changes and customize as needed"
@@ -333,19 +333,19 @@ fi
               ;;
           [Bb]* )
               cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.bak$$
-              cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+              cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
               echo ""
               echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${CONFDIR}/tmux.conf"
+              echo "The file ${MPPCDIR}/tmux.conf"
               echo "was copied to $HOME/.tmux.conf"
               echo "A backup of the previous file was created at $HOME/.tmux.conf.bak$$"
               break
               ;;
           [Oo]* )
-              cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+              cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
               echo ""
               echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${CONFDIR}/tmux.conf"
+              echo "The file ${MPPCDIR}/tmux.conf"
               echo "was copied to $HOME/.tmux.conf"
               break
               ;;
@@ -355,10 +355,10 @@ fi
               echo "The file $HOME/.tmux.conf remains unmodified"
               echo "Some MusicPlayerPlus features will not work properly with tmux"
               echo ""
-              echo "The file ${CONFDIR}/tmux.conf"
+              echo "The file ${MPPCDIR}/tmux.conf"
               echo "contains the MusicPlayerPlus tmux customizations."
               echo "To fully enable MusicPlayerPlus tmux features, merge"
-              echo "${CONFDIR}/tmux.conf with $HOME/.tmux.conf"
+              echo "${MPPCDIR}/tmux.conf with $HOME/.tmux.conf"
               break
               ;;
           * )
@@ -368,7 +368,7 @@ fi
       done
     }
   else
-    cp ${CONFDIR}/tmux.conf ${HOME}/.tmux.conf
+    cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
   fi
 }
 
