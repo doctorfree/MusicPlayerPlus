@@ -303,7 +303,7 @@ fi
 [ -f ${MPPCDIR}/tmux.conf ] && {
   if [ -f ${HOME}/.tmux.conf ]
   then
-    diff -b ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf > /dev/null || {
+    diff -u -B <(grep -vE '^\s*(#|$)' ${MPPCDIR}/tmux.conf)  <(grep -vE '^\s*(#|$)' ${HOME}/.tmux.conf) > /dev/null || {
       echo ""
       echo "MusicPlayerPlus includes extensive configuration for tmux."
       echo "An existing $HOME/.tmux.conf has been detected."
