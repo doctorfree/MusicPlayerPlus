@@ -1,0 +1,20 @@
+[Unit]
+Description=beets mpdstats
+Documentation=https://beets.readthedocs.io/en/stable/plugins/mpdstats.html
+After=mpd.service
+OnFailure=notify-xmpp@%i.service
+#StartLimitIntervalSec=20s
+
+[Service]
+Type=simple
+UMask=007
+ExecStart=/bin/bash -c 'PATH=/home/USERNAME/.local/bin:$PATH exec beet mpdstats'
+Restart=on-failure
+#RestartSec=5s
+# Time to wait before forcefully stopped.
+TimeoutStopSec=300
+StandardOutput=file:/home/USERNAME/.config/beets/mpdstats.log
+StandardError=inherit
+
+[Install]
+WantedBy=default.target
