@@ -16,6 +16,8 @@ BEETSCONFDIR="${CONF}/beets"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
+BOLD=$(tput bold)
+NORMAL=$(tput sgr0)
 
 create_new_profile() {
   local proterm="$1"
@@ -136,16 +138,19 @@ sync_music_dir() {
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
     }
-    if [ -x ${SCPTDIR}/beet_import.sh ]
-    then
-      ${SCPTDIR}/beet_import.sh "${exp_music}" &
-    else
-      echo ""
-      echo "WARNING: Could not locate beets import script"
-      echo "A manual beets import must be performed by executing the commands:"
-      echo "    beet import ${exp_music}"
-      echo "    beet import -ps ${exp_music}"
-    fi
+    # Don't do beets import here
+    # Let the user decide when this potentially lengthy process runs
+    #
+    # if [ -x ${SCPTDIR}/beet_import.sh ]
+    # then
+    #   ${SCPTDIR}/beet_import.sh -d "${exp_music}" &
+    # else
+    #   echo ""
+    #   echo "WARNING: Could not locate beets import script"
+    #   echo "A manual beets import must be performed by executing the commands:"
+    #   echo "    beet import ${exp_music}"
+    #   echo "    beet import -ps ${exp_music}"
+    # fi
 
     # Disable and stop any system-wide MPD service
     systemctl is-enabled --quiet mpd.service
@@ -472,9 +477,13 @@ fi
 
 sync_music_dir
 
-printf "\nMusicPlayerPlus Initialization Complete\n"
+printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
+printf "\nDownload album cover art with the command:"
+printf "\n\t${BOLD}mpplus -D${NORM}\n"
+printf "\nImport your music library into the Beets Music Organizer with the command:"
+printf "\n\t${BOLD}mpplus -I${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"
-printf "\n\thttps://github.com/doctorfree/MusicPlayerPlus/wiki\n"
+printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 
 type -p mppsplash > /dev/null && {
   while true

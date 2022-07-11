@@ -18,6 +18,8 @@ import:
     bell: no
     log: ~/.config/beets/log.txt
 
+art_filename: cover
+
 plugins: acousticbrainz duplicates edit fetchart fromfilename importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist unimported
 
 smartplaylist:

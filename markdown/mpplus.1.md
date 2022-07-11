@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -23,6 +23,7 @@ When invoked with the `-i` option, `mpplus` presents a selection menu and operat
 Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the `mpplus -k` command.
 
 # COMMAND LINE OPTIONS
+
 *MPCplus/Visualizer options:*
 
 **-A**
@@ -36,6 +37,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-f**
 : indicates fullscreen display
+
+**-g**
+: indicates do not use gradient colors for spectrum visualizer
 
 **-h**
 : indicates half-height for mppcava window (with -f only)
@@ -90,10 +94,13 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 *General options:*
 
 **-D**
-: indicates download album cover art
+: indicates download album cover art and exit
 
 **-d 'music_directory'**
 : specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
+
+**-I**
+: indicates import albums and songs from 'music_directory' to beets and exit
 
 **-i**
 : indicates interactive mode with selection menus
@@ -150,8 +157,11 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **mpplus -S -j -a**
 : Launch `mppsplash` displaying the Julia Set asciimatics animation with audio
 
-**mpplus -d**
+**mpplus -D**
 : Download album cover art for any albums in the music library that do not already have cover art 
+
+**mpplus -I**
+: Import the music library into the Beets library management system
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

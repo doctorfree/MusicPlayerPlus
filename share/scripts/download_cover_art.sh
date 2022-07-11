@@ -2,10 +2,13 @@
 #
 # Uses sacad from https://github.com/desbma/sacad
 
-MPD_CONF=~/.config/mpd/mpd.conf
+MPD_CONF=${HOME}/.config/mpd/mpd.conf
 
 usage() {
-  printf "\nUsage: download_cover_art [-d music_directory] [-u]"
+  printf "\nUsage: download_cover_art.sh [-c cover_name] [-d music_directory] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-c 'cover_name' specifies the filename to use for downloaded art"
+  printf "\n\t\tDefault: 'cover'"
   printf "\n\nWithout the '-d music_directory' option, the 'music_directory'"
   printf "\nsetting in ${MPD_CONF} will be used\n\n"
   exit 1
@@ -13,8 +16,18 @@ usage() {
 
 mpd_music=
 custom_dir=
-while getopts "d:u" flag; do
+cover_name="cover"
+while getopts "c:d:u" flag; do
     case $flag in
+        c)
+            cover_name="$OPTARG"
+            ext=$([[ "$cover_name" = *.* ]] && echo ".${cover_name##*.}" || echo '')
+            [ "${ext}" ] && {
+              echo "Cover filename provided with extension. Removing extension."
+              cover_name="${cover_name%.*}"
+              echo "Using ${cover_name} as template for downloaded art filename"
+            }
+            ;;
         d)
             mpd_music="$OPTARG"
             custom_dir=1
@@ -85,21 +98,5 @@ have_sacad=`type -p sacad_r`
   fi
 }
 
-cd ${mpd_music}
-for artist in *
-do
-  [ "${artist}" == "*" ] && {
-    echo "No artists or albums found in ${mpd_music}"
-    echo "Exiting"
-    continue
-  }
-  [ -d "${artist}" ] || {
-    echo "Plain file ${artist} found in top-level of music directory."
-    echo "This downloader assumes music directory organized in"
-    echo "Artist/Album/Song directory structure"
-    echo "Skipping ${artist}"
-    continue
-  }
-  echo "Downloading cover art for artist: ${artist}"
-  sacad_r "${mpd_music}/${artist}" 600 cover.jpg
-done
+echo "Downloading album cover art for Artist/Albums in ${mpd_music}"
+sacad_r "${mpd_music}" 600 ${cover_name}.jpg

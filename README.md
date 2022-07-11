@@ -20,10 +20,14 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
-    1. [Client Configuration](#client-configuration)
-    1. [MPD Server Configuration](#mpd-server-configuration)
+    1. [Client Configuration (required)](#client-configuration-required)
+    1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
+    1. [Downloading album cover art](#downloading-album-cover-art)
+    1. [Initializing the Beets library management system](#initializing-the-beets-library-management-system)
+    1. [MPD Audio Output Configuration](#mpd-audio-output-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
     1. [Start MPD](#start-mpd)
+    1. [System verification checks](#system-verification-checks)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [Documentation](#documentation)
@@ -103,7 +107,6 @@ MusicPlayerPlus adds the following commands to your system:
     * **mpprocks** : ASCIImatics animated MusicPlayerPlus splash screen
 * **raise_cava** : raises the mppcava spectrum visualizer window
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
-* **download_cover_art** : automatically downloads cover album art for your entire music directory
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 
 Additional detail and info can be found in the
@@ -135,37 +138,14 @@ Additional detail and info can be found in the
 For many installations, installing the MusicPlayerPlus package and initializing
 the user configuration with the `mpcinit` command is all that need be done.
 
-However, you may need to modify the MPD and `mpcplus` music directory setting.
+Some common additional setup steps that can be performed include:
 
-The `mpcinit` command sets the MPD and `mpcplus` music directory to:
+- Configuring the music library location
+- Downloading album cover art
+- Importing your music library into the Beets library management system
 
-`~/.config/mpd/music/`
-
-and, if it did not previously exist, links that directory to `$HOME/Music`.
-
-If your media library resides in another location then perform the following
-steps and re-run `mpcinit`:
-
-* Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
-* Re-run the `mpcinit` command
-
-Any time the MPD music directory is manually modified, for example if the
-music library is moved to a different location, re-run `mpcinit`.
-
-Once the music directory has been set correctly and `mpcinit` has completed
-initialization, some system checks can optionally be performed.
-
-* Verify the `mpd` service is running and if not then start it:
-    * `systemctl --user is-active mpd.service`
-    * `systemctl --user start mpd.service`
-* Update the MPD client database:
-    * `mpc update`
-* Verify the `mpd` service is enabled and if not enable it
-    * `systemctl --user is-enabled mpd.service`
-    * `systemctl --user enable mpd.service`
-* Play music with `mpplus`
-    * See the [online mpcpluskeys cheat sheet](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpcpluskeys.1) or `man mpcpluskeys` for help navigating the `mpplus` windows
-    * See the [online mpplus man page](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpplus.1) or `man mpplus` for different ways to invoke the `mpplus` command
+These three common additional setup steps are covered below in the section
+on [Post Installation Configuration](#post-installation-configuration).
 
 ## Requirements
 
@@ -249,15 +229,23 @@ sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 ```
 
 ## Post Installation Configuration
+
+**[NOTE:]** Extensive post-installation steps are covered here.
+Minimal post-installation configuration required is the execution
+of the command `mpcinit`. If the MPD music library is located in
+the default `$HOME/Music` directory then no further configuration
+may be necessary. See the [Quickstart](#quickstart) section.
+
 After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
 be configured by editing the MPD configuration file `~/.config/mpd/mpd.conf`.
 
-Minimal post installation configuration required is the execution
-of the command `mpcinit`.
+Following any modification of the music library location in
+`~/.config/mpd/mpd.conf` execute `mpcinit sync`.
 
-### Client Configuration
+### Client Configuration (required)
+
 Initialize the `mpcplus` client configuration by executing the command:
 
 ```
@@ -272,23 +260,139 @@ of an MPD user service. The configuration, files, and folders used by
 this user level MPD service are stored in `~/.config/mpd/`. Examine the
 generated MPD configuration file `~/.config/mpd/mpd.conf`.
 
-### MPD Server Configuration
+### MPD Music Directory Configuration
 
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
 This is performed by the `mpcinit` command. MusicPlayerPlus 1.0.3r1
 and later installations need not perform the following manual procedures
-but users may wish to review the automated MPD configuration by
-following these steps.
+but users may wish to review the automated MPD configuration and alter
+the default MPD music directory location.
 
-Edit `~/.config/mpd/mpd.conf`, uncomment the `music_directory` entry and
-set the value to the location of your music library. For example,
+The default MPD and `mpcplus` music directory is set to:
+
+`$HOME/Music`
+
+If your media library resides in another location then perform the following
+steps and run `mpcinit sync`:
+
+* Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
+* Run the `mpcinit sync` command
+
+For example, to set the MPD music directory to the `/u/audio/music` directory,
+edit `$HOME/.config/mpd/mpd.conf` and change the *music_directory* setting:
 
 ```
-music_directory		"~/.config/mpd/music"
+music_directory		"/u/audio/music"
 ```
 
-The `music_directory` location must be writeable by your user.
+The *music_directory* location must be writeable by your user.
+
+Any time the MPD music directory is manually modified, run `mpcinit sync`.
+
+### Downloading album cover art
+
+To download album cover art for all albums in your music library,
+run the command:
+
+```
+mpplus -D
+```
+
+Depending on the size of the music library, the download process may take
+some time. For this reason, the album art download process is run in the
+background non-interactively so it will not interfere with continued enjoyment.
+
+The `mpplus -D` command downloads album cover art for each album in your
+music library and places the album cover art in the file `cover.jpg` in the
+album folder. The `mpplus -D` command downloads images of size 600x600.
+
+If you wish to name album cover art differently or if you wish
+to create a different sized album cover art, then execute the `sacad_r` command
+directly rather than with `mpplus -D` as follows:
+
+
+```
+sacad_r <MUSIC_DIRECTORY> <SIZE> <FILENAME>
+```
+
+Where <MUSIC_DIRECTORY> is the full pathname to your music library, <SIZE>
+is the desired size of the image, and <FILENAME> is the desired filename.
+
+For example, to download album art for a music library located in
+`/u/audio/music` with an image size of 500x500, in PNG image format,
+and album art filenames `album_cover.png` execute the command:
+
+```
+sacad_r /u/audio/music 500 album_cover.png
+```
+
+Learn more about the Smart Automatic Cover Art Downloader `sacad` at
+https://github.com/desbma/sacad
+
+### Initializing the Beets library management system
+
+MusicPlayerPlus includes the Beets media library management system
+and preconfigured settings to allow easy integration with MPD and `mpcplus`.
+Beets is an application that catalogs your music collection, automatically
+improving its metadata. It then provides a suite of tools for manipulating
+and accessing your music. Beets includes an extensive set of plugins that
+can be used to enhance and extend the functionality of the media library
+management Beets provides. Many Beets plugins are installed and configured
+automatically by MusicPlayerPlus.
+
+**[NOTE:]** Beets is NOT the now defunct music service purchased by Apple.
+
+To get started using the Beets media library management system, it is
+necessary to import your music library into the Beets database. This process
+catalogs your music collection and improves its metadata. The default
+Beets configuration provided by MusicPlayerPlus does not copy or move
+any of the files in the music library during this process. It simply
+adds music library data to the Beets database. To import your music
+library into Beets, issue the command:
+
+```
+mpplus -I
+```
+
+The Beets import defaults are controlled by the Beets configuration file
+at `$HOME/.config/beets/config.yaml` and command-line options to the
+`beet import` command. By default, MusicPlayerPlus imports the MPD music
+library into Beets without copying and without writing tags. A log of the
+import is written to the file `$HOME/.config/beets/import_log.txt`.
+
+The import process, depending on the size of the music library and metadata
+analyzed, may take some time. For this reason, it is performed in the
+background and non-interactively. The `mpplus -I` command performs both
+an import of the music library albums and an import of singleton songs.
+
+If a manual beets import is desired, it may be performed by issuing the commands:
+
+```
+beet import [-W] <MUSIC_DIRECTORY>
+```
+
+and
+
+```
+beet import [-W]ps <MUSIC_DIRECTORY>
+```
+
+Where <MUSIC_DIRECTORY> is the full pathname to your music library and the
+`-W` flag indicates 'do not write tags'. Omitting the `-W` flag will write
+tags. The first import command above imports albums from the music library
+at <MUSIC_DIRECTORY>. The second import command imports singleton songs.
+
+If new songs or albums are added to the MPD music library, the Beets import
+can be re-run with `mpplus -I` or manually and only new albums and songs
+will be added to the Beets database as the import is performed incrementally.
+Incremental imports is a configuration option set in the *import* section
+of the Beets `$HOME/.config/beets/config.yaml` configuration file.
+
+Learn more about the Beets media library management system at
+https://beets.io/
+
+### MPD Audio Output Configuration
 
 Adjust the `audio_output` settings in `~/.config/mpd/mpd.conf`.
 MPD must have at least one `audio_output` configured and in order
@@ -389,6 +493,7 @@ Several other `fzmp` bindings and options can be configured. See `man fzmp`
 for details.
 
 ### Start MPD
+
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
 Initialization with `mpcinit` for these installations should automatically
@@ -415,7 +520,26 @@ attempts to connect:
 
 `sudo systemctl enable mpd.socket`
 
+### System verification checks
+
+Once the music directory has been set correctly, album art downloaded,
+music library imported, and `mpcinit sync` has completed initialization,
+some system checks can optionally be performed.
+
+* Verify the `mpd` service is running and if not then start it:
+    * `systemctl --user is-active mpd.service`
+    * `systemctl --user start mpd.service`
+* Update the MPD client database:
+    * `mpc update`
+* Verify the `mpd` service is enabled and if not enable it
+    * `systemctl --user is-enabled mpd.service`
+    * `systemctl --user enable mpd.service`
+* Play music with `mpplus`
+    * See the [online mpcpluskeys cheat sheet](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpcpluskeys.1) or `man mpcpluskeys` for help navigating the `mpplus` windows
+    * See the [online mpplus man page](https://github.com/doctorfree/MusicPlayerPlus/wiki/mpplus.1) or `man mpplus` for different ways to invoke the `mpplus` command
+
 ### Initialize Music Database
+
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform an
 automated MPD music database initialization during execution of `mpcinit`.
 
@@ -431,6 +555,7 @@ to complete. Once the music database has been updated you should see the
 songs, albums, and playlists in your music library appear in the client view.
 
 ### Terminal Emulator Profiles
+
 The `mppcava` spectrum visualizer looks better when the font used by the
 terminal emulator in which it is running is a small sized font. Some
 terminal emulators rely on a profile from which they draw much of
@@ -489,7 +614,7 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-g] [-f] [-h] [-i] [-jJ] [-k] [-m]
+		[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
 		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
@@ -499,7 +624,6 @@ MPCplus/Visualizer options:
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-g indicates do not use gradient colors for spectrum visualizer
-	-i indicates start mpplus in interactive mode
 	-h indicates half-height for visualizer window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for visualizer window (with -f only)
@@ -521,10 +645,12 @@ ASCIImatics animation options:
 		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
-	-D indicates download album cover art
+	-D indicates download album cover art and exit
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
+	-I indicates import albums and songs from 'music_directory' to beets and exit
+	-i indicates start mpplus in interactive mode
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
@@ -670,13 +796,7 @@ An album cover art downloader is included in MusicPlayerPlus. To download
 cover art for all of the albums in your MPD music directory, run the command:
 
 ```
-download_cover_art
-```
-
-or, alternately,
-
-```
-mpplus -d
+mpplus -D
 ```
 
 Cover art for each album is saved as the file `cover.jpg` in the album folder.

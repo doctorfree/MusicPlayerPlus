@@ -22,7 +22,7 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-f] [-h] [-i] [-jJ] [-k] [-m] [-M
+music_directory] [-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
 [-z fzmpopt]
@@ -70,6 +70,9 @@ indicates use \[aq]client\[aq] MPD client rather than mpcplus
 .TP
 \f[B]-f\f[R]
 indicates fullscreen display
+.TP
+\f[B]-g\f[R]
+indicates do not use gradient colors for spectrum visualizer
 .TP
 \f[B]-h\f[R]
 indicates half-height for mppcava window (with -f only)
@@ -124,12 +127,16 @@ indicates display ASCIImatics splash animation
 \f[I]General options:\f[R]
 .TP
 \f[B]-D\f[R]
-indicates download album cover art
+indicates download album cover art and exit
 .TP
 \f[B]-d \[aq]music_directory\[aq]\f[R]
 specifies the music directory to use for downloaded album cover art
 (without this option -D will use the \f[V]music_directory\f[R] setting
 in \f[V]\[ti]/.config/mpd/mpd.conf\f[R]
+.TP
+\f[B]-I\f[R]
+indicates import albums and songs from \[aq]music_directory\[aq] to
+beets and exit
 .TP
 \f[B]-i\f[R]
 indicates interactive mode with selection menus
@@ -206,9 +213,12 @@ and visualizer running in a tmux session
 Launch \f[V]mppsplash\f[R] displaying the Julia Set asciimatics
 animation with audio
 .TP
-\f[B]mpplus -d\f[R]
+\f[B]mpplus -D\f[R]
 Download album cover art for any albums in the music library that do not
 already have cover art
+.TP
+\f[B]mpplus -I\f[R]
+Import the music library into the Beets library management system
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

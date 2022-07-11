@@ -48,13 +48,14 @@ VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
+DO_NOT_EXIT=
 USE_GRAD=1
 MPP_DIR="/usr/share/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-g] [-f] [-h] [-i] [-jJ] [-k] [-m]"
+  printf "\n\t\t[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
   printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]"
@@ -64,7 +65,6 @@ usage() {
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
-  printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-h indicates half-height for visualizer window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
@@ -86,10 +86,12 @@ usage() {
   printf "\n\t\tor $HOME/Music/"
   printf "\n\t-S indicates display ASCIImatics splash animation"
   printf "\nGeneral options:"
-  printf "\n\t-D indicates download album cover art"
+  printf "\n\t-D indicates download album cover art and exit"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
+  printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
+  printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"
@@ -129,12 +131,44 @@ kill_tmux_sessions() {
 
 make_it_so() {
   [ "${DOWNLOAD_ART}" ] && {
-    if [ "${MUSIC_DIRECTORY}" ]
+    if [ -x ${SCRIPTS}/download_cover_art.sh ]
     then
-      download_cover_art -d "${MUSIC_DIRECTORY}"
+      if [ "${MUSIC_DIRECTORY}" ]
+      then
+        nohup ${SCRIPTS}/download_cover_art.sh -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
+      else
+        nohup ${SCRIPTS}/download_cover_art.sh > /dev/null 2>&1 &
+      fi
     else
-      download_cover_art
+      echo "${SCRIPTS}/download_cover_art.sh not found or not executable"
+      echo "Check your MusicPlayerPlus installation"
+      echo ""
+      echo "Manual cover art download may be required:"
+      printf "\n\tsacad_r <MUSIC_DIRECTORY> 600 cover.jpg"
+      printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
     fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
+  [ "${BEETS_IMPORT}" ] && {
+    if [ -x ${SCRIPTS}/beet_import.sh ]
+    then
+      if [ "${MUSIC_DIRECTORY}" ]
+      then
+        nohup ${SCRIPTS}/beet_import.sh -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
+      else
+        nohup ${SCRIPTS}/beet_import.sh > /dev/null 2>&1 &
+      fi
+    else
+      echo "${SCRIPTS}/beet_import.sh not found or not executable"
+      echo "Check your MusicPlayerPlus installation"
+      echo ""
+      echo "Manual beets import may be required:"
+      printf "\n\tbeet import -W <MUSIC_DIRECTORY>"
+      printf "\n\tbeet import -Wps <MUSIC_DIRECTORY>"
+      printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
   # Begin visualizer startup section
@@ -575,7 +609,7 @@ show_main_menu() {
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
-    options+=("ASCIImatics Animations" "Download Album Cover Art" "Kill Tmux Sessions")
+    options+=("ASCIImatics Animations" "Download Album Cover Art" "Import Music to Beets")
     options+=("Manage Music Player Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -617,13 +651,14 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Download Album Cover Art",*|*,"Download Album Cover Art")
+          "Download"*,*|*,"Download"*)
               DOWNLOAD_ART=1
+              DO_NOT_EXIT=1
               break
               ;;
-          "Kill Tmux Sessions",*|*,"Kill Tmux Sessions")
-              kill_tmux_sessions
-              skip_it_so=1
+          "Import"*,*|*,"Import"*)
+              BEETS_IMPORT=1
+              DO_NOT_EXIT=1
               break
               ;;
           "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
@@ -693,6 +728,7 @@ init_vars() {
   CLIENT=
   COVER_ART=
   DOWNLOAD_ART=
+  BEETS_IMPORT=
   FULLSCREEN=
   HALFHEIGHT=
   INTERACTIVE=
@@ -740,7 +776,7 @@ have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
 
-while getopts "AabcC:Dd:fghijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
+while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -806,6 +842,9 @@ while getopts "AabcC:Dd:fghijJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
       ;;
     h)
       HALFHEIGHT=1
+      ;;
+    I)
+      BEETS_IMPORT=1
       ;;
     i)
       INTERACTIVE=1

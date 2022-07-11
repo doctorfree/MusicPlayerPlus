@@ -1,7 +1,7 @@
 =============================================================================
 
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-g] [-f] [-h] [-i] [-jJ] [-k] [-m]
+		[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
 		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
@@ -11,7 +11,6 @@ MPCplus/Visualizer options:
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-g indicates do not use gradient colors for spectrum visualizer
-	-i indicates start mpplus in interactive mode
 	-h indicates half-height for visualizer window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for visualizer window (with -f only)
@@ -33,10 +32,12 @@ ASCIImatics animation options:
 		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
-	-D indicates download album cover art
+	-D indicates download album cover art and exit
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
+	-I indicates import albums and songs from 'music_directory' to beets and exit
+	-i indicates start mpplus in interactive mode
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
