@@ -4,8 +4,6 @@
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
 LOGFILE="${HOME}/.config/beets/import_log.txt"
 
-#exp_music="$1"
-
 usage() {
   printf "\nUsage: beet_import.sh [-d music_directory] [-u]"
   printf "\n\nWithout the '-d music_directory' option, the 'music_directory'"
@@ -80,16 +78,16 @@ done
 have_beet=`type -p beet`
 if [ "${have_beet}" ]
 then
-  beet import -qWl ${LOGFILE} ${exp_music} > /dev/null 2>&1
-  beet import -qWpsl ${LOGFILE} ${exp_music} > /dev/null 2>&1
+  beet import -qWl ${LOGFILE} ${mpd_music}
+  beet import -qWpsl ${LOGFILE} ${mpd_music}
 else
   if [ -x ${HOME}/.local/bin/beet ]
   then
-    ${HOME}/.local/bin/beet import -qWl ${LOGFILE} ${exp_music} > /dev/null 2>&1
-    ${HOME}/.local/bin/beet import -qWpsl ${LOGFILE} ${exp_music} > /dev/null 2>&1
+    ${HOME}/.local/bin/beet import -qWl ${LOGFILE} ${mpd_music}
+    ${HOME}/.local/bin/beet import -qWpsl ${LOGFILE} ${mpd_music}
   else
     echo "WARNING: Cannot locate 'beet' executable"
-    echo "Music library ${exp_music} not imported to beets media organizer"
+    echo "Music library ${mpd_music} not imported to beets media organizer"
     exit 1
   fi
 fi
