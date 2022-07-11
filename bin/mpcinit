@@ -441,14 +441,7 @@ TPM="${HOME}/.tmux/plugins/tpm"
   }
 }
 
-[ -d ${TPM} ] && {
-  grep plugins/tpm/tpm ${HOME}/.tmux.conf > /dev/null || {
-    [ -f ${MPPCDIR}/tmux-tpm.conf ] && {
-      cat ${MPPCDIR}/tmux-tpm.conf >> ${HOME}/.tmux.conf
-      [ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins > /dev/null 2>&1
-    }
-  }
-}
+[ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins > /dev/null 2>&1
 
 have_pip=`type -p pip`
 if [ "${have_pip}" ]

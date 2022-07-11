@@ -123,7 +123,6 @@ ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 
 ${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp config/tmux-tpm.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 
 ${SUDO} cp -a config/beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets"
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
