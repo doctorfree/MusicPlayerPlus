@@ -9,9 +9,10 @@
 MPPCDIR=/usr/share/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
 SCPTDIR=${MPPCDIR}/scripts
-MPDCONFDIR="${HOME}/.config/mpd"
+CONF=${HOME}/.config
+MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
-BEETSCONFDIR="${HOME}/.config/beets"
+BEETSCONFDIR="${CONF}/beets"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
@@ -137,7 +138,7 @@ sync_music_dir() {
     }
     if [ -x ${SCPTDIR}/beet_import.sh ]
     then
-      ${SCPTDIR}/beet_import.sh ${exp_music}" &
+      ${SCPTDIR}/beet_import.sh "${exp_music}" &
     else
       echo ""
       echo "WARNING: Could not locate beets import script"
@@ -200,7 +201,7 @@ sync_music_dir() {
     exit 1
 }
 
-if [ -f ${HOME}/.config/mpcplus/config ]
+if [ -f ${CONF}/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
 else
@@ -208,8 +209,8 @@ else
   then
     MPCDIR=".mpcplus"
   else
-    [ -d ${HOME}/.config/mpcplus ] || mkdir -p ${HOME}/.config/mpcplus
-    cp ${CONFDIR}/config ${HOME}/.config/mpcplus/config
+    [ -d ${CONF}/mpcplus ] || mkdir -p ${CONF}/mpcplus
+    cp ${CONFDIR}/config ${CONF}/mpcplus/config
     MPCDIR=".config/mpcplus"
   fi
 fi
@@ -241,32 +242,32 @@ do
   }
 done
 
-[ -d ${HOME}/.config/mppcava ] || mkdir -p ${HOME}/.config/mppcava
-[ -f ${HOME}/.config/mppcava/config ] || {
-  cp ${MPPCDIR}/mppcava/config ${HOME}/.config/mppcava/config
+[ -d ${CONF}/mppcava ] || mkdir -p ${CONF}/mppcava
+[ -f ${CONF}/mppcava/config ] || {
+  cp ${MPPCDIR}/mppcava/config ${CONF}/mppcava/config
 }
-[ -f ${HOME}/.config/mppcava/config-tmux ] || {
-  cp ${MPPCDIR}/mppcava/config-tmux ${HOME}/.config/mppcava/config-tmux
+[ -f ${CONF}/mppcava/config-tmux ] || {
+  cp ${MPPCDIR}/mppcava/config-tmux ${CONF}/mppcava/config-tmux
 }
 
-if [ -d ${HOME}/.config/tmuxp ]
+if [ -d ${CONF}/tmuxp ]
 then
   for tmc in ${MPPCDIR}/tmuxp/*
   do
     tmcbase=`basename "${tmc}"`
     if [ -d "${tmc}" ]
     then
-      [ -d "${HOME}/.config/tmuxp/${tmcbase}" ] || {
-        cp -a "${tmc}" "${HOME}/.config/tmuxp/${tmcbase}"
+      [ -d "${CONF}/tmuxp/${tmcbase}" ] || {
+        cp -a "${tmc}" "${CONF}/tmuxp/${tmcbase}"
       }
     else
-      [ -f "${HOME}/.config/tmuxp/${tmcbase}" ] || {
-        cp "${tmc}" "${HOME}/.config/tmuxp/${tmcbase}"
+      [ -f "${CONF}/tmuxp/${tmcbase}" ] || {
+        cp "${tmc}" "${CONF}/tmuxp/${tmcbase}"
       }
     fi
   done
 else
-  cp -a ${MPPCDIR}/tmuxp ${HOME}/.config/tmuxp
+  cp -a ${MPPCDIR}/tmuxp ${CONF}/tmuxp
 fi
 
 # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
@@ -342,14 +343,13 @@ done
   [ -d ${BEETSCONFDIR} ] || mkdir -p ${BEETSCONFDIR}
   cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
 }
-SYSTEMDIR="${HOME}/.config/systemd/user"
+SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 [ -f ${MPDSTATSD} ] || {
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
 }
 
-CONF=${HOME}/.config
 FIFS="mppcava/config-tmux mppcava/config systemd/user/mpdstats.service"
 for cnf in ${FIFS}
 do
