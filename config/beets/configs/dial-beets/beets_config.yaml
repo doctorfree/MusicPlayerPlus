@@ -1,0 +1,411 @@
+# don't copy paste this into your config. It's tailored to me and I haven't really stress-tested it outside of my own use. Also, I was mostly using this in 2017-2019 and features may have changed.
+
+# Some plugins have been retired and I haven't migrated yet. copyartifacts is the best example of this.
+
+# Just use this as a starting point to learn about advanced, undocumented/poorly-documented features of beets.
+
+directory: e:\Music\
+library: e:\Music\beetslibrary.bib
+
+#copyartifactspy3 chroma scrub
+plugins: the inline chroma fetchart orig_date convert mbsync duplicates replaygain info alternatives
+
+# scrub:
+#     auto: no
+
+asciify_paths: false
+
+alternatives:
+    sd:
+        directory: 'd:\c5\'
+        # paths are pulled from beets settings if not specified here
+        formats: qaac mp3 aac
+        #query: "onplayer:true"
+        #query: "albumartist:beatles"
+        # query: "why do it road"
+        #query: britney, beatles
+        query: channels:..2
+        # query: weird al
+        removable: false
+
+replaygain:
+    backend: ffmpeg
+    # multidisc albums often have different mastering; ex. if disc 2 is a live recording
+    per_disc: yes
+
+import:
+    log: e:\Music\beet.log
+    #copy: yes
+    move: yes
+    write: yes
+    timid: no
+    languages: en
+    quiet: no
+    duplicate_action: ask
+    # duplicate_action: skip
+    none_rec_action: ask
+    quiet_fallback: skip
+per_disc_numbering: yes
+
+musicbrainz:
+    #host: localhost:5000
+    #default= 1
+    #ratelimit: 80
+    #default= 5
+    #make higher for prolific artists (ex. Beatles) because otherwise, beets may pick the wrong release from the release group
+    searchlimit: 5
+
+terminal_encoding:
+    'utf_8'
+
+convert:
+    dest: d:\c3
+    copy_album_art: yes
+    embed: no
+    album_art_maxwidth: 1080
+    never_convert_lossy_files: True
+    convert_lossy: False
+    format: qaac
+    threads: 3 #num_cpus minus 1
+    formats:
+        #specify --rate 44100 to downsample high-res audio to Red Book CD standard
+        #(and, I guess, upsample lower-sample-rate audio to 44.1 KHz)
+        #I would like to keep stereo as stereo, but downmix 3+ channels to 3.0 channels (front left, front right, front center).
+        #this would probably require something more complicated than I am willing to set up at this point.
+        #So, just downsample everything to stereo.
+        #removed "--threading" option because the convert plugin appears to thread the parent calls to the convert command. Expected result: as many simultaneous commands as CPU threads.
+        #cmd ffmpeg -i "$source" -ac 2 -f flac - |
+        qaac:
+        # cshim is a private (for now) piece of trash 'compatibility shim' that connects to qaac.exe and ffmpeg.
+        # among other issues, it has a shell execution vulnerability, so I'm reluctant to share it.
+            command: python c:\\apps\\cshim.py "$source" "$dest"
+            extension: m4a
+
+artist_credit: yes
+
+#just for testing
+# match:
+    # max_rec:
+        # missing_tracks: none
+        # artist: none
+        # year: none
+
+match:
+    #.1 = 90% similarity required. automatically matches above the threshold.
+    #even at the chosen threshold, can be unintuitive and not automatically select the choice that meets the threshold. I think.
+    strong_rec_thresh: .05
+    #medium_rec_thresh: .3
+    #low_rec_thresh: .4
+    #see https://beets.readthedocs.io/en/latest/reference/config.html#preferred
+    preferred:
+        media: ['CD', 'Digital Media|File', 'Digital Media']
+        countries: ['US', 'GB|UK']    
+    distance_weights:
+        #should help "quiet" matching. If beets is too eager to match incorrectly and ignore missing tracks,
+        #then this creates more work for the user later when they manually correct the matches to a release
+        #without the tracks, or find the missing tracks.
+        missing_tracks: 10
+        unmatched_tracks: 10
+        #try to force away from vinyl
+        #media: 20.0
+        #mediums: 20.0
+
+#"You can now customize the character substituted for path separators (e.g., /) in filenames via path_sep_replace. The default is an underscore. Use this setting with caution."
+#do this for replacing "/" in paths, i.e., in album titles / track titles
+#one would think this also makes the path seperator change from "/" but I have not found this to be the case.
+#BIG SOLIDUS
+path_sep_replace: '⧸'
+
+#replace only works on paths (shouldn't change any internal tags)
+
+# the "replace" setting seems to follow Python regex rules.
+# Use Python 2.x or 3.x documentation depending on the Python version you're using with beets. See the output of `beet version`.
+# https://docs.python.org/3/library/re.html
+# sanitize_path within beets:
+# https://github.com/beetbox/beets/blob/68089ac8e913b8175876b50cc7086bba8f355a5f/beets/util/__init__.py#L563
+
+#any customization in "replace" causes beets to not use the default "replace" values.
+#So don't only half-fill out this section. If you put anything here, you have to make the whole
+#section robust to strange characters that can make OS filesystems complain.
+#see config_default.yaml in beets.
+# https://github.com/beetbox/beets/blob/master/beets/config_default.yaml
+
+#replace problematic characters with lookalikes
+replace:
+    #BIG SOLIDUS
+    '/': '⧸'
+    #29FS BIG REVERSE SOLIDUS
+    '\\': ⧵
+    #2223: DIVIDES
+    '\|': ∣
+    #02C2 MODIFIER LETTER LEFT ARROWHEAD
+    '<': ˂
+    #O2C3 MODIFIER LETTER RIGHT ARROWHEAD
+    '>': ˃
+    #replace starting & closing periods with _
+    '^\.': _
+    '\.$': _
+    '\s+$': ''
+    '^\s+': ''
+    #replace : with ։ (lookalike)
+    '\:': ։
+    #replace " with two single apostrophes ''
+    "\"": "''"
+    '\“': "''"
+    '\”': "''"
+    '[\*]': ✶
+    '[\?]': ？
+    #elipses are a bit annoying but this way avoids ending filenames with "."
+    '[\.]{3}$': …
+    #hopefully exclude DEL ␡ from the next Regex
+    '␡': '␡'
+    #control characters including Delete (DEL) ␡, see previous rule.
+    #should just exclude '[\x00-\x1f]'.
+    #commented out because it interpreted the end of every filename before the extension as a
+    #control character. maybe this is because of "end of text" (U+0003)?
+    #'[\x00-\x1f]': _
+    
+    #fake comment and fake tab options
+    #listen, these options are hacky. If you use symbols expected in context (like a quotation mark), you may break the comment you're trying to write.
+    #the best option in the long-term is real comment and tab support in the path config. This is just a workaround for readability reasons.
+    #there is an open issue for better newline support:
+    # https://github.com/beetbox/beets/issues/2147
+    #start comments in paths with `#` and end them with `zxc\`. The \ is to avoid adding a space after a newline. Inelegant solution that will fail on any section of path (any line?) with # and zxc in the same section. Ex. an album called "The Strange #zxc".
+    #do not put comments inside of %left, %right, or any other tag that truncates. Specifically, it seems that left% and similar functions evaluate first, before the replace regex. If your comment gets eaten by the function, it will no longer match the regex.
+    #top level comments are the safest; things get less stable the deeper in a nested function that you go. for example, a comma "," in an %if statement comment can give
+    #unintuitive results for the if statement.
+    '\#.*zxc': ''
+    #fake tab (4+ spaces) to have tabs in paths. will still match to any path that really should have 4+ spaces in it. Ex. an album called "Trouble    Maker"    
+    ' {4,}': ''
+
+#end all lines with a backslash: \
+#see precautions above in "replace" for using fake comments and/or fake tabs (4+ spaces)
+
+paths:
+    #regex to match all items. (avoid having to separately define compilations and singletons.)
+    title::.*: "%if{\
+                   $alb_artist,\
+                       %the{\
+                             $alb_artist\
+                            } - ,\
+                   No Artist - \
+                 }\
+    %if{\
+      $alb_promo_boot,\
+      $alb_promo_boot%if{\
+                          $alb_exotic_type,\
+                          #add literal comma and space if promo_boot and exotic_type exist for the same album. zxc\
+                          #for example Promo comma Spoken Word zxc\
+                          $, , - \
+                        }\
+       }\
+    %if{\
+    $alb_exotic_type,\
+    $alb_exotic_type - \
+        }\
+    $alb_orig_year - \
+    $alb_title\
+    %aunique{\
+              album $alb_orig_year_mm_dd albumartist albumstatus albumtype,\
+              albumdisambig country label catalognum,\
+              ()\
+            }\
+    $i_cust_catalog%if{\
+                                   $alb_subset_bitrate, \
+                                   [$alb_subset_bitrate]\
+                      }\
+    /%if{\
+         $i_disc_layer,\
+         $i_disc_layer-\
+        }\
+    %if{\
+        $track,\
+        $i_track. ,\
+        [no track number]. \
+        }\
+    %if{\
+        $title,\
+        $title,\
+        [unknown]\
+        }"
+    
+#I still have not found a color scheme I really like for all this
+# https://beets.readthedocs.io/en/v1.4.5/reference/config.html#colors
+ui:
+    color: yes
+    colors:
+        text_success: green
+        text_warning: yellow
+        text_error: red
+        text_highlight: magenta
+        text_highlight_minor: brown
+        action_default: cyan
+        action: green
+        
+#avoid conflicts with existing files like "cover.jpg" "front.jpg" etc.
+#art_filename: 'covauto'
+art_filename: 'front'
+
+fetchart:
+    #uses art_filename (see above)
+    #Pick only trusted album art by ignoring filenames that do not contain one of the keywords in cover_names. Default: no.
+    cautious: no
+    #drop the first letter to allow for capital or lowercase as a trusted keyword
+    cover_names: over ront art lbum older
+    #filesystem causes conflicts (hard stops in beets import) when used alongside copyartifacts
+    #some of the latter items require API keys which are not configured. as such, they will not work if you just use this config as-is 
+    # filesystem
+    sources: coverart amazon albumart wikipedia google fanarttv
+
+#posthumous is not yet a possible distinguisher (something I want in the future)
+# https://github.com/beetbox/beets/issues/2338
+
+album_fields:
+    alb_promo_boot: |
+        #official, promo, bootleg, and pseudo-release. we only note the middle two. https://musicbrainz.org/doc/Release#Status
+        if 'Promo' in albumstatus:
+            return 'Promo'
+        elif 'Bootleg' in albumstatus:
+            return 'Bootleg'
+        else:
+            return ''
+    alb_exotic_type: |
+        #no special noting of albums, EPs, and soundtracks
+        if albumtype in {'album', 'ep', 'soundtrack'}:
+           return ''
+        #special case for proper spacing and caps
+        elif 'spokenword' in albumtype:
+           return 'Spoken Word'
+        else:
+           return str.title(albumtype)
+    alb_subset_bitrate: |
+        #return bitrate information for albums <150kbps.
+        #do nothing for higher-bitrate albums, because they are assumed to be perceptually lossless.
+        br_threshhold = 150
+        max_tracks_to_check = 10
+        def sample_tracks(tracks):
+            #reproducible randomness for debugging. should be excluded for optimal randomness from album to album.
+            #otherwise, any album with same number of tracks will get same sample of track numbers, I think
+            from random import seed, sample
+            seed(25)
+            num_items = len(tracks)
+            sample_size = min(max_tracks_to_check, num_items)
+            test_tracks = sample(tracks, sample_size)
+            return(test_tracks)
+        test_tracks = sample_tracks(items)
+        sample_size = len(test_tracks)
+        total = 0
+        for item in test_tracks:
+            total += item.bitrate
+        album_br_bits_ps = total / sample_size
+        # music bitrates are base 10:
+        # https://hydrogenaud.io/index.php/topic,12633.0.html
+        album_br_kbps = album_br_bits_ps / 1000
+        if album_br_kbps > br_threshhold:
+            out_text = ''
+        else:
+            #return Opus, MP3, "Mixed", etc.
+            #uses same test_tracks from earlier sample
+            alb_format = set()
+            for item in test_tracks[0:sample_size]:
+                alb_format.add(item.format)        
+            if len(alb_format) != 1:
+                alb_format = 'Mixed'
+            else:
+                alb_format = alb_format.pop()
+            out_text = str(int(album_br_kbps)) + 'kbps ' + str(alb_format)
+        return out_text
+    alb_title: |
+        #convert long allcaps titles to title case, while leaving other titles alone
+        allowed_length = 3
+        allowed_allcaps_artists = ['573fd3e2-3f61-4329-a6c1-89e20620b0b9']
+        if album.isupper and len(album) > allowed_length:
+            if mb_albumartistid not in allowed_allcaps_artists:
+                from titlecase import titlecase
+                return titlecase(album)
+        if len(album) < 1:
+            return "[untitled]"
+        return album
+    alb_artist: |
+        VA_STR = "Various Artists"
+        if albumartist:
+            return albumartist
+        else:
+            # the album probably has no MBid
+            # return VA_STR if multiple artists are found on the album
+            my_artists = set()
+            for item in items:
+                my_artists.add(item.artist)        
+                if len(my_artists) > 1:
+                    return VA_STR
+            # every artist is the same
+            return my_artists.pop()
+item_fields:
+    i_track: |
+        # hotfix for beets' hardcoded 2-digit track numbers
+        # https://github.com/beetbox/beets/issues/3352
+        str_track = str(track)
+        # pad based on length of highest track number (per disc).
+        # may interact with per_disc_numbering, not sure
+        pad_length = len(str(tracktotal))
+        if pad_length < 2:
+            pad_length = 2
+        return str_track.zfill(pad_length)
+        
+    i_disc_layer: |
+        #do nothing for single-disc releases
+        if disctotal > 1:
+            if disc != '':
+                str_disc = str(disc)
+                #pad based on length of highest disc number.
+                #ex. if total discs = 2 digits, pad 1 zero for discs 1-9 (01-09)
+                legth_to_pad_to = len(str(disctotal))
+                return str_disc.zfill(legth_to_pad_to)
+        return ''
+    i_condition: |
+        #set as a flex attribute(?) elsewhere
+        return ''
+    i_cust_catalog: |
+        #omit uninteresting formats
+        #these formats are bit-identical to CD
+        snake_oil_formats = ['Blu-spec CD', 'SHM-CD', 'HQCD']
+        media_types_to_omit = snake_oil_formats + ['CD', 'CD-R', 'Enhanced CD', 'CDDA', 'Digital Media', '']
+        
+        def item_cust_media():
+            #see https://musicbrainz.org/doc/Release/Format
+            if media in media_types_to_omit:
+                return ''
+            #combine hybrid SACD with SACD, see https://en.wikipedia.org/wiki/Super_Audio_CD#Technology
+            elif 'SACD' in media:
+                return 'SACD'
+            #combine all vinyl types into "Vinyl"
+            elif 'Vinyl' in media:
+                #https://en.wikipedia.org/wiki/VinylDisc
+                if media == 'VinylDisc':
+                    return 'VinylDisc'
+                else:
+                    return 'Vinyl'
+            elif "USB" in media:
+                return 'USB'
+            elif media == 'HD-DVD':
+                return 'HD-DVD'
+            # note: DualDisc contains a DVD side and a CD side.
+            elif media == "DualDisc":
+                return "DVD"
+            elif 'DVD' in media:
+                return 'DVD'
+            else:
+                return media
+            
+        def reissue():
+            if year > original_year:
+                if original_year > 0:
+                    return str(year)
+            return ''
+        # condition = custom attribute to note (mostly) vinyl skips
+        # and other seriously noticable artifacts.
+        result = reissue() + ' ' + item_cust_media() # + i_condition()
+        result = result.strip(' ')
+        if result != '':
+            return ' (' + result + ')'
+        return result

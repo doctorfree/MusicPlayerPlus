@@ -1,0 +1,38 @@
+#!/bin/bash
+# shellcheck disable=SC2016,SC2115
+
+set -euo pipefail
+
+msg() {
+    printf >&2 "%s: %s\n" "$alternative" "$@"
+}
+
+scriptdir="$(cd "$(dirname "$0")" && pwd -P)"
+# shellcheck source=common.sh
+. "$scriptdir/common.sh"
+
+alternative="$1"
+shift
+directory="$1"
+shift
+
+if [ -n "${BEETS_SKIP_HOOKS:-}" ]; then
+    exit 0
+fi
+
+if [ -n "$directory" ] && [ -d "$directory" ]; then
+    msg "Removing dead symlinks"
+    find "$directory" -type l \
+        | while read -r fn; do test -e "$fn" || echo "$fn"; done \
+        | tr '\n' '\0' \
+        | xargs -0 rm -fv \
+        | sed -e 's,^,-,'
+
+    if [ -z "${BEETS_ALT_SKIP_REMOVE_ART:-}" ] && [ $# -eq 0 ]; then
+        msg "Removing album art to avoid remnants"
+        find "$directory" \( -iname cover\*.jpg -o -iname cover\*.png \) -print0 \
+            | xargs -0 rm -f
+    fi
+fi
+
+msg Updating

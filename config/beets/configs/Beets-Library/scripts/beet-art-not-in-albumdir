@@ -1,0 +1,12 @@
+#!/bin/sh
+TAB="$(printf '\t')"
+beet ls -a -f "\$id$TAB\$artpath$TAB\$path" artpath::. \
+    | while IFS="$TAB" read -r id artpath path; do
+        case "$artpath" in
+            "$path"/*)
+                ;;
+            *)
+                echo "$id$TAB$artpath"
+                ;;
+        esac
+    done

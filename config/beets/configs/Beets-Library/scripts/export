@@ -1,0 +1,30 @@
+#!/bin/sh
+# shellcheck disable=SC2016
+
+set -e
+
+librarypath="$(cd "$(beet get-config-path directory)" && pwd -P)"
+album_flexible_fields="$(beet-flexible-fields -a | xargs | tr ' ' ',')"
+item_flexible_fields="$(beet-flexible-fields -i | xargs | tr ' ' ',')"
+
+mkdir -p Exported
+
+if [ $# -eq 0 ]; then
+    echo >&2 "Exporting singleton item fields"
+    beet export -l -i "path,$item_flexible_fields" singleton:true | jq . >Exported/singletons.json
+fi
+
+albums="$(beet ls -f '$id' -a "$@" | xargs)"
+for album_id in $albums; do
+    beet ls -a id:"$album_id"
+
+    # Export flexible fields
+    path="$(beet ls -f '$path' -a "id:$album_id")"
+    relpath="$(relpath "$path" "$librarypath")"
+    destdir="Exported/$relpath"
+    mkdir -p "$destdir"
+    echo >&2 "Exporting album fields"
+    beet export -l -i "$album_flexible_fields" -a "id:$album_id" | jq . >"$destdir/album.json"
+    echo >&2 "Exporting album item fields"
+    beet export -l -i "path,$item_flexible_fields" "album_id:$album_id" | jq . >"$destdir/items.json"
+done

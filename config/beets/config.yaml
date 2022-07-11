@@ -1,17 +1,122 @@
 directory: ~/Music
-library: ~/.config/beets/library.db
+library: ~/.config/beets/musiclibrary.db
 
 import:
     copy: no
+    move: no
+    write: yes
     incremental: yes
     quiet: yes
+    resume: yes
+    from_scratch: yes
+    default_action: apply
+    detail: yes
+    non_rec_action: ask
+    duplicate_action: skip
+    group_albums: no
+    autotag: yes
+    bell: no
     log: ~/.config/beets/log.txt
 
-plugins: fetchart lyrics lastgenre mpdstats
+plugins: acousticbrainz duplicates edit fetchart fromfilename importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist unimported
+
+smartplaylist:
+    relative_to: ~/Music
+    playlist_dir: ~/.config/mpd/playlists
+    forward_slash: no
+    playlists:
+        - name: all.m3u
+          query: ''
+
+        - name: beatles.m3u
+          query: 'artist:Beatles'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::195(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::196(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::197(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::198(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::199(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::200(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::201(0|1|2|3|4|5|6|7|8|9)'
+
+        - name: 'ReleasedIn$year.m3u'
+          query: 'year::202(0|1|2)'
 
 mpd:
     host: localhost
     port: 6600
+
+match:
+    ignored_media: ['Data CD', 'DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD',
+                    'VCD', 'SVCD', 'UMD', 'VHS']
+    strong_rec_thresh: 0.80
+    medium_rec_thresh: 0.50
+    max_rec:
+        missing_tracks: medium
+        #unmatched_tracks: medium
+    preferred:
+        #countries: ['GB|UK', 'US']
+        media: ['CD', 'LP', 'Digital Media|File', 'Cassette']
+        original_year: yes
+
+paths:
+    default: $albumartist/$year - $albumartist - $album%aunique{}/$track - $artist - $album - $title ($year)
+    singleton: $artist/$artist - $album - $title ($year)
+    comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
+
+musicbrainz:
+    source_weight: 1.0
+    genres: yes
+
+fetchart:
+  # Enable automatic album art fetching during import.
+  auto: yes
+  # Pick only trusted album art by ignoring filenames that do not contain one of the keywords in "cover_names".
+  cautious: no
+  # Only allow images with 1:1 aspect ratio
+  enforce_ratio: yes
+  # Only images with a width bigger or equal to minwidth are considered as valid album art candidates.
+  minwidth: 1000
+  # A maximum image width to downscale fetched images if they are too big.
+  # The height is recomputed so that the aspect ratio is preserved.
+  maxwidth: 3000
+  # An asterisk * expands to all available sources.
+  sources:
+    # No remote art sources are queried if local art is found in the filesystem.
+    - filesystem
+    - coverart
+    - amazon
+    - albumart
+    - fanarttv
+    - bandcamp
+  # Store the art source (e.g. filesystem) in the beets database as art_source.
+  store_source: yes
+  # Prefer higher resolution art
+  high_resolution: true
+
+fromfilename:
+    source_weight: 0.5
+
+importadded:
+    preserve_mtimes: yes
+    preserve_write_mtimes: yes
+
+unimported:
+    ignore_extensions: jpg png
+    ignore_subdirectories: data tmp
 
 ui:
     color: yes

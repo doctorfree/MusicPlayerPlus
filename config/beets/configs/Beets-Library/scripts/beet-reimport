@@ -1,0 +1,83 @@
+#!/bin/sh
+# shellcheck disable=SC2016,SC2046
+
+usage() {
+    cat >&2 <<END
+${0##*/} [options] [QUERY..]
+
+Options:
+
+  -n   Dry run.
+  -s   Singletons, not albums.
+  -S KEY=VALUE  Set a value on the imported album or singleton item regardless
+                of reimport result.
+END
+exit 2
+}
+
+dry_run=0
+album=1
+set_values=
+singleton=
+while getopts nsS:h opt; do
+    case "$opt" in
+        n)
+            dry_run=1
+            ;;
+        s)
+            album=
+            singleton=1
+            ;;
+        S)
+            set_values="$set_values $OPTARG"
+            ;;
+        \? | h)
+            usage
+            ;;
+    esac
+done
+shift $((OPTIND - 1))
+
+ret=0
+tmp=$(mktemp -t "${0##*/}.XXXX")
+trap 'rm -f "$tmp"' EXIT INT TERM
+
+scriptdir="$(dirname "$0")"
+
+beet ls ${album:+-a} -f '$id' ${singleton:+singleton:true} "$@" >"$tmp"
+while read -r id; do
+    item_query="${album:+album_}id:$id"
+    beet ls ${album:+-a} "$item_query"
+
+    printf >&2 '+ export "%s"\n' "$item_query"
+    if [ $dry_run -eq 0 ]; then
+        "$scriptdir/export" "$item_query"
+    fi
+
+    printf >&2 '+ beet import -L %s "%s"\n' "${singleton:+--singletons }" "$item_query"
+    if [ $dry_run -eq 0 ]; then
+        beet ls "$item_query"
+
+        if ! beet import -L ${singleton:+--singletons} "$item_query" </dev/tty; then
+            ret=1
+            break
+        fi
+
+        if [ -z "$(beet ls -f '$id' ${album:+-a} "id:$id" 2>/dev/null)" ]; then
+            # Item was imported, id changed, get the new one with last_import
+            id="$(beet ls -f '$id' ${album:+-a} last_import:1)"
+            item_query="${album:+album_}id:$id"
+        fi
+
+        if [ -n "$set_values" ]; then
+            # shellcheck disable=SC2086
+            beet modify -y ${album:+-a} "id:$id" $set_values 2>/dev/null
+            ret=$?
+            if [ $ret -gt 127 ]; then
+                # Exited due to signal
+                exit $ret
+            fi
+        fi
+    fi
+done <"$tmp"
+exit $ret

@@ -1,0 +1,499 @@
+# Global Options ##################################################################################
+
+include:                     # A list of extra configuration files to include.
+                             # IMPORTANT: Most configurations doesn't seem to work in external files, so leave them here.
+  - local.yaml               # Edit paths to your needs.
+  - secrets.yaml             # Secret strings (REDUCTED) like usernames and passwords. Add this file to git.ignore.
+  - plugins.yaml             # Activate/deactivate plugins here.
+
+original_date: yes           # Use the original date for the release.
+
+per_disc_numbering: yes      # The track numbers are incremented throughout a multi disk release.
+
+threaded: yes                # Indicating whether the autotagger should use multiple threads.
+                             # This makes things substantially faster by overlapping work.
+parentwork:                  # This plugin adds five tags:
+                             # - parentwork: The title of the parent work.
+                             # - mb_parentworkid: The musicbrainz id of the parent work.
+                             # - parentwork_disambig: The disambiguation of the parent work title.
+                             # - parent_composer: The composer of the parent work.
+                             # - parent_composer_sort: The sort name of the parent work composer.
+                             # - work_date: The composition date of the work, or the first parent work that has a composition date. Format: yyyy-mm-dd.
+  force: no                  # As a default, parentwork only fetches work info for recordings that do not already have a parentwork tag.
+                             # If force is enabled, it fetches it for all recordings. Default: no.
+  auto: yes                  # If enabled, automatically fetches works at import.
+                             # It takes quite some time, because beets is restricted to one musicbrainz query per second. Default: no.
+
+###################################################################################################
+
+
+# Paths ###########################################################################################
+
+asciify_path: yes            # Convert all non-ASCII characters in paths to ASCII equivalents.
+
+clutter:                     # When beets imports all the files in a directory, it tries to remove the directory if it’s empty.
+                             # A directory is considered empty if it only contains files whose names match the glob patterns in clutter,
+                             # which should be a list of strings.
+                             # The importer only removes recursively searched subdirectories—the top-level directory you specify on the command line is never deleted.
+  [
+  .DS_Store,                 # Default.
+  Thumbs.DB                  # Default.
+  ]
+
+bucket:
+  bucket_alpha_regex:
+    [A-Z]                    # Create folders with the first letters of the band names.
+
+paths:                       # Directory and naming scheme.
+                             # The aunique{} function ensures that identically-named albums are placed in different directories.
+  default: %bucket{$artist,alpha}/$albumartist/$album%aunique{}/$track $title
+  singleton: %bucket{$artist,alpha}/$artist/Non-Album/$title
+  albumtype:soundtrack: Soundtracks/$album%aunique{}/$track $title
+  comp: Compilations/$album%aunique{}/$track $title
+  
+  # copyartifacts ###############################
+  ext:jpg: $albumpath/scans/cover
+  ext:png: $albumpath/scans/cover
+  ext:pdf: $albumpath/scans/booklet
+  ###############################################
+
+max_filename_length: 255     # 0 = unlimited.
+
+##################################################################################################
+
+
+# Import ##########################################################################################
+
+import:                      # Beets can move or copy files but it doesn’t make sense to do both).
+  write: yes                 # Controlling whether metadata (e.g., ID3) tags are written to files when using beet import.
+  #copy: yes                 # Keep your current directory structure.
+                             # The option is ignored if move is enabled (i.e., beets can move or copy files but it doesn’t make sense to do both).
+  move: yes                  # Move the files. Otherwise there will be duplicates.
+  resume: yes                #  Controls whether interrupted imports should be resumed.
+                             # “Yes” means that imports are always resumed when possible;
+                             # “no” means resuming is disabled entirely;
+                             # “ask” (the default) means that the user should be prompted when resuming is possible.
+  incremental: no            # Don't record imported directories.
+  incremental_skip_later: no # Controlling whether imported directories are recorded and whether these recorded directories are skipped.
+  from_scratch: no           # Controlling whether existing metadata is discarded when a match is applied.
+  quiet_fallback: skip       # Either skip (default) or asis, specifying what should happen in quiet mode when there is no strong recommendation.
+  none_rec_action: ask       # Either ask (default), asis or skip.
+                             # Specifies what should happen during an interactive import session when there is no recommendation.
+                             # Useful when you are only interested in processing medium and strong recommendations interactively.
+  timid: no                  # Controlling whether the importer runs in timid mode,
+                             # in which it asks for confirmation on every autotagging match, even the ones that seem very close.
+  log: /mnt/internal/music/import.log
+  default_action: apply      # One of apply, skip, asis, or none, indicating which option should be the default when selecting an action for a given match.
+                             # This is the action that will be taken when you type return without an option letter.
+  languages: en de           # Prefer transliterated English names.
+  detail: no                 # Whether the importer UI should show detailed information about each match it finds.
+                             # When enabled, this mode prints out the title of every track, regardless of whether it matches the original metadata.
+                             # The default behavior only shows changes. Default: no.
+  group_albums: no             # By default, the beets importer groups tracks into albums based on the directories they reside in.
+                             # This option instead uses files’ metadata to partition albums.
+                             # Enable this option if you have directories that contain tracks from many albums mixed together.
+  autotag: yes               # If most of your collection consists of obscure music,
+                             # you may be interested in disabling autotagging by setting this option to no.
+  duplicate_action: ask      # Either skip, keep, remove, merge or ask. Controls how duplicates are treated in import task.
+                             # “skip” means that new item (album or track) will be skipped;
+                             # “keep” means keep both old and new items;
+                             # “remove” means remove old item;
+                             # “merge” means merge into one album;
+                             # “ask” means the user should be prompted for the action each time.
+  bell: yes                  # Ring the terminal bell to get your attention when the importer needs your input.
+
+importadded:
+  preserve_mtimes: no        # After importing files, re-set their mtimes to their original value. Default: no.
+  preserve_write_mtimes: no  # After writing files, re-set their mtimes to their original value. Default: no.
+
+###################################################################################################
+
+
+# AcousticBrainz ##################################################################################
+
+absubmit:                    # The absubmit plugin lets you submit acoustic analysis results to the AcousticBrainz server.
+  auto: yes                  # Analyze every file on import. Otherwise, you need to use the beet absubmit command explicitly. Default: no
+  force: no                  # Analyze items and submit of AcousticBrainz data even for tracks that already have it. Default: no.
+  pretend: no                # Do not analyze and submit of AcousticBrainz data but print out the items which would be processed. Default: no.
+  
+
+acoustid:
+  apikey: REDACTED           # Command: beet submit
+
+chroma:                      # Turning on fingerprinting can increase the accuracy of the autotagger - especially on files with very poor metadata.
+                             # The Acoustid plugin extends the autotagger to use acoustic fingerprinting to find information for arbitrary audio.
+                             # Install that plugin if you’re willing to spend a little more CPU power to get tags for unidentified albums.
+                             # (But be aware that it does slow down the process.)
+  auto: yes                  # Fingerprint-based autotagging.
+
+acousticbrainz:              # The acousticbrainz plugin gets acoustic-analysis information from the AcousticBrainz project.
+  auto: yes                  # Enable AcousticBrainz during beet import. Default: yes.
+  force: yes                 # Download AcousticBrainz data even for tracks that already have it. Default: no.
+  tags:                      # Which tags from the list above to set on your files. Default: [] (all).
+    [                        # As far as I know, the following tags couldn't be read by Roon.
+    average_loudness,
+    bpm,                     # ToDo: Mostly zero.
+    chords_changes_rate,
+    chords_key,
+    chords_number_rate,
+    chords_scale,
+    danceable,
+    gender,
+    genre_rosamerica,
+    initial_key,             # This is a built-in beets field, which can also be provided by Key Finder Plugin.
+    key_strength,
+    mood_acoustic,
+    mood_aggressive,
+    mood_electronic,
+    mood_happy,
+    mood_party,
+    mood_relaxed,
+    mood_sad,
+    moods_mirex,
+    rhythm,
+    timbre,
+    tonal,
+    voice_instrumental
+    ]
+
+###################################################################################################
+
+
+# MusicBrainz #####################################################################################
+
+musicbrainz:
+  user: REDACTED
+  pass: REDACTED
+  searchlimit: 20            # Recommendation from: https://github.com/kernitus/beets-oldestdate
+  extra_tags:                # Enable improved MediaBrainz queries from tags.
+    [
+    catalognum,
+    country,
+    label,
+    media,
+    year
+    ]
+
+match:
+  preferred:
+    media: ['Digital Media|File', 'Digital Media'] # Priorize digital media.
+    countries: ['DE', 'XW', 'US', 'GB|UK']
+
+  strong_rec_thresh: 0.75    # Reflects the distance threshold below which beets will make a “strong recommendation” that the metadata be used.
+                             # Strong recommendations are accepted automatically (except in “timid” mode),
+                             # so you can use this to make beets ask your opinion more or less often.
+                             # The threshold is a distance value between 0.0 and 1.0, so you can think of it as the opposite of a similarity value.
+                             # For example, if you want to automatically accept any matches above 90% similarity, use: "strong_rec_thresh: 0.10"
+                             # The default strong recommendation threshold is 0.04.
+                             # When a match is below the medium recommendation threshold
+                             # or the distance between it and the next-best match is above the gap threshold,
+                             # the importer will suggest that match but not automatically confirm it.
+                             # Otherwise, you’ll see a list of options to choose from.
+
+  medium_rec_thresh: 0.125   # The medium_rec_thresh and rec_gap_thresh options work similarly.
+
+mbcollection:
+  auto: yes                  # Automatically amend your MusicBrainz collection whenever you import a new album.
+  collection: REDACTED       # Which MusicBrainz collection to update. Use the ID from the URL instead of the name.
+  remove: yes                # Remove albums from collections which are no longer present in the beets database.
+                             # ToDo: remove doesn't work.
+
+mbsubmit:                    # As MusicBrainz currently does not support submitting albums programmatically,
+                             # the recommended workflow is to copy the output of the Print tracks choice and
+                             # paste it into the parser that can be found by clicking on the “Track Parser” button on MusicBrainz “Tracklist” tab.
+  format: $track. $title - $artist ($length)
+                             # The format used for printing the tracks, defined using the same template syntax as beets’ path formats.
+                             # Default: $track. $title - $artist ($length).
+  threshold: medium          # The minimum strength of the autotagger recommendation that will cause the Print tracks choice to be displayed on the prompt.
+                             # Default: medium (causing the choice to be displayed for all albums that have a recommendation of medium strength or lower).
+                             # Valid values: none, low, medium, strong.
+
+###################################################################################################
+
+
+# Bandcamp ########################################################################################
+
+# beetcamp
+bandcamp:                    # Beetcamp. Uses the bandcamp URL as id (for both albums and songs).
+                             # If no matching release is found when importing you can select enter Id and paste the bandcamp URL.
+
+    preferred_media: Digital # A comma-separated list of media to prioritise when fetching albums.
+
+    include_digital_only_tracks: true
+                             # For media that isn't Digital Media, include all tracks,
+                             # even if their titles contain digital only (or alike).
+
+    search_max: 10           # Maximum number of items to fetch through search queries. Default: 10.
+
+    art: true                # Add a source to the FetchArt plug-in to download album art for Bandcamp albums
+                             # (requires FetchArt plug-in enabled).
+
+    #exclude_extra_fields:   # The data that is added after the core auto tagging process is considered extra:                      
+      #- lyrics              # (currently) lyrics and comments (release description) fields.
+      #- comments            # Since there yet isn't an easy way to preview them before they get applied,
+                             # you can ignore them if you find them irrelevant or inaccurate.
+
+###################################################################################################
+
+
+# Last.fm #########################################################################################
+
+lastimport:
+  per_page: 500              # The number of tracks to request from the API at once. Default: 500.
+  retry_limit: 3             # How many times should we re-send requests to Last.fm on failure? Default: 3.
+lastfm:
+  user: REDACTED
+  api_key: REDACTED
+types:
+  play_count: int
+  rating: float
+
+lastgenre:                   # Fetches tags from Last.fm and assigns them as genres to your albums and items.
+  auto: yes                  # Fetch genres automatically during import. Default: yes.
+  canonical: ~/.config/beets/genres/genres-tree.yaml 
+                             # Use a canonicalization tree. Setting this to yes will use a built-in tree.
+  whitelist: ~/.config/beets/genres/genres.txt
+                             # The filename of a custom genre list, yes to use the internal whitelist, or no to consider all genres valid.
+                             # Default: yes.
+  count: 5                   # Number of genres to fetch. Default: 1
+  fallback: 'Pop/Rock'       # A string if to use a fallback genre when no genre is found.
+                             # You can use the empty string '' to reset the genre.
+                             # Default: None.
+  separator: '; '
+  force: no                  # By default, beets will always fetch new genres, even if the files already have one.
+                             # To instead leave genres in place in when they pass the #whitelist: ~/.config/beets/genres.txt,
+                             # set the force option to no.
+  min_weight: 10             # Minimum popularity factor below which genres are discarded. Default: 10.
+  prefer_specific: no        # Sort genres by the most to least specific, rather than most to least popular. Default: no.
+  source: track              # Which entity to look up in Last.fm. Can be either artist, album or track. Default: album. 
+  title_case: yes            # Convert the new tags to TitleCase before saving. Default: yes.
+
+###################################################################################################
+
+
+# Muspy ###########################################################################################
+
+follow:                      # Get notifications about new releases from album artists in your Beets library using muspy.
+  email: REDACTED
+  password: REDACTED
+  userid: REDACTED
+  auto: yes
+
+###################################################################################################
+
+
+# Lyrics ##########################################################################################
+
+lyrics:
+  auto: yes                  # Fetch lyrics automatically during import. Default: yes.
+  fallback: ''               # By default, the file will be left unchanged when no lyrics are found.
+                             # Use the empty string '' to reset the lyrics in such a case.
+                             # Default: None.
+  force: no                  # By default, beets won’t fetch lyrics if the files already have ones.
+                             # To instead always fetch lyrics, set the force option to yes.
+                             # Default: no.
+  #google_API_key: None      # Your Google API key (to enable the Google Custom Search backend).
+                             # Default: None.
+  #google_engine_ID:         # The custom search engine to use.
+                             # Default: The beets custom search engine, which gathers an updated list of sources known to be scrapeable.
+  sources:                   # List of sources to search for lyrics.
+                             # An asterisk * expands to all available sources.
+                             # Both it and the genius source will only be enabled if BeautifulSoup is installed.
+    - bandcamp               # ToDo: Not shure if this entry is really nescessary.
+    - genius
+    - lyricwiki
+    - google                 # The google source will be automatically deactivated if no google_API_key is setup.
+    - musixmatch             # Possibly just 30% of a whole song text
+                             # Leave in last position or comment it out.
+                             # @test 
+###################################################################################################
+
+
+# Pictures ########################################################################################
+
+# In Roon, all the images embedded in the file tags, are stored next to the audio files or
+# stored in a folder called artwork or scans next to the files are displayed.
+# This includes all images that include cover, front or folder.
+
+art_filename: cover          # When importing album art, the name of the file (without extension) where the cover art image should be placed.
+                             # This is a template string, so you can use any of the syntax available to Path Formats.
+
+copyartifacts:
+    extensions: .jpg .pdf .png
+    print_ignored: yes
+
+fetchart:
+  auto: yes                  # Enable automatic album art fetching during import.
+  cautious: no               # Pick only trusted album art by ignoring filenames that do not contain one of the keywords in "cover_names".
+  enforce_ratio: yes         # Only allow images with 1:1 aspect ratio
+  minwidth: 1000             # Only images with a width bigger or equal to minwidth are considered as valid album art candidates.
+  maxwidth: 3000             # A maximum image width to downscale fetched images if they are too big.
+                             # The height is recomputed so that the aspect ratio is preserved.
+  sources:                   # An asterisk * expands to all available sources.
+    - filesystem             # No remote art sources are queried if local art is found in the filesystem.
+    - coverart
+    - albumart
+    - fanarttv
+    - bandcamp
+  fanarttv_key: REDACTED     # API key to use for the fanart API.
+  store_source: yes          # Store the art source (e.g. filesystem) in the beets database as art_source.
+
+embedart:
+  auto: no                   # Enable automatic album art embedding.
+  compare_threshold: 50      # A threshold of 0 (the default) disables similarity checking and always embeds new images.
+                             # Recommended between 10 and 100.
+                             # The smaller the threshold number, the more similar the images must be.
+  ifempty: yes               # Avoid embedding album art for files that already have art embedded.
+  maxwidth: 0                # A maximum width to downscale images before embedding them (the original image file is not altered).
+                             # The resize operation reduces image width to at most maxwidth pixels.
+                             # The height is recomputed so that the aspect ratio is preserved. See also Image Resizing for further caveats about image resizing.
+  remove_art_file: no        # Automatically remove the album art file for the album after it has been embedded.
+                             # This option is best used alongside the FetchArt plugin to download art with the purpose
+                             # of directly embedding it into the file’s metadata without an “intermediate” album art file.
+
+###################################################################################################
+
+
+# ReplayGain ######################################################################################
+
+replaygain:
+  auto: yes                  # Enable ReplayGain analysis during import. Default: yes.
+                             # ReplayGain analysis is not fast, so you may want to disable it during import.
+  backend: ffmpeg            # The analysis backend; either gstreamer, command, or audiotools. Default: command.
+  overwrite: no              # Re-analyze files that already have ReplayGain tags. Default: no.
+  targetlevel: 89            # A number of decibels for the target loudness level. Default: 89.
+  per_disc: no               # Calculate album ReplayGain on disc level instead of album level. Default: no.
+
+###################################################################################################
+
+
+# Maintanance #####################################################################################
+
+duplicates:
+  album: no                  # List duplicate albums instead of tracks. Default: no.
+  checksum: ffmpeg -i {file} -f crc -
+                             # Use an arbitrary command to compute a checksum of items.
+                             # This overrides the keys option the first time it is run;
+                             # however, because it caches the resulting checksum as flexattrs in the database,
+                             # you can use --key=name_of_the_checksumming_program --key=any_other_keys
+                             # (or set the keys configuration option) the second time around.
+                             # Default: ffmpeg -i {file} -f crc -.
+  copy: none                 # A destination base directory into which to copy matched items.
+                             # Default: none (disabled).
+  count: yes                 # Print a count of duplicate tracks or albums in the format
+                             # $albumartist - $album - $title: $count (for tracks)
+                             # or
+                             # $albumartist - $album: $count (for albums).
+                             # Default: no.
+  delete: no                 # Removes matched items from the library and from the disk. Default: no
+  format: format_item        # A specific format with which to print every track or album.
+                             # This uses the same template syntax as beets’ path formats.
+                             # The usage is inspired by, and therefore similar to, the list command.
+                             # Default: format_item
+  full: yes                  # List every track or album that has duplicates, not just the duplicates themselves. Default: no
+  keys: [mb_trackid, mb_albumid]
+                             # Define in which track or album fields duplicates are to be searched.
+                             # By default, the plugin uses the musicbrainz track and album IDs for this purpose.
+                             # Using the keys option (as a YAML list in the configuration file,
+                             # or as space-delimited strings in the command-line),
+                             # you can extend this behavior to consider other attributes.
+                             # Default: [mb_trackid, mb_albumid]
+  merge: no                  # Merge duplicate items by consolidating tracks and/or metadata where possible.
+  move: none                 # A destination base directory into which it will move matched items. Default: none (disabled).
+  path: no                   # Output the path instead of metadata when listing duplicates. Default: no.
+  strict: no                 # Do not report duplicate matches if some of the attributes are not defined (ie. null or empty). Default: no
+  #tag: no                   # A key=value pair.
+                             # The plugin will add a new key attribute with value value as a flexattr to the database for duplicate items. Default: no.
+  tiebreak: {}               # Dictionary of lists of attributes keyed by items or albums to use when choosing duplicates.
+                             # By default, the tie-breaking procedure favors the most complete metadata attribute set.
+                             # If you would like to consider the lower bitrates as duplicates, for example, set tiebreak: items: [bitrate].
+                             # Default: {}.
+
+check:
+  import: yes                # Add checksums for new files during the import process.
+                             # This also disables integrity checks on import and will not ask you to skip the import of corrupted files.
+  write-check: yes           # Verify checksums before writing files with beet write or beet modify.
+  write-update: yes          # Update checksums after writing files with beet write or beet modify.
+  convert-update: no         # Update the checksum if a file has been converted with the --keep-new flag.
+  threads: 1                 # Threads to compute checksums.
+
+missing:
+  #format: $albumartist - $album - $title
+                             # A specific format with which to print every track.
+                             # This uses the same template syntax as beets’ path formats.
+                             # The usage is inspired by, and therefore similar to, the list command.
+                             # Default: format_item.
+  count: yes                 # Print a count of missing tracks per album, with format defaulting to $albumartist - $album: $missing.
+                             # Default: no.
+  total: yes                 # Print a single count of missing tracks in all albums.
+                             # Default: no.
+
+###################################################################################################
+
+# Export ##########################################################################################
+
+convert:                     # By default, the command places converted files into the destination directory and leaves your library pristine.
+  auto: no                   # Import transcoded versions of your files automatically during imports.
+  command: ffmpeg -i $source -sample_fmt s16 -ar 44100 $dest
+  extension: flac
+  source: /mnt/external/work/roon-export
+  dest: /mnt/external/work/converted
+                             # The directory where the files will be converted (or copied) to. Default: none.
+                             # With this option enabled, the importer will transcode all (in the default configuration) non-MP3 files
+                             # over the maximum bitrate before adding them to your library.
+  #tmpdir: none              # The directory where temporary files will be stored during import. Default: none (system default),
+  copy_album_art: no         # Since the covers are embedded in the files when Roon exports them, this configuration is not necessary.
+  embed: no                  # Embed album art in converted items. Default: yes.
+  #id3v23: inherit           # Can be used to override the global id3v23 option. Default: inherit.
+  never_convert_lossy_files: yes
+                             # Cross-conversions between lossy codecs—such as mp3, ogg vorbis, etc.
+                             # Makes little sense as they will decrease quality even further.
+                             # If set to yes, lossy files are always copied.
+  quiet: false               # Prevent the plugin from announcing every file it processes.
+                             # Default: false.
+  threads: 1                 # The number of threads to use for parallel encoding.
+                             # By default, the plugin will detect the number of processors available and use them all. 
+
+permissions: # octal modes   # Maybe nescessary for smb shares like ROCK or NAS drives.
+  file: 777
+  dir: 777
+
+###################################################################################################
+
+# UI ##############################################################################################
+
+verbose: no
+
+ui:
+    color: yes
+    colors:
+        text_success: green
+        text_warning: blue
+        text_error: red
+        text_highlight: blue
+        text_highlight_minor: lightgray
+        action_default: darkblue
+        action: purple
+
+hook:
+  hooks:
+    #############################################
+    - event: album_imported
+      command: echo "\"{album}\""
+    - event: import
+      command: echo "imported from {paths}"
+    #############################################
+    - event: art_set
+      command: echo "Coverart saved"
+    - event: import_begin
+      command: echo "Roon import started..."
+    - event: import_task_apply
+      command: echo "Metadata applied"
+    - event: item_copied
+      command: echo "\"{item}\" copied from \"{source}\" to \"{destination}\""
+    - event: item_moved
+      command: echo "Moved \"{item}\""
+    - event: write
+      command: echo "Writing to {path}"
+    - event: cli_exit
+      command: echo "All tasks finished!"

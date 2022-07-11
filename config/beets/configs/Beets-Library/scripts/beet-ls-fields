@@ -1,0 +1,65 @@
+#!/bin/bash
+# List the specified fields from the specified query, with a specific separator. Useful for shell parsing.
+
+set -euo pipefail
+
+usage() {
+    cat <<END >&2
+${0##*/} [options..] [QUERY..]
+
+Example:
+
+    beet-ls-fields -i track -i title \
+        | while IFS="\$(printf '\t')" read -r track title; do
+            echo "\$track: \$title"
+        done
+
+Options:
+  -i FIELDS      Specify a field to include. Cumulative. Required.
+  -s SEPARATOR  Specify field separator for output. Default: '\\t' (Tab character)
+  -h   Show usage
+END
+    exit 2
+}
+
+fields=
+separator=$'\t'
+while getopts i:s:h opt; do
+    case "$opt" in
+        i)
+            fields="$fields $OPTARG"
+            ;;
+        s)
+            separator="$OPTARG"
+            ;;
+        \? | h)
+            usage
+            ;;
+    esac
+done
+fields="${fields# }"
+shift $((OPTIND - 1))
+
+if [ -z "$fields" ]; then
+    usage
+fi
+
+case "${OSTYPE:-}" in
+    darwin*)
+        sed=gsed
+        ;;
+    *)
+        sed=sed
+        ;;
+esac
+
+beet export -l -i "${fields/ /,}" -f jsonlines "$@" \
+    | while read -r jsonobject; do
+        eval "$(printf "%s\n" "$jsonobject" | jq -r '. | to_entries | .[] | .key + "=" + (.value | @sh)' | $sed -e 's/^\([^=.]*\)\.\([^=.]*\)/\1\2/g')"
+        for field in $fields; do
+            field="$(echo "$field" | tr -d .)"
+            value="$(eval echo "\$$field")"
+            printf '%s%s' "$value" "$separator"
+        done | sed -e "s/$separator$//"
+        echo
+    done

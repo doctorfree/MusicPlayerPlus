@@ -1,0 +1,41 @@
+# List of useful plugins.
+# Commented out (#) plugins are not in use yet.
+
+plugins:
+  [
+  #absubmit,       # Lets you submit acoustic analysis results to the AcousticBrainz server.
+                   # ToDo: install the extractor binary from https://acousticbrainz.org/download
+  acousticbrainz,  # Gets acoustic-analysis information from the AcousticBrainz project.
+  badfiles,        # ToDo. Adds a beet bad command to check for missing and corrupt files.
+  bandcamp,        # Beetcamp. Use bandcamp as an autotagger source for eg. artwork and lyrics.
+  bucket,          # Groups your files into buckets folders representing ranges.
+  chroma,          # Chromaprint/Acoustid Plugin.
+  check,           # Add checksum automatically.
+  convert,         # Lets you transcoding audio and embedding album art.
+  copyartifacts,   # A plugin that moves non-music files during the import process.
+  duplicates,      # Adds a new command, duplicates or dup, which finds and lists duplicate tracks or albums in your collection.
+  edit,            # Lets you modify music metadata using your favorite text editor. ToDo: No config file yet.
+  embedart,        # Embed the album art directly into each file’s metadata.
+  export,          # Lets you get data from the items and export the content as JSON, CSV, or XML.
+  fetchart,        # Retrieves album art images from various sources on the Web and stores them as image files.
+  follow,          # Get notifications about new releases from album artists in your Beets library using muspy.
+  fromfilename,    # The FromFilename plugin adds the ability to guess tags from the filenames.
+                   # Use this plugin if your tracks have useful names (like “03 Call Me Maybe.mp3”) but their tags don’t reflect that.
+  hook,            # Lets you run commands in response to these events.
+  importadded,     # Useful when an existing collection is imported and the time when albums and items were added should be preserved.
+  info,            # The info plugin provides a command that dumps the current tag values for any file format supported by beets.
+  lastimport,      # Doesn't write tags to files - only database. So not useful at the moment.
+  lastgenre,       # Fetches tags from Last.fm and assigns them as genres to your albums and items.
+  lyrics,          # Fetches and stores song lyrics from databases on the Web.
+  mbcollection,    # Lets you submit your catalog to MusicBrainz to maintain your music collection list there.
+  mbsubmit,        # Provides an extra prompt choice during an import session that prints the tracks
+                   # of the current album in a format that is parseable by MusicBrainz’s track parser.
+  mbsync,          # This plugin provides the mbsync command,
+                   # which lets you fetch metadata from MusicBrainz for albums and tracks that already have MusicBrainz IDs.
+  missing,         # This plugin adds a new command, missing or miss,
+                   # which finds and lists, for every album in your collection, which or how many tracks are missing.
+  parentwork,      # Fetches the work title, parent work title and parent work composer from MusicBrainz.
+  permissions,     # Set file permissions for imported music files and its directories. Permissions will be adjusted automatically on import.
+  replaygain,      # This plugin adds support for ReplayGain, a technique for normalizing audio playback levels.
+  unimported       # Allows to list all files in the library folder which are not listed in the beets library database, including art files.
+  ]

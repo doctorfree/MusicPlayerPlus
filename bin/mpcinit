@@ -135,20 +135,15 @@ sync_music_dir() {
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
     }
-    have_beet=`type -p beet`
-    if [ "${have_beet}" ]
+    if [ -x ${SCPTDIR}/beet_import.sh ]
     then
-      rm -f ${BEETSCONFDIR}/library.db
-      beet import -q ${exp_music} > /dev/null 2>&1 &
+      ${SCPTDIR}/beet_import.sh ${exp_music}" &
     else
-      if [ -x ${HOME}/.local/bin/beet ]
-      then
-        rm -f ${BEETSCONFDIR}/library.db
-        ${HOME}/.local/bin/beet import -q ${exp_music} > /dev/null 2>&1 &
-      else
-        echo "WARNING: Cannot locate 'beet' executable"
-        echo "Music library ${exp_music} not imported to beets media organizer"
-      fi
+      echo ""
+      echo "WARNING: Could not locate beets import script"
+      echo "A manual beets import must be performed by executing the commands:"
+      echo "    beet import ${exp_music}"
+      echo "    beet import -ps ${exp_music}"
     fi
 
     # Disable and stop any system-wide MPD service
@@ -220,13 +215,13 @@ else
 fi
 
 [ "$1" == "sync" ] && {
-  printf "\n\nSyncing MusicPlayerPlus music directory, please wait ..."
+  printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
   sync_music_dir
   printf "\n\nMusicPlayerPlus music directory synchronized."
   exit 0
 }
 
-printf "\n\nInitializing MusicPlayerPlus, please wait ..."
+printf "\nInitializing MusicPlayerPlus, please wait ..."
 [ -f ${HOME}/${MPCDIR}/bindings ] || {
   cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
 }

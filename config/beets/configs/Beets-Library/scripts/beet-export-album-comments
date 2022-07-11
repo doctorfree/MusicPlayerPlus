@@ -1,0 +1,9 @@
+#!/bin/sh
+# shellcheck disable=SC2016
+
+beet ls -a -f '$id' comments::. "$@" | while read -r album_id; do
+    album_path="$(beet ls -a -f '$path' "id:$album_id")"
+    if [ -e "$album_path" ] && ! [ -s "$album_path/comments.txt" ]; then
+        beet ls -a -f '$comments' "id:$album_id" >"$album_path/comments.txt"
+    fi
+done

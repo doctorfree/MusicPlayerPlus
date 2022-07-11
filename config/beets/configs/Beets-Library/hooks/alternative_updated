@@ -1,0 +1,61 @@
+#!/bin/bash
+# shellcheck disable=SC2016,SC2115
+
+set -euo pipefail
+
+msg() {
+    printf >&2 "%s: %s\n" "$alternative" "$@"
+}
+
+scriptdir="$(cd "$(dirname "$0")" && pwd -P)"
+# shellcheck source=common.sh
+. "$scriptdir/common.sh"
+
+alternative="$1"
+shift
+directory="$1"
+shift
+
+if ! [ -d "$directory" ]; then
+    echo >&2 "Error: $directory does not exist after alternative update"
+    exit 1
+fi
+
+if [ -n "${BEETS_SKIP_HOOKS:-}" ]; then
+    exit 0
+fi
+
+PATH="$scriptdir:$scriptdir/../scripts:$PATH"
+
+if [ -z "${BEETS_LIBRARY:-}" ]; then
+    msg "Warning: BEETS_LIBRARY not set, skipping playlist clean up."
+elif [ -d "${BEETS_LIBRARY:-}" ]; then
+    msg "Removing remnant playlists"
+    playlistdir="$(config_value 'alternativesplaylist.playlist_dir' || config_value 'playlist.playlist_dir' Playlists)"
+    playlistdir="$(basename "$playlistdir")"
+    if [ -n "$playlistdir" ] && [ -d "$directory/$playlistdir" ]; then
+        find "$directory/$playlistdir" -type f \
+            | while read -r fn; do
+                rel="${fn#$directory/}"
+                if ! [ -e "$BEETS_LIBRARY/$rel" ]; then
+                    msg "$BEETS_LIBRARY/$rel does not exist, but $fn does, removing"
+                    rm -fv "$fn"
+                fi
+            done
+    fi
+fi
+
+find "$directory" -type l \
+    | while read -r fn; do test -e "$fn" || echo "$fn"; done \
+    | ifne sh -c '"echo >&2 Warning: dead symbolic links exist in alternative \"$alternative\":"; cat'
+
+msg "Removing empty directories"
+remove-empty-dirs "$directory"/*/ >/dev/null || :
+
+if [ -d "$directory/.git" ]; then
+    (
+        cd "$directory" || exit 1
+        git add -A .
+        git commit -m "Update"
+    ) || :
+fi

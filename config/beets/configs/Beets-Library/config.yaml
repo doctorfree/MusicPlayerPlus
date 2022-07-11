@@ -1,0 +1,97 @@
+library: Library/library.db
+directory: Library
+statefile: Library/state.pickle
+include:
+  - config.d/plugins.yaml
+  - config.d/plugins/included.yaml
+  - config.d/plugins/community.yaml
+  - config.d/plugins/mine.yaml
+  - config.d/plugins/smartplaylist.yaml
+  - config.d/plugins/xtractor.yaml
+  - config.d/local.yaml
+
+pluginpath:
+  - ./plugins
+  - ./src/beets-kergoth/beetsplug
+  - ./src/beets-alternatives/beetsplug
+  - ./src/whatlastgenre/plugin/beets/beetsplug
+
+ignore: ['.DS_Store', '@eaDir', '.*', '*~', 'System Volume Information', 'lost+found']
+
+# For unicode lookalikes, see:
+# http://www.unicode.org/Public/security/latest/confusables.txt
+replace:
+  # Avoid trailing periods, invalid on Windows
+  ' E\.P\.': ' EP'
+  ' *(\.\.\.)$': '…'
+  '\.+$': ''
+
+  # Zero-width space
+  '​': ''
+
+  # Colon in paths is often unsupported. Use a unicode lookalike.
+  ' *:': '∶'
+
+  # Remaining default configuration for portability
+  '[\\/]': _
+  '^\.+': _
+  '[\x00-\x1f]': _
+  # '[<>"\?\*\|]': _
+  '\s+$': ''
+  '^\s+': ''
+  '^-': _
+path_sep_replace: ／
+
+format_item: '%ifdef{id,[$id] }%if{$album,$album%if{$albumtypes,%if{$atypes, $atypes}}%aunique{}%if{$e_albumadvisory, (Explicit)} - $disc_and_track_pre}$artist - $full_title'
+format_album: '%ifdef{id,[$id] }$albumartist - $album%if{$albumtypes,%if{$atypes, $atypes}}%aunique{}%if{$e_albumadvisory, (Explicit)}'
+sort_item: albumartist+ album+ disc+ track+ artist+
+sort_album: albumartist+ album+
+per_disc_numbering: yes
+
+clutter: ['*.m3u', 'Thumbs.DB', '.DS_Store']
+
+id3v23: yes
+
+import:
+  incremental: yes
+  timid: yes
+  copy: yes
+  log: Library/import.log
+  default_action: skip
+
+musicbrainz:
+  searchlimit: 10
+  extra_tags: [year, catalognum, country, media, label]
+  genres: no
+
+match:
+  strong_rec_thresh: 0.075
+  medium_rec_thresh: 0.125
+  max_rec:
+    unmatched_tracks: low
+    missing_tracks: strong
+  # The higher the weight, the lower the items go in the candidate list (greater
+  # distance) when this penalty is applied.
+  distance_weights:
+    # Default: 3.0
+    album: 6.0
+    # Default: 3.0
+    artist: 7.0
+    # Default: 2.0
+    totaltracks: 4.0
+    # Default: 0.9
+    missing_tracks: 1.0
+    # Default: 0.6
+    unmatched_tracks: 10.0
+  preferred:
+    countries: ['US', 'XW', 'GB|UK']
+    media: ['Digital Media|File', 'CD']
+  ignored_media:
+    ['DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD', 'VCD', 'SVCD', 'UMD', 'VHS']
+
+paths:
+  default: '$source/%if{$albumartist_credit,$albumartist_credit,$albumartist}/%if{$album,$album%aunique{},[non-album tracks]}/$path_filename'
+  singleton: '$source/%if{$artist_credit,$artist_credit,$artist}/[non-album tracks]/$path_filename'
+  comp: '$source/Compilations/%if{$album,$album%aunique{},[non-album tracks]}/$path_filename'
+  ext:log: $albumpath/$album
+  ext:cue: $albumpath/$album

@@ -1,0 +1,26 @@
+xtractor:
+  auto: no
+  dry-run: no
+  write: no
+  threads: 4
+  force: no
+  quiet: no
+  keep_output: yes
+  keep_profiles: no
+  output_path: "/Volumes/Data/Music Library/Xtractor/Data"
+  essentia_extractor: "/Volumes/Data/Music Library/Xtractor/streaming_extractor_music"
+  extractor_profile:
+    highlevel:
+      svm_models:
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/danceability.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/gender.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/genre_rosamerica.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_acoustic.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_aggressive.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_electronic.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_happy.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_sad.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_party.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/mood_relaxed.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/voice_instrumental.history"
+        - "/Volumes/Data/Music Library/Xtractor/SVM_Models/moods_mirex.history"

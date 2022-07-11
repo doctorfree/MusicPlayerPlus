@@ -1,0 +1,196 @@
+library: /mnt/d/Music/beets/library.db
+directory: /mnt/d/Music/beets/Collection
+
+plugins:
+  - acousticbrainz
+  # lastimport command to import play counts from last.fm
+  - lastimport
+  # mbsync command to sync new metadata from MusicBrainz
+  - mbsync
+  - inline
+  - playlist
+  - smartplaylist
+  - convert
+  # duplicates command to list duplicates
+  - duplicates
+  # allows prefixing searches with ~ to use fuzzy search
+  - fuzzy
+  # info command to get ID3 tags or database fields
+  - info
+  # mbupdate command to send data to a MusicBrainz collection
+  - mbcollection
+  # missing command to list missing albums or tracks
+  - missing
+  # random command to get random entries from library
+  - random
+  # allows treating fields with a different datatype
+  - types
+
+acousticbrainz:
+  auto: yes
+  force: yes
+
+lastfm:
+  user:
+
+playlist:
+  auto: yes
+  playlist_dir: /mnt/d/Music/Playlists
+  relative_to: /mnt/d/Music/Playlists
+
+smartplaylist:
+  auto: yes
+  playlist_dir: /mnt/d/Music/Playlists
+  relative_to: /mnt/d/Music/Playlists
+  playlists:
+    - name: all.m3u
+      query: ''
+    - name: 1940s.m3u
+      query: 'year:1940..1949'
+    - name: 1950s.m3u
+      query: 'year:1950..1959'
+    - name: 1960s.m3u
+      query: 'year:1960..1969'
+    - name: 1970s.m3u
+      query: 'year:1970..1979'
+    - name: 1980s.m3u
+      query: 'year:1980..1989'
+    - name: 1990s.m3u
+      query: 'year:1990..1999'
+    - name: 2000s.m3u
+      query: 'year:2000..2009'
+    - name: 2010s.m3u
+      query: 'year:2010..2019'
+    - name: 2020s.m3u
+      query: 'year:2020..2029'
+
+convert:
+  auto: no
+  copy_album_art: yes
+  dest: /mnt/d/Music/RIPs
+  embed: no
+  never_convert_lossy_files: yes
+  format: mp3
+
+mbcollection:
+  auto: yes
+  collection:
+  remove: yes
+
+musicbrainz:
+  user:
+  pass:
+
+types:
+  rating: int
+
+item_fields:
+  __i_artist: |
+    if albumartist == "Various Artists":
+        return "Various Artists"
+    elif albumartist is not None:
+        return albumartist
+    else:
+        return artist
+  __i_release_type: |
+    if albumtype == "album":
+        return "Albums"
+    elif albumtype == "single":
+        return "Singles"
+    elif albumtype == "ep":
+        return "EPs"
+    elif albumtype == "compilation":
+        return "Compilations"
+    elif albumtype == "soundtrack":
+        return "Soundtracks"
+    elif albumtype == "live":
+        return "Live"
+    else:
+        return "Others"
+  __i_album: |
+    if original_year is None and year is None:
+        return album
+    elif original_year is not None and year is not None:
+        # Both available, need to disambiguate if unequal, pick anyone otherwise
+        if original_year == year:
+            # Pick whatever, doesn't make a difference
+            return "[{year}] - {album}".format(year=year, album=album)
+        else:
+            # Disambiguate since both are present and unequal
+            return "[{release_year}] - {album} [{original_year}]".format(
+                release_year=year, album=album, original_year=original_year)
+    else:
+        # Pick whatever is available
+        __year = original_year or year
+        return "[{year}] - {album}".format(year=__year, album=album)
+  __i_multidisc: 1 if disctotal > 1 else 0
+  __i_disc: |
+    __min_discnum_length = 1
+    __total_discnum_length = len(str(disctotal))
+    if __total_discnum_length > __min_discnum_length:
+        __discnum_pad_length = __total_discnum_length
+    else:
+        __discnum_pad_length = __min_discnum_length
+
+    __padded_disc = "Disc {discnum}".format(
+        discnum=str(disc).zfill(__discnum_pad_length))
+
+    if disctitle is not None:
+        __disc = "{disc} - {subtitle}".format(disc=__padded_disc,
+            subtitle=disctitle)
+    else:
+        __disc = "{disc}".format(disc=__padded_disc)
+
+    return __disc
+  __i_track: |
+    __min_tracknum_length = 2
+    __total_tracknum_length = len(str(disctotal))
+    if __total_tracknum_length > __min_tracknum_length:
+        __tracknum_pad_length = __total_tracknum_length
+    else:
+        __tracknum_pad_length = __min_tracknum_length
+
+    if track is None:
+        __track_num = 1
+    else:
+        __track_num = track
+
+    __padded_track = "{track}".format(
+        track=str(__track_num).zfill(__tracknum_pad_length))
+    __track = "{track} - {title}".format(track=__padded_track, title=title)
+    return __track
+
+ignore_hidden: no
+asciify_paths: no
+threaded: yes
+original_date: no
+artist_credit: no
+per_disc_numbering: yes
+aunique:
+  keys: albumartist albumtype original_year year album
+  disambiguators: albumdisambig label
+  bracket: '[]'
+id3v23: yes
+va_name: 'Various Artists'
+
+ui:
+  color: yes
+
+import:
+  write: no
+  copy: no
+  move: no
+  resume: ask
+  incremental: yes
+  incremental_skip_later: no
+  from_scratch: no
+  timid: yes
+  log: /mnt/d/Music/beets/importer.log
+  group_albums: yes
+  autotag: yes
+  bell: yes
+
+paths:
+  default:   $__i_artist/$__i_release_type/$__i_album%aunique{}/%if{$__i_multidisc,$__i_disc/}$__i_track
+  comp:      $__i_artist/$__i_release_type/$__i_album%aunique{}/%if{$__i_multidisc,$__i_disc/}$__i_track
+  singleton: $__i_artist/[Non-Album]/%if{$year,[$year]}/$__i_track
