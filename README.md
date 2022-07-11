@@ -349,7 +349,21 @@ catalogs your music collection and improves its metadata. The default
 Beets configuration provided by MusicPlayerPlus does not copy or move
 any of the files in the music library during this process. It simply
 adds music library data to the Beets database. To import your music
-library into Beets, issue the command:
+library into Beets, issue one of the following commands.
+
+To write tags during import:
+
+```
+mpplus -I -w
+```
+
+To not write tags during import (faster but tags are nice):
+
+```
+mpplus -I -W
+```
+
+To use the default tag writing setting from `~/.config/beets/config.yaml`:
 
 ```
 mpplus -I
@@ -358,29 +372,42 @@ mpplus -I
 The Beets import defaults are controlled by the Beets configuration file
 at `$HOME/.config/beets/config.yaml` and command-line options to the
 `beet import` command. By default, MusicPlayerPlus imports the MPD music
-library into Beets without copying and without writing tags. A log of the
+library into Beets without copying and writing tags. A log of the
 import is written to the file `$HOME/.config/beets/import_log.txt`.
 
 The import process, depending on the size of the music library and metadata
-analyzed, may take some time. For this reason, it is performed in the
+analyzed, may take several hours. For this reason, it is performed in the
 background and non-interactively. The `mpplus -I` command performs both
 an import of the music library albums and an import of singleton songs.
+
+When running in the background, monitor the progess of the import by
+examining the log file. For example, to view progress in real-time:
+
+```
+tail -f $HOME/.config/beets/import_log.txt
+```
+
+Music library folders that are skipped are likely those for which `beet import`
+did not find the entire album. These songs should be picked up and imported
+during the subsequent import where singletons are identified and imported.
 
 If a manual beets import is desired, it may be performed by issuing the commands:
 
 ```
-beet import [-W] <MUSIC_DIRECTORY>
+beet import -[w|W] <MUSIC_DIRECTORY>
 ```
 
 and
 
 ```
-beet import [-W]ps <MUSIC_DIRECTORY>
+beet import -[w|W] -p -s <MUSIC_DIRECTORY>
 ```
 
 Where <MUSIC_DIRECTORY> is the full pathname to your music library and the
-`-W` flag indicates 'do not write tags'. Omitting the `-W` flag will write
-tags. The first import command above imports albums from the music library
+`-w` flag indicates 'write tags' while `-W` flag indicates 'do not write tags'.
+Omitting both the `-w` and `-W` flags will use the *write* setting in the
+*import* section of `~/.config/beets/config.yaml` to determin if tags are
+written. The first import command above imports albums from the music library
 at <MUSIC_DIRECTORY>. The second import command imports singleton songs.
 
 If new songs or albums are added to the MPD music library, the Beets import
@@ -388,6 +415,10 @@ can be re-run with `mpplus -I` or manually and only new albums and songs
 will be added to the Beets database as the import is performed incrementally.
 Incremental imports is a configuration option set in the *import* section
 of the Beets `$HOME/.config/beets/config.yaml` configuration file.
+
+List the currently imported music library items with the command `beet list`.
+The `beet` command-line reference is available at
+https://beets.readthedocs.io/en/latest/reference/cli.html
 
 Learn more about the Beets media library management system at
 https://beets.io/
@@ -617,7 +648,7 @@ Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
-		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
+		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -657,6 +688,8 @@ General options:
 		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
+    -w indicates write tags during beets import
+    -W indicates do not write tags during beets import
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
 		list/search/select media in the MPD library.
 		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'

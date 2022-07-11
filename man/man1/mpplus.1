@@ -25,7 +25,7 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 music_directory] [-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
-[-z fzmpopt]
+[-w|W] [-z fzmpopt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -154,6 +154,12 @@ indicates record tmux session with asciinema
 \f[B]-T\f[R]
 indicates use a tmux session for either ASCIImatics or mpcplus
 .TP
+\f[B]-w\f[R]
+indicates write tags during beets import
+.TP
+\f[B]-W\f[R]
+indicates do not write tags during beets import
+.TP
 \f[B]-z opt\f[R]
 Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
 list/search/select MPD media.
@@ -217,8 +223,13 @@ animation with audio
 Download album cover art for any albums in the music library that do not
 already have cover art
 .TP
-\f[B]mpplus -I\f[R]
-Import the music library into the Beets library management system
+\f[B]mpplus -I -W\f[R]
+Import the music library into the Beets library management system, do
+not write tags
+.TP
+\f[B]mpplus -I -w\f[R]
+Import the music library into the Beets library management system, write
+tags
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

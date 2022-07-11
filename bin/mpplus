@@ -58,7 +58,7 @@ usage() {
   printf "\n\t\t[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
-  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]"
+  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -98,6 +98,8 @@ usage() {
   printf "\n\t\tALSA configuration will update the ALSA configuration in '/etc/asound.conf'"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
+  printf "\n\t-w indicates write tags during beets import"
+  printf "\n\t-W indicates do not write tags during beets import"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
   printf "\n\t\tlist/search/select media in the MPD library."
   printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
@@ -155,18 +157,19 @@ make_it_so() {
     then
       if [ "${MUSIC_DIRECTORY}" ]
       then
-        nohup ${SCRIPTS}/beet_import.sh -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${tagflag} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
       else
-        nohup ${SCRIPTS}/beet_import.sh > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${tagflag} > /dev/null 2>&1 &
       fi
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
       echo ""
       echo "Manual beets import may be required:"
-      printf "\n\tbeet import -W <MUSIC_DIRECTORY>"
-      printf "\n\tbeet import -Wps <MUSIC_DIRECTORY>"
-      printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
+      printf "\n\tbeet import -[w|W] <MUSIC_DIRECTORY>"
+      printf "\n\tbeet import -[w|W]ps <MUSIC_DIRECTORY>"
+      printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library,"
+      printf "\n-w indicates write tags, -W indicates do not write tags\n"
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
@@ -775,8 +778,9 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
+tagflag=
 
-while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
+while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -942,6 +946,12 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:z:u" flag; do
         echo "Specified visualizer ${OPTARG} not found."
         echo "Using ${VISUALIZER} visualizer"
       fi
+      ;;
+    w)
+      tagflag="-w"
+      ;;
+    W)
+      tagflag="-W"
       ;;
     z)
       FZMPOPT="${OPTARG}"

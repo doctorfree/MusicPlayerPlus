@@ -5,7 +5,12 @@ MPD_CONF=${HOME}/.config/mpd/mpd.conf
 LOGFILE="${HOME}/.config/beets/import_log.txt"
 
 usage() {
-  printf "\nUsage: beet_import.sh [-d music_directory] [-u]"
+  printf "\nUsage: beet_import.sh -[w|W] [-d music_directory] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-w indicates write tags during import"
+  printf "\n\t-W indicates do not write tags during import"
+  printf "\n\tWithout a -w or -W flag, writing of tags is determined by the"
+  printf "\n\tBeets configuration file $HOME/.config/beets/config.yaml"
   printf "\n\nWithout the '-d music_directory' option, the 'music_directory'"
   printf "\nsetting in ${MPD_CONF} will be used\n\n"
   exit 1
@@ -13,11 +18,18 @@ usage() {
 
 mpd_music=
 custom_dir=
-while getopts "d:u" flag; do
+tagflag=
+while getopts "d:wWu" flag; do
     case $flag in
         d)
             mpd_music="$OPTARG"
             custom_dir=1
+            ;;
+        w)
+            tagflag="-w"
+            ;;
+        W)
+            tagflag="-W"
             ;;
         u)
             usage
@@ -78,13 +90,13 @@ done
 have_beet=`type -p beet`
 if [ "${have_beet}" ]
 then
-  beet import -qWl ${LOGFILE} ${mpd_music}
-  beet import -qWpsl ${LOGFILE} ${mpd_music}
+  beet import -q ${tagflag} -l ${LOGFILE} ${mpd_music}
+  beet import -q ${tagflag} -p -s -l ${LOGFILE} ${mpd_music}
 else
   if [ -x ${HOME}/.local/bin/beet ]
   then
-    ${HOME}/.local/bin/beet import -qWl ${LOGFILE} ${mpd_music}
-    ${HOME}/.local/bin/beet import -qWpsl ${LOGFILE} ${mpd_music}
+    ${HOME}/.local/bin/beet import -q ${tagflag} -l ${LOGFILE} ${mpd_music}
+    ${HOME}/.local/bin/beet import -q ${tagflag} -p -s -l ${LOGFILE} ${mpd_music}
   else
     echo "WARNING: Cannot locate 'beet' executable"
     echo "Music library ${mpd_music} not imported to beets media organizer"

@@ -4,7 +4,7 @@ Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
-		[-S] [-t] [-T] [-u] [-v viz_comm] [-z fzmpopt]
+		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -44,6 +44,8 @@ General options:
 		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
+	-w indicates write tags during beets import
+	-W indicates do not write tags during beets import
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
 		list/search/select media in the MPD library.
 		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
