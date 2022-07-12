@@ -3,7 +3,7 @@ library: ~/.config/beets/musiclibrary.db
 
 import:
     copy: no
-    move: no
+    move: yes
     write: yes
     incremental: yes
     quiet: yes
