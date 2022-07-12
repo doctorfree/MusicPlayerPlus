@@ -20,7 +20,7 @@ import:
 
 art_filename: cover
 
-plugins: acousticbrainz duplicates edit fetchart fromfilename importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist unimported
+plugins: duplicates edit fromfilename fetchart hook importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist mpdupdate unimported
 
 smartplaylist:
     relative_to: ~/Music
@@ -79,10 +79,6 @@ paths:
     singleton: $artist/$artist - $album - $title ($year)
     comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
 
-musicbrainz:
-    source_weight: 1.0
-    genres: yes
-
 fetchart:
   # Enable automatic album art fetching during import.
   auto: yes
@@ -109,9 +105,6 @@ fetchart:
   # Prefer higher resolution art
   high_resolution: true
 
-fromfilename:
-    source_weight: 0.5
-
 importadded:
     preserve_mtimes: yes
     preserve_write_mtimes: yes
@@ -130,3 +123,10 @@ ui:
         text_highlight_minor: lightgray
         action_default: turquoise
         action: blue
+
+hook:
+  hooks:
+    - event: import_begin
+      command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin
+    - event: import
+      command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end
