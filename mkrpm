@@ -132,6 +132,7 @@ ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/${PKG}/music"
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1
+${SUDO} cp -a man/man5 ${OUT_DIR}/${DESTDIR}/share/man/man5
 ${SUDO} cp -a share/menu "${OUT_DIR}/${DESTDIR}/share/menu"
 
 [ -f .gitignore ] && {

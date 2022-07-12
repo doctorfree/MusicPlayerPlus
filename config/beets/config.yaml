@@ -20,11 +20,29 @@ import:
 
 plugins: duplicates edit fromfilename hook importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist mpdupdate unimported
 
+mpdstats:
+    host: localhost
+    port: 6600
+    rating: yes
+    rating_mix: 0.75
+
 smartplaylist:
     relative_to: ~/Music
     playlist_dir: ~/.config/mpd/playlists
     forward_slash: no
     playlists:
+        - name: 'rating.m3u'
+          query: 'rating:0.4..1.0'
+
+        - name: 'not_played.m3u'
+          query: '-play_count: artist:'
+
+        - name: beatles.m3u
+          query: 'artist:Beatles'
+
+        - name: 'dylan.m3u'
+          query: 'artist:Dylan'
+
         - name: 'ReleasedIn$year.m3u'
           query: 'year::195(0|1|2|3|4|5|6|7|8|9)'
 
@@ -52,6 +70,8 @@ smartplaylist:
 mpd:
     host: localhost
     port: 6600
+    rating: yes
+    rating_mix: 0.75
 
 match:
     ignored_media: ['Data CD', 'DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD',
@@ -96,3 +116,4 @@ hook:
       command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin
     - event: import
       command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end
+
