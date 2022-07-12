@@ -19,7 +19,7 @@
 #
 # See ~/.config/beets/config.yaml for the hook plugin configuration
 
-LOG="${HOME}/.config/beets/import_time.txt"
+LOG="${HOME}/.config/beets/import_time.log"
 DATE=$(date "+%Y/%m/%d at %H:%M:%S")
 SECONDS=$(date +%s)
 

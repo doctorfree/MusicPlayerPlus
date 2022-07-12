@@ -302,6 +302,12 @@ mpplus -D
 Depending on the size of the music library, the download process may take
 some time. For this reason, the album art download process is run in the
 background non-interactively so it will not interfere with continued enjoyment.
+Album cover art download progress can be monitored by examining the download
+log file at `${HOME}/.config/mpcplus/download_art.log`:
+
+```
+tail -f ${HOME}/.config/mpcplus/download_art.log
+```
 
 The `mpplus -D` command downloads album cover art for each album in your
 music library and places the album cover art in the file `cover.jpg` in the
@@ -379,11 +385,11 @@ at `$HOME/.config/beets/config.yaml` and command-line options to the
 library into Beets, moving rather than copying files to conform with
 standard detected artist/album/song naming conventions, and writing
 detected tags. A log of the import is written to the file
-`$HOME/.config/beets/import_log.txt`.
+`$HOME/.config/beets/import.log`.
 
 Prior to performing the intial Beets import of your music library,
 examine the *import* section of the Beets configuration at
-`$HOME/.config/beets/import_log.txt`. Modify the *import* settings
+`$HOME/.config/beets/import.log`. Modify the *import* settings
 to suit your preferences. The default *import* settings configured
 by MusicPlayerPlus are:
 
@@ -403,7 +409,7 @@ import:
     group_albums: no
     autotag: yes
     bell: no
-    log: ~/.config/beets/log.txt
+    log: ~/.config/beets/import.log
 ```
 
 You may prefer to set `move: no` or `copy: yes` if you do not wish your
@@ -431,7 +437,7 @@ When running in the background, monitor the progess of the import by
 examining the log file. For example, to view progress in real-time:
 
 ```
-tail -f $HOME/.config/beets/import_log.txt
+tail -f $HOME/.config/beets/import.log
 ```
 
 Music library folders that are skipped are likely those for which `beet import`

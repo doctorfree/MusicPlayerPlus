@@ -2,7 +2,8 @@
 #
 # Uses sacad from https://github.com/desbma/sacad
 
-MPD_CONF=${HOME}/.config/mpd/mpd.conf
+MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+LOG="${HOME}/.config/mpcplus/download_art.log"
 
 usage() {
   printf "\nUsage: download_cover_art.sh [-c cover_name] [-d music_directory] [-u]"
@@ -98,5 +99,6 @@ have_sacad=`type -p sacad_r`
   fi
 }
 
-echo "Downloading album cover art for Artist/Albums in ${mpd_music}"
-sacad_r "${mpd_music}" 600 ${cover_name}.jpg
+[ -f ${LOG} ] || touch ${LOG}
+echo "Downloading album cover art for Artist/Albums in ${mpd_music}" >> ${LOG}
+sacad_r "${mpd_music}" 600 ${cover_name}.jpg >> ${LOG} 2>&1

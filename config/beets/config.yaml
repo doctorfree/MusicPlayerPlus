@@ -16,7 +16,7 @@ import:
     group_albums: no
     autotag: yes
     bell: no
-    log: ~/.config/beets/log.txt
+    log: ~/.config/beets/import.log
 
 plugins: duplicates edit fromfilename hook importadded info lyrics lastgenre missing mbsync mpdstats smartplaylist mpdupdate unimported
 

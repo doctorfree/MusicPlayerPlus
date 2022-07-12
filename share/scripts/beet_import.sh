@@ -2,7 +2,7 @@
 #
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
-LOGFILE="${HOME}/.config/beets/import_log.txt"
+LOGFILE="${HOME}/.config/beets/import.log"
 
 usage() {
   printf "\nUsage: beet_import.sh -[w|W] [-d music_directory] [-u]"
