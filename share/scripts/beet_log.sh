@@ -25,13 +25,17 @@ SECONDS=$(date +%s)
 
 [ -f ${LOG} ] || touch ${LOG}
 
-PREVSECS=$(tail -1 ${LOG} | awk ' { print $1 } ')
-if [ "${PREVSECS}" ]
+if tail -1 ${LOG} | grep 'Import end' > /dev/null
 then
-  ELAPSECS=$(( SECONDS - PREVSECS ))
-  ELAPSED=`eval "echo elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+  printf "${SECONDS} on ${DATE} $*\n" >> ${LOG}
 else
-  ELAPSED="begin logging import times"
+  PREVSECS=$(tail -1 ${LOG} | awk ' { print $1 } ')
+  if [ "${PREVSECS}" ]
+  then
+    ELAPSECS=$(( SECONDS - PREVSECS ))
+    ELAPSED=`eval "echo elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+    printf "${SECONDS} on ${DATE} $* , ${ELAPSED}\n" >> ${LOG}
+  else
+    printf "${SECONDS} on ${DATE} $*\n" >> ${LOG}
+  fi
 fi
-
-printf "${SECONDS} on ${DATE} $* , ${ELAPSED}\n" >> ${LOG}
