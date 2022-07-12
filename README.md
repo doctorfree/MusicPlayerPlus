@@ -6,6 +6,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** `tmux` sessions managed by `tmuxp`
 - ***plus*** character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
+- ***plus*** Beets media library management
 - ***plus*** `asciimatics` color ASCII animations
 - ***plus*** `asciinema` text-based terminal session recording.
 
@@ -70,6 +71,8 @@ The `mpplus` command can be used to invoke:
 * One or more terminal emulators running an MPD client and visualizer
 * A tmux session using the tmux session manager `tmuxp`
 * A spectrum visualizer
+* A download of album cover art for every album in a music library
+* An import of a music library to the Beets media library manager
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
 * A fuzzy listing and searching of the audio library using `fzf`
@@ -78,9 +81,11 @@ Integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
 * [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
+* [beets](https://beets.io/), media library management system
 * [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
+* [fzf](https://github.com/junegunn/fzf), interactive fuzzy finder
 * [asciimatics](https://github.com/peterbrittain/asciimatics) - automatically display a variety of character-based animation effects
 * [asciinema](https://asciinema.org/) - automatically create ascii character-based video clips
 * [tmux](https://github.com/tmux/tmux/wiki), a terminal multiplexer
@@ -90,7 +95,6 @@ Integration is provided for:
     * gnome-terminal
     * tilix
     * cool-retro-term
-* [fzf](https://github.com/junegunn/fzf), interactive fuzzy finder
 
 ### MusicPlayerPlus Commands
 
@@ -142,7 +146,7 @@ Some common additional setup steps that can be performed include:
 
 - Configuring the music library location
 - Downloading album cover art
-- Importing your music library into the Beets library management system
+- Importing a music library into the Beets library management system
 
 These three common additional setup steps are covered below in the section
 on [Post Installation Configuration](#post-installation-configuration).
@@ -689,6 +693,8 @@ e.g. `mpplus -u`.
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
 - [**mppsplash-tmux**](markdown/mppsplash-tmux.1.md) : MusicPlayerPlus asciimatics animations in a tmux session
 - [**mppsplash**](markdown/mppsplash.1.md) : MusicPlayerPlus asciimatics animations
+- [**beet**](markdown/beet.1.md) : Beets media library management command-line interface
+- [**beetsconfig**](markdown/beetsconfig.5.md) : Beets media library management configuration
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
 
 ### Usage
@@ -870,6 +876,7 @@ To test the mpcplus lyrics fetchers:
 `mpcplus --test-lyrics-fetchers`
 
 ### Adding Album Cover Art
+
 The `mpcplus` MPD client is a character-based application. As such, it is
 difficult to display graphical images. However, this limitation can be
 overcome using `tmux` and additional tools. In this way we can add album
