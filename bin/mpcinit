@@ -223,7 +223,7 @@ fi
 [ "$1" == "sync" ] && {
   printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
   sync_music_dir
-  printf "\n\nMusicPlayerPlus music directory synchronized."
+  printf "\n\nMusicPlayerPlus music directory synchronized.\n"
   exit 0
 }
 
