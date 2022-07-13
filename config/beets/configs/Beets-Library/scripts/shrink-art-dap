@@ -1,6 +1,0 @@
-#!/bin/sh
-
-artpath="$1"
-
-convert "$artpath" -resize 220x220 -bordercolor black -border 10x10 "$artpath.new" \
-    && mv "$artpath.new" "$artpath"

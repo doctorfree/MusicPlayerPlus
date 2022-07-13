@@ -1,4 +1,0 @@
-#!/bin/sh
-
-beet modify "$@" advisory\!
-beet modify -a "any_track_has:$*" \^any_track_has:advisory:1 albumadvisory\!

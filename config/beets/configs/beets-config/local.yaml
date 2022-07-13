@@ -1,7 +1,0 @@
-# Edit this file to fit your system.
-
-directory: /mnt/internal/music # Destination.
-library: /mnt/internal/music/library.db # Database
-#pluginpath:
-  #- ~/.config/beets/beetsplug/fetchartist # https://github.com/dkanada/beets-fetchartist
-  #- ~/.config/beets/beetsplug/discogs_extradata
