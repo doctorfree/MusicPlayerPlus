@@ -1,6 +1,12 @@
 directory: ~/Music
 library: ~/.config/beets/musiclibrary.db
 
+# Uncomment if you wish to place secret paths/tokens/credentials in
+# ~/.config/beets/secrets.yaml
+#
+#include:
+#    - secrets.yaml
+
 import:
     copy: no
     move: yes

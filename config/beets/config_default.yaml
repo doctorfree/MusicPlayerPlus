@@ -1,4 +1,9 @@
 # These are the defaults used by beets
+# If no setting for an entry appears in ~/.config/beets/config.yaml then
+# the setting described here will be used. This file is for reference only.
+#
+# To view the current beets configuration settings: beet config --default
+
 library: library.db
 directory: ~/Music
 
