@@ -131,9 +131,13 @@ sync_music_dir() {
     [ "${mpd_music}" == "${bts_music}" ] || {
       if [ "${bts_custom}" ]
       then
-        cat ${BEETSCONF} | sed -e "s%^directory:.*%directory: ${mpd_music}%" > /tmp/bts$$
+        cat ${BEETSCONF} | \
+          sed -e "s%^directory:.*%directory: ${mpd_music}%" \
+              -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
       else
-        cat ${BEETSCONF} | sed -e "s%#directory:.*%directory: ${mpd_music}%" > /tmp/bts$$
+        cat ${BEETSCONF} | \
+          sed -e "s%#directory:.*%directory: ${mpd_music}%" \
+              -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
       fi
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
@@ -451,7 +455,7 @@ TPM="${HOME}/.tmux/plugins/tpm"
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
-  for pkg in asciimatics beautifulsoup4 beets pylast \
+  for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
              python-mpd2 requests sacad tmuxp ueberzug
   do
     if pip list | grep ${pkg} > /dev/null
