@@ -58,8 +58,8 @@ components are used to manage and control MPD and ALSA configuration.
 
 MusicPlayerPlus integrations and extensions are primarily aimed at the
 character-based terminal user. They enable an easy to use seamlessly
-integrated control of audio streaming, playing, and visualization in
-a lightweight character-based environment.
+integrated control of audio streaming, playing, music library management,
+and visualization in a lightweight character-based environment.
 
 Audio streaming is provided by the Music Player Daemon (MPD).
 At the core of MusicPlayerPlus is the `mpplus` command which acts as
@@ -95,6 +95,12 @@ Integration is provided for:
     * gnome-terminal
     * tilix
     * cool-retro-term
+
+The goal of MusicPlayerPlus is to provide the user with a sophisticated set
+of complex music library tools that can be integrated and managed in a fairly
+simple to understand and administer fashion. We wish to make the difficult easy.
+Also, to make some cool looking powerful stuff happen from the command-line
+in a character-based environment.
 
 ### MusicPlayerPlus Commands
 
@@ -422,21 +428,40 @@ copying rather than moving. Moving conserves disk space, copying preserves
 a libary's structure but can consume much additional disk space. The
 MusicPlayerPlus default preference is to move rather than copy.
 
-To perform a faster import without auto-tagging, writing tags, or copying,
-but interactively so you will have to monitor the import progress,
-run the command:
+**[NOTE:]** If you have previously tagged your music library using
+Musicbrainz Picard then you may wish to modify the default Beets
+*import* configuration to preserve Picard tagging and speed up import.
+An example *import* section of the Beets `config.yaml` that would
+preserve Picard tags might look like the following:
 
 ```
-beet import -AWC
+import:
+    write: no
+    copy: no
+    move: no
+    resume: ask
+    incremental: yes
+    incremental_skip_later: no
+    from_scratch: no
+    timid: yes
+    log: ~/.config/beets/import.log
+    group_albums: no
+    autotag: yes
+    bell: no
 ```
 
-You may wish to backup your music library prior to importing.
-To view help on Beets importing, run the command `beet help import`.
+If you modify the Beets `config.yaml` in this way or in any way desiring
+to use those configuration settings during a MusicPlayerPlus Beets import
+then perform the import with the command `mpplus -I` rather than
+`mpplus -I -w` as command-line arguments override configuration file settings.
 
 The import process, depending on the size of the music library and metadata
 analyzed, may take several hours. For this reason, it is performed in the
-background and non-interactively. The `mpplus -I ...` command performs both
-an import of the music library albums and an import of singleton songs.
+background and non-interactively. For extremely large music libraries
+(e.g. over 500GB) the import may need to run overnight. As long as your
+computer remains on and connected to the Internet, the import process
+should run uninterrupted and without need for attention. You may continue
+working or leave the import unattended.
 
 When running in the background, monitor the progess of the import by
 examining the log file. For example, to view progress in real-time:
@@ -444,6 +469,9 @@ examining the log file. For example, to view progress in real-time:
 ```
 tail -f $HOME/.config/beets/import.log
 ```
+
+The `mpplus -I ...` command performs both an import of the music library
+albums and an import of singleton songs.
 
 Music library folders that are skipped are likely those for which `beet import`
 did not find the entire album. These songs should be picked up and imported
@@ -467,6 +495,17 @@ Omitting both the `-w` and `-W` flags will use the *write* setting in the
 *import* section of `~/.config/beets/config.yaml` to determin if tags are
 written. The first import command above imports albums from the music library
 at <MUSIC_DIRECTORY>. The second import command imports singleton songs.
+
+To perform a faster import without auto-tagging, writing tags, or copying,
+but interactively so you will have to monitor the import progress (the import
+process cannot be left unattended), run the command:
+
+```
+beet import -AWC
+```
+
+You may wish to backup your music library prior to importing.
+To view help on Beets importing, run the command `beet help import`.
 
 If new songs or albums are added to the MPD music library, the Beets import
 can be re-run with `mpplus -I` or manually and only new albums and songs
