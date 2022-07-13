@@ -35,6 +35,7 @@ mppcava/m4/
 mppcava/version
 mppcava/config_file.h
 mppcava/.*
+config/beets/configs/*
 releases/*
 tmp/*
 tools/*

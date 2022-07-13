@@ -423,6 +423,7 @@ a libary's structure but can consume much additional disk space. The
 MusicPlayerPlus default preference is to move rather than copy.
 
 To perform a faster import without auto-tagging, writing tags, or copying,
+but interactively so you will have to monitor the import progress,
 run the command:
 
 ```

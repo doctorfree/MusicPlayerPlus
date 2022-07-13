@@ -37,6 +37,7 @@ plugins:
     - missing
     - mbsync
     - mpdstats
+    - play
     - playlist
     - smartplaylist
     - mpdupdate
@@ -47,6 +48,28 @@ mpdstats:
     port: 6600
     rating: yes
     rating_mix: 0.75
+
+play:
+    # The command used to open the playlist. Default: xdg-open
+    # Insert $args to use the --args feature.
+    #command: mpv $args --playlist
+    command: mpc --quiet $args load 
+    # If set, emit paths relative to this directory. Default: None.
+    #relative_to: ~/Music
+    # When using the -a option, the m3u will contain the paths to each track on
+    # the matched albums. Enable this option to store paths to folders instead.
+    # Default: no.
+    #use_folders: no
+    # Instead of creating a temporary m3u playlist and then opening it, simply
+    # call the command with the paths returned by the query as arguments.
+    # Default: no.
+    raw: yes
+    #  Set the minimum number of files to play which will trigger a warning to
+    # be emitted. If set to no, warning are never issued. Default: 100.
+    #warning_threshold: 100
+    # Set whether or not a UTF-8 Byte Order Mark should be emitted into the m3u
+    # file. If you’re using foobar2000 or Winamp, this is needed. Default: no.
+    #bom: no
 
 playlist:
   auto: yes
