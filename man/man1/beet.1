@@ -23,9 +23,7 @@ beet - command-line interface to beets
 .PP
 | \f[B]beet\f[R] [\f[I]args\f[R]...]
 \f[I]command\f[R] [\f[I]args\f[R]...]
-| \f[B]beet help\f[R] \f[I]command\f[R] :::
-.PP
-::: only html
+| \f[B]beet help\f[R] \f[I]command\f[R]
 .PP
 \f[B]beet\f[R] is the command-line interface to beets.
 .PP
@@ -47,20 +45,12 @@ For bash, see the completion command; for zsh, see the accompanying
 completion
 script (https://github.com/beetbox/beets/blob/master/extra/_beet) for
 the \f[V]beet\f[R] command.
-:::
 .SS Commands
-.PP
-::: only html
 .PP
 Here are the built-in commands available in beets:
 .PP
-::: {.contents local=\[dq]\[dq] depth=\[dq]1\[dq]} :::
-.PP
-Also be sure to see the
-\f[V]global flags <global-flags>\f[R]{.interpreted-text
-role=\[dq]ref\[dq]}.
-:::
-.SS import {#import-cmd}
+Also be sure to see the \f[V]global flags <global-flags>\f[R].
+.SS import
 .IP
 .nf
 \f[C]
@@ -78,9 +68,8 @@ The music will be copied to a configurable directory structure and added
 to a library database.
 The command is interactive and will try to get you to verify MusicBrainz
 tags that it thinks are suspect.
-See the \f[V]autotagging guide </guides/tagger>\f[R]{.interpreted-text
-role=\[dq]doc\[dq]} for detail on how to use the interactive
-tag-correction flow.
+See the \f[V]autotagging guide </guides/tagger>\f[R] for detail on how
+to use the interactive tag-correction flow.
 .PP
 Directories passed to the import command can contain either a single
 album or many, in which case the leaf directories will be considered
@@ -192,8 +181,7 @@ times.
 You can supply \f[V]--set field=value\f[R] to assign [field]{.title-ref}
 to [value]{.title-ref} on import.
 These assignments will merge with (and possibly override) the
-\f[V]set_fields\f[R]{.interpreted-text role=\[dq]ref\[dq]} configuration
-dictionary.
+\f[V]set_fields\f[R] configuration dictionary.
 You can use the option multiple times on the command line, like so:
 .RS 2
 .IP
@@ -203,9 +191,7 @@ beet import --set genre=\[dq]Alternative Rock\[dq] --set mood=\[dq]emotional\[dq
 \f[R]
 .fi
 .RE
-.PP
-::: only html
-.SS Reimporting {#reimport}
+.SS Reimporting
 .PP
 The \f[V]import\f[R] command can also be used to \[dq]reimport\[dq]
 music that you\[aq]ve already added to your library.
@@ -230,21 +216,18 @@ file.
 The \f[V]-L\f[R] (\f[V]--library\f[R]) flag is also useful for
 retagging.
 Instead of listing paths you want to import on the command line, specify
-a \f[V]query string <query>\f[R]{.interpreted-text role=\[dq]doc\[dq]}
-that matches items from your library.
+a \f[V]query string <query>\f[R] that matches items from your library.
 In this case, the \f[V]-s\f[R] (singleton) flag controls whether the
 query matches individual items or full albums.
 If you want to retag your whole library, just supply a null query, which
 matches everything: \f[V]beet import -L\f[R]
 .PP
 Note that, if you just want to update your files\[aq] tags according to
-changes in the MusicBrainz database, the
-\f[V]/plugins/mbsync\f[R]{.interpreted-text role=\[dq]doc\[dq]} is a
+changes in the MusicBrainz database, the \f[V]/plugins/mbsync\f[R] is a
 better choice.
 Reimporting uses the full matching machinery to guess metadata matches;
 \f[V]mbsync\f[R] just relies on MusicBrainz IDs.
-:::
-.SS list {#list-cmd}
+.SS list
 .IP
 .nf
 \f[C]
@@ -252,8 +235,7 @@ beet list [-apf] QUERY
 \f[R]
 .fi
 .PP
-\f[V]Queries <query>\f[R]{.interpreted-text role=\[dq]doc\[dq]} the
-database for music.
+\f[V]Queries <query>\f[R] the database for music.
 .PP
 Want to search for \[dq]Gronlandic Edit\[dq] by of Montreal?
 Try \f[V]beet list gronlandic\f[R].
@@ -261,7 +243,7 @@ Maybe you want to see everything released in 2009 with
 \[dq]vegetables\[dq] in the title?
 Try \f[V]beet list year:2009 title:vegetables\f[R].
 You can also specify the sort order.
-(Read more in \f[V]query\f[R]{.interpreted-text role=\[dq]doc\[dq]}.)
+(Read more in \f[V]query\f[R].)
 .PP
 You can use the \f[V]-a\f[R] switch to search for albums instead of
 individual items.
@@ -277,14 +259,13 @@ as xargs (https://en.wikipedia.org/wiki/Xargs)).
 Similarly, the \f[V]-f\f[R] option lets you specify a specific format
 with which to print every album or track.
 This uses the same template syntax as beets\[aq]
-\f[V]path formats <pathformat>\f[R]{.interpreted-text
-role=\[dq]doc\[dq]}.
+\f[V]path formats <pathformat>\f[R].
 For example, the command
 \f[V]beet ls -af \[aq]$album: $albumtotal\[aq] beatles\f[R] prints out
 the number of tracks on each Beatles album.
 In Unix shells, remember to enclose the template argument in single
 quotes to avoid environment variable expansion.
-.SS remove {#remove-cmd}
+.SS remove
 .IP
 .nf
 \f[C]
@@ -294,8 +275,8 @@ beet remove [-adf] QUERY
 .PP
 Remove music from your library.
 .PP
-This command uses the same \f[V]query <query>\f[R]{.interpreted-text
-role=\[dq]doc\[dq]} syntax as the \f[V]list\f[R] command.
+This command uses the same \f[V]query <query>\f[R] syntax as the
+\f[V]list\f[R] command.
 By default, it just removes entries from the library database; it
 doesn\[aq]t touch the files on disk.
 To actually delete the files, use the \f[V]-d\f[R] flag.
@@ -315,7 +296,7 @@ only remove the items/albums selected up to this point.
 This option lets you choose precisely which tracks/albums to remove
 without spending too much time to carefully craft a query.
 If you do not want to be prompted at all, use the \f[V]-f\f[R] option.
-.SS modify {#modify-cmd}
+.SS modify
 .IP
 .nf
 \f[C]
@@ -325,9 +306,8 @@ beet modify [-MWay] [-f FORMAT] QUERY [FIELD=VALUE...] [FIELD!...]
 .PP
 Change the metadata for items or albums in the database.
 .PP
-Supply a \f[V]query <query>\f[R]{.interpreted-text role=\[dq]doc\[dq]}
-matching the things you want to change and a series of
-\f[V]field=value\f[R] pairs.
+Supply a \f[V]query <query>\f[R] matching the things you want to change
+and a series of \f[V]field=value\f[R] pairs.
 For example,
 \f[V]beet modify genius of love artist=\[dq]Tom Tom Club\[dq]\f[R] will
 change the artist for the track \[dq]Genius of Love.\[dq] To remove
@@ -362,7 +342,7 @@ selected changes.
 This option lets you choose precisely which data to change without
 spending too much time to carefully craft a query.
 To skip the prompts entirely, use the \f[V]-y\f[R] option.
-.SS move {#move-cmd}
+.SS move
 .IP
 .nf
 \f[C]
@@ -388,7 +368,7 @@ This will show you a list of files that would be moved but won\[aq]t
 actually change anything on disk.
 The \f[V]-t\f[R] option sets the timid mode which will ask again before
 really moving or copying the files.
-.SS update {#update-cmd}
+.SS update
 .IP
 .nf
 \f[C]
@@ -428,7 +408,7 @@ album, some changes shown by the \f[V]update\f[R] command may be
 overridden by data from other tracks on the same album.
 This means that running the \f[V]update\f[R] command multiple times may
 show the same changes being applied.
-.SS write {#write-cmd}
+.SS write
 .IP
 .nf
 \f[C]
@@ -439,8 +419,7 @@ beet write [-pf] [QUERY]
 Write metadata from the database into files\[aq] tags.
 .PP
 When you make changes to the metadata stored in beets\[aq] library
-database (during import or with the
-\f[V]modify-cmd\f[R]{.interpreted-text role=\[dq]ref\[dq]} command, for
+database (during import or with the \f[V]modify-cmd\f[R] command, for
 example), you often have the option of storing changes only in the
 database, leaving your files untouched.
 The \f[V]write\f[R] command lets you later change your mind and write
@@ -448,8 +427,7 @@ the contents of the database into the files.
 By default, this writes the changes only if there is a difference
 between the database and the tags in the file.
 .PP
-You can think of this command as the opposite of
-\f[V]update-cmd\f[R]{.interpreted-text role=\[dq]ref\[dq]}.
+You can think of this command as the opposite of \f[V]update-cmd\f[R].
 .PP
 The \f[V]-p\f[R] option previews metadata changes without actually
 applying them.
@@ -458,7 +436,7 @@ The \f[V]-f\f[R] option forces a write to the file, even if the file
 tags match the database.
 This is useful for making sure that enabled plugins that run on write
 (e.g., the Scrub and Zero plugins) are run on the file.
-.SS stats {#stats-cmd}
+.SS stats
 .IP
 .nf
 \f[C]
@@ -467,15 +445,14 @@ beet stats [-e] [QUERY]
 .fi
 .PP
 Show some statistics on your entire library (if you don\[aq]t provide a
-\f[V]query <query>\f[R]{.interpreted-text role=\[dq]doc\[dq]}) or the
-matched items (if you do).
+\f[V]query <query>\f[R]) or the matched items (if you do).
 .PP
 By default, the command calculates file sizes using their bitrate and
 duration.
 The \f[V]-e\f[R] (\f[V]--exact\f[R]) option reads the exact sizes of
 each file (but is slower).
 The exact mode also outputs the exact duration in seconds.
-.SS fields {#fields-cmd}
+.SS fields
 .IP
 .nf
 \f[C]
@@ -484,12 +461,11 @@ beet fields
 .fi
 .PP
 Show the item and album metadata fields available for use in
-\f[V]query\f[R]{.interpreted-text role=\[dq]doc\[dq]} and
-\f[V]pathformat\f[R]{.interpreted-text role=\[dq]doc\[dq]}.
+\f[V]query\f[R] and \f[V]pathformat\f[R].
 The listing includes any template fields provided by plugins and any
 flexible attributes you\[aq]ve manually assigned to your items and
 albums.
-.SS config {#config-cmd}
+.SS config
 .IP
 .nf
 \f[C]
@@ -537,8 +513,7 @@ You can use it twice, as in \f[V]-vv\f[R], to make beets even more
 verbose.
 .IP \[bu] 2
 \f[V]-c FILE\f[R]: read a specified YAML
-\f[V]configuration file <config>\f[R]{.interpreted-text
-role=\[dq]doc\[dq]}.
+\f[V]configuration file <config>\f[R].
 This configuration works as an overlay: rather than replacing your
 normal configuration options entirely, the two are merged.
 Any individual options set in this config file will override the
@@ -557,7 +532,7 @@ To disable all plugins, use \f[V]--plugins=\f[R] instead.
 .PP
 Beets also uses the \f[V]BEETSDIR\f[R] environment variable to look for
 configuration and data.
-.SS Shell Completion {#completion}
+.SS Shell Completion
 .PP
 Beets includes support for shell command completion.
 The command \f[V]beet completion\f[R] prints out a
@@ -626,12 +601,11 @@ eval \[dq]$(beet completion)\[dq]
 .fi
 .SH Queries
 .PP
-Many of beets\[aq] \f[V]commands <cli>\f[R]{.interpreted-text
-role=\[dq]doc\[dq]} are built around \f[B]query strings:\f[R] searches
-that select tracks and albums from your library.
+Many of beets\[aq] \f[V]commands <cli>\f[R] are built around \f[B]query
+strings:\f[R] searches that select tracks and albums from your library.
 This page explains the query string syntax, which is meant to vaguely
 resemble the syntax used by Web search engines.
-.SS Keyword {#keywordquery}
+.SS Keyword
 .PP
 This command:
 .IP
@@ -657,7 +631,7 @@ Bat for Lashes - Two Suns - Good Love
 \&...
 \f[R]
 .fi
-.SS Combining Keywords {#combiningqueries}
+.SS Combining Keywords
 .PP
 Multiple keywords are implicitly joined with a Boolean \[dq]and.\[dq]
 That is, if a query has two keywords, it only matches tracks that
@@ -798,7 +772,7 @@ $ beet list \[ti]crash
 $ beet list =\[dq]American Football\[dq]
 \f[R]
 .fi
-.SS Regular Expressions {#regex}
+.SS Regular Expressions
 .PP
 In addition to simple substring and exact matches, beets also supports
 regular expression matching for more advanced queries.
@@ -838,7 +812,7 @@ Most command-line shells will try to interpret common characters in
 regular expressions, such as \f[V]()[]|\f[R].
 To type those characters, you\[aq]ll need to escape them (e.g., with
 backslashes or quotation marks, depending on your shell).
-.SS Numeric Range Queries {#numericquery}
+.SS Numeric Range Queries
 .PP
 For numeric fields, such as year, bitrate, and track, you can query
 using one-or two-sided intervals.
@@ -876,7 +850,7 @@ minutes in length:
 $ beet list length:..4:30
 \f[R]
 .fi
-.SS Date and Date Range Queries {#datequery}
+.SS Date and Date Range Queries
 .PP
 Date-valued fields, such as \f[I]added\f[R] and \f[I]mtime\f[R], have a
 special query syntax that lets you specify years, months, and days as
@@ -1009,7 +983,7 @@ starting four weeks ago:
 $ beet ls \[aq]added:-6w..-4w\[aq]
 \f[R]
 .fi
-.SS Query Term Negation {#not_query}
+.SS Query Term Negation
 .PP
 Query terms can also be negated, acting like a Boolean \[dq]not,\[dq] by
 prefixing them with \f[V]-\f[R] or \f[V]\[ha]\f[R].
@@ -1050,7 +1024,7 @@ To use a minus sign in a command-line query, use a double dash
 $ beet list -a -- artist:dylan -year:1980..1990 \[dq]-album::the(y)?\[dq]
 \f[R]
 .fi
-.SS Path Queries {#pathquery}
+.SS Path Queries
 .PP
 Sometimes it\[aq]s useful to find all the items in your library that are
 (recursively) inside a certain directory.
@@ -1080,7 +1054,7 @@ to your beets library.
 .PP
 Path queries are case sensitive if the queried path is on a
 case-sensitive filesystem.
-.SS Sort Order {#query-sort}
+.SS Sort Order
 .PP
 Queries can specify a sort order.
 Use the name of the [field]{.title-ref} you want to sort on, followed by
@@ -1114,8 +1088,7 @@ back to the ordinary fields when those are empty).
 .PP
 Lexicographic sorts are case insensitive by default, resulting in the
 following sort order: \f[V]Bar foo Qux\f[R].
-This behavior can be changed with the
-\f[V]sort_case_insensitive\f[R]{.interpreted-text role=\[dq]ref\[dq]}
+This behavior can be changed with the \f[V]sort_case_insensitive\f[R]
 configuration option.
 Case sensitive sort will result in lower-case values being placed after
 upper-case values, e.g., \f[V]Bar Qux foo\f[R].
@@ -1125,12 +1098,10 @@ as flexible fields, or those defined by plugins) in \f[I]ascending\f[R]
 order, the items that lack that particular field will be listed at the
 \f[I]beginning\f[R] of the list.
 .PP
-You can set the default sorting behavior with the
-\f[V]sort_item\f[R]{.interpreted-text role=\[dq]ref\[dq]} and
-\f[V]sort_album\f[R]{.interpreted-text role=\[dq]ref\[dq]} configuration
-options.
+You can set the default sorting behavior with the \f[V]sort_item\f[R]
+and \f[V]sort_album\f[R] configuration options.
 .SS See Also
 .PP
 \f[V]https://beets.readthedocs.org/\f[R]
 .PP
-\f[V]beetsconfig(5)\f[R]{.interpreted-text role=\[dq]manpage\[dq]}
+\f[V]beetsconfig(5)\f[R]

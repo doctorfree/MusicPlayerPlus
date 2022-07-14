@@ -22,8 +22,8 @@ platform (type `beet config -p` to see the path on your system):
     `~/Library/Application Support/beets/config.yaml`.
 
 You can launch your text editor to create or update your configuration
-by typing `beet config -e`. (See the `config-cmd`{.interpreted-text
-role="ref"} command for details.) It is also possible to customize the
+by typing `beet config -e`. (See the `config-cmd`
+command for details.) It is also possible to customize the
 location of the configuration file and even use multiple layers of
 configuration. See [Configuration Location](#configuration-location),
 below.
@@ -44,10 +44,7 @@ the [YAML](https://yaml.org/) documentation.
 
 The rest of this page enumerates the dizzying litany of configuration
 options available in beets. You might also want to see an
-`example <config-example>`{.interpreted-text role="ref"}.
-
-::: {.contents local="" depth="2"}
-:::
+`example <config-example>`.
 
 ## Global Options
 
@@ -66,7 +63,7 @@ the library. Defaults to a folder called `Music` in your home directory.
 ### plugins
 
 A space-separated list of plugin module names to load. See
-`using-plugins`{.interpreted-text role="ref"}.
+`using-plugins`.
 
 ### include
 
@@ -77,8 +74,8 @@ Filenames are relative to the directory containing `config.yaml`.
 
 Directories to search for plugins. Each Python file or directory in a
 plugin path represents a plugin and should define a subclass of
-`BeetsPlugin`{.interpreted-text role="class"}. A plugin can then be
-loaded by adding the filename to the [plugins]{.title-ref}
+`BeetsPlugin`. A plugin can then be
+loaded by adding the filename to the [plugins]
 configuration. The plugin path can either be a single string or a list
 of strings\-\--so, if you have multiple paths, format them as a YAML
 list like so:
@@ -147,40 +144,34 @@ Note that paths might contain special characters such as typographical
 quotes (`“”`). With the configuration above, those will not be replaced
 as they don\'t match the typewriter quote (`"`). To also strip these
 special characters, you can either add them to the replacement list or
-use the `asciify-paths`{.interpreted-text role="ref"} configuration
+use the `asciify-paths` configuration
 option below.
 
-### path_sep_replace {#path-sep-replace}
+### path_sep_replace
 
 A string that replaces the path separator (for example, the forward
 slash `/` on Linux and MacOS, and the backward slash `\\` on Windows)
 when generating filenames with beets. This option is related to
-`replace`{.interpreted-text role="ref"}, but is distict from it for
+`replace`, but is distict from it for
 technical reasons.
-
-::: warning
-::: title
-Warning
-:::
 
 Changing this option is potentially dangerous. For example, setting it
 to the actual path separator could create directories in unexpected
 locations. Use caution when changing it and always try it out on a small
 number of files before applying it to your whole library.
-:::
 
 Default: `_`.
 
-### asciify_paths {#asciify-paths}
+### asciify_paths
 
 Convert all non-ASCII characters in paths to ASCII equivalents.
 
 For example, if your path template for singletons is `singletons/$title`
 and the title of a track is \"Café\", then the track will be saved as
 `singletons/Cafe.mp3`. The changes take place before applying the
-`replace`{.interpreted-text role="ref"} configuration and are roughly
+`replace` configuration and are roughly
 equivalent to wrapping all your path templates in the `%asciify{}`
-`template function <template-functions>`{.interpreted-text role="ref"}.
+`template function <template-functions>`.
 
 This uses the [unidecode module](https://pypi.org/project/Unidecode)
 which is language agnostic, so some characters may be transliterated
@@ -189,12 +180,12 @@ will usually use their Chinese readings.
 
 Default: `no`.
 
-### art_filename {#art-filename}
+### art_filename
 
 When importing album art, the name of the file (without extension) where
 the cover art image should be placed. This is a template string, so you
 can use any of the syntax available to
-`/reference/pathformat`{.interpreted-text role="doc"}. Defaults to
+`/reference/pathformat`. Defaults to
 `cover` (i.e., images will be named `cover.jpg` or `cover.png` and
 placed in the album\'s directory).
 
@@ -207,22 +198,22 @@ looking up data in MusicBrainz for a different album. You may want to
 disable this when debugging problems with the autotagger. Defaults to
 `yes`.
 
-### format_item[]{#list_format_item}
+### format_item[]
 
 Format to use when listing *individual items* with the
-`list-cmd`{.interpreted-text role="ref"} command and other commands that
+`list-cmd` command and other commands that
 need to print out items. Defaults to `$artist - $album - $title`. The
 `-f` command-line option overrides this setting.
 
-It used to be named [list_format_item]{.title-ref}.
+It used to be named [list_format_item].
 
-### format_album[]{#list_format_album}
+### format_album[]
 
-Format to use when listing *albums* with `list-cmd`{.interpreted-text
-role="ref"} and other commands. Defaults to `$albumartist - $album`. The
+Format to use when listing *albums* with `list-cmd`
+and other commands. Defaults to `$albumartist - $album`. The
 `-f` command-line option overrides this setting.
 
-It used to be named [list_format_album]{.title-ref}.
+It used to be named [list_format_album].
 
 ### sort_item
 
@@ -268,7 +259,7 @@ enabled, then the first (non-pregap) track on each disc always has track
 number 1.
 
 If you enable `per_disc_numbering`, you will likely want to change your
-`path-format-config`{.interpreted-text role="ref"} also to include
+`path-format-config` also to include
 `$disc` before `$track` to make filenames sort correctly in album
 directories. For example, you might want to use a path format like this:
 
@@ -280,7 +271,7 @@ numbered from one, not zero, so other track numbers may appear to be
 bumped up by one. When it is on, the pregap track for each disc can be
 numbered zero.
 
-### aunique {#config-aunique}
+### aunique
 
 These options are used to generate a string that is guaranteed to be
 unique among all albums in the library who share the same set of keys.
@@ -292,7 +283,7 @@ The defaults look like this:
         disambiguators: albumtype year label catalognum albumdisambig releasegroupdisambig
         bracket: '[]'
 
-See `aunique`{.interpreted-text role="ref"} for more details.
+See `aunique` for more details.
 
 ### terminal_encoding
 
@@ -307,7 +298,7 @@ automatically from the locale environment variables.
 When beets imports all the files in a directory, it tries to remove the
 directory if it\'s empty. A directory is considered empty if it only
 contains files whose names match the glob patterns in
-[clutter]{.title-ref}, which should be a list of strings. The default
+[clutter], which should be a list of strings. The default
 list consists of \"Thumbs.DB\" and \".DS_Store\".
 
 The importer only removes recursively searched subdirectories\-\--the
@@ -330,7 +321,7 @@ Media Player.
 
 Sets the albumartist for various-artist compilations. Defaults to
 `'Various Artists'` (the MusicBrainz standard). Affects other sources,
-such as `/plugins/discogs`{.interpreted-text role="doc"}, too.
+such as `/plugins/discogs`, too.
 
 ## UI Options
 
@@ -345,16 +336,10 @@ Either `yes` or `no`; whether to use color in console output (currently
 only in the `import` command). Turn this off if your terminal doesn\'t
 support ANSI colors.
 
-::: note
-::: title
-Note
-:::
-
-The [color]{.title-ref} option was previously a top-level configuration.
+The [color] option was previously a top-level configuration.
 This is still respected, but a deprecation message will be shown until
-your top-level [color]{.title-ref} configuration has been nested under
-[ui]{.title-ref}.
-:::
+your top-level [color] configuration has been nested under
+[ui].
 
 ### colors
 
@@ -379,7 +364,7 @@ red, green, yellow, blue, fuchsia (magenta), turquoise (cyan), white
 
 ## Importer Options
 
-The options that control the `import-cmd`{.interpreted-text role="ref"}
+The options that control the `import-cmd`
 command are indented under the `import:` key. For example, you might
 have a section in your configuration file that looks like this:
 
@@ -390,13 +375,13 @@ have a section in your configuration file that looks like this:
 
 These options are available in this section:
 
-### write {#config-import-write}
+### write
 
 Either `yes` or `no`, controlling whether metadata (e.g., ID3) tags are
 written to files when using `beet import`. Defaults to `yes`. The `-w`
 and `-W` command-line options override this setting.
 
-### copy {#config-import-copy}
+### copy
 
 Either `yes` or `no`, indicating whether to **copy** files into the
 library directory when using `beet import`. Defaults to `yes`. Can be
@@ -405,7 +390,7 @@ overridden with the `-c` and `-C` command-line options.
 The option is ignored if `move` is enabled (i.e., beets can move or copy
 files but it doesn\'t make sense to do both).
 
-### move {#config-import-move}
+### move
 
 Either `yes` or `no`, indicating whether to **move** files into the
 library directory when using `beet import`. Defaults to `no`.
@@ -438,7 +423,7 @@ Either `yes` or `no`, indicating whether to use hard links instead of
 moving, copying, or symlinking files. (It conflicts with the `move`,
 `copy`, and `link` options.) Defaults to `no`.
 
-As with symbolic links (see `link`{.interpreted-text role="ref"},
+As with symbolic links (see `link`,
 above), this will not work on Windows and you will want to set `write`
 to `no`. Otherwise, metadata on the original file will be modified.
 
@@ -516,7 +501,7 @@ mode, in which it asks for confirmation on every autotagging match, even
 the ones that seem very close. Defaults to `no`. The `-t` command-line
 flag controls the same setting.
 
-### log {#import_log}
+### log
 
 Specifies a filename where the importer\'s log should be kept. By
 default, no log is written. This can be overridden with the `-l` flag to
@@ -553,7 +538,7 @@ partition albums. Enable this option if you have directories that
 contain tracks from many albums mixed together.
 
 The `--group-albums` or `-g` option to the
-`import-cmd`{.interpreted-text role="ref"} command is equivalent, and
+`import-cmd` command is equivalent, and
 the *G* interactive option invokes the same workflow.
 
 Default: `no`.
@@ -563,8 +548,8 @@ Default: `no`.
 By default, the beets importer always attempts to autotag new music. If
 most of your collection consists of obscure music, you may be interested
 in disabling autotagging by setting this option to `no`. (You can
-re-enable it with the `-a` flag to the `import-cmd`{.interpreted-text
-role="ref"} command.)
+re-enable it with the `-a` flag to the `import-cmd`
+command.)
 
 Default: `yes`.
 
@@ -601,7 +586,7 @@ Fields are persisted to the media files of each track.
 
 Default: `{}` (empty).
 
-## MusicBrainz Options {#musicbrainz-config}
+## MusicBrainz Options
 
 You can instruct beets to use [your own MusicBrainz
 database](https://musicbrainz.org/doc/MusicBrainz_Server/Setup) instead
@@ -628,7 +613,7 @@ public server, you\'re
 [limited](https://musicbrainz.org/doc/XML_Web_Service/Rate_Limiting) to
 one request per second.
 
-### enabled {#musicbrainz.enabled}
+### enabled
 
 This option allows you to disable using MusicBrainz as a metadata
 source. This applies if you use plugins that fetch data from alternative
@@ -667,7 +652,7 @@ set) the `genre` tag. This will make it a list of all the genres tagged
 for the release and the release-group on MusicBrainz, separated by \";
 \" and sorted by the total number of votes. Default: `no`
 
-## Autotagger Matching Options {#match-config}
+## Autotagger Matching Options
 
 You can configure some aspects of the logic beets uses when
 automatically matching MusicBrainz results under the `match:` section.
@@ -772,7 +757,7 @@ adding the penalty name to the `ignored` setting:
         ignored: missing_tracks unmatched_tracks
 
 The available penalties are the same as those for the
-`max_rec`{.interpreted-text role="ref"} setting.
+`max_rec` setting.
 
 For example, setting `ignored: missing_tracks` will skip any album
 matches where your audio files are missing some of the tracks. The
@@ -819,7 +804,7 @@ audio-only versions of the video tracks), set it to `no`.
 
 Default: `yes`.
 
-## Path Format Configuration {#path-format-config}
+## Path Format Configuration
 
 You can also configure the directory hierarchy beets uses to store
 music. These settings appear under the `paths:` key. Each string is a
@@ -836,13 +821,13 @@ for non-album tracks. The defaults look like this:
 
 Note the use of `$albumartist` instead of `$artist`; this ensures that
 albums will be well-organized. For more about these format strings, see
-`pathformat`{.interpreted-text role="doc"}. The `aunique{}` function
+`pathformat`. The `aunique{}` function
 ensures that identically-named albums are placed in different
-directories; see `aunique`{.interpreted-text role="ref"} for details.
+directories; see `aunique` for details.
 
 In addition to `default`, `comp`, and `singleton`, you can condition
 path queries based on beets queries (see
-`/reference/query`{.interpreted-text role="doc"}). This means that a
+`/reference/query`). This means that a
 config file like this:
 
     paths:
@@ -899,7 +884,7 @@ Beets uses the first directory in your platform\'s list that contains
 `config.yaml`. If no config file exists, the last path in the list is
 used.
 
-## Example {#config-example}
+## Example
 
 Here\'s an example file:
 
@@ -922,8 +907,8 @@ Here\'s an example file:
 
 # Path Formats
 
-The `paths:` section of the config file (see `config`{.interpreted-text
-role="doc"}) lets you specify the directory and file naming scheme for
+The `paths:` section of the config file (see `config`)
+lets you specify the directory and file naming scheme for
 your music library. Templates substitute symbols like `$title` (any
 field value prefixed by `$`) with the appropriate value from the
 track\'s metadata. Beets adds the filename extension automatically.
@@ -984,10 +969,10 @@ These functions are built in to beets:
     equivalents. For example, \"café\" becomes \"cafe\". Uses the
     mapping provided by the [unidecode
     module](https://pypi.org/project/Unidecode). See the
-    `asciify-paths`{.interpreted-text role="ref"} configuration option.
+    `asciify-paths` configuration option.
 -   `%aunique{identifiers,disambiguators,brackets}`: Provides a unique
     string to disambiguate similar albums in the database. See
-    `aunique`{.interpreted-text role="ref"}, below.
+    `aunique`, below.
 -   `%time{date_time,format}`: Return the date and time in any format
     accepted by
     [strftime](https://docs.python.org/3/library/time.html#time.strftime).
@@ -1004,13 +989,13 @@ These functions are built in to beets:
     `field` is defined. If it exists, then return `truetext` or `field`
     (default). Otherwise, returns `falsetext`. The `field` should be
     entered without `$`. Note that this doesn\'t work with built-in
-    `itemfields`{.interpreted-text role="ref"}, as they are always
+    `itemfields`, as they are always
     defined.
 
 Plugins can extend beets with more template functions (see
-`templ_plugins`{.interpreted-text role="ref"}).
+`templ_plugins`).
 
-## Album Disambiguation {#aunique}
+## Album Disambiguation
 
 Occasionally, bands release two albums with the same name (c.f. Crystal
 Castles, Weezer, and any situation where a single has the same name as
@@ -1091,12 +1076,12 @@ so you can debug your template. For example, the second parameter to
 `%left` must be an integer; if you write `%left{foo,bar}`, this will be
 expanded to something like `<ValueError: invalid literal for int()>`.
 
-## Available Values {#itemfields}
+## Available Values
 
 Here\'s a list of the different values available to path formats. The
 current list can be found definitively by running the command
 `beet fields`. Note that plugins can add new (or replace existing)
-template values (see `templ_plugins`{.interpreted-text role="ref"}).
+template values (see `templ_plugins`).
 
 Ordinary metadata:
 
@@ -1172,27 +1157,27 @@ Library metadata:
 -   added: The date and time that the music was added to your library.
 -   path: The item\'s filename.
 
-## Template functions and values provided by plugins {#templ_plugins}
+## Template functions and values provided by plugins
 
 Beets plugins can provide additional fields and functions to templates.
-See the `/plugins/index`{.interpreted-text role="doc"} page for a full
+See the `/plugins/index` page for a full
 list of plugins. Some plugin-provided constructs include:
 
--   `$missing` by `/plugins/missing`{.interpreted-text role="doc"}: The
+-   `$missing` by `/plugins/missing`: The
     number of missing tracks per album.
--   `%bucket{text}` by `/plugins/bucket`{.interpreted-text role="doc"}:
+-   `%bucket{text}` by `/plugins/bucket`:
     Substitute a string by the range it belongs to.
--   `%the{text}` by `/plugins/the`{.interpreted-text role="doc"}: Moves
+-   `%the{text}` by `/plugins/the`: Moves
     English articles to ends of strings.
 
-The `/plugins/inline`{.interpreted-text role="doc"} lets you define
+The `/plugins/inline` lets you define
 template fields in your beets configuration file using Python snippets.
 And for more advanced processing, you can go all-in and write a
 dedicated plugin to register your own fields and functions (see
-`writing-plugins`{.interpreted-text role="ref"}).
+`writing-plugins`).
 
 ## See Also
 
 `https://beets.readthedocs.org/`
 
-`beet(1)`{.interpreted-text role="manpage"}
+`beet(1)`

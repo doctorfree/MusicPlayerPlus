@@ -12,10 +12,6 @@ beet - command-line interface to beets
 
 | **beet** \[*args*\...\] *command* \[*args*\...\]
 | **beet help** *command*
-:::
-
-::: only
-html
 
 **beet** is the command-line interface to beets.
 
@@ -32,23 +28,14 @@ Beets also offers shell completion. For bash, see the
 [completion
 script](https://github.com/beetbox/beets/blob/master/extra/_beet) for
 the `beet` command.
-:::
 
 ## Commands
 
-::: only
-html
-
 Here are the built-in commands available in beets:
 
-::: {.contents local="" depth="1"}
-:::
+Also be sure to see the `global flags <global-flags>`.
 
-Also be sure to see the `global flags <global-flags>`{.interpreted-text
-role="ref"}.
-:::
-
-### import {#import-cmd}
+### import
 
     beet import [-CWAPRqst] [-l LOGPATH] PATH...
     beet import [options] -L QUERY
@@ -61,7 +48,7 @@ compressed archives. The music will be copied to a configurable
 directory structure and added to a library database. The command is
 interactive and will try to get you to verify MusicBrainz tags that it
 thinks are suspect. See the
-`autotagging guide </guides/tagger>`{.interpreted-text role="doc"} for
+`autotagging guide </guides/tagger>` for
 detail on how to use the interactive tag-correction flow.
 
 Directories passed to the import command can contain either a single
@@ -156,16 +143,13 @@ Optional command flags:
 
 -   You can supply `--set field=value` to assign [field]{.title-ref} to
     [value]{.title-ref} on import. These assignments will merge with
-    (and possibly override) the `set_fields`{.interpreted-text
-    role="ref"} configuration dictionary. You can use the option
+    (and possibly override) the `set_fields`
+    configuration dictionary. You can use the option
     multiple times on the command line, like so:
 
         beet import --set genre="Alternative Rock" --set mood="emotional"
 
-::: only
-html
-
-#### Reimporting {#reimport}
+#### Reimporting
 
 The `import` command can also be used to \"reimport\" music that you\'ve
 already added to your library. This is useful when you change your mind
@@ -184,7 +168,7 @@ you never end up with two copies of the file.
 
 The `-L` (`--library`) flag is also useful for retagging. Instead of
 listing paths you want to import on the command line, specify a `query
-string <query>`{.interpreted-text role="doc"} that matches items from
+string <query>` that matches items from
 your library. In this case, the `-s` (singleton) flag controls whether
 the query matches individual items or full albums. If you want to retag
 your whole library, just supply a null query, which matches everything:
@@ -192,22 +176,21 @@ your whole library, just supply a null query, which matches everything:
 
 Note that, if you just want to update your files\' tags according to
 changes in the MusicBrainz database, the
-`/plugins/mbsync`{.interpreted-text role="doc"} is a better choice.
+`/plugins/mbsync` is a better choice.
 Reimporting uses the full matching machinery to guess metadata matches;
 `mbsync` just relies on MusicBrainz IDs.
-:::
 
-### list {#list-cmd}
+### list
 
     beet list [-apf] QUERY
 
-`Queries <query>`{.interpreted-text role="doc"} the database for music.
+`Queries <query>` the database for music.
 
 Want to search for \"Gronlandic Edit\" by of Montreal? Try
 `beet list gronlandic`. Maybe you want to see everything released in
 2009 with \"vegetables\" in the title? Try
 `beet list year:2009 title:vegetables`. You can also specify the sort
-order. (Read more in `query`{.interpreted-text role="doc"}.)
+order. (Read more in `query`.)
 
 You can use the `-a` switch to search for albums instead of individual
 items. In this case, the queries you use are restricted to album-level
@@ -222,19 +205,19 @@ might be useful for piping into other Unix commands (such as
 option lets you specify a specific format with which to print every
 album or track. This uses the same template syntax as beets\'
 `path formats
-<pathformat>`{.interpreted-text role="doc"}. For example, the command
+<pathformat>`. For example, the command
 `beet ls -af '$album: $albumtotal' beatles` prints out the number of
 tracks on each Beatles album. In Unix shells, remember to enclose the
 template argument in single quotes to avoid environment variable
 expansion.
 
-### remove {#remove-cmd}
+### remove
 
     beet remove [-adf] QUERY
 
 Remove music from your library.
 
-This command uses the same `query <query>`{.interpreted-text role="doc"}
+This command uses the same `query <query>`
 syntax as the `list` command. By default, it just removes entries from
 the library database; it doesn\'t touch the files on disk. To actually
 delete the files, use the `-d` flag. When the `-a` flag is given, the
@@ -252,13 +235,13 @@ option lets you choose precisely which tracks/albums to remove without
 spending too much time to carefully craft a query. If you do not want to
 be prompted at all, use the `-f` option.
 
-### modify {#modify-cmd}
+### modify
 
     beet modify [-MWay] [-f FORMAT] QUERY [FIELD=VALUE...] [FIELD!...]
 
 Change the metadata for items or albums in the database.
 
-Supply a `query <query>`{.interpreted-text role="doc"} matching the
+Supply a `query <query>` matching the
 things you want to change and a series of `field=value` pairs. For
 example, `beet modify genius of love artist="Tom Tom Club"` will change
 the artist for the track \"Genius of Love.\" To remove fields (which is
@@ -290,7 +273,7 @@ precisely which data to change without spending too much time to
 carefully craft a query. To skip the prompts entirely, use the `-y`
 option.
 
-### move {#move-cmd}
+### move
 
     beet move [-capt] [-d DIR] QUERY
 
@@ -309,7 +292,7 @@ will show you a list of files that would be moved but won\'t actually
 change anything on disk. The `-t` option sets the timid mode which will
 ask again before really moving or copying the files.
 
-### update {#update-cmd}
+### update
 
     beet update [-F] FIELD [-aM] QUERY
 
@@ -341,14 +324,14 @@ command may be overridden by data from other tracks on the same album.
 This means that running the `update` command multiple times may show the
 same changes being applied.
 
-### write {#write-cmd}
+### write
 
     beet write [-pf] [QUERY]
 
 Write metadata from the database into files\' tags.
 
 When you make changes to the metadata stored in beets\' library database
-(during import or with the `modify-cmd`{.interpreted-text role="ref"}
+(during import or with the `modify-cmd`
 command, for example), you often have the option of storing changes only
 in the database, leaving your files untouched. The `write` command lets
 you later change your mind and write the contents of the database into
@@ -356,7 +339,7 @@ the files. By default, this writes the changes only if there is a
 difference between the database and the tags in the file.
 
 You can think of this command as the opposite of
-`update-cmd`{.interpreted-text role="ref"}.
+`update-cmd`.
 
 The `-p` option previews metadata changes without actually applying
 them.
@@ -365,12 +348,12 @@ The `-f` option forces a write to the file, even if the file tags match
 the database. This is useful for making sure that enabled plugins that
 run on write (e.g., the Scrub and Zero plugins) are run on the file.
 
-### stats {#stats-cmd}
+### stats
 
     beet stats [-e] [QUERY]
 
 Show some statistics on your entire library (if you don\'t provide a
-`query <query>`{.interpreted-text role="doc"}) or the matched items (if
+`query <query>`) or the matched items (if
 you do).
 
 By default, the command calculates file sizes using their bitrate and
@@ -378,17 +361,16 @@ duration. The `-e` (`--exact`) option reads the exact sizes of each file
 (but is slower). The exact mode also outputs the exact duration in
 seconds.
 
-### fields {#fields-cmd}
+### fields
 
     beet fields
 
 Show the item and album metadata fields available for use in
-`query`{.interpreted-text role="doc"} and `pathformat`{.interpreted-text
-role="doc"}. The listing includes any template fields provided by
+`query` and `pathformat`. The listing includes any template fields provided by
 plugins and any flexible attributes you\'ve manually assigned to your
 items and albums.
 
-### config {#config-cmd}
+### config
 
     beet config [-pdc]
     beet config -e
@@ -422,7 +404,7 @@ example, `beet -v import ...`.
     Please use this flag when reporting bugs. You can use it twice, as
     in `-vv`, to make beets even more verbose.
 -   `-c FILE`: read a specified YAML
-    `configuration file <config>`{.interpreted-text role="doc"}. This
+    `configuration file <config>`. This
     configuration works as an overlay: rather than replacing your normal
     configuration options entirely, the two are merged. Any individual
     options set in this config file will override the corresponding
@@ -438,7 +420,7 @@ example, `beet -v import ...`.
 Beets also uses the `BEETSDIR` environment variable to look for
 configuration and data.
 
-## Shell Completion {#completion}
+## Shell Completion
 
 Beets includes support for shell command completion. The command
 `beet completion` prints out a
@@ -493,12 +475,12 @@ errors:
 
 # Queries
 
-Many of beets\' `commands <cli>`{.interpreted-text role="doc"} are built
+Many of beets\' `commands <cli>` are built
 around **query strings:** searches that select tracks and albums from
 your library. This page explains the query string syntax, which is meant
 to vaguely resemble the syntax used by Web search engines.
 
-## Keyword {#keywordquery}
+## Keyword
 
 This command:
 
@@ -517,7 +499,7 @@ For example, this is what I might see when I run the command above:
     Bat for Lashes - Two Suns - Good Love
     ...
 
-## Combining Keywords {#combiningqueries}
+## Combining Keywords
 
 Multiple keywords are implicitly joined with a Boolean \"and.\" That is,
 if a query has two keywords, it only matches tracks that contain *both*
@@ -612,7 +594,7 @@ expression with a single `=` or `~`:
     $ beet list ~crash
     $ beet list ="American Football"
 
-## Regular Expressions {#regex}
+## Regular Expressions
 
 In addition to simple substring and exact matches, beets also supports
 regular expression matching for more advanced queries. To run a regex
@@ -640,7 +622,7 @@ regular expressions, such as `()[]|`. To type those characters, you\'ll
 need to escape them (e.g., with backslashes or quotation marks,
 depending on your shell).
 
-## Numeric Range Queries {#numericquery}
+## Numeric Range Queries
 
 For numeric fields, such as year, bitrate, and track, you can query
 using one-or two-sided intervals. That is, you can find music that falls
@@ -665,7 +647,7 @@ length:
 
     $ beet list length:..4:30
 
-## Date and Date Range Queries {#datequery}
+## Date and Date Range Queries
 
 Date-valued fields, such as *added* and *mtime*, have a special query
 syntax that lets you specify years, months, and days as well as ranges
@@ -748,7 +730,7 @@ starting four weeks ago:
 
     $ beet ls 'added:-6w..-4w'
 
-## Query Term Negation {#not_query}
+## Query Term Negation
 
 Query terms can also be negated, acting like a Boolean \"not,\" by
 prefixing them with `-` or `^`. This has the effect of returning all the
@@ -776,7 +758,7 @@ the query:
 
     $ beet list -a -- artist:dylan -year:1980..1990 "-album::the(y)?"
 
-## Path Queries {#pathquery}
+## Path Queries
 
 Sometimes it\'s useful to find all the items in your library that are
 (recursively) inside a certain directory. Use the `path:` field to do
@@ -797,7 +779,7 @@ directory\-\--just the ones you\'ve already added to your beets library.
 Path queries are case sensitive if the queried path is on a
 case-sensitive filesystem.
 
-## Sort Order {#query-sort}
+## Sort Order
 
 Queries can specify a sort order. Use the name of the
 [field]{.title-ref} you want to sort on, followed by a `+` or `-` sign
@@ -821,7 +803,7 @@ are empty).
 
 Lexicographic sorts are case insensitive by default, resulting in the
 following sort order: `Bar foo Qux`. This behavior can be changed with
-the `sort_case_insensitive`{.interpreted-text role="ref"} configuration
+the `sort_case_insensitive` configuration
 option. Case sensitive sort will result in lower-case values being
 placed after upper-case values, e.g., `Bar Qux foo`.
 
@@ -831,11 +813,11 @@ the items that lack that particular field will be listed at the
 *beginning* of the list.
 
 You can set the default sorting behavior with the
-`sort_item`{.interpreted-text role="ref"} and
-`sort_album`{.interpreted-text role="ref"} configuration options.
+`sort_item` and
+`sort_album` configuration options.
 
 ## See Also
 
 `https://beets.readthedocs.org/`
 
-`beetsconfig(5)`{.interpreted-text role="manpage"}
+`beetsconfig(5)`

@@ -3,6 +3,7 @@
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
 LOGFILE="${HOME}/.config/beets/import.log"
+SINGLE_LOG="${HOME}/.config/beets/import-singletons.log"
 
 usage() {
   printf "\nUsage: beet_import.sh -[w|W] [-d music_directory] [-u]"
@@ -18,7 +19,7 @@ usage() {
 
 mpd_music=
 custom_dir=
-tagflag=
+tagflags=
 while getopts "d:wWu" flag; do
     case $flag in
         d)
@@ -26,10 +27,10 @@ while getopts "d:wWu" flag; do
             custom_dir=1
             ;;
         w)
-            tagflag="-w"
+            tagflags="-w"
             ;;
         W)
-            tagflag="-W"
+            tagflags="-A -C -W"
             ;;
         u)
             usage
@@ -90,13 +91,17 @@ done
 have_beet=`type -p beet`
 if [ "${have_beet}" ]
 then
-  beet import -q ${tagflag} -l ${LOGFILE} ${mpd_music}
-  beet import -q ${tagflag} -p -s -l ${LOGFILE} ${mpd_music}
+  beet import -q ${tagflags} -l ${LOGFILE} ${mpd_music}
+  # Do not copy/move singletons
+  echo "${tagflags}" | grep C > /dev/null || tagflags="${tagflags} -C"
+  beet import -q ${tagflags} -p -s -l ${SINGLE_LOG} ${mpd_music}
 else
   if [ -x ${HOME}/.local/bin/beet ]
   then
-    ${HOME}/.local/bin/beet import -q ${tagflag} -l ${LOGFILE} ${mpd_music}
-    ${HOME}/.local/bin/beet import -q ${tagflag} -p -s -l ${LOGFILE} ${mpd_music}
+    ${HOME}/.local/bin/beet import -q ${tagflags} -l ${LOGFILE} ${mpd_music}
+    # Do not copy/move singletons
+    echo "${tagflags}" | grep C > /dev/null || tagflags="${tagflags} -C"
+    ${HOME}/.local/bin/beet import -q ${tagflags} -p -s -l ${SINGLE_LOG} ${mpd_music}
   else
     echo "WARNING: Cannot locate 'beet' executable"
     echo "Music library ${mpd_music} not imported to beets media organizer"

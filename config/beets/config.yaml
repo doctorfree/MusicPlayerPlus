@@ -14,7 +14,7 @@ import:
     incremental: yes
     quiet: yes
     resume: yes
-    from_scratch: yes
+    from_scratch: no
     default_action: apply
     detail: yes
     non_rec_action: ask
