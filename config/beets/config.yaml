@@ -12,6 +12,7 @@ import:
     move: yes
     write: yes
     incremental: yes
+    incremental_skip_later: yes
     quiet: yes
     resume: yes
     from_scratch: no

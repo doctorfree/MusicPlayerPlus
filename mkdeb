@@ -68,7 +68,7 @@ fi
 # Build mppcava
 if [ -x build-mppcava.sh ]
 then
-  ./build-mppcava.sh -v
+  ./build-mppcava.sh
 else
   cd mppcava
   make clean

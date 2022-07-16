@@ -2,6 +2,7 @@
 #
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
+LOGTEMP="${HOME}/.config/beets/import.log$$"
 LOGFILE="${HOME}/.config/beets/import.log"
 LOGTIME="${HOME}/.config/beets/import_time.log"
 SINGLE_LOG="${HOME}/.config/beets/import_singletons.log"
@@ -104,6 +105,7 @@ else
   fi
 fi
 
+[ -f "${LOGFILE}" ] && mv "${LOGFILE}" "${LOGTEMP}"
 START_SECONDS=$(date +%s)
 for artist in "${mpd_music}"/*
 do
@@ -112,12 +114,29 @@ do
   if [ -d "${artist}" ]
   then
     ${BEET} import -q ${tagflags} -l "${LOGFILE}" "${artist}"
-    # Do not copy/move singletons
-    # ${BEET} import -q ${tagflags} -C -s -l "${SINGLE_LOG}" "${artist}"
-  # else
-    # ${BEET} import -q ${tagflags} -C -s -l "${SINGLE_LOG}" "${artist}"
   fi
 done
+
+# Add skipped folders as singletons
+grep ^skip "${LOGFILE}" > /tmp/skip$$
+sed 's/[^ ]* //' /tmp/skip$$ > /tmp/add$$
+rm -f /tmp/skip$$
+while read skipped
+do
+  ${BEET} import -q ${tagflags} -s -l "${SINGLE_LOG}" "${skipped}" >> "${SINGLE_LOG}" 2>&1
+done < /tmp/add$$
+rm -f /tmp/add$$
+[ -f "${LOGTEMP}" ] && {
+  [ -f "${LOGFILE}" ] && {
+    mv "${LOGFILE}" /tmp/log$$
+  }
+  mv "${LOGTEMP}" "${LOGFILE}"
+  [ -f /tmp/log$$ ] && {
+    cat /tmp/log$$ >> "${LOGFILE}"
+    rm -f /tmp/log$$
+  }
+}
+
 FINISH_SECONDS=$(date +%s)
 ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
 ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
