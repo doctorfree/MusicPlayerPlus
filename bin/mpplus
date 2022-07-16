@@ -155,13 +155,15 @@ make_it_so() {
   [ "${BEETS_IMPORT}" ] && {
     if [ -x ${SCRIPTS}/beet_import.sh ]
     then
-      echo "Importing music library into Beets media library management system."
-      echo "The import can take about a minute per album."
-      echo "A large music library may take several hours to import."
+      echo ""
+      echo "===================================================================="
+      echo "Importing, tagging, and organizing your music library with the Beets"
+      echo "media library management system. The import can take about a minute"
+      echo "per album. A large music library may take several hours to import."
       echo ""
       echo "The import process is performed in the background and non-interactively."
-      echo "As long as your computer remains on and connected to the Internet,"
-      echo "the import process should run uninterrupted and without need for attention."
+      echo "As long as your computer remains on and connected to the Internet, the"
+      echo "import process should run uninterrupted and without need for attention."
       echo "You may continue working and leave the import unattended."
       echo ""
       echo "To monitor the progress of the import, examine the logs at:"
@@ -169,6 +171,8 @@ make_it_so() {
       echo "$HOME/.config/beets/import.log"
       echo "and"
       echo "$HOME/.config/beets/import_time.log"
+      echo "===================================================================="
+      echo ""
 
       if [ "${MUSIC_DIRECTORY}" ]
       then

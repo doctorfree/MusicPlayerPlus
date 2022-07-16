@@ -175,7 +175,7 @@ match:
 #   comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
 paths:
     default: $albumartist/$album%aunique{}/$track $title
-    singleton: $artist/$album - tracks/$track $title
+    singleton: $artist/$album%aunique{}/$title
     comp: Compilations/$album%aunique{}/$track $title
 
 importadded:
