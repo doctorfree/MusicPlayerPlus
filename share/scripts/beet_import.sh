@@ -110,19 +110,20 @@ START_SECONDS=$(date +%s)
 for artist in "${mpd_music}"/*
 do
   [ "${artist}" == "${mpd_music}/*" ] && continue
-  echo "# Importing ${artist}" >> "${LOGTIME}"
   if [ -d "${artist}" ]
   then
+    echo "# Importing ${artist}" >> "${LOGTIME}"
     ${BEET} import -q ${tagflags} -l "${LOGFILE}" "${artist}"
   fi
 done
 
 # Add skipped folders as singletons
-grep ^skip "${LOGFILE}" > /tmp/skip$$
+grep '^skip\|^duplicate-skip' "${LOGFILE}" > /tmp/skip$$
 sed 's/[^ ]* //' /tmp/skip$$ > /tmp/add$$
 rm -f /tmp/skip$$
 while read skipped
 do
+  echo "# Importing singletons ${skipped}" >> "${LOGTIME}"
   ${BEET} import -q ${tagflags} -s -l "${SINGLE_LOG}" "${skipped}" >> "${SINGLE_LOG}" 2>&1
 done < /tmp/add$$
 rm -f /tmp/add$$

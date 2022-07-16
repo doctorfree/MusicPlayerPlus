@@ -456,13 +456,14 @@ TPM="${HOME}/.tmux/plugins/tpm"
 # If there is no user beets plugin folder
 # then copy the MusicPlayerPlus beets plugin folder
 # into the user's home and install these plugins
-[ -d ${BEETSCONFDIR}/plugins ] || mkdir -p ${BEETSCONFDIR}/plugins
 for plugin in ${MPPCDIR}/beets/plugins/*
 do
   [ "${plugin}" == "${MPPCDIR}/beets/plugins/*" ] && continue
   [ -d "${plugin}" ] && {
     plugbase=`basename "${plugin}"`
     [ -d "${BEETSCONFDIR}/plugins/${plugbase}" ] || {
+      # Inside the loop so it does not get created unless needed
+      [ -d ${BEETSCONFDIR}/plugins ] || mkdir -p ${BEETSCONFDIR}/plugins
       cp -a "${plugin}" "${BEETSCONFDIR}/plugins/${plugbase}"
     }
   }

@@ -166,11 +166,9 @@ make_it_so() {
       echo "import process should run uninterrupted and without need for attention."
       echo "You may continue working and leave the import unattended."
       echo ""
-      echo "To monitor the progress of the import, examine the logs at:"
+      echo "To monitor the progress of the import, examine the import time log:"
       echo ""
-      echo "$HOME/.config/beets/import.log"
-      echo "and"
-      echo "$HOME/.config/beets/import_time.log"
+      echo "tail -f $HOME/.config/beets/import_time.log"
       echo "===================================================================="
       echo ""
 

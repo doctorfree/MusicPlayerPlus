@@ -19,7 +19,7 @@ import:
     default_action: apply
     detail: yes
     non_rec_action: ask
-    duplicate_action: skip
+    duplicate_action: keep
     group_albums: no
     autotag: yes
     bell: no
@@ -44,6 +44,11 @@ plugins:
     - smartplaylist
     - mpdupdate
     - unimported
+
+duplicates:
+    album: yes
+    tiebreak:
+        items: [bitrate]
 
 extrafiles:
     patterns:
