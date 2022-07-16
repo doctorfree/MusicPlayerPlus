@@ -28,6 +28,7 @@ plugins:
     - describe
     - duplicates
     - edit
+    - extrafiles
     - fromfilename
     - hook
     - importadded
@@ -42,6 +43,10 @@ plugins:
     - smartplaylist
     - mpdupdate
     - unimported
+
+extrafiles:
+    patterns:
+        all: '*.*'
 
 mpdstats:
     host: localhost
@@ -163,14 +168,20 @@ match:
         media: ['CD', 'LP', 'Digital Media|File', 'Cassette']
         original_year: yes
 
+#paths:
+#   default: $albumartist/$year - $albumartist - $album%aunique{}/$track - $artist - $album - $title ($year)
+#   singleton: $artist/$artist - $album - $title ($year)
+#   comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
 paths:
-    default: $albumartist/$year - $albumartist - $album%aunique{}/$track - $artist - $album - $title ($year)
-    singleton: $artist/$artist - $album - $title ($year)
-    comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
+    default: $albumartist/$album%aunique{}/$track $title
+    singleton: $artist/$album - tracks/$track $title
+    comp: Compilations/$album%aunique{}/$track $title
 
 importadded:
     preserve_mtimes: yes
     preserve_write_mtimes: yes
+
+threaded: no
 
 unimported:
     ignore_extensions: jpg png

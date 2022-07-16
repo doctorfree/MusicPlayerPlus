@@ -36,6 +36,8 @@ mppcava/version
 mppcava/config_file.h
 mppcava/.*
 config/beets/configs/*
+beets/*/__pycache__/
+beets/*/*.egg-info/
 releases/*
 tmp/*
 tools/*

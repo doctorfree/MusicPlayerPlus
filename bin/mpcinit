@@ -352,6 +352,7 @@ done
   [ -d ${BEETSCONFDIR} ] || mkdir -p ${BEETSCONFDIR}
   cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
 }
+
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 [ -f ${MPDSTATSD} ] || {
@@ -452,11 +453,35 @@ TPM="${HOME}/.tmux/plugins/tpm"
 
 [ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins > /dev/null 2>&1
 
+# If there is no user beets plugin folder
+# then copy the MusicPlayerPlus beets plugin folder
+# into the user's home and install these plugins
+[ -d ${BEETSCONFDIR}/plugins ] || mkdir -p ${BEETSCONFDIR}/plugins
+for plugin in ${MPPCDIR}/beets/plugins/*
+do
+  [ "${plugin}" == "${MPPCDIR}/beets/plugins/*" ] && continue
+  [ -d "${plugin}" ] && {
+    plugbase=`basename "${plugin}"`
+    [ -d "${BEETSCONFDIR}/plugins/${plugbase}" ] || {
+      cp -a "${plugin}" "${BEETSCONF}/plugins/${plugbase}"
+    }
+  }
+done
+
+for plugin in ${BEETSCONFDIR}/plugins/*
+do
+  [ "${plugin}" == "${BEETSCONFDIR}/plugins/*" ] && continue
+  [ -x "${plugin}/setup.py" ] && {
+    cd "${plugin}"
+    ./setup.py install --user
+  }
+done
+
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
   for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
-             python-mpd2 requests sacad tmuxp ueberzug
+             beets-extrafiles python-mpd2 requests sacad tmuxp ueberzug
   do
     if pip list | grep ${pkg} > /dev/null
     then

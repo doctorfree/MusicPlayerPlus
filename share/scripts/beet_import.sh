@@ -3,7 +3,8 @@
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
 LOGFILE="${HOME}/.config/beets/import.log"
-SINGLE_LOG="${HOME}/.config/beets/import-singletons.log"
+LOGTIME="${HOME}/.config/beets/import_time.log"
+SINGLE_LOG="${HOME}/.config/beets/import_singletons.log"
 
 usage() {
   printf "\nUsage: beet_import.sh -[w|W] [-d music_directory] [-u]"
@@ -30,7 +31,7 @@ while getopts "d:wWu" flag; do
             tagflags="-w"
             ;;
         W)
-            tagflags="-A -C -W"
+            tagflags="-W"
             ;;
         u)
             usage
@@ -91,22 +92,37 @@ done
 have_beet=`type -p beet`
 if [ "${have_beet}" ]
 then
-  beet import -q ${tagflags} -l ${LOGFILE} ${mpd_music}
-  # Do not copy/move singletons
-  echo "${tagflags}" | grep C > /dev/null || tagflags="${tagflags} -C"
-  beet import -q ${tagflags} -p -s -l ${SINGLE_LOG} ${mpd_music}
+  BEET=beet
 else
   if [ -x ${HOME}/.local/bin/beet ]
   then
-    ${HOME}/.local/bin/beet import -q ${tagflags} -l ${LOGFILE} ${mpd_music}
-    # Do not copy/move singletons
-    echo "${tagflags}" | grep C > /dev/null || tagflags="${tagflags} -C"
-    ${HOME}/.local/bin/beet import -q ${tagflags} -p -s -l ${SINGLE_LOG} ${mpd_music}
+    BEET="${HOME}/.local/bin/beet"
   else
     echo "WARNING: Cannot locate 'beet' executable"
     echo "Music library ${mpd_music} not imported to beets media organizer"
     exit 1
   fi
 fi
+
+START_SECONDS=$(date +%s)
+for artist in "${mpd_music}"/*
+do
+  [ "${artist}" == "${mpd_music}/*" ] && continue
+  echo "# Importing ${artist}" >> "${LOGTIME}"
+  if [ -d "${artist}" ]
+  then
+    ${BEET} import -q ${tagflags} -l "${LOGFILE}" "${artist}"
+    # Do not copy/move singletons
+    # ${BEET} import -q ${tagflags} -C -s -l "${SINGLE_LOG}" "${artist}"
+  # else
+    # ${BEET} import -q ${tagflags} -C -s -l "${SINGLE_LOG}" "${artist}"
+  fi
+done
+FINISH_SECONDS=$(date +%s)
+ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
+ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+printf "\n# Import ${ELAPSED}\n" >> ${LOGTIME}
+
+find "${mpd_music}" -depth -type d -empty -delete
 
 exit 0

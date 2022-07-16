@@ -420,7 +420,7 @@ library into Beets, moving rather than copying files to conform with
 standard detected artist/album/song naming conventions, and writing
 detected tags. A log of the album import is written to the file
 `$HOME/.config/beets/import.log`. A log of the singletons import
-is written to the file `$HOME/.config/beets/import-singletons.log`.
+is written to the file `$HOME/.config/beets/import_singletons.log`.
 
 Prior to performing the intial Beets import of your music library,
 examine the *import* section of the Beets configuration at
@@ -506,7 +506,7 @@ tail -f $HOME/.config/beets/import.log
 To view the progress of the singletons import in real-time:
 
 ```
-tail -f $HOME/.config/beets/import-singletons.log
+tail -f $HOME/.config/beets/import_singletons.log
 ```
 
 The `mpplus -I ...` command performs both an import of the music library
