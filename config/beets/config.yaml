@@ -27,6 +27,7 @@ import:
     log: ~/.config/beets/import.log
 
 plugins:
+    - albumtypes
     - describe
     - duplicates
     - edit
@@ -45,6 +46,17 @@ plugins:
     - smartplaylist
     - mpdupdate
     - unimported
+
+albumtypes:
+    types:
+        - ep: 'EP'
+        - single: 'Single'
+        - soundtrack: 'OST'
+        - live: 'Live'
+        - compilation: 'Anthology'
+        - remix: 'Remix'
+    ignore_va: compilation
+    bracket: '[]'
 
 duplicates:
     album: yes
@@ -175,14 +187,11 @@ match:
         media: ['CD', 'LP', 'Digital Media|File', 'Cassette']
         original_year: yes
 
-#paths:
-#   default: $albumartist/$year - $albumartist - $album%aunique{}/$track - $artist - $album - $title ($year)
-#   singleton: $artist/$artist - $album - $title ($year)
-#   comp: Compilations/$album%aunique{}/$track - $artist - $title ($year)
 paths:
-    default: $albumartist/$album%aunique{}/$track $title
-    singleton: $artist/$album%aunique{}/$title
-    comp: Compilations/$album%aunique{}/$track $title
+    default: $albumartist/$album%aunique{} $atypes/$track - $title
+    singleton: $artist/Non-Album/$album - $title
+    albumtype:soundtrack: Soundtracks/$album%aunique{} $atypes/$track - $title
+    comp: Compilations/$album%aunique{} $atypes/$track - $artist - $title
 
 importadded:
     preserve_mtimes: yes

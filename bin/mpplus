@@ -91,6 +91,9 @@ usage() {
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
+  printf "\n\t\tWhen -I is specified, the '-a' argument can be used"
+  printf "\n\t\tto specify auto-tagging (default is no auto-tags)."
+  printf "\n\t\tSee also '-w' and '-W' below."
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
@@ -98,8 +101,8 @@ usage() {
   printf "\n\t\tALSA configuration will update the ALSA configuration in '/etc/asound.conf'"
   printf "\n\t-R indicates record tmux session with asciinema"
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
-  printf "\n\t-w indicates write tags during beets import"
-  printf "\n\t-W indicates do not write tags during beets import"
+  printf "\n\t-w indicates write metadata during beets import"
+  printf "\n\t-W indicates do not write metadata during beets import"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
   printf "\n\t\tlist/search/select media in the MPD library."
   printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
@@ -174,9 +177,9 @@ make_it_so() {
 
       if [ "${MUSIC_DIRECTORY}" ]
       then
-        nohup ${SCRIPTS}/beet_import.sh ${tagflag} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${tagflags} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
       else
-        nohup ${SCRIPTS}/beet_import.sh ${tagflag} > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${tagflags} > /dev/null 2>&1 &
       fi
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
@@ -795,7 +798,9 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
-tagflag=
+tagflags=
+autotag=
+writeflag=
 
 while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
   case $flag in
@@ -803,6 +808,7 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       AUDIO=1
       MPPSPLASH="${MPPSPLASH} -a"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
+      autotag="-a"
       ;;
     A)
       [ "${have_uebz}" ] && {
@@ -965,10 +971,10 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       fi
       ;;
     w)
-      tagflag="-w"
+      writeflag="-w"
       ;;
     W)
-      tagflag="-W"
+      writeflag="-W"
       ;;
     z)
       FZMPOPT="${OPTARG}"
@@ -978,6 +984,8 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       ;;
     esac
 done
+
+tagflags="${autotag} ${writeflag}"
 
 # The -T option says use tmux, -S says do asciimatics
 # If we have both then do asciimatics in tmux

@@ -8,8 +8,9 @@ LOGTIME="${HOME}/.config/beets/import_time.log"
 SINGLE_LOG="${HOME}/.config/beets/import_singletons.log"
 
 usage() {
-  printf "\nUsage: beet_import.sh -[w|W] [-d music_directory] [-u]"
+  printf "\nUsage: beet_import.sh [-a] -[w|W] [-d music_directory] [-u]"
   printf "\nWhere:"
+  printf "\n\t-a indicates use auto-tagger during import (slower)"
   printf "\n\t-w indicates write tags during import"
   printf "\n\t-W indicates do not write tags during import"
   printf "\n\tWithout a -w or -W flag, writing of tags is determined by the"
@@ -21,24 +22,30 @@ usage() {
 
 mpd_music=
 custom_dir=
-tagflags=
-while getopts "d:wWu" flag; do
+autotag="-A"
+writeflag=
+while getopts "ad:wWu" flag; do
     case $flag in
+        a)
+            autotag=
+            ;;
         d)
             mpd_music="$OPTARG"
             custom_dir=1
             ;;
         w)
-            tagflags="-w"
+            writeflag="-w"
             ;;
         W)
-            tagflags="-W"
+            writeflag="-W"
             ;;
         u)
             usage
             ;;
     esac
 done
+
+tagflags="${autotag} ${writeflag}"
 
 [ "${custom_dir}" ] || {
   [ -f ${MPD_CONF} ] || {
@@ -114,6 +121,9 @@ do
   then
     echo "# Importing ${artist}" >> "${LOGTIME}"
     ${BEET} import -q ${tagflags} -l "${LOGFILE}" "${artist}"
+  else
+    echo "# Importing singleton ${artist}" >> "${LOGTIME}"
+    ${BEET} import -q ${tagflags} -s -l "${SINGLE_LOG}" "${artist}" >> "${SINGLE_LOG}" 2>&1
   fi
 done
 
