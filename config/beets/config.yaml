@@ -19,7 +19,8 @@ import:
     default_action: apply
     detail: yes
     non_rec_action: ask
-    duplicate_action: keep
+    # duplicate_action can be 'skip', 'keep', 'remove', 'merge' or 'ask'
+    duplicate_action: skip
     group_albums: no
     autotag: yes
     bell: no
