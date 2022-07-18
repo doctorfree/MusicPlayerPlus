@@ -5,17 +5,18 @@ library: ~/.config/beets/musiclibrary.db
 # ~/.config/beets/secrets.yaml
 #
 #include:
-#    - secrets.yaml
+#   - secrets.yaml
 
 import:
-    copy: no
+    copy: yes
     move: yes
     write: yes
     incremental: yes
     incremental_skip_later: yes
-    quiet: yes
+    quiet: no
+    quiet_fallback: asis
     resume: yes
-    from_scratch: yes
+    from_scratch: no
     default_action: apply
     detail: yes
     non_rec_action: ask
@@ -28,7 +29,9 @@ import:
 
 plugins:
     - albumtypes
+#   - convert
     - describe
+#   - discogs
     - duplicates
     - edit
     - extrafiles
@@ -57,6 +60,15 @@ albumtypes:
         - remix: 'Remix'
     ignore_va: compilation
     bracket: '[]'
+
+# Uncomment this and the convert plugin entry to enable format conversion
+# of media in your Beets library with the 'beet convert' command
+#
+#convert:
+#   dest: ~/Music/__Converted__
+#   quiet: true
+#   command: ffmpeg -i $source -y -vn -aq 2 $dest
+#   extension: mp3
 
 duplicates:
     album: yes
@@ -174,10 +186,52 @@ mpd:
     rating: yes
     rating_mix: 0.75
 
+# Uncomment this and the discogs plugin entry to enable Discogs metadata source
+#
+#discogs:
+#   source_weight: 0.0
+#   index_tracks: yes
+#   user_token: Your_Discogs_User_Token
+
 musicbrainz:
-    searchlimit: 10
+    # Default: 5
+    # Higher: better for albums with many releases in many formats/countries
+    # Lower: better for box sets
+    #searchlimit: 10
     extra_tags: [year, catalognum, country, media, label]
-    genres: no
+    #genres: yes
+#   Disable Musicbrainz: not in Beets 1.6.0, will be in 1.6.1
+#   enabled: no
+
+match:
+    #strong_rec_thresh: 0.10
+    #medium_rec_thresh: 0.25
+    strong_rec_thresh: 0.075
+    medium_rec_thresh: 0.125
+    max_rec:
+      unmatched_tracks: low
+      missing_tracks: strong
+    # The higher the weight, the lower the items go in the candidate list (greater
+    # distance) when this penalty is applied.
+    distance_weights:
+      # Default: 3.0
+      album: 6.0
+      # Default: 3.0
+      artist: 7.0
+      # Default: 2.0
+      totaltracks: 4.0
+      # Default: 0.9
+      missing_tracks: 1.0
+      # Default: 0.6
+      unmatched_tracks: 10.0
+    #preferred:
+    #    media: ['CD', 'Digital Media|File', 'Digital Media']
+    #    countries: ['US', 'GB|UK']    
+    preferred:
+      countries: ['US', 'XW', 'GB|UK']
+      media: ['Digital Media|File', 'CD']
+    ignored_media:
+      ['DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD', 'VCD', 'SVCD', 'UMD', 'VHS']
 
 paths:
     default: $albumartist/$album%aunique{} $atypes/$track - $title

@@ -18,6 +18,7 @@ CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
+mpd_music="~/Music"
 
 create_new_profile() {
   local proterm="$1"
@@ -197,6 +198,36 @@ sync_music_dir() {
     echo "Could not detect any music_directory setting in ${MPDCONF}"
     echo "Manual configuration of ${MPDCONF} and ${HOME}/${MPCDIR}/config required"
   fi
+}
+
+iamroot=
+if [ "${EUID}" ]
+then
+  [ ${EUID} -eq 0 ] && iamroot=1
+else
+  uid=`id -u`
+  [ ${uid} -eq 0 ] && iamroot=1
+fi
+
+[ "${iamroot}" ] && {
+  printf "\nThe ${BOLD}mpcinit${NORM} command should be run as a normal user."
+  printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
+  while true
+  do
+    read -p "Do you intend to use MusicPlayerPlus as the 'root' user ? (y/n) " yn
+    case $yn in
+        [Yy]* )
+                break
+                ;;
+        [Nn]* )
+                printf "\nRe-run this command as a normal user."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+            * ) echo "Please answer yes or no."
+                ;;
+    esac
+  done
 }
 
 [ -f ${CONFDIR}/config ] || {
@@ -478,11 +509,16 @@ do
   }
 done
 
+# To install latest Beets source tarball:
+#    - Uninstall Beets (python -m pip uninstall beets)
+#    - pip install https://github.com/beetbox/beets/tarball/master
+
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
   for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
-             beets-extrafiles python-mpd2 requests sacad tmuxp ueberzug
+             beets-extrafiles python-mpd2 requests sacad tmuxp ueberzug \
+             python3-discogs-client
   do
     if pip list | grep ${pkg} > /dev/null
     then
@@ -529,12 +565,13 @@ fi
 sync_music_dir
 
 printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
+printf "\nMusic directory set to ${BOLD}${mpd_music}${NORM} in ${MPDCONF}"
+printf "\nModify ${MPDCONF} 'music_directory' to change this."
+printf "\nIf 'music_directory' is modified, run '${BOLD}mpcinit sync${NORM}'\n"
 printf "\nDownload album cover art with the command:"
 printf "\n\t${BOLD}mpplus -D${NORM}\n"
 printf "\nImport your music library into the Beets Music Organizer with the command:"
-printf "\n\t${BOLD}mpplus -I${NORM}"
-printf "\n\tor to enable auto-tagging:"
-printf "\n\t${BOLD}mpplus -I -a${NORM}\n"
+printf "\n\t${BOLD}mpplus -I${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"
 printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 

@@ -51,13 +51,7 @@ while getopts "Aad:wWu" flag; do
     esac
 done
 
-if [ "${autotag}" ]
-then
-  copyflag=
-else
-  copyflag="-C"
-fi
-tagflags="${copyflag} ${autotag} ${writeflag}"
+tagflags="${autotag} ${writeflag}"
 
 [ "${custom_dir}" ] || {
   [ -f ${MPD_CONF} ] || {
