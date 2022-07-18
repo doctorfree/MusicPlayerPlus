@@ -91,9 +91,6 @@ usage() {
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
-  printf "\n\t\tWhen -I is specified, the '-a' argument can be used"
-  printf "\n\t\tto specify auto-tagging (default is no auto-tags)."
-  printf "\n\t\tSee also '-w' and '-W' below."
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
@@ -177,9 +174,9 @@ make_it_so() {
 
       if [ "${MUSIC_DIRECTORY}" ]
       then
-        nohup ${SCRIPTS}/beet_import.sh ${tagflags} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${writeflag} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
       else
-        nohup ${SCRIPTS}/beet_import.sh ${tagflags} > /dev/null 2>&1 &
+        nohup ${SCRIPTS}/beet_import.sh ${writeflag} > /dev/null 2>&1 &
       fi
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
@@ -189,7 +186,7 @@ make_it_so() {
       printf "\n\tbeet import -[w|W] <MUSIC_DIRECTORY>"
       printf "\n\tbeet import -[w|W]ps <MUSIC_DIRECTORY>"
       printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library,"
-      printf "\n-w indicates write tags, -W indicates do not write tags\n"
+      printf "\n-w indicates write metadata, -W indicates do not write metadata\n"
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
@@ -798,8 +795,6 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
-tagflags=
-autotag=
 writeflag=
 
 while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
@@ -808,7 +803,6 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       AUDIO=1
       MPPSPLASH="${MPPSPLASH} -a"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
-      autotag="-a"
       ;;
     A)
       [ "${have_uebz}" ] && {
@@ -984,8 +978,6 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       ;;
     esac
 done
-
-tagflags="${autotag} ${writeflag}"
 
 # The -T option says use tmux, -S says do asciimatics
 # If we have both then do asciimatics in tmux

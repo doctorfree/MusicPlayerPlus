@@ -532,25 +532,27 @@ printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
 printf "\nDownload album cover art with the command:"
 printf "\n\t${BOLD}mpplus -D${NORM}\n"
 printf "\nImport your music library into the Beets Music Organizer with the command:"
-printf "\n\t${BOLD}mpplus -I${NORM}\n"
+printf "\n\t${BOLD}mpplus -I${NORM}"
+printf "\n\tor to enable auto-tagging:"
+printf "\n\t${BOLD}mpplus -I -a${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"
 printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 
-type -p mppsplash > /dev/null && {
-  while true
-  do
-    read -p "View a MusicPlayerPlus ASCII animation ? (y/n) " yn
-    case $yn in
-      [Yy]* )
-              mppsplash -c 1 -a
-              break
-              ;;
-      [Nn]* )
-              printf "\nExiting.\n"
-              exit 0
-              ;;
-          * ) echo "Please answer yes or no."
-              ;;
-    esac
-  done
-}
+# type -p mppsplash > /dev/null && {
+#   while true
+#   do
+#     read -p "View a MusicPlayerPlus ASCII animation ? (y/n) " yn
+#     case $yn in
+#       [Yy]* )
+#               mppsplash -c 1 -a
+#               break
+#               ;;
+#       [Nn]* )
+#               printf "\nExiting.\n"
+#               exit 0
+#               ;;
+#           * ) echo "Please answer yes or no."
+#               ;;
+#     esac
+#   done
+# }

@@ -22,12 +22,18 @@ usage() {
 
 mpd_music=
 custom_dir=
-autotag="-A"
+autotag=
+tagging="ON"
 writeflag=
-while getopts "ad:wWu" flag; do
+while getopts "Aad:wWu" flag; do
     case $flag in
+        A)
+            autotag="-A"
+            tagging="OFF"
+            ;;
         a)
             autotag=
+            tagging="ON"
             ;;
         d)
             mpd_music="$OPTARG"
@@ -45,7 +51,13 @@ while getopts "ad:wWu" flag; do
     esac
 done
 
-tagflags="${autotag} ${writeflag}"
+if [ "${autotag}" ]
+then
+  copyflag=
+else
+  copyflag="-C"
+fi
+tagflags="${copyflag} ${autotag} ${writeflag}"
 
 [ "${custom_dir}" ] || {
   [ -f ${MPD_CONF} ] || {
@@ -113,6 +125,7 @@ else
 fi
 
 [ -f "${LOGFILE}" ] && mv "${LOGFILE}" "${LOGTEMP}"
+echo "# Importing artists from ${mpd_music}, auto-tag ${tagging}" >> "${LOGTIME}"
 START_SECONDS=$(date +%s)
 for artist in "${mpd_music}"/*
 do

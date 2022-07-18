@@ -15,7 +15,7 @@ import:
     incremental_skip_later: yes
     quiet: yes
     resume: yes
-    from_scratch: no
+    from_scratch: yes
     default_action: apply
     detail: yes
     non_rec_action: ask
@@ -60,8 +60,8 @@ albumtypes:
 
 duplicates:
     album: yes
-    tiebreak:
-        items: [bitrate]
+#   tiebreak:
+#       items: [bitrate]
 
 extrafiles:
     patterns:
@@ -174,24 +174,17 @@ mpd:
     rating: yes
     rating_mix: 0.75
 
-match:
-    ignored_media: ['Data CD', 'DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD',
-                    'VCD', 'SVCD', 'UMD', 'VHS']
-    strong_rec_thresh: 0.80
-    medium_rec_thresh: 0.50
-    max_rec:
-        missing_tracks: medium
-        #unmatched_tracks: medium
-    preferred:
-        #countries: ['GB|UK', 'US']
-        media: ['CD', 'LP', 'Digital Media|File', 'Cassette']
-        original_year: yes
+musicbrainz:
+    searchlimit: 10
+    extra_tags: [year, catalognum, country, media, label]
+    genres: no
 
 paths:
     default: $albumartist/$album%aunique{} $atypes/$track - $title
-    singleton: $artist/Non-Album/$album - $title
-    albumtype:soundtrack: Soundtracks/$album%aunique{} $atypes/$track - $title
+#   singleton: %if{$track,$artist/$album%aunique{}/$track - $title,$artist/$album%aunique{}/$title}
+    singleton: $artist/$album%aunique{}/$track - $title
     comp: Compilations/$album%aunique{} $atypes/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/$album%aunique{} $atypes/$track - $title
 
 importadded:
     preserve_mtimes: yes
