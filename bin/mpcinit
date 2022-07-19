@@ -517,8 +517,8 @@ have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
   for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
-             beets-extrafiles python-mpd2 requests sacad tmuxp ueberzug \
-             python3-discogs-client
+             beetcamp beets-extrafiles python-mpd2 requests sacad \
+             tmuxp ueberzug python3-discogs-client
   do
     if pip list | grep ${pkg} > /dev/null
     then

@@ -55,7 +55,7 @@ SCRIPTS="${MPP_DIR}/scripts"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
+  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
   printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]"
@@ -90,6 +90,9 @@ usage() {
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
+  printf "\n\t-F indicates convert all WAV format files in the music library"
+  printf "\n\t\tto MP3 format files and exit. A subsequent 'mpplus -I' import"
+  printf "\n\t\twill be necessary to import these newly converted music files."
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
   printf "\n\t\tIn conjunction with '-I', the '-A' flag disables auto-tagging"
   printf "\n\t-i indicates start mpplus in interactive mode"
@@ -133,6 +136,26 @@ kill_tmux_sessions() {
 }
 
 make_it_so() {
+  [ "${CONVERT_WAV}" ] && {
+    if [ -x ${SCRIPTS}/wav2mp3.sh ]
+    then
+      printf "\n\tConverting WAV files ..."
+      if [ "${MUSIC_DIRECTORY}" ]
+      then
+        ${SCRIPTS}/wav2mp3.sh -d "${MUSIC_DIRECTORY}"
+      else
+        ${SCRIPTS}/wav2mp3.sh
+      fi
+      printf " done\n\n"
+    else
+      echo "${SCRIPTS}/wav2mp3.sh not found or not executable"
+      echo "Check your MusicPlayerPlus installation"
+      echo ""
+      echo "Manual media file conversion may be required"
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
   [ "${DOWNLOAD_ART}" ] && {
     if [ -x ${SCRIPTS}/download_cover_art.sh ]
     then
@@ -184,10 +207,8 @@ make_it_so() {
       # beetpid=`ps -ef | grep beet_import.sh | grep -v grep | awk ' { print $2 } '`
       beetpid=$!
       [ "${CONSOLE_MODE}" ] || {
-        gnome-terminal --title="Beets Import Log" \
-                --profile=MusicPlayer \
-                --geometry=90x20+150+25 \
-                -- tail --pid=${beetpid} -f $HOME/.config/beets/import_time.log &
+        gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
+                       -- tail --pid=${beetpid} -f $HOME/.config/beets/import_time.log &
       }
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
@@ -640,7 +661,8 @@ show_main_menu() {
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
-    options+=("ASCIImatics Animations" "Download Album Cover Art" "Import Music to Beets")
+    options+=("ASCIImatics Animations" "Convert WAV files to MP3")
+    options+=("Download Album Cover Art" "Import Music to Beets")
     options+=("Manage Music Player Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -680,6 +702,11 @@ show_main_menu() {
           "List"*,*|*,"List"*)
               show_fzmp_menu
               skip_it_so=1
+              break
+              ;;
+          "Convert"*,*|*,"Convert"*)
+              CONVERT_WAV=1
+              DO_NOT_EXIT=1
               break
               ;;
           "Download"*,*|*,"Download"*)
@@ -758,6 +785,7 @@ init_vars() {
   AUDIO=
   CLIENT=
   COVER_ART=
+  CONVERT_WAV=
   DOWNLOAD_ART=
   BEETS_IMPORT=
   FULLSCREEN=
@@ -809,7 +837,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -868,6 +896,9 @@ while getopts "AabcC:Dd:fghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       ;;
     d)
       MUSIC_DIRECTORY="${OPTARG}"
+      ;;
+    F)
+      CONVERT_WAV=1
       ;;
     f)
       FULLSCREEN=1

@@ -29,6 +29,7 @@ import:
 
 plugins:
     - albumtypes
+    - beetcamp
 #   - convert
     - describe
 #   - discogs
@@ -60,6 +61,20 @@ albumtypes:
         - remix: 'Remix'
     ignore_va: compilation
     bracket: '[]'
+
+bandcamp:
+    include_digital_only_tracks: true
+    search_max: 2
+    art: no
+    comments_separator: "\n---\n"
+    exclude_extra_fields:
+        - comments
+#       - lyrics
+    genre:
+        capitalize: no
+        maximum: 0
+        always_include: []
+        mode: progressive # classical, progressive or psychedelic
 
 # Uncomment this and the convert plugin entry to enable format conversion
 # of media in your Beets library with the 'beet convert' command
@@ -234,11 +249,14 @@ match:
       ['DVD', 'DVD-Video', 'Blu-ray', 'HD-DVD', 'VCD', 'SVCD', 'UMD', 'VHS']
 
 paths:
-    default: $albumartist/$album%aunique{} $atypes/$track - $title
-#   singleton: %if{$track,$artist/$album%aunique{}/$track - $title,$artist/$album%aunique{}/$title}
-    singleton: $artist/$album%aunique{}/$track - $title
-    comp: Compilations/$album%aunique{} $atypes/$track - $artist - $title
-    albumtype:soundtrack: Soundtracks/$album%aunique{} $atypes/$track - $title
+    # Default paths configuration
+    # default: $albumartist/$album%aunique{}/$track $title
+    # singleton: Non-Album/$artist/$title
+    # comp: Compilations/$album%aunique{}/$track $title
+    default: "%if{$albumartist,$albumartist,%if{$artist,$artist,Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    singleton: "%if{$albumartist,$albumartist,%if{$artist,$artist,Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 
 importadded:
     preserve_mtimes: yes

@@ -22,7 +22,7 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-g] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M
+music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
 [-w|W] [-z fzmpopt]
@@ -48,6 +48,20 @@ disabled, restarted, and status queried.
 The \f[I]mpplus\f[R] command can also act as a front-end to the
 \f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
 with the \f[V]-S\f[R] and \f[V]-T\f[R] command line options.
+.PP
+The \f[I]mpplus\f[R] command can be used in conjunction with the Beets
+music library management system:
+.IP \[bu] 2
+When invoked as \f[V]mpplus -D\f[R] it will downlad album cover art for
+all albums in the music library
+.IP \[bu] 2
+When invoked as \f[V]mpplus -F\f[R] it will convert all WAV format files
+in the music library to MP3 format files
+.IP \[bu] 2
+When invoked as \f[V]mpplus -I\f[R] it will perform a Beets library
+import of all songs and albums in the music library.
+If a previous import has been performed it will import any new songs or
+albums it finds in the music library.
 .PP
 When invoked with the \f[V]-i\f[R] option, \f[V]mpplus\f[R] presents a
 selection menu and operates in interactive mode.
@@ -134,9 +148,15 @@ specifies the music directory to use for downloaded album cover art
 (without this option -D will use the \f[V]music_directory\f[R] setting
 in \f[V]\[ti]/.config/mpd/mpd.conf\f[R]
 .TP
+\f[B]-F\f[R]
+indicates convert all WAV format files in the music library to MP3
+format files and exit.
+A subsequent \[aq]mpplus -I\[aq] import will be necessary to import
+these newly converted music files.
+.TP
 \f[B]-I\f[R]
 indicates import albums and songs from \[aq]music_directory\[aq] to
-beets and exit
+Beets and exit
 .TP
 \f[B]-i\f[R]
 indicates interactive mode with selection menus
@@ -155,10 +175,10 @@ indicates record tmux session with asciinema
 indicates use a tmux session for either ASCIImatics or mpcplus
 .TP
 \f[B]-w\f[R]
-indicates write tags during beets import
+indicates write metadata during Beets import
 .TP
 \f[B]-W\f[R]
-indicates do not write tags during beets import
+indicates do not write metadata during Beets import
 .TP
 \f[B]-z opt\f[R]
 Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to

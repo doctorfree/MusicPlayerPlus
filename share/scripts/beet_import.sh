@@ -11,9 +11,9 @@ usage() {
   printf "\nUsage: beet_import.sh [-a] -[w|W] [-d music_directory] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates use auto-tagger during import (slower)"
-  printf "\n\t-w indicates write tags during import"
-  printf "\n\t-W indicates do not write tags during import"
-  printf "\n\tWithout a -w or -W flag, writing of tags is determined by the"
+  printf "\n\t-w indicates write metadata during import"
+  printf "\n\t-W indicates do not write metadata during import"
+  printf "\n\tWithout a -w or -W flag, writing of metadata is determined by the"
   printf "\n\tBeets configuration file $HOME/.config/beets/config.yaml"
   printf "\n\nWithout the '-d music_directory' option, the 'music_directory'"
   printf "\nsetting in ${MPD_CONF} will be used\n\n"
@@ -51,7 +51,7 @@ while getopts "Aad:wWu" flag; do
     esac
 done
 
-tagflags="${autotag} ${writeflag}"
+impflags="${autotag} ${writeflag}"
 
 [ "${custom_dir}" ] || {
   [ -f ${MPD_CONF} ] || {
@@ -127,10 +127,10 @@ do
   if [ -d "${artist}" ]
   then
     echo "# Importing ${artist}" >> "${LOGTIME}"
-    ${BEET} import -q ${tagflags} -l "${LOGFILE}" "${artist}"
+    ${BEET} import -q ${impflags} -l "${LOGFILE}" "${artist}"
   else
     echo "# Importing singleton ${artist}" >> "${LOGTIME}"
-    ${BEET} import -q ${tagflags} -s -l "${SINGLE_LOG}" "${artist}" >> "${SINGLE_LOG}" 2>&1
+    ${BEET} import -q ${impflags} -s -l "${SINGLE_LOG}" "${artist}" >> "${SINGLE_LOG}" 2>&1
   fi
 done
 
@@ -141,7 +141,7 @@ rm -f /tmp/skip$$
 while read skipped
 do
   echo "# Importing singletons ${skipped}" >> "${LOGTIME}"
-  ${BEET} import -q ${tagflags} -s -l "${SINGLE_LOG}" "${skipped}" >> "${SINGLE_LOG}" 2>&1
+  ${BEET} import -q ${impflags} -s -l "${SINGLE_LOG}" "${skipped}" >> "${SINGLE_LOG}" 2>&1
 done < /tmp/add$$
 rm -f /tmp/add$$
 [ -f "${LOGTEMP}" ] && {
