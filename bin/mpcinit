@@ -14,6 +14,7 @@ MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 BEETSCONFDIR="${CONF}/beets"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
+BEETSGENR="${BEETSCONFDIR}/genres"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
@@ -376,13 +377,24 @@ done
   fi
 }
 
-# If there is no user beets config
-# then copy the MusicPlayerPlus beets config folder
+# If there is no user beets config.yaml and genres folder then
+# copy the MusicPlayerPlus beets config.yaml and genres folder
 # into the user's home and setup user mpdstats service
 [ -f ${BEETSCONF} ] || {
   [ -d ${BEETSCONFDIR} ] || mkdir -p ${BEETSCONFDIR}
   cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
 }
+if [ -d ${BEETSGENR} ]
+then
+  for genconf in genres-tree.yaml genres.txt
+  do
+    [ -f ${BEETSGENR}/${genconf} ] || {
+      cp ${MPPCDIR}/beets/genres/${genconf} ${BEETSGENR}/${genconf}
+    }
+  done
+else
+  cp -a ${MPPCDIR}/beets/genres ${BEETSGENR}
+fi
 
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
@@ -570,26 +582,9 @@ printf "\nModify ${MPDCONF} 'music_directory' to change this."
 printf "\nIf 'music_directory' is modified, run '${BOLD}mpcinit sync${NORM}'\n"
 printf "\nDownload album cover art with the command:"
 printf "\n\t${BOLD}mpplus -D${NORM}\n"
+printf "\nConvert WAV format media to MP3 format with the command:"
+printf "\n\t${BOLD}mpplus -F${NORM}\n"
 printf "\nImport your music library into the Beets Music Organizer with the command:"
 printf "\n\t${BOLD}mpplus -I${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"
 printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
-
-# type -p mppsplash > /dev/null && {
-#   while true
-#   do
-#     read -p "View a MusicPlayerPlus ASCII animation ? (y/n) " yn
-#     case $yn in
-#       [Yy]* )
-#               mppsplash -c 1 -a
-#               break
-#               ;;
-#       [Nn]* )
-#               printf "\nExiting.\n"
-#               exit 0
-#               ;;
-#           * ) echo "Please answer yes or no."
-#               ;;
-#     esac
-#   done
-# }
