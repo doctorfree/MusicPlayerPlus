@@ -20,7 +20,7 @@ extensible, highly configurable suite of tools and plugins that organizes
 and improves the structure, cataloging, and metadata of a music library.
 
 Management of your music library with Beets is an optional feature provided
-by MusicPlayerPlus. Use of Beets is entirely optional but can enhance your
+by MusicPlayerPlus. Although optional, use of Beets can enhance your
 music library in ways that make it more useful and easier to access with
 the `mpcplus` MusicPlayerPlus MPD client. For example, one of the automated
 tasks that Beets performs is updating the tags in your music library. Beets
@@ -28,6 +28,15 @@ queries online sources like MusicBrainz, Bandcamp, and Last.fm to update the
 music library with widely used metadata for songs and albums it can identify.
 Subsequent invocations of `mpcplus` will be able to use this rich set of tags
 to filter, search, and find items in your music library.
+
+The primary source of online data for Beets is
+[MusicBrainz](https://musicbrainz.org), a collaborative music database.
+As of March 2022, MusicBrainz contained information on roughly 1.9 million
+artists, 3 million releases, and 26.5 million recordings. This extensive set
+of data, along with additional data from other online sources like
+[Bandcamp](https://bandcamp.com) and [Last.fm](https://www.last.fm)
+can be used to significantly improve the metadata content and organization
+of your music library.
 
 **[NOTE:]** Beets is NOT the now defunct music service purchased by Apple.
 It is an open source media library management system.
