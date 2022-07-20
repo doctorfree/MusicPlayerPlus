@@ -85,7 +85,7 @@ usage() {
   printf "\nUsage: $ME [-a audio codec] [-v video codec] [-c codec] [-p preset]"
   printf "\n\t\t[-i input format (lower case)] [-o output format (lower case)]"
   printf "\n\t\t[-q scale] [-r rate] [-b audio bitrate] [-z video bitrate]"
-  printf "\n\t\t[-s size] [-t threads] [-I] [-d] [-y] [-u] file1 [file2 ...]"
+  printf "\n\t\t[-s size] [-t threads] [-I] [-d] [-P] [-y] [-u] file1 [file2 ...]"
   printf "\n\nWhere:\n\t-d indicates tell me what you would do"
   printf "\n\t-i input format specifies the 3 letter lower case input format"
   printf "\n\t-o output format specifies the 3 letter lower case output format"
@@ -94,6 +94,7 @@ usage() {
   printf "\n\t-s size specifies the output video size (widthxheight)"
   printf "\n\t-c codec specifies the output codec"
   printf "\n\t-I indicates add the converted file to Apple Music"
+  printf "\n\t-P indicates prompt to make any needed output folders"
   printf "\n\t-p preset specifies the ffmpeg preset to use"
   printf "\n\t\t Useful presets:"
   printf "\n\t\t ultrafast superfast veryfast faster fast medium slow"
@@ -122,7 +123,8 @@ usage() {
   exit 1
 }
 
-while getopts i:o:p:q:r:b:t:s:v:z:a:c:Iydu flag; do
+MAKE_DIR=1
+while getopts i:o:p:q:r:b:t:s:v:z:a:c:IydPu flag; do
     case $flag in
         a)
             ACODEC="-acodec $OPTARG"
@@ -156,6 +158,9 @@ while getopts i:o:p:q:r:b:t:s:v:z:a:c:Iydu flag; do
                 echo "AppleScript is not supported on this platform."
                 echo "Unable to automate the installation in Apple Music."
             fi
+            ;;
+        P)
+            MAKE_DIR=
             ;;
         p)
             PRESET="-preset $OPTARG"
@@ -239,6 +244,10 @@ OPTS=`echo "$OVER $ACODEC $CODEC $SIZE $VCODEC $PRESET $QSCALE $RATE $ASAMPLE $V
 [ "$USAGE" ] && usage
 
 [ -d "$DIR" ] || {
+  if [ "${MAKE_DIR}" ]
+  then
+    mkdir -p "$DIR"
+  else
     printf "\nOutput directory $DIR does not exist or is not a directory.\n"
     while true
     do
@@ -249,6 +258,7 @@ OPTS=`echo "$OVER $ACODEC $CODEC $SIZE $VCODEC $PRESET $QSCALE $RATE $ASAMPLE $V
                 * ) echo "Please answer yes or no.";;
         esac
     done
+  fi
 }
 
 for i in "$@"

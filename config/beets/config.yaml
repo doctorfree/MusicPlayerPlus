@@ -29,7 +29,7 @@ import:
 
 plugins:
     - albumtypes
-    - beetcamp
+    - bandcamp
 #   - convert
     - describe
 #   - discogs
@@ -253,8 +253,8 @@ paths:
     # default: $albumartist/$album%aunique{}/$track $title
     # singleton: Non-Album/$artist/$title
     # comp: Compilations/$album%aunique{}/$track $title
-    default: "%if{$albumartist,$albumartist,%if{$artist,$artist,Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
-    singleton: "%if{$albumartist,$albumartist,%if{$artist,$artist,Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
     comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
     albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 

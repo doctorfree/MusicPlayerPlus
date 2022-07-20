@@ -152,6 +152,7 @@ Some common additional setup steps that can be performed include:
 
 - Configuring the music library location
 - Downloading album cover art
+- Converting WAV format media files to MP3 format
 - Importing a music library into the Beets library management system
 
 Configure the music library location by editing `~/.config/mpd/mpd.conf` and
@@ -161,11 +162,14 @@ run the command `mpcinit sync`.
 
 Album cover art can be downloaded with the command `mpplus -D`.
 
-If you wish to manage your music library with Beets, import the music library
-with the command `mpplus -I -W`. Later add tags and organize your music library
-with the command `beet mbsync`.
+Convert WAV format media files in your library to MP3 format files with
+the command `mpplus -F`. Conversion from WAV to MP3 allows these files to
+be imported into the Beets media library management system.
 
-These three common additional setup steps are covered in greater detail
+If you wish to manage your music library with Beets, import the music library
+with the command `mpplus -I`.
+
+These four common additional setup steps are covered in greater detail
 below in the section on
 [Post Installation Configuration](#post-installation-configuration).
 
@@ -178,8 +182,8 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
 * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
 * If you change the `music_directory` setting run the command `mpcinit sync`
 * Download album cover art with the command `mpplus -D`
-* Import your music library into Beets with the command `mpplus -I -W`
-* Later add tags and organize your music library with the command `beet mbsync`
+* Convert WAV format files to MP3 format with the command `mpplus -F`
+* Import your music library into Beets with the command `mpplus -I`
 
 ## Requirements
 
@@ -390,24 +394,9 @@ for an introduction to the installed and configured MusicPlayerPlus Beets plugin
 To get started using the Beets media library management system, it is
 necessary to import your music library into the Beets database. This process
 catalogs your music collection and improves its metadata. The default
-Beets configuration provided by MusicPlayerPlus moves and (optionally) tags
-files in the music library during this process. It adds music library data
-to the Beets database. To import your music library into Beets, issue one
-of the following commands.
-
-To write tags during import (very slow for a large music library):
-
-```
-mpplus -I -w
-```
-
-To not write tags during import (faster, tags can be added later):
-
-```
-mpplus -I -W
-```
-
-To use the default tag writing setting from `~/.config/beets/config.yaml`:
+Beets configuration provided by MusicPlayerPlus moves and tags files in the
+music library during this process. It adds music library data to the Beets
+database. To import your music library into Beets, issue the following command:
 
 ```
 mpplus -I
@@ -418,7 +407,7 @@ at `$HOME/.config/beets/config.yaml` and command-line options to the
 `beet import` command. By default, MusicPlayerPlus imports the MPD music
 library into Beets, moving rather than copying files to conform with
 standard detected artist/album/song naming conventions, and writing
-detected tags. A log of the album import is written to the file
+detected metadata. A log of the album import is written to the file
 `$HOME/.config/beets/import.log`. A log of the singletons import
 is written to the file `$HOME/.config/beets/import_singletons.log`.
 
@@ -430,16 +419,19 @@ by MusicPlayerPlus are:
 
 ```
 import:
-    copy: no
+    copy: yes
     move: yes
     write: yes
     incremental: yes
-    quiet: yes
+    incremental_skip_later: yes
+    quiet: no
+    quiet_fallback: asis
     resume: yes
     from_scratch: no
     default_action: apply
     detail: yes
     non_rec_action: ask
+    # duplicate_action can be 'skip', 'keep', 'remove', 'merge' or 'ask'
     duplicate_action: skip
     group_albums: no
     autotag: yes
@@ -447,8 +439,8 @@ import:
     log: ~/.config/beets/import.log
 ```
 
-You may prefer to set `move: no` or `copy: yes` if you do not wish your
-files to be moved or if you wish that rearrangement to be performed by
+You may prefer to set `move: no` if you do not wish your files and folders
+to be moved or if you wish that rearrangement to be performed by
 copying rather than moving. Moving conserves disk space, copying preserves
 a libary's structure but can consume much additional disk space. The
 MusicPlayerPlus default preference is to move rather than copy.
@@ -490,17 +482,23 @@ computer remains on and connected to the Internet, the import process
 should run uninterrupted and without need for attention. You may continue
 working or leave the import unattended.
 
-To speed up the initial Beets import (often desirable for a large music library)
-use the command `mpplus -I -W`. This disables copy/move/write and auto-tagging
-during the initial import. Later, tags and album/filename moving can be
-accomplished using the `mbsync` plugin by running the command `beet mbsync`.
+A rough estimate of the time to import a music library into Beets can be
+obtained by calculating the size of the library. On a moderately equipped
+Ubuntu Linux system, a test import of a 4GB music library of ~200 songs
+took about 15 minutes. Import times will vary with network speed, how quickly
+metadata sources like Musicbrainz and Bandcamp can locate media matches,
+and many other factors. Unfortunately, it is not possible to speed an
+import beyond the frequency with which Musicbrainz permits API requests.
+
+A good workflow might be: Kickoff a Beets import, Enjoy some Sun with a good
+book, Check the import progress, Return to reading, Check progress, Repeat.
 
 When running in the background, monitor the progess of the import by
 examining the log file. For example, to view the progress of the album
 import in real-time:
 
 ```
-tail -f $HOME/.config/beets/import.log
+tail -f $HOME/.config/beets/import_time.log
 ```
 
 To view the progress of the singletons import in real-time:
@@ -525,13 +523,13 @@ beet import -[w|W] <MUSIC_DIRECTORY>
 and
 
 ```
-beet import -[w|W] -p -s <MUSIC_DIRECTORY>
+beet import -[w|W] -s <MUSIC_DIRECTORY>
 ```
 
 Where <MUSIC_DIRECTORY> is the full pathname to your music library and the
-`-w` flag indicates 'write tags' while `-W` flag indicates 'do not write tags'.
+`-w` flag indicates 'write metadata' while `-W` flag indicates 'do not write metadata'.
 Omitting both the `-w` and `-W` flags will use the *write* setting in the
-*import* section of `~/.config/beets/config.yaml` to determin if tags are
+*import* section of `~/.config/beets/config.yaml` to determin if metadata are
 written. The first import command above imports albums from the music library
 at <MUSIC_DIRECTORY>. The second import command imports singleton songs.
 
@@ -556,7 +554,8 @@ will be added to the Beets database as the import is performed incrementally.
 Incremental imports is a configuration option set in the *import* section
 of the Beets `$HOME/.config/beets/config.yaml` configuration file.
 
-List the currently imported music library items with the command `beet list`.
+List the currently imported music library items with the command `beet list`
+and the currently imported music library albums with the command `beet list -a`.
 The `beet` command-line reference is available at
 https://beets.readthedocs.io/en/latest/reference/cli.html
 

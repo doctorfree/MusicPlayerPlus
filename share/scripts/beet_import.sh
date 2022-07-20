@@ -160,6 +160,28 @@ ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
 ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
 printf "\n# Import ${ELAPSED}\n" >> ${LOGTIME}
 
+# First remove cover art in folders with no music
+find "${mpd_music}" -type d -exec bash -O dotglob -c '
+    for dirpath do
+        ok=true
+        seen_files=false
+        set -- "$dirpath"/*
+        for name do
+            [ -d "$name" ] && continue  # skip dirs
+            seen_files=true
+            case "${name##*/}" in
+                *.jpg|*.png) ;; # do nothing
+                *) ok=false; break
+            esac
+        done
+
+        "$seen_files" && "$ok" && printf "%s\n" "$dirpath"
+    done' bash {} + | while read folder
+do
+    rm -f "${folder}"/*.jpg "${folder}"/*.png
+done
+
+# Then remove empty folders
 find "${mpd_music}" -depth -type d -empty -delete
 
 exit 0

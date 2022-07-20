@@ -139,14 +139,13 @@ make_it_so() {
   [ "${CONVERT_WAV}" ] && {
     if [ -x ${SCRIPTS}/wav2mp3.sh ]
     then
-      printf "\n\tConverting WAV files ..."
+      printf "\nConverting WAV files\n"
       if [ "${MUSIC_DIRECTORY}" ]
       then
         ${SCRIPTS}/wav2mp3.sh -d "${MUSIC_DIRECTORY}"
       else
         ${SCRIPTS}/wav2mp3.sh
       fi
-      printf " done\n\n"
     else
       echo "${SCRIPTS}/wav2mp3.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
@@ -192,11 +191,6 @@ make_it_so() {
       echo "import process should run uninterrupted and without need for attention."
       echo "You may continue working and leave the import unattended."
       echo ""
-      echo "To monitor the progress of the import, examine the import time log:"
-      echo ""
-      echo "tail -f $HOME/.config/beets/import_time.log"
-      echo "===================================================================="
-      echo ""
 
       if [ "${MUSIC_DIRECTORY}" ]
       then
@@ -206,10 +200,20 @@ make_it_so() {
       fi
       # beetpid=`ps -ef | grep beet_import.sh | grep -v grep | awk ' { print $2 } '`
       beetpid=$!
-      [ "${CONSOLE_MODE}" ] || {
+      if [ "${CONSOLE_MODE}" ]
+      then
+        echo "To monitor the progress of the import, examine the import time log:"
+        echo ""
+        echo "tail -f $HOME/.config/beets/import_time.log"
+      else
+        echo "A terminal window will be opened to monitor the progress of the import."
+        echo ""
+        echo "Beets log files can be found in $HOME/.config/beets/"
         gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f $HOME/.config/beets/import_time.log &
-      }
+      fi
+      echo "===================================================================="
+      echo ""
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
