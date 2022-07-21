@@ -4,6 +4,16 @@ sudo rm -rf dist releases
 
 cd essentia
 python3 waf distclean
+rm -f doc/sphinxdoc/Makefile
+rm -f src/3rdparty/kiss_fft130/Makefile
+rm -f src/3rdparty/kiss_fft130/test/Makefile
+rm -f src/3rdparty/kiss_fft130/tools/Makefile
+rm -f src/algorithms/essentia_algorithms_reg.cpp
+rm -f src/version.h
+rm -f test/3rdparty/gtest-1.6.0/src/gtest-all.o
+rm -rf test/audio
+rm -rf test/models
+rm -rf utils/__pycache__
 cd ..
 
 for proj in mpcplus mppcava

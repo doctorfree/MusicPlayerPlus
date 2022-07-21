@@ -877,7 +877,7 @@ The MusicPlayerPlus package can be removed by executing the "Uninstall"
 script in the MusicPlayerPlus source directory:
 
 ```console
-    git clone git@github.com:doctorfree/MusicPlayerPlus.git
+    git clone https://github.com/doctorfree/MusicPlayerPlus.git
     cd MusicPlayerPlus
     ./Uninstall
 ```
@@ -1172,7 +1172,7 @@ sudo dnf install rpm-build rpm-devel rpmlint rpmdevtools
 ### Clone MusicPlayerPlus repository
 
 ```
-git clone git@github.com:doctorfree/MusicPlayerPlus.git
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
 cd MusicPlayerPlus
 ```
 
