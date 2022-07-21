@@ -16,7 +16,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Quickstart](#quickstart)
-1. [Requirements](#requirements)
 1. [Installation](#installation)
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
@@ -47,6 +46,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 1. [Infrared remote control of MPD](#infrared-remote-control-of-mpd)
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
+1. [Building MusicPlayerPlus from source](#Building MusicPlayerPlus from source)
 
 ## Overview
 
@@ -187,21 +187,6 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Download album cover art with the command `mpplus -D`
     * Convert WAV format files to MP3 format with the command `mpplus -F`
 * Import your music library into Beets with the command `mpplus -I`
-
-## Requirements
-
-MusicPlayerPlus can be installed on Debian or RPM based Linux systems.
-It requires:
-
-* [MPD Music Player Daemon](https://www.musicpd.org/)
-* [Boost library](https://www.boost.org/)
-* [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
-* [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
-* [Curl library](https://curl.haxx.se/)
-* [Bash](https://en.wikipedia.org/wiki/Bash_(Unix_shell))
-
-These dependencies will all be automatically installed if not present
-when MusicPlayerPlus is installed using the Debian or RPM packaging.
 
 ## Installation
 
@@ -1113,3 +1098,104 @@ https://wiki.archlinux.org/title/Music_Player_Daemon/Tips_and_tricks#Control_MPD
 
 - [![MusicPlayerPlus Intro](https://i.imgur.com/UH2A21h.png)](https://www.youtube.com/watch?v=r7XLA9tO45Q "MusicPlayerPlus ASCIImatics Intro")
 - [![MusicPlayerPlus Demo](https://i.imgur.com/ZntE1sH.jpg)](https://www.youtube.com/watch?v=y2yaHm04ELM "MusicPlayerPlus Demo")
+
+## Building MusicPlayerPlus from source
+
+### Install build dependencies
+
+MusicPlayerPlus components have build dependencies on the following:
+
+* libtool
+* automake
+* build-essentials
+* [Boost library](https://www.boost.org/)
+* [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
+* [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
+* [Curl library](https://curl.haxx.se/)
+* [fftw library](http://www.fftw.org/)
+* [tag library](https://taglib.org/)
+* [iniparser](https://github.com/ndevilla/iniparser)
+* [ALSA dev files](http://alsa-project.org/)
+* [Pulseaudio dev files](http://freedesktop.org/software/pulseaudio/doxygen/)
+* [Eigen](http://eigen.tuxfamily.org/)
+* [Gaia](https://github.com/MTG/gaia)
+* [libavcodec/libavformat/libavutil/libswresample](http://ffmpeg.org/)
+* [libsamplerate](http://www.mega-nerd.com/SRC/)
+* [LibYAML](http://pyyaml.org/wiki/LibYAML)
+* [Chromaprint](https://github.com/acoustid/chromaprint)
+* [TensorFlow](https://tensorflow.org/)
+
+On Debian based systems like Ubuntu Linux, install build dependencies via:
+
+```
+sudo apt install build-essential libfftw3-dev libasound2-dev libncursesw5-dev \
+     libpulse-dev libtool automake libiniparser-dev libsdl2-2.0-0 libsdl2-dev \
+     libeigen3-dev libyaml-dev libavcodec-dev libavformat-dev libavutil-dev \
+     libswresample-dev libsamplerate0-dev libtag1-dev libchromaprint-dev \
+     python3-dev python3-numpy-dev python3-numpy python3-yaml python3-six
+```
+
+On RPM based systems like Fedora Linux, install build dependencies via:
+
+```
+sudo dnf install build-essential alsa-lib-devel ncurses-devel fftw3-devel \
+     pulseaudio-libs-devel libtool automake libiniparser-devel libsdl2-2.0-0 \
+     libsdl2-devel libeigen3-devel libyaml-devel libavcodec-devel \
+     libavformat-devel libavutil-devel libswresample-devel libsamplerate0-devel \
+     libtag1-devel libchromaprint-devel python-devel \
+     python3-dev python3-numpy-dev python3-numpy python3-yaml python3-six
+```
+
+It is necessary to build and install Gaia from source.
+After cloning MusicPlayerPlus (see below), `cd MusicPlayerPlus`
+and run the Gaia build script:
+
+```
+./build-gaia.sh -i
+```
+
+### Install packaging dependencies
+
+MusicPlayerPlus components have packaging dependencies on the following:
+
+On Debian based systems like Ubuntu Linux, install packaging dependencies via:
+
+```
+sudo apt install dpkg
+```
+
+On RPM based systems like Fedora Linux, install packaging dependencies via:
+
+```
+sudo dnf install rpm-build rpm-devel rpmlint rpmdevtools
+```
+
+### Clone MusicPlayerPlus repository
+
+```
+git clone git@github.com:doctorfree/MusicPlayerPlus.git
+cd MusicPlayerPlus
+```
+
+### Build and package MusicPlayerPlus
+
+On Debian based systems like Ubuntu Linux, build and package MusicPlayerPlus via:
+
+```
+./mkdeb
+```
+
+On RPM based systems like Fedora Linux, build and package MusicPlayerPlus via:
+
+```
+./mkrpm
+```
+
+### Install MusicPlayerPlus from source build
+
+After successfully building and packaging MusicPlayerPlus with either
+`./mkdeb` or `./mkrpm`, install the MusicPlayerPlus package with the command:
+
+```
+./Install
+```

@@ -1,0 +1,6 @@
+essentia (2.1-1) UNRELEASED; urgency=low
+
+  * Initial test release.
+  * Essentia 2.1-dev (master branch)
+
+ -- Dmitry Bogdanov <dmitry.bogdanov@upf.edu>  Tue, 11 Aug 2015 15:57:18 +0200

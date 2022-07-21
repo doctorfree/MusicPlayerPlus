@@ -1,0 +1,58 @@
+Essentia developers and contributors
+------------------------------------
+Nicolas Wack (wackou@gmail.com)
+    general architecture and design, python bindings, build scripts, documentation
+Dmitry Bogdanov (dmitry.bogdanov@upf.edu)
+    algorithm development, music extractors, general architecture, build scripts, documentation
+Oscar Mayor (oscar.mayor@upf.edu)
+    scripting language for streaming extractors
+Robert Toscano
+    algorithm development, python bindings
+Eduard Aylon
+    algorithm development, python bindings
+Bram de Jong
+    general architecture, algorithm development
+Thomas Aussenac
+    algorithm development, documentation
+Andreas Beisler
+    algorithm development, documentation
+Paul Brossier
+    algorithm development
+Vincent Akkermans
+    algorithm development
+Alastair Porter
+    python bindings, build scripts, music extractors
+Nadine Kroher
+    algorithm development
+Jordi Janer
+    algorithm development
+Gerard Roma
+    algorithm development
+Cárthach Ó Nuanáin
+    iOS/Android support
+Martin Hermant
+    algorithm development
+Hector Parra
+    algorithm development
+Dimitris Mastro
+    algorithm development
+Ángel Faraldo
+    algorithm development
+Sertan Senturk
+    algorithm development
+Oriol Romaní
+    algorithm development
+Adrià Garriga
+    documentation
+Giuseppe Bandiera
+    build scripts, web design for documentation
+Sankalp Gulati (sankalp.gulati@upf.edu)
+    algorithm development
+Pablo Alonso
+    algorithm development
+Albin Correya
+    algorithm development, JavaScript bindings
+Colm Forkin
+    Unit tests
+Miaocai (Kelvin) Pan
+Xavier Serra

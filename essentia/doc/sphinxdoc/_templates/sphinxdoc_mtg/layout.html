@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{{ pathto("_static/docs.css", 1) }}" />
+{% endblock %}
+
+{% block content %}
+<div class="container main-container">
+  {% block body %}
+  {% endblock %}
+</div>
+{% endblock %}

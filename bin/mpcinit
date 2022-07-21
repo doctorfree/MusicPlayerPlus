@@ -396,6 +396,8 @@ else
   cp -a ${MPPCDIR}/beets/genres ${BEETSGENR}
 fi
 
+[ -d ${BEETSCONFDIR}/xtraction_data ] || mkdir -p ${BEETSCONFDIR}/xtraction_data
+
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 [ -f ${MPDSTATSD} ] || {
@@ -529,8 +531,8 @@ have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
   for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
-             beetcamp beets-extrafiles python-mpd2 requests sacad \
-             tmuxp ueberzug python3-discogs-client
+             beetcamp beets-extrafiles beets-xtractor python-mpd2 requests \
+             sacad tmuxp ueberzug python3-discogs-client calliope-music
   do
     if pip list | grep ${pkg} > /dev/null
     then

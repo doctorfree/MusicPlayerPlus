@@ -51,6 +51,7 @@ plugins:
     - smartplaylist
     - mpdupdate
     - unimported
+    - xtractor
 
 acousticbrainz:
     auto: yes
@@ -326,6 +327,33 @@ threaded: yes
 unimported:
     ignore_extensions: jpg png
     ignore_subdirectories: data tmp
+
+xtractor:
+    auto: no
+    dry-run: no
+    write: yes
+    threads: 1
+    force: no
+    quiet: yes
+    keep_output: yes
+    keep_profiles: no
+    output_path: ~/.config/beets/xtraction_data
+    essentia_extractor: /usr/bin/essentia_streaming_extractor_music
+    extractor_profile:
+        highlevel:
+            svm_models:
+                - /usr/share/musicplayerplus/svm_models/danceability.history
+                - /usr/share/musicplayerplus/svm_models/gender.history
+                - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
+                - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
+                - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
+                - /usr/share/musicplayerplus/svm_models/mood_electronic.history
+                - /usr/share/musicplayerplus/svm_models/mood_happy.history
+                - /usr/share/musicplayerplus/svm_models/mood_sad.history
+                - /usr/share/musicplayerplus/svm_models/mood_party.history
+                - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
+                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+                - /usr/share/musicplayerplus/svm_models/moods_mirex.history
 
 ui:
     color: yes

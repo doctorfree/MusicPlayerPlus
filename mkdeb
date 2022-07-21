@@ -79,6 +79,17 @@ else
   cd ..
 fi
 
+# Build essentia
+if [ -x build-essentia.sh ]
+then
+  ./build-essentia.sh
+else
+  cd essentia
+  python3 waf configure --prefix=/usr --build-static --with-python --with-examples
+  python3 waf
+  cd ..
+fi
+
 ${SUDO} rm -rf dist
 mkdir dist
 
@@ -139,6 +150,8 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
+${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
+           ${OUT_DIR}/${DESTDIR}/bin
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
@@ -163,6 +176,7 @@ ${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcp
 ${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
+${SUDO} cp -a share/svm_models ${OUT_DIR}/${DESTDIR}/share/${PKG}/svm_models
 
 ${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}

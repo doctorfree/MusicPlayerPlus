@@ -1,0 +1,3 @@
+evaluation: {nfold: 5, type: nfoldcrossvalidation}
+model: {C: 5, balanceClasses: false, classifier: svm, gamma: -11, kernel: RBF, preprocessing: nobands,
+  type: C-SVC}
