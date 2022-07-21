@@ -2,6 +2,10 @@
 
 sudo rm -rf dist releases
 
+cd esssentia
+python3 waf distclean
+cd ..
+
 for proj in mpcplus mppcava
 do
   cd ${proj}

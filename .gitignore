@@ -42,6 +42,7 @@ beets/*/*.egg-info/
 .DS_Store
 essentia/*.pyc
 essentia/build
+essentia/utils/__pycache__/
 essentia/.sconsign.dblite
 essentia/*.idb
 essentia/*~

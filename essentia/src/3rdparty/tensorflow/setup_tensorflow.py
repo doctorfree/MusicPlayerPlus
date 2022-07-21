@@ -37,7 +37,7 @@ if __name__ == "__main__":
                         choices=['python', 'libtensorflow'])
     parser.add_argument('--platform', '-p', default='linux',
                         choices=['linux', 'macos', 'windows'])
-    parser.add_argument('--context', '-c', default='/usr/local/')
+    parser.add_argument('--context', '-c', default='/usr/')
     parser.add_argument('--version', '-v', default='1.14.0')
     parser.add_argument('--with_gpu', action='store_true')
 
@@ -107,7 +107,7 @@ if __name__ == "__main__":
         #   In [1]: import tensorflow
         #   In [2]: import essentia
         #
-        #   ImportError: /usr/local/lib/libtensorflow.so.1: undefined symbol:
+        #   ImportError: /usr/lib/libtensorflow.so.1: undefined symbol:
         #  _ZN6google8protobuf5Arena18CreateMaybeMessageIN10tensorflow16OptimizerOptionsEIEEEPT_PS1_DpOT0_
 
         # The recommended solution is to link Essentia against the Tensorflow shared

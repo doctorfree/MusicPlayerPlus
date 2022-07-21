@@ -12,6 +12,12 @@
 #   libtag1-dev libchromaprint-dev python3-dev python3-numpy-dev
 #   python3-numpy python3-yaml python3-six
 #
+# On RPM based systems like Fedora Linux, dependencies include:
+#   fftw3-devel libtool automake iniparser-devel
+#   SDL2-devel eigen3-devel libyaml-devel
+#   ffmpeg-devel libchromaprint-devel python-devel
+#   python3-devel python3-yaml python3-six
+#
 # Go into its source code directory and start by configuring the build:
 #
 # python3 waf configure --build-static --with-python --with-cpptests \

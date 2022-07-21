@@ -1138,12 +1138,11 @@ sudo apt install build-essential libfftw3-dev libasound2-dev libncursesw5-dev \
 On RPM based systems like Fedora Linux, install build dependencies via:
 
 ```
-sudo dnf install build-essential alsa-lib-devel ncurses-devel fftw3-devel \
-     pulseaudio-libs-devel libtool automake libiniparser-devel libsdl2-2.0-0 \
-     libsdl2-devel libeigen3-devel libyaml-devel libavcodec-devel \
-     libavformat-devel libavutil-devel libswresample-devel libsamplerate0-devel \
-     libtag1-devel libchromaprint-devel python-devel \
-     python3-dev python3-numpy-dev python3-numpy python3-yaml python3-six
+sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
+     pulseaudio-libs-devel libtool automake iniparser-devel \
+     SDL2-devel eigen3-devel libyaml-devel \
+     ffmpeg-devel libchromaprint-devel python-devel \
+     python3-devel python3-yaml python3-six
 ```
 
 It is necessary to build and install Gaia from source.
