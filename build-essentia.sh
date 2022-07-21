@@ -79,8 +79,8 @@ prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 
 cd ${PROJ}
-python3 waf configure ${prefix} --build-static --with-python --with-cpptests \
-                      --with-examples --with-vamp
+python3 waf configure ${prefix} --build-static --with-python \
+                                --with-gaia --with-examples
 
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
