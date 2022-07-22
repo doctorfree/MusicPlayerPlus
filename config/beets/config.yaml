@@ -75,7 +75,7 @@ bandcamp:
     comments_separator: "\n---\n"
     exclude_extra_fields:
         - comments
-#       - lyrics
+        - lyrics
     genre:
         capitalize: no
         maximum: 0
@@ -128,7 +128,7 @@ lastgenre:
     # have one. To instead leave genres in place in when they pass the whitelist,
     # set the force option to no. Default: yes.
     # NOTE: May not be working as expected. Perhaps fixed in 1.6.1 Investigating
-    force: no
+    # force: yes
     #
     # Minimum popularity factor below which genres are discarded.
     # Default: 10.
@@ -159,6 +159,38 @@ lastgenre:
     #
     # Convert the new tags to TitleCase before saving. Default: yes.
     title_case: yes
+
+lyrics:
+    # Fetch lyrics automatically during import. Default: yes.
+    auto: yes
+    # List of sources to search for lyrics. An asterisk * expands to all
+    # available sources. Default: google musixmatch genius tekstowo
+    sources: musixmatch genius
+    #
+    # Your Bing Translation application password (to Activate On-the-Fly Translation)
+    # bing_client_secret:
+    #
+    # By default all lyrics with a language other than bing_lang_to are translated.
+    # Use a list of lang codes to restrict the set of source languages to translate.
+    # Default: []
+    # bing_lang_from: [ en ]
+    #
+    # Language to translate lyrics into. Default: None.
+    # bing_lang_to: en
+    #
+    # By default, the file will be left unchanged when no lyrics are found.
+    # Use the empty string '' to reset the lyrics in such a case. Default: None.
+    # fallback:
+    #
+    # By default, beets won’t fetch lyrics if the files already have ones.
+    # To instead always fetch lyrics, set the force option to yes. Default: no.
+    # force: yes
+    #
+    # Your Google API key (to enable the Google Custom Search backend). Default: None.
+    # google_API_key:
+    #
+    # The custom search engine to use. Default: The beets custom search engine
+    # google_engine_ID:
 
 play:
     # The command used to open the playlist. Default: xdg-open
@@ -329,31 +361,138 @@ unimported:
     ignore_subdirectories: data tmp
 
 xtractor:
-    auto: no
+    auto: no  # auto not implemented yet, run xtractor manually after import
     dry-run: no
     write: yes
     threads: 1
     force: no
-    quiet: yes
+    quiet: no
     keep_output: yes
     keep_profiles: no
     output_path: ~/.config/beets/xtraction_data
     essentia_extractor: /usr/bin/essentia_streaming_extractor_music
     extractor_profile:
+        outputFormat: json
+        outputFrames: 0
+        lowlevel:
+            frameSize: 2048
+            hopSize: 1024
+        chromaprint:
+            compute: 1
+            duration: 20.0
         highlevel:
+            compute: 1
             svm_models:
                 - /usr/share/musicplayerplus/svm_models/danceability.history
                 - /usr/share/musicplayerplus/svm_models/gender.history
+                - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
+                - /usr/share/musicplayerplus/svm_models/genre_electronic.history
                 - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
+                - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
+                - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
                 - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
                 - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
                 - /usr/share/musicplayerplus/svm_models/mood_electronic.history
                 - /usr/share/musicplayerplus/svm_models/mood_happy.history
-                - /usr/share/musicplayerplus/svm_models/mood_sad.history
                 - /usr/share/musicplayerplus/svm_models/mood_party.history
                 - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
-                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+                - /usr/share/musicplayerplus/svm_models/mood_sad.history
                 - /usr/share/musicplayerplus/svm_models/moods_mirex.history
+                - /usr/share/musicplayerplus/svm_models/timbre.history
+                - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
+                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+# xtractor configuration defaults:
+#   low_level_targets:
+#       bpm:
+#           path: "rhythm.bpm"
+#           type: integer
+#           required: yes
+#       danceability:
+#           path: "rhythm.danceability"
+#           type: float
+#       beats_count:
+#           path: "rhythm.beats_count"
+#           type: integer
+#       average_loudness:
+#           path: "lowlevel.average_loudness"
+#           type: float
+#           required: yes
+#   high_level_targets:
+#       danceable:
+#           path: "highlevel.danceability.all.danceable"
+#           type: float
+#           required: yes
+#       gender:
+#           path: "highlevel.gender.value"
+#           type: string
+#           required: yes
+#       is_male:
+#           path: "highlevel.gender.all.male"
+#           type: float
+#       is_female:
+#           path: "highlevel.gender.all.female"
+#           type: float
+#       genre_rosamerica:
+#           path: "highlevel.genre_rosamerica.value"
+#           type: string
+#           required: yes
+#       voice_instrumental:
+#           path: "highlevel.voice_instrumental.value"
+#           type: string
+#           required: yes
+#       is_voice:
+#           path: "highlevel.voice_instrumental.all.voice"
+#           type: float
+#       is_instrumental:
+#           path: "highlevel.voice_instrumental.all.instrumental"
+#           type: float
+#       mood_acoustic:
+#           path: "highlevel.mood_acoustic.all.acoustic"
+#           type: float
+#           required: yes
+#       mood_aggressive:
+#           path: "highlevel.mood_aggressive.all.aggressive"
+#           type: float
+#           required: yes
+#       mood_electronic:
+#           path: "highlevel.mood_electronic.all.electronic"
+#           type: float
+#           required: yes
+#       mood_happy:
+#           path: "highlevel.mood_happy.all.happy"
+#           type: float
+#           required: yes
+#       mood_sad:
+#           path: "highlevel.mood_sad.all.sad"
+#           type: float
+#           required: yes
+#       mood_party:
+#           path: "highlevel.mood_party.all.party"
+#           type: float
+#           required: yes
+#       mood_relaxed:
+#           path: "highlevel.mood_relaxed.all.relaxed"
+#           type: float
+#           required: yes
+#       mood_mirex:
+#           path: "highlevel.moods_mirex.value"
+#           type: string
+#           required: yes
+#       mood_mirex_cluster_1:
+#           path: "highlevel.moods_mirex.all.Cluster1"
+#           type: float
+#       mood_mirex_cluster_2:
+#           path: "highlevel.moods_mirex.all.Cluster2"
+#           type: float
+#       mood_mirex_cluster_3:
+#           path: "highlevel.moods_mirex.all.Cluster3"
+#           type: float
+#       mood_mirex_cluster_4:
+#           path: "highlevel.moods_mirex.all.Cluster4"
+#           type: float
+#       mood_mirex_cluster_5:
+#           path: "highlevel.moods_mirex.all.Cluster5"
+#           type: float
 
 ui:
     color: yes
