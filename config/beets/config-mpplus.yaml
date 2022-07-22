@@ -1,0 +1,391 @@
+directory: ~/Music
+library: ~/.config/beets/musiclibrary.db
+
+lyrics:
+    bing_lang_from: []
+    auto: yes
+    sources: musixmatch genius
+    bing_client_secret: REDACTED
+    bing_lang_to:
+    google_API_key: REDACTED
+    google_engine_ID: REDACTED
+    genius_api_key: REDACTED
+    fallback:
+    force: no
+    local: no
+
+import:
+    copy: yes
+    move: yes
+    write: yes
+    incremental: yes
+    incremental_skip_later: yes
+    quiet: no
+    quiet_fallback: asis
+    resume: yes
+    from_scratch: no
+    default_action: apply
+    detail: yes
+    non_rec_action: ask
+    duplicate_action: skip
+    group_albums: no
+    autotag: yes
+    bell: no
+    log: ~/.config/beets/import.log
+
+plugins:
+    - acousticbrainz
+    - albumtypes
+    - bandcamp
+    - describe
+    - duplicates
+    - edit
+    - extrafiles
+    - fromfilename
+    - hook
+    - importadded
+    - info
+    - lyrics
+    - lastgenre
+    - missing
+    - mbsync
+    - mpdstats
+    - play
+    - playlist
+    - smartplaylist
+    - mpdupdate
+    - unimported
+    - xtractor
+
+acousticbrainz:
+    auto: yes
+    force: no
+    tags: []
+
+albumtypes:
+    types:
+        -   ep: EP
+        -   single: Single
+        -   soundtrack: OST
+        -   live: Live
+        -   compilation: Anthology
+        -   remix: Remix
+    ignore_va: compilation
+    bracket: '[]'
+
+bandcamp:
+    include_digital_only_tracks: yes
+    search_max: 2
+    art: no
+    comments_separator: "\n---\n"
+    exclude_extra_fields: [comments, lyrics]
+    genre:
+        capitalize: no
+        maximum: 0
+        always_include: []
+        mode: progressive
+
+duplicates:
+    album: yes
+    checksum: ''
+    copy: ''
+    count: no
+    delete: no
+    format: ''
+    full: no
+    keys: []
+    merge: no
+    move: ''
+    path: no
+    tiebreak: {}
+    strict: no
+    tag: ''
+
+extrafiles:
+    patterns:
+        all: '*.*'
+    paths: {}
+
+mpdstats:
+    host: localhost
+    port: 6600
+    rating: yes
+    rating_mix: 0.75
+
+lastgenre:
+    auto: yes
+    canonical: ~/.config/beets/genres/genres-tree.yaml
+    count: 1
+    fallback: Unknown
+    min_weight: 10
+    prefer_specific: yes
+    source: track
+    separator: ', '
+    whitelist: ~/.config/beets/genres/genres.txt
+    title_case: yes
+    force: yes
+
+play:
+    command: mpc --quiet $args load
+    raw: yes
+    use_folders: no
+    relative_to:
+    warning_threshold: 100
+    bom: no
+
+playlist:
+    auto: yes
+    playlist_dir: ~/.config/mpd/playlists
+    relative_to: ~/Music
+    forward_slash: no
+
+smartplaylist:
+    relative_to: ~/Music
+    playlist_dir: ~/.config/mpd/playlists
+    forward_slash: no
+    playlists:
+        -   name: rating.m3u
+            query: rating:0.4..1.0
+        -   name: ween.m3u
+            query: artist:Ween
+        -   name: 1940s.m3u
+            query: year:1940..1949
+        -   name: 1950s.m3u
+            query: year:1950..1959
+        -   name: 1960s.m3u
+            query: year:1960..1969
+        -   name: 1970s.m3u
+            query: year:1970..1979
+        -   name: 1980s.m3u
+            query: year:1980..1989
+        -   name: 1990s.m3u
+            query: year:1990..1999
+        -   name: 2000s.m3u
+            query: year:2000..2009
+        -   name: 2010s.m3u
+            query: year:2010..2019
+        -   name: 2020s.m3u
+            query: year:2020..2029
+        -   name: ReleasedIn$year.m3u
+            query: year::197(0|1|2|3|4|5|6|7|8|9)
+    auto: yes
+    prefix: REDACTED
+    urlencode: no
+
+mpd:
+    host: localhost
+    port: 6600
+    rating: yes
+    rating_mix: 0.75
+    password: REDACTED
+    music_directory: ~/Music
+    strip_path: ''
+
+musicbrainz:
+    extra_tags:
+        - year
+        - catalognum
+        - country
+        - media
+        - label
+
+match:
+    strong_rec_thresh: 0.075
+    medium_rec_thresh: 0.125
+    max_rec:
+        unmatched_tracks: low
+        missing_tracks: strong
+    distance_weights:
+        album: 6.0
+        artist: 7.0
+        totaltracks: 4.0
+        missing_tracks: 1.0
+        unmatched_tracks: 10.0
+    preferred:
+        countries: [US, XW, GB|UK]
+        media: [Digital Media|File, CD]
+    ignored_media:
+        - DVD
+        - DVD-Video
+        - Blu-ray
+        - HD-DVD
+        - VCD
+        - SVCD
+        - UMD
+        - VHS
+
+paths:
+    default: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
+    singleton: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
+    comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+
+importadded:
+    preserve_mtimes: yes
+    preserve_write_mtimes: yes
+
+threaded: yes
+
+unimported:
+    ignore_extensions: jpg png
+    ignore_subdirectories: data tmp
+
+xtractor:
+    auto: no
+    dry-run: no
+    write: yes
+    threads: 1
+    force: no
+    quiet: no
+    keep_output: yes
+    keep_profiles: no
+    output_path: ~/.config/beets/xtraction_data
+    essentia_extractor: /usr/bin/essentia_streaming_extractor_music
+    extractor_profile:
+        outputFormat: json
+        outputFrames: 0
+        lowlevel:
+            frameSize: 2048
+            hopSize: 1024
+        chromaprint:
+            compute: 1
+            duration: 20.0
+        highlevel:
+            compute: 1
+            svm_models:
+                - /usr/share/musicplayerplus/svm_models/danceability.history
+                - /usr/share/musicplayerplus/svm_models/gender.history
+                - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
+                - /usr/share/musicplayerplus/svm_models/genre_electronic.history
+                - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
+                - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
+                - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
+                - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
+                - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
+                - /usr/share/musicplayerplus/svm_models/mood_electronic.history
+                - /usr/share/musicplayerplus/svm_models/mood_happy.history
+                - /usr/share/musicplayerplus/svm_models/mood_party.history
+                - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
+                - /usr/share/musicplayerplus/svm_models/mood_sad.history
+                - /usr/share/musicplayerplus/svm_models/moods_mirex.history
+                - /usr/share/musicplayerplus/svm_models/timbre.history
+                - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
+                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+    low_level_targets:
+        bpm:
+            path: rhythm.bpm
+            type: integer
+            required: yes
+        danceability:
+            path: rhythm.danceability
+            type: float
+        beats_count:
+            path: rhythm.beats_count
+            type: integer
+        average_loudness:
+            path: lowlevel.average_loudness
+            type: float
+            required: yes
+    high_level_targets:
+        danceable:
+            path: highlevel.danceability.all.danceable
+            type: float
+            required: yes
+        gender:
+            path: highlevel.gender.value
+            type: string
+            required: yes
+        is_male:
+            path: highlevel.gender.all.male
+            type: float
+        is_female:
+            path: highlevel.gender.all.female
+            type: float
+        genre_rosamerica:
+            path: highlevel.genre_rosamerica.value
+            type: string
+            required: yes
+        voice_instrumental:
+            path: highlevel.voice_instrumental.value
+            type: string
+            required: yes
+        is_voice:
+            path: highlevel.voice_instrumental.all.voice
+            type: float
+        is_instrumental:
+            path: highlevel.voice_instrumental.all.instrumental
+            type: float
+        mood_acoustic:
+            path: highlevel.mood_acoustic.all.acoustic
+            type: float
+            required: yes
+        mood_aggressive:
+            path: highlevel.mood_aggressive.all.aggressive
+            type: float
+            required: yes
+        mood_electronic:
+            path: highlevel.mood_electronic.all.electronic
+            type: float
+            required: yes
+        mood_happy:
+            path: highlevel.mood_happy.all.happy
+            type: float
+            required: yes
+        mood_sad:
+            path: highlevel.mood_sad.all.sad
+            type: float
+            required: yes
+        mood_party:
+            path: highlevel.mood_party.all.party
+            type: float
+            required: yes
+        mood_relaxed:
+            path: highlevel.mood_relaxed.all.relaxed
+            type: float
+            required: yes
+        mood_mirex:
+            path: highlevel.moods_mirex.value
+            type: string
+            required: yes
+        mood_mirex_cluster_1:
+            path: highlevel.moods_mirex.all.Cluster1
+            type: float
+        mood_mirex_cluster_2:
+            path: highlevel.moods_mirex.all.Cluster2
+            type: float
+        mood_mirex_cluster_3:
+            path: highlevel.moods_mirex.all.Cluster3
+            type: float
+        mood_mirex_cluster_4:
+            path: highlevel.moods_mirex.all.Cluster4
+            type: float
+        mood_mirex_cluster_5:
+            path: highlevel.moods_mirex.all.Cluster5
+            type: float
+
+ui:
+    color: yes
+    colors:
+        text_success: green
+        text_warning: yellow
+        text_error: red
+        text_highlight: red
+        text_highlight_minor: lightgray
+        action_default: turquoise
+        action: blue
+hook:
+    hooks: [{event: import_begin, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin}, {event: import, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end}]
+
+edit:
+    albumfields: album albumartist
+    itemfields: track title artist album
+    ignore_fields: id path
+
+describe:
+    auto: no
+
+missing:
+    count: no
+    total: no
+    album: no
+

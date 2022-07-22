@@ -7,8 +7,9 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
 - ***plus*** Beets media library management
+- ***plus*** Automated audio analysis and audio-based information retrieval
 - ***plus*** `asciimatics` color ASCII animations
-- ***plus*** `asciinema` text-based terminal session recording.
+- ***plus*** `asciinema` text-based terminal session recording
 
 ## Table of contents
 

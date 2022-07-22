@@ -506,9 +506,9 @@ ui:
         action: blue
 
 hook:
-  hooks:
-    - event: import_begin
-      command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin
-    - event: import
-      command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end
+    hooks:
+        - event: import_begin
+          command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin
+        - event: import
+          command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end
 
