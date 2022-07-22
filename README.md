@@ -171,8 +171,8 @@ be imported into the Beets media library management system.
 If you wish to manage your music library with Beets, import the music library
 with the command `mpplus -I`.
 
-These four common additional setup steps are covered in greater detail
-below in the section on
+These four common additional setup steps and more are covered in greater
+detail below in the section on
 [Post Installation Configuration](#post-installation-configuration).
 
 ### Quickstart summary
@@ -588,7 +588,7 @@ Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
-		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]
+		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -634,6 +634,9 @@ General options:
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-w indicates write metadata during beets import
 	-W indicates do not write metadata during beets import
+	-X 'query' performs an analysis and retrieval of audio-based information
+		for all music library media matching 'query'. A query of 'all' performs
+		the analysis  and retrieval on the entire music library.
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
 		list/search/select media in the MPD library.
 		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'

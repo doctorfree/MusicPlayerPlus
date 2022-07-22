@@ -10,6 +10,7 @@
     1. [Download album cover art](#download-album-cover-art)
     1. [Convert WAV format media files](#convert-wav-format-media-files)
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
+1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
 1. [MusicPlayerPlus Beets plugins](#musicplayerplus-beets-plugins)
 
 ## Overview
@@ -335,11 +336,41 @@ https://beets.readthedocs.io/en/latest/reference/cli.html
 Learn more about the Beets media library management system at
 https://beets.io/
 
+## Automated audio analysis and audio-based information retrieval
+
+MusicPlayerPlus includes a pre-compiled `essentia_streaming_extractor_music`
+binary along with pre-installed and configured `xtractor` Beets plugin.
+The enables Beets to analyze audio files, extract information on a wide
+variety of audio parameters, and write metadata to the Beets library.
+This process can provide information on audio in a music library that
+can be used to filter and select songs by their detected audio qualities.
+
+To perform an audio analysis and audio-based information retrieval using
+MusicPlayerPlus, issue the command `mpplus -X 'query'` where 'query' is
+a Beets media library query specifying which songs or albums or artists
+to match. A special query of 'all' indicates the entire music library.
+
+For example, to analyze and retrieve audio information on all songs with
+filename or pathname that include the string "Love Party", issue the
+command `mpplus -X 'love party'`. To analyze and retrieve audio information
+on the entire music library, issue the command `mpplus -X all`.
+
+The process of analyzing and retrieving audio information can be very
+time consuming. For this reason, the process is run in the background
+and a terminal window is opened to monitor the extraction process.
+
 ## MusicPlayerPlus Beets plugins
 
 Beets includes an extensive set of plugins that can be used to enhance and
 extend the functionality of the media library management Beets provides. Many
 Beets plugins are installed and configured automatically by MusicPlayerPlus.
+
+MusicPlayerPlus 2.0.1 and later include automated installation and
+configuration for the following Beets plugins:
+
+* acousticbrainz, albumtypes, bandcamp, describe, duplicates, edit, extrafiles
+* fromfilename, hook, importadded, info, lyrics, lastgenre, missing, mbsync
+* mpdstats, play, playlist, smartplaylist, mpdupdate, unimported, xtractor
 
 See the MusicPlayerPlus [Wiki article on Beets plugins](https://github.com/doctorfree/MusicPlayerPlus/wiki/BeetsPlugins)
 for an introduction to the installed and configured MusicPlayerPlus Beets plugins.

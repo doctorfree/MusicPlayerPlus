@@ -58,7 +58,7 @@ usage() {
   printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
-  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]"
+  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -104,6 +104,9 @@ usage() {
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
   printf "\n\t-w indicates write metadata during beets import"
   printf "\n\t-W indicates do not write metadata during beets import"
+  printf "\n\t-X 'query' performs an analysis and retrieval of audio-based information"
+  printf "\n\t\tfor all music library media matching 'query'. A query of 'all' performs"
+  printf "\n\t\tthe analysis  and retrieval on the entire music library."
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
   printf "\n\t\tlist/search/select media in the MPD library."
   printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
@@ -173,6 +176,53 @@ make_it_so() {
       echo "Manual cover art download may be required:"
       printf "\n\tsacad_r <MUSIC_DIRECTORY> 600 cover.jpg"
       printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
+  [ "${XTRACTOR}" ] && {
+    have_beet=`type =p beet`
+    if [ "${have_beet}" ]
+    then
+      echo ""
+      echo "===================================================================="
+      echo "Performing audio analysis and audio-based information retrieval"
+      echo "for media matching ${XTRACTOR} in the Beets music library management"
+      echo "system. The analysis and retrieval can take several minutes per"
+      echo "album. A large music library may take several hours to extract."
+      echo ""
+      echo "The process is performed in the background and non-interactively."
+      echo "As long as your computer remains on and connected to the Internet, the"
+      echo "process should run uninterrupted and without need for attention."
+      echo "You may continue working and leave the extraction unattended."
+      echo ""
+      if [ "${XTRACTOR}" == "all" ]
+      then
+        extquery=
+      else
+        extquery="${XTRACTOR}"
+      fi
+      XLOG="/tmp/xtractor_$$.log"
+      nohup beet -v xt ${extquery} > ${XLOG} 2>&1 &
+      beetpid=$!
+      if [ "${CONSOLE_MODE}" ]
+      then
+        echo "To monitor the progress of the extraction, examine the extraction log:"
+        echo ""
+        echo "tail -f ${XLOG}"
+      else
+        echo "A terminal window will be opened to monitor the progress of the extraction."
+        echo ""
+        gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
+                       -- tail --pid=${beetpid} -f ${XLOG} &
+      fi
+      echo "===================================================================="
+      echo ""
+    else
+      echo "The 'beet' command is not in your PATH or is not executable."
+      echo "Check your MusicPlayerPlus installation."
+      echo "Once the 'beet' command is executable and in the execution PATH,"
+      echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
@@ -667,6 +717,7 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
+    options+=("Extract and Retrieve Audio Information")
     options+=("Manage Music Player Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -715,6 +766,11 @@ show_main_menu() {
               ;;
           "Download"*,*|*,"Download"*)
               DOWNLOAD_ART=1
+              DO_NOT_EXIT=1
+              break
+              ;;
+          "Extract"*,*|*,"Extract"*)
+              XTRACTOR="all"
               DO_NOT_EXIT=1
               break
               ;;
@@ -792,6 +848,7 @@ init_vars() {
   CONVERT_WAV=
   DOWNLOAD_ART=
   BEETS_IMPORT=
+  XTRACTOR=
   FULLSCREEN=
   HALFHEIGHT=
   INTERACTIVE=
@@ -841,7 +898,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1018,6 +1075,9 @@ while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWz:u" flag; do
       ;;
     W)
       writeflag="-W"
+      ;;
+    X)
+      XTRACTOR="${OPTARG}"
       ;;
     z)
       FZMPOPT="${OPTARG}"
