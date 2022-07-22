@@ -75,6 +75,8 @@ The `mpplus` command can be used to invoke:
 * A download of album cover art for every album in a music library
 * Conversion of all WAV format media in a music library to MP3 format media
 * An import of a music library to the Beets media library manager
+* A download of lyrics for all songs in the music library without lyrics
+* Analysis and retrieval of audio-based information for media matching a query
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
 * A fuzzy listing and searching of the audio library using `fzf`
@@ -156,6 +158,8 @@ Some common additional setup steps that can be performed include:
 - Downloading album cover art
 - Converting WAV format media files to MP3 format
 - Importing a music library into the Beets library management system
+- Downloading additional lyrics
+- Analysis and retrieval of audio-based information for media matching a query
 
 Configure the music library location by editing `~/.config/mpd/mpd.conf` and
 setting the `music_directory` to your music library location (default setting
@@ -171,7 +175,14 @@ be imported into the Beets media library management system.
 If you wish to manage your music library with Beets, import the music library
 with the command `mpplus -I`.
 
-These four common additional setup steps and more are covered in greater
+Download additional lyrics with the command `mpplus -L`.
+
+Analysis and retrieval of audio-based information can be performed with
+the command `mpplus -X 'query'` where 'query' is a Beets library query.
+The special query term 'all' indicates the entire music library, i.e.
+`mpplus -X all`.
+
+These common additional setup steps and more are covered in greater
 detail below in the section on
 [Post Installation Configuration](#post-installation-configuration).
 
@@ -187,7 +198,7 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
 * Optionally:
     * Download album cover art with the command `mpplus -D`
     * Convert WAV format files to MP3 format with the command `mpplus -F`
-* Import your music library into Beets with the command `mpplus -I`
+    * Import your music library into Beets with the command `mpplus -I`
 
 ## Installation
 
