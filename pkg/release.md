@@ -1,3 +1,90 @@
+# MusicPlayerPlus
+
+This major release of MusicPlayerPlus adds:
+
+* Integration of the Beets media library management system
+* Automated Beets xtractor plugin installation and configuration
+    * Beets xtractor plugin performs acoustic analysis and metadata updates
+    * Gaia and Essentia for audio analysis and audio-based information retrieval
+    * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
+* Many more improvements and features (See [Changelog](#changelog) below)
+
+## Installation
+
+Download the [latest Debian or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
+
+Install the package on Debian based systems by executing the command
+
+```bash
+sudo apt install ./MusicPlayerPlus_2.0.1-1.amd64.deb
+```
+
+or, on a Raspberry Pi:
+
+```bash
+sudo apt install ./MusicPlayerPlus_2.0.1-1.armhf.deb
+```
+
+Install the package on RPM based systems by executing the command
+```bash
+sudo yum localinstall ./MusicPlayerPlus-2.0.1-1.x86_64.rpm
+```
+
+## Configuration
+
+Execute the `mpcinit` command.
+
+Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
+
+If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then run `mpcinit sync`.
+
+To enable the Beets media library management system:
+
+* Run `mpplus -D` to download album cover art
+* Run `mpplus -F` to convert WAV format media to MP3 format media
+* Run `mpplus -I` to import and auto-tag the music library
+
+See the [MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme) for additional configuration info.
+
+## Removal
+
+Removal of the package on Debian based systems can be accomplished by issuing the command:
+
+```bash
+sudo apt remove musicplayerplus
+```
+
+Removal of the package on RPM based systems can be accomplished by issuing the command:
+
+```bash
+sudo yum remove MusicPlayerPlus
+```
+
+## Changelog
+
+Changes in version 2.0.1 release 1 include:
+
+* Added Beets media library management integration
+* Automated Beets xtractor plugin installation and configuration
+    * Beets xtractor plugin performs acoustic analysis and metadata updates
+    * Gaia and Essentia for audio analysis and audio-based information retrieval
+    * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
+* Improved lastgenre Beets configuration
+* Use %title template function to Title Case artist names in Beets
+* Scripts to convert WAV format media to MP3 format media
+* Custom Beets play plugin configuration to use `mpc`
+* Auto generation of smart MPD playlists
+* Enhanced Beets import logging
+* Man pages for `beets` and `beetsconfig`
+* Integrate basic Beets initialization and management in `mpplus`
+* Add tmux plugin manager settings to default configuration
+* Compile and install Gaia and Essentia from customized source
+* Automated install and configuration of many Beets plugins
+    * acousticbrainz, albumtypes, bandcamp, describe, duplicates
+    * edit, extrafiles, fromfilename, hook, importadded, info
+    * lyrics, lastgenre, missing, mbsync, mpdstats, play, playlist
+    * smartplaylist, mpdupdate, unimported, xtractor
+
 Changes in version 1.0.3 release 1 include:
 
 * Add support for Raspberry Pi
@@ -58,46 +145,3 @@ Previous changes in version 1.0.2 include:
 * Added display of client, visualizer, and album cover art in tmux
 * Additional terminal support
 
-## Installation
-
-Download the [latest Debian or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
-
-Install the package on Debian based systems by executing the command
-
-```bash
-sudo apt install ./MusicPlayerPlus_1.0.3-1.amd64.deb
-```
-
-or, on a Raspberry Pi:
-
-```bash
-sudo apt install ./MusicPlayerPlus_1.0.3-1.armhf.deb
-```
-
-Install the package on RPM based systems by executing the command
-```bash
-sudo yum localinstall ./MusicPlayerPlus-1.0.3-1.x86_64.rpm
-```
-
-## Configuration
-
-Execute the `mpcinit` command.
-
-Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
-
-If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then re-run `mpcinit`.
-
-See the [MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme) for additional configuration info.
-
-## Removal
-Removal of the package on Debian based systems can be accomplished by issuing the command:
-
-```bash
-sudo apt remove musicplayerplus
-```
-
-Removal of the package on RPM based systems can be accomplished by issuing the command:
-
-```bash
-sudo yum remove MusicPlayerPlus
-```
