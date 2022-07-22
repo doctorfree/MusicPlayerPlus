@@ -22,10 +22,10 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M
+music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
-[-w|W] [-z fzmpopt]
+[-w|W] [-X query] [-z fzmpopt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -62,6 +62,9 @@ When invoked as \f[V]mpplus -I\f[R] it will perform a Beets library
 import of all songs and albums in the music library.
 If a previous import has been performed it will import any new songs or
 albums it finds in the music library.
+.IP \[bu] 2
+When invoked as \f[V]mpplus -L\f[R] it will downlad lyrics for all songs
+in the music library that do not already have lyrics
 .PP
 When invoked with the \f[V]-i\f[R] option, \f[V]mpplus\f[R] presents a
 selection menu and operates in interactive mode.
@@ -164,6 +167,9 @@ indicates interactive mode with selection menus
 \f[B]-k\f[R]
 indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 .TP
+\f[B]-L\f[R]
+indicates download lyrics to the Beets library and exit
+.TP
 \f[B]-M \[aq]enable|disable|start|stop|restart|status\[aq]\f[R]
 Enable, disable, start, stop, restart, or get the status of the MPD and
 MPD socket system services
@@ -179,6 +185,12 @@ indicates write metadata during Beets import
 .TP
 \f[B]-W\f[R]
 indicates do not write metadata during Beets import
+.TP
+\f[B]-X \[aq]query\[aq]\f[R]
+performs an analysis and retrieval of audio-based information for all
+music library media matching \[aq]query\[aq].
+A query of \[aq]all\[aq] performs the analysis and retrieval on the
+entire music library.
 .TP
 \f[B]-z opt\f[R]
 Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
@@ -243,13 +255,19 @@ animation with audio
 Download album cover art for any albums in the music library that do not
 already have cover art
 .TP
+\f[B]mpplus -I\f[R]
+Import the music library into the Beets library management system
+.TP
 \f[B]mpplus -I -W\f[R]
 Import the music library into the Beets library management system, do
-not write tags
+not write metadata
 .TP
-\f[B]mpplus -I -w\f[R]
-Import the music library into the Beets library management system, write
-tags
+\f[B]mpplus -L\f[R]
+Download lyrics for any songs in the music library that do not already
+have lyrics
+.TP
+\f[B]mpplus -X all\f[R]
+Analyze audio and retrieve information for the entire music library
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

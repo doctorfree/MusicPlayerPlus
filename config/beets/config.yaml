@@ -75,7 +75,6 @@ bandcamp:
     comments_separator: "\n---\n"
     exclude_extra_fields:
         - comments
-        - lyrics
     genre:
         capitalize: no
         maximum: 0
@@ -162,10 +161,18 @@ lastgenre:
 
 lyrics:
     # Fetch lyrics automatically during import. Default: yes.
-    auto: yes
+    # No lyrics are fetched during import. Run 'mpplus -L` after import.
+    auto: no
     # List of sources to search for lyrics. An asterisk * expands to all
     # available sources. Default: google musixmatch genius tekstowo
-    sources: musixmatch genius
+    # Currently it appears MusixMatch and Genius are blocking Beets.
+    # Google requires an API key - use that if you have one.
+    # The only free no-setup-required service is the Polish one but
+    # they have changed their website so Beets lyrics scraping adds
+    # some untranslated Polish at the beginning and end of the lyrics.
+    # For now, we use the Polish service as default lyrics source.
+    # Users may wish to go through the trouble of activating Google.
+    sources: tekstowo
     #
     # Your Bing Translation application password (to Activate On-the-Fly Translation)
     # bing_client_secret:

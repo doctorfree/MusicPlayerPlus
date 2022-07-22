@@ -386,7 +386,15 @@ all songs in the music library that do not have a 'mood_party' metadata
 tag, issue the command:
 
 ```
-beet list -p mood_party::^$
+beet list -f '$artist: $album - $title' mood_party::^$
+```
+
+Other songs for which the `xtractor` plugin may prove useful are those
+for which `acousticbrainz` mistakenly added a bpm value of 0. To find
+these songs, issue the command:
+
+```
+beet list -f '$artist: $album - $title' bpm:0
 ```
 
 ## MusicPlayerPlus Beets plugins

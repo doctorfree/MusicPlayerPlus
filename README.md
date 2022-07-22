@@ -585,7 +585,7 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]
+		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
 		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
 		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]
@@ -627,6 +627,7 @@ General options:
 		In conjunction with '-I', the '-A' flag disables auto-tagging
 	-i indicates start mpplus in interactive mode
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+    -L indicates download lyrics to the Beets library and exit
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
 		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'

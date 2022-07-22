@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-z fzmpopt]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -23,6 +23,7 @@ The *mpplus* command can be used in conjunction with the Beets music library man
 - When invoked as `mpplus -D` it will downlad album cover art for all albums in the music library
 - When invoked as `mpplus -F` it will convert all WAV format files in the music library to MP3 format files
 - When invoked as `mpplus -I` it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
+- When invoked as `mpplus -L` it will downlad lyrics for all songs in the music library that do not already have lyrics
 
 When invoked with the `-i` option, `mpplus` presents a selection menu and operates in interactive mode.
 
@@ -117,6 +118,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-k**
 : indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 
+**-L**
+: indicates download lyrics to the Beets library and exit
+
 **-M 'enable|disable|start|stop|restart|status'**
 : Enable, disable, start, stop, restart, or get the status of the MPD and MPD socket system services 
 
@@ -131,6 +135,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-W**
 : indicates do not write metadata during Beets import
+
+**-X 'query'**
+: performs an analysis and retrieval of audio-based information for all music library media matching 'query'. A query of 'all' performs the analysis  and retrieval on the entire music library.
 
 **-z opt**
 : Specifies an `fzmp` option and invokes `fzmp` to list/search/select MPD media. Valid values for `opt` are 'a', 'A', 'g', 'p', or 'P'
@@ -175,11 +182,17 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **mpplus -D**
 : Download album cover art for any albums in the music library that do not already have cover art 
 
-**mpplus -I -W**
-: Import the music library into the Beets library management system, do not write tags
+**mpplus -I**
+: Import the music library into the Beets library management system
 
-**mpplus -I -w**
-: Import the music library into the Beets library management system, write tags
+**mpplus -I -W**
+: Import the music library into the Beets library management system, do not write metadata
+
+**mpplus -L**
+: Download lyrics for any songs in the music library that do not already have lyrics
+
+**mpplus -X all**
+: Analyze audio and retrieve information for the entire music library
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

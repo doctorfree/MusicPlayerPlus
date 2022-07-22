@@ -55,7 +55,7 @@ SCRIPTS="${MPP_DIR}/scripts"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-m]"
+  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
   printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]"
@@ -97,6 +97,7 @@ usage() {
   printf "\n\t\tIn conjunction with '-I', the '-A' flag disables auto-tagging"
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
+  printf "\n\t-L indicates download lyrics to the Beets library and exit"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"
   printf "\n\t\tALSA configuration will update the ALSA configuration in '/etc/asound.conf'"
@@ -176,6 +177,46 @@ make_it_so() {
       echo "Manual cover art download may be required:"
       printf "\n\tsacad_r <MUSIC_DIRECTORY> 600 cover.jpg"
       printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
+  [ "${FETCH_LYRICS}" ] && {
+    have_beet=`type =p beet`
+    if [ "${have_beet}" ]
+    then
+      echo ""
+      echo "===================================================================="
+      echo "Fetching lyrics for all songs in the music library which do not"
+      echo "already contain lyrics. This can take several minutes or hours"
+      echo "depending on how many songs need lyrics."
+      echo ""
+      echo "The process is performed in the background and non-interactively."
+      echo "As long as your computer remains on and connected to the Internet, the"
+      echo "process should run uninterrupted and without need for attention."
+      echo "You may continue working and leave the lyrics update unattended."
+      echo ""
+      LLOG="/tmp/lyrics_$$.log"
+      nohup beet lyrics > ${LLOG} 2>&1 &
+      beetpid=$!
+      if [ "${CONSOLE_MODE}" ]
+      then
+        echo "To monitor the progress of the lyrics downloads, examine the log:"
+        echo ""
+        echo "tail -f ${LLOG}"
+      else
+        echo "A terminal window will be opened to monitor the progress."
+        echo ""
+        gnome-terminal --title="Beets Lyrics Log" --geometry=90x25+50+25 \
+                       -- tail --pid=${beetpid} -f ${LLOG} &
+      fi
+      echo "===================================================================="
+      echo ""
+    else
+      echo "The 'beet' command is not in your PATH or is not executable."
+      echo "Check your MusicPlayerPlus installation."
+      echo "Once the 'beet' command is executable and in the execution PATH,"
+      echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
@@ -717,7 +758,7 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
-    options+=("Extract and Retrieve Audio Information")
+    options+=("Extract and Retrieve Audio Information" "Fetch Lyrics")
     options+=("Manage Music Player Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -771,6 +812,11 @@ show_main_menu() {
               ;;
           "Extract"*,*|*,"Extract"*)
               XTRACTOR="all"
+              DO_NOT_EXIT=1
+              break
+              ;;
+          "Fetch"*,*|*,"Fetch"*)
+              FETCH_LYRICS=1
               DO_NOT_EXIT=1
               break
               ;;
@@ -847,6 +893,7 @@ init_vars() {
   COVER_ART=
   CONVERT_WAV=
   DOWNLOAD_ART=
+  FETCH_LYRICS=
   BEETS_IMPORT=
   XTRACTOR=
   FULLSCREEN=
@@ -898,7 +945,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -987,6 +1034,9 @@ while getopts "AabcC:Dd:FfghiIjJkmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
     J)
       MPPSPLASH="${MPPSPLASH} -J"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -J"
+      ;;
+    L)
+      FETCH_LYRICS=1
       ;;
     m)
       MPPSPLASH="${MPPSPLASH} -m"
