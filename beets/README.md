@@ -340,10 +340,21 @@ https://beets.io/
 
 MusicPlayerPlus includes a pre-compiled `essentia_streaming_extractor_music`
 binary along with pre-installed and configured `xtractor` Beets plugin.
-The enables Beets to analyze audio files, extract information on a wide
+This enables Beets to analyze audio files, extract information on a wide
 variety of audio parameters, and write metadata to the Beets library.
 This process can provide information on audio in a music library that
 can be used to filter and select songs by their detected audio qualities.
+
+The `acousticbrainz` plugin, also installed and pre-configured in
+MusicPlayerPlus 2.0.1, performs the same function and even uses the
+same Essentia technology to analyze audio data. A MusicPlayerPlus
+initialization of the Beets music library database will automatically
+add metadata for songs in the music library using `acousticbrainz`.
+
+However, `acousticbrainz` does not perform an analysis on all songs
+and, worse, the AcousticBrainz service is being retired in 2023.
+For these reasons, MusicPlayerPlus provides the built-in capability
+to perform acoustic audio analysis using Essentia and the xtractor plugin.
 
 To perform an audio analysis and audio-based information retrieval using
 MusicPlayerPlus, issue the command `mpplus -X 'query'` where 'query' is
@@ -351,13 +362,32 @@ a Beets media library query specifying which songs or albums or artists
 to match. A special query of 'all' indicates the entire music library.
 
 For example, to analyze and retrieve audio information on all songs with
-filename or pathname that include the string "Love Party", issue the
-command `mpplus -X 'love party'`. To analyze and retrieve audio information
-on the entire music library, issue the command `mpplus -X all`.
+filename or pathname that include the string "Love Party", issue the command:
+
+```
+mpplus -X 'love party'
+```
+
+To analyze and retrieve audio information on the entire music library:
+
+```
+mpplus -X all
+```
 
 The process of analyzing and retrieving audio information can be very
 time consuming. For this reason, the process is run in the background
 and a terminal window is opened to monitor the extraction process.
+
+Due to the long extraction times needed to perform an audio analysis,
+it is often desirable to identify only those songs that do not already
+have the desired metadata and perform the analysis selectively on those
+songs using an appropriate Beets query string. For example, to identify
+all songs in the music library that do not have a 'mood_party' metadata
+tag, issue the command:
+
+```
+beet list -p mood_party::^$
+```
 
 ## MusicPlayerPlus Beets plugins
 
