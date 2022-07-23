@@ -78,6 +78,13 @@ shift $(( OPTIND - 1 ))
 prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 
+[ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music ] && {
+  [ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music_svm ] && {
+    echo "Essentia binaries already built"
+    exit 0
+  }
+}
+
 cd ${PROJ}
 python3 waf configure ${prefix} --build-static --with-python \
                                 --with-gaia --with-examples

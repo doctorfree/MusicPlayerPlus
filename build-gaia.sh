@@ -11,7 +11,8 @@
 #   swig python-dev pkg-config libeigen3-dev
 #
 # On RPM bases systems like Fedora Linux, dependencies include:
-#   libyaml-devel swig python-devel pkg-config eigen3-devel qt5-qtbase-devel
+#   libyaml-devel swig python-devel pkg-config eigen3-devel
+#   libsamplerate-devel qt5-qtbase-devel
 #
 # Go into its source code directory and start by configuring the build:
 #
