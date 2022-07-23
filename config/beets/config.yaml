@@ -245,55 +245,55 @@ smartplaylist:
           query: 'artist:Ween'
 
         - name: 1940s.m3u
-          query: 'year:1940..1949'
+          query: 'original_year:1940..1949'
 
         - name: 1950s.m3u
-          query: 'year:1950..1959'
+          query: 'original_year:1950..1959'
 
         - name: 1960s.m3u
-          query: 'year:1960..1969'
+          query: 'original_year:1960..1969'
 
         - name: 1970s.m3u
-          query: 'year:1970..1979'
+          query: 'original_year:1970..1979'
 
         - name: 1980s.m3u
-          query: 'year:1980..1989'
+          query: 'original_year:1980..1989'
 
         - name: 1990s.m3u
-          query: 'year:1990..1999'
+          query: 'original_year:1990..1999'
 
         - name: 2000s.m3u
-          query: 'year:2000..2009'
+          query: 'original_year:2000..2009'
 
         - name: 2010s.m3u
-          query: 'year:2010..2019'
+          query: 'original_year:2010..2019'
 
         - name: 2020s.m3u
-          query: 'year:2020..2029'
+          query: 'original_year:2020..2029'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::195(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::195(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::196(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::196(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$year.m3u'
-          query: 'year::197(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::197(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::198(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::198(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::199(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::199(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::200(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::200(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::201(0|1|2|3|4|5|6|7|8|9)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::201(0|1|2|3|4|5|6|7|8|9)'
 
-#       - name: 'ReleasedIn$year.m3u'
-#         query: 'year::202(0|1|2)'
+        - name: 'ReleasedIn$original_year.m3u'
+          query: 'original_year::202(0|1|2)'
 
 mpd:
     host: localhost
@@ -503,7 +503,7 @@ xtractor:
 #           type: float
 
 yearfixer:
-    force: no
+    force: yes
 
 ui:
     color: yes
