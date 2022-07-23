@@ -10,7 +10,9 @@
     1. [Download album cover art](#download-album-cover-art)
     1. [Convert WAV format media files](#convert-wav-format-media-files)
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
+1. [Fetching lyrics](#fetching-lyrics)
 1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
+1. [Configuring the Discogs metadata source](#configuring-the-discogs-metadata-source)
 1. [MusicPlayerPlus Beets plugins](#musicplayerplus-beets-plugins)
 
 ## Overview
@@ -336,6 +338,55 @@ https://beets.readthedocs.io/en/latest/reference/cli.html
 Learn more about the Beets media library management system at
 https://beets.io/
 
+## Fetching lyrics
+
+The Beets media library management system can fetch lyrics using the
+`lyrics` plugin. The MusicPlayerPlus default Beets configuration does
+not enable lyrics fetching using the `lyrics` plugin during Beets import.
+Albums and songs imported using Bandcamp as a metadata source will
+automatically fetch lyrics during import. That is, the default MusicPlayerPlus
+Beets import will only fetch lyrics for Bandcamp sourced items.
+
+To view a list of music library items that do not have lyrics metadata,
+issue the command:
+
+```
+beet list -f '$artist: $album - $title' lyrics::^$
+```
+
+To fetch lyrics for all songs in the music library that do not already have
+lyrics. after the Beets import process completes issue the command:
+
+```
+mpplus -L
+```
+
+MusicPlayerPlus has chosen to provide a default Beets configuration that
+disables auto-fetching of lyrics during import in order to reduce the
+import time which can be quite lengthy. To enable auto-fetching of lyrics
+during import, prior to performing the music library Beets import, change
+the `auto: no` setting to `auto: yes` in the `lyrics:` section of
+`$HOME/.config/beets/config.yaml`
+
+The `lyrics` plugin also has a configuration option to specify the lyrics
+sources to query when fetching lyrics. Some of these online lyrics services
+have blocked the Beets User-Agent thereby disabling those services for
+Beets users. Google does not block Beets lyrics queries but the Google
+lyrics service requires additional configuration - providing an API key.
+
+For these reasons, MusicPlayerPlus distributes a Beets lyrics configuration
+that auto-fetches from Bandcamp when that is used as a metadata source
+and only queries the Polish lyrics service at https://www.tekstowo.pl
+for `lyrics` plugin requests. You may wish to add to or replace this service.
+To modify the list of lyrics services queried by the Beets `lyrics` plugin,
+change the `sources: tekstowo` setting in the `lyrics:` section of
+`$HOME/.config/beets/config.yaml` to one or more of
+`google musixmatch genius tekstowo`.
+
+See the
+[Beets lyrics plugin documentation](https://beets.readthedocs.io/en/stable/plugins/lyrics.html)
+for more information on configuring and using the Beets lyrics plugin.
+
 ## Automated audio analysis and audio-based information retrieval
 
 MusicPlayerPlus includes a pre-compiled `essentia_streaming_extractor_music`
@@ -396,6 +447,66 @@ these songs, issue the command:
 ```
 beet list -f '$artist: $album - $title' bpm:0
 ```
+
+## Configuring the Discogs metadata source
+
+Beets uses [MusicBrainz](https://musicbrainz.org) as the default source
+for metadata. This is sufficient for many Beets users as MusicBrainz has
+a vast amount of data and requires no registration or API key to utilize.
+However, MusicBrainz does not have every artist, album, and song in its
+database and there are several Beets plugins that extend metadata search
+to additional sources.
+
+MusicPlayerPlus provides a pre-configured Beets `bandcamp` plugin to enable
+[Bandcamp](https://bandcamp.com) as a metadata source. Many artists have
+chosen to only distribute their works on Bandcamp in order to avoid the
+miniscule royalty payments made to artists by streaming services. Bandcamp
+is also a frequent home for artists who have not been signed to a label
+or are otherwise not well known. The default Beets configuration that
+MusicPlayerPlus provides will automatically use Bandcamp as a metadata
+source thereby finding matches for artists, albums, and songs in the music
+library that were downloaded from Bandcamp.
+
+The default MusicPlayerPlus Beets configuration, using both MusicBrainz
+and Bandcamp as metadata sources, should satisfy most use cases.
+However, some users may wish to enable additional metadata sources.
+One of the most complete sources of music metadata is
+[Discogs](https://www.discogs.com). To enable Discogs as a metadata source,
+it will be necessary to register for a Discogs account, provide
+authorization and credentials, and configure the `discogs` plugin.
+This process is not too difficult but MusicPlayerPlus cannot perform
+this automatically. It must be performed by the Beets user. Follow these
+steps to enable Discogs as a metadata source:
+
+* Register for a free Discogs account by visiting https://www.discogs.com
+* No need to install `python3-discogs-client` as this was done during the MusicPlayerPlus initialization with `mpcinit`
+* Login to Discogs to generate a user token
+    * Visit the [Developer settings page](https://www.discogs.com/settings/developers) at https://www.discogs.com/settings/developers
+    * Press the 'Generate new token' button
+    * Copy the generated token to your clipboard (select the token and press Ctrl-c)
+* Add the generated token in the `discogs` section of the Beets configuration
+    * Edit `$HOME/.config/beets/config.yaml`
+    * Uncomment the `discogs` entry in the `plugins` section
+    * Uncomment the `discogs:` plugin configuration section
+    * Set the `user_token:` configuration option in the `discogs:` section
+        * user_token: Your_Discogs_User_Token
+
+After editing `config.yaml` the discogs plugin configuration should look
+something like the following:
+
+```yaml
+discogs:
+    source_weight: 0.0
+    index_tracks: yes
+    user_token: DruiHPid_I_Just_Made_This_Up_LSAPTWUCnpRJ
+```
+
+After completing the above steps Discogs will be used as a metadata
+source by Beets. The `user_token` setting will alleviate the need to
+authenticate or provide credentials when accessing Discogs with Beets.
+
+For additional information on the Beets discogs plugin, visit
+https://beets.readthedocs.io/en/stable/plugins/discogs.html
 
 ## MusicPlayerPlus Beets plugins
 
