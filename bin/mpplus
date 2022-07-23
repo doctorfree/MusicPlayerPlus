@@ -182,7 +182,7 @@ make_it_so() {
   }
 
   [ "${FETCH_LYRICS}" ] && {
-    have_beet=`type =p beet`
+    have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""
@@ -222,7 +222,7 @@ make_it_so() {
   }
 
   [ "${XTRACTOR}" ] && {
-    have_beet=`type =p beet`
+    have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""

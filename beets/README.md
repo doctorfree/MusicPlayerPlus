@@ -448,6 +448,13 @@ these songs, issue the command:
 beet list -f '$artist: $album - $title' bpm:0
 ```
 
+To analyze and retrieve information for all songs in the music library
+with a bpm value of 0, issue the command:
+
+```
+mpplus -X bpm:0
+```
+
 ## Configuring the Discogs metadata source
 
 Beets uses [MusicBrainz](https://musicbrainz.org) as the default source
