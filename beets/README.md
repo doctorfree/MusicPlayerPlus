@@ -524,9 +524,10 @@ Beets plugins are installed and configured automatically by MusicPlayerPlus.
 MusicPlayerPlus 2.0.1 and later include automated installation and
 configuration for the following Beets plugins:
 
-* acousticbrainz, albumtypes, bandcamp, describe, duplicates, edit, extrafiles
-* fromfilename, hook, importadded, info, lyrics, lastgenre, missing, mbsync
-* mpdstats, play, playlist, smartplaylist, mpdupdate, unimported, xtractor, yearfixer
+* acousticbrainz, albumtypes, bandcamp, describe, duplicates, edit
+* extrafiles, fetchart, fromfilename, hook, importadded, info, lyrics
+* lastgenre, missing, mbsync, mpdstats, play, playlist, smartplaylist
+* mpdupdate, unimported, xtractor, yearfixer
 
 See the MusicPlayerPlus [Wiki article on Beets plugins](https://github.com/doctorfree/MusicPlayerPlus/wiki/BeetsPlugins)
 for an introduction to the installed and configured MusicPlayerPlus Beets plugins.

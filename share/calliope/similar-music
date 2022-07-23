@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# similar-music - songs similar to a specified artist
+#
+# arguments specify artist name (e.g. 'similar-music Beach Boys')
+#
+
+artist="Cake"
+
+[ "$1" ] && artist="$*"
+
+# cpe lastfm similar-artists "${artist}" | cpe tracker expand-tracks | cpe shuffle
+cpe lastfm similar-artists "${artist}" | cpe beets expand-tracks | cpe shuffle

@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Artists which you discovered in the last year(s)
+# First argument can be used to specify number of years
+# Default number of years without arguments is 1
+#
+# You may want to add `--min-listens=3` to filter out
+# things you only played once or twice.
+
+numyears=1
+
+[ "$1" ] && numyears=$1
+
+cpe lastfm-history artists --first-play-since="${numyears} year ago"

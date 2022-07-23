@@ -1,0 +1,26 @@
+#!/bin/bash
+#
+# not-played-in-years - list songs not played in specified
+# number of years (default, 1 year)
+#
+# First argument can be used to specify number of years
+#
+# Filter out things that you never listened to much (less than 5 times total)
+
+numyears=1
+
+[ "$1" ] && numyears=$1
+
+# cpe_local_database=${cpe_local_database-cpe tracker}
+cpe_local_database=${cpe_local_database-cpe beets}
+duration=${duration-1hour}
+
+cpe lastfm-history tracks \
+        --last-play-before="${numyears} year ago" \
+        --min-listens=5 | cpe shuffle - | head -n 100 | \
+        $cpe_local_database resolve-content - | cpe select \
+        --constraint=type:playlist-duration,vmin:$duration,vmax:$duration - | \
+        cpe export -
+
+
+

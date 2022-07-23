@@ -37,6 +37,7 @@ plugins:
     - duplicates
     - edit
     - extrafiles
+    - fetchart
     - fromfilename
     - hook
     - importadded
@@ -99,6 +100,35 @@ duplicates:
 extrafiles:
     patterns:
         all: '*.*'
+
+fetchart:
+  # Enable automatic album art fetching during import.
+  auto: no
+  # Pick only trusted album art by ignoring filenames that do not contain
+  # one of the keywords in "cover_names".
+  cautious: no
+  # Only allow images with 1:1 aspect ratio
+  enforce_ratio: yes
+  # Only images with a width bigger or equal to minwidth are considered as
+  # valid album art candidates.
+  minwidth: 1000
+  # A maximum image width to downscale fetched images if they are too big.
+  # The height is recomputed so that the aspect ratio is preserved.
+  maxwidth: 3000
+  # An asterisk * expands to all available sources.
+  # Supported sources include:
+  #  filesystem coverart itunes amazon albumart wikipedia google fanarttv lastfm
+  # No remote art sources are queried if local art is found in the filesystem.
+  sources:
+    - filesystem
+    - coverart
+    - albumart
+#   - lastfm
+    - wikipedia
+  # API key to use for the fanart API.
+# lastfm_key: REDACTED
+  # Store the art source (e.g. filesystem) in the beets database as art_source.
+  store_source: yes
 
 mpdstats:
     host: localhost
