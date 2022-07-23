@@ -406,7 +406,7 @@ fi
 [ -f ${CALIPCONF} ] || {
   if [ -d ${CALIPCONFDIR} ]
   then
-    cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONF}
+    cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
   else
     cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
   fi
