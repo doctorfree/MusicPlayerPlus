@@ -85,6 +85,9 @@ prefix="--prefix=/usr"
   }
 }
 
+PKGPATH=`pkg-config --variable pc_path pkg-config`
+export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+
 cd ${PROJ}
 python3 waf configure ${prefix} --build-static --with-python \
                                 --with-gaia --with-examples

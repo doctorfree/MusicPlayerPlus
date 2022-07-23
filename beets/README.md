@@ -519,7 +519,7 @@ configuration for the following Beets plugins:
 
 * acousticbrainz, albumtypes, bandcamp, describe, duplicates, edit, extrafiles
 * fromfilename, hook, importadded, info, lyrics, lastgenre, missing, mbsync
-* mpdstats, play, playlist, smartplaylist, mpdupdate, unimported, xtractor
+* mpdstats, play, playlist, smartplaylist, mpdupdate, unimported, xtractor, yearfixer
 
 See the MusicPlayerPlus [Wiki article on Beets plugins](https://github.com/doctorfree/MusicPlayerPlus/wiki/BeetsPlugins)
 for an introduction to the installed and configured MusicPlayerPlus Beets plugins.

@@ -52,6 +52,7 @@ plugins:
     - mpdupdate
     - unimported
     - xtractor
+    - yearfixer
 
 acousticbrainz:
     auto: yes
@@ -500,6 +501,9 @@ xtractor:
 #       mood_mirex_cluster_5:
 #           path: "highlevel.moods_mirex.all.Cluster5"
 #           type: float
+
+yearfixer:
+    force: no
 
 ui:
     color: yes
