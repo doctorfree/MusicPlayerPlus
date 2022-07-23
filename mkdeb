@@ -179,12 +179,14 @@ ${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcpl
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 ${SUDO} cp -a share/svm_models ${OUT_DIR}/${DESTDIR}/share/${PKG}/svm_models
+${SUDO} cp -a share/calliope ${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope
 
 ${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 
 ${SUDO} cp -a config/beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets"
 ${SUDO} cp -a beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets/plugins"
+${SUDO} cp -a config/calliope "${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope"
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
 ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf

@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Albums in your Bandcamp online collection
+# that are missing from your local collection.
+
+USERNAME="your_bandcamp_username"
+ONLINE_ALBUMS="cpe bandcamp --user ${USERNAME} collection"
+#LOCAL_ALBUMS="cpe tracker albums"
+LOCAL_ALBUMS="cpe beets albums"
+
+cpe diff --scope=album <($ONLINE_ALBUMS | cpe musicbrainz annotate -) <($LOCAL_ALBUMS)

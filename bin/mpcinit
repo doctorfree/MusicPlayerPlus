@@ -15,6 +15,8 @@ MPDCONF="${MPDCONFDIR}/mpd.conf"
 BEETSCONFDIR="${CONF}/beets"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
+CALIPCONFDIR="${CONF}/calliope"
+CALIPCONF="${CALIPCONFDIR}/calliope.conf"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
@@ -397,6 +399,18 @@ else
 fi
 
 [ -d ${BEETSCONFDIR}/xtraction_data ] || mkdir -p ${BEETSCONFDIR}/xtraction_data
+
+# If there is no user calliope config folder then
+# copy the MusicPlayerPlus calliope config folder
+# into the user's home
+[ -f ${CALIPCONF} ] || {
+  if [ -d ${CALIPCONFDIR} ]
+  then
+    cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONF}
+  else
+    cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
+  fi
+}
 
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"

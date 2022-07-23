@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# List random tracks from the Beets music library
+# First argument can be used to specify number of tracks
+# Default number of tracks without arguments is 10
+
+numtracks=10
+
+[ "$1" ] && numtracks=$1
+
+cpe beets tracks | cpe shuffle --count ${numtracks}
