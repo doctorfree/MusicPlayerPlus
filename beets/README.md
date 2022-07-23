@@ -482,7 +482,7 @@ steps to enable Discogs as a metadata source:
 * No need to install `python3-discogs-client` as this was done during the MusicPlayerPlus initialization with `mpcinit`
 * Login to Discogs to generate a user token
     * Visit the [Developer settings page](https://www.discogs.com/settings/developers) at https://www.discogs.com/settings/developers
-    * Press the 'Generate new token' button
+    * Press the `Generate new token` button
     * Copy the generated token to your clipboard (select the token and press Ctrl-c)
 * Add the generated token in the `discogs` section of the Beets configuration
     * Edit `$HOME/.config/beets/config.yaml`

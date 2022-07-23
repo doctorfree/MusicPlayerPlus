@@ -183,8 +183,9 @@ The special query term 'all' indicates the entire music library, i.e.
 `mpplus -X all`.
 
 These common additional setup steps and more are covered in greater
-detail below in the section on
-[Post Installation Configuration](#post-installation-configuration).
+detail in the [MusicPlayerPlus Beets README](beets/README.md) and the
+[Post Installation Configuration](#post-installation-configuration)
+section below.
 
 ### Quickstart summary
 
