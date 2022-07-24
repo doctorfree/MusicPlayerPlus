@@ -140,6 +140,41 @@ sacad_r /u/audio/music 500 album_cover.png
 Learn more about the Smart Automatic Cover Art Downloader `sacad` at
 https://github.com/desbma/sacad
 
+#### Alternative album cover art download
+
+MusicPlayerPlus includes the `fetchart` Beets plugin. This plugin is
+pre-installed, pre-configured, and enabled. The fetchart Beets plugin
+can be used as an alternative method of downloading album cover art and
+provides significant flexibility and options not available to `sacad`.
+
+Our experience here at MusicPlayerPlus labs has found that `mpplus -D` finds
+and downloads a higher number of album cover art than the fetchart plugin.
+The fetchart plugin is useful for augmenting an initial cover art download
+with `mpplus -D`. The fetchart plugin also has many configurable options
+allowing the user to specify download parameters and sources. The choice
+of which method to use to download cover art is left to the user, both
+methods being supported and useful.
+
+The fetchart plugin can also be used to selectively download album cover
+art by specifying a Beets query limiting the download to those albums
+that do not already have album cover art. This can be useful as a way
+to augment a previous cover art download with `mpplus -D`.
+
+To identify albums without cover art, issue the command:
+
+```
+/usr/share/musicplayerplus/scripts/find-no-covers.sh
+```
+
+After identifying music library folders without album cover art using the
+above command, the `fetchart` Beets plugin, can be used to download cover
+art for those albums with no cover art by specifying a Beets query. For
+example, if the artist "John Doe" has no album cover art, issue the command:
+
+```
+beet fetchart 'John Doe'
+```
+
 ### Convert WAV format media files
 
 If your music library contains WAV format media files, these will not be
