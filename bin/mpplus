@@ -758,7 +758,7 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
-    options+=("Extract and Retrieve Audio Information" "Fetch Lyrics")
+    options+=("Extract Audio Information" "Fetch Lyrics")
     options+=("Manage Music Player Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")

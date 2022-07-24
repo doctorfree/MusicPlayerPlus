@@ -399,7 +399,8 @@ unimported:
     ignore_subdirectories: data tmp
 
 xtractor:
-    auto: no  # auto not implemented yet, run xtractor manually after import
+    # auto not implemented yet, run xtractor manually after import
+    auto: no
     dry-run: no
     write: yes
     threads: 1
