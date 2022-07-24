@@ -66,6 +66,18 @@ with Beets after installing MusicPlayerPlus and initializing with `mpcinit`.
     - Convert WAV format media to MP3 format with the command `mpplus -F`
 - Import the music library into Beets with the command `mpplus -I`
 
+Try playing something with a command like:
+
+```
+beet play QUERY
+```
+
+Where 'QUERY' is a valid Beets query. This can be a simple string like
+"blue" or "love" or a more complicated expression as described in the
+Beets query documentation. The Beets `play` plugin should match the
+query string to songs in your music library, add those songs to the
+MPD queue, and play them. Use `beet ls QUERY` to see what would be played.
+
 ### Create a music library
 
 If you do not already have one, create a music library on the system where

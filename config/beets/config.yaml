@@ -234,9 +234,10 @@ play:
     # The command used to open the playlist. Default: xdg-open
     # Insert $args to use the --args feature.
     #command: mpv $args --playlist
-    command: mpc --quiet $args load 
+    #command: mpc --quiet $args load
+    command: /usr/share/musicplayerplus/scripts/mpcplay.sh $args
     # If set, emit paths relative to this directory. Default: None.
-    #relative_to: ~/Music
+    relative_to: ~/Music
     # When using the -a option, the m3u will contain the paths to each track on
     # the matched albums. Enable this option to store paths to folders instead.
     # Default: no.

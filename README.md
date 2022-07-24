@@ -367,6 +367,27 @@ database. To import your music library into Beets, issue the following command:
 mpplus -I
 ```
 
+Try playing something with a command like:
+
+```
+beet play QUERY
+```
+
+Where 'QUERY' is a valid Beets query. This can be a simple string like
+"blue" or "love" or a more complicated expression as described in the
+Beets query documentation. The Beets `play` plugin should match the
+query string to songs in your music library, add those songs to the
+MPD queue, and play them. Use `beet ls QUERY` to see what would be played.
+
+**[NOTE:]** MusicPlayerPlus has configured the Beets play plugin
+to use the command `/usr/share/musicplayerplus/scripts/mpcplay.sh`
+to play media with this plugin. This script clears the MPD queue,
+adds any songs matching the query to the queue, and plays the MPD queue.
+In addition, two arguments are supported: `--shuffle` and `--debug`.
+These additional arguments are passed using the `--args` feature.
+For example, to play all media matching the string "velvet" and shuffle
+the order of play, issue the command `beet play --args --shuffle velvet`.
+
 For instructions on Beets media library setup and use see the
 [MusicPlayerPlus Beets README](beets/README.md).
 
