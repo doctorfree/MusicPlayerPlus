@@ -1,10 +1,13 @@
+# Output of 'beet config'
+#
+
 directory: ~/Music
 library: ~/.config/beets/musiclibrary.db
 
 lyrics:
     bing_lang_from: []
-    auto: yes
-    sources: musixmatch genius
+    auto: no
+    sources: tekstowo
     bing_client_secret: REDACTED
     bing_lang_to:
     google_API_key: REDACTED
@@ -41,6 +44,7 @@ plugins:
     - duplicates
     - edit
     - extrafiles
+    - fetchart
     - fromfilename
     - hook
     - importadded
@@ -56,6 +60,7 @@ plugins:
     - mpdupdate
     - unimported
     - xtractor
+    - yearfixer
 
 acousticbrainz:
     auto: yes
@@ -64,12 +69,12 @@ acousticbrainz:
 
 albumtypes:
     types:
-        -   ep: EP
-        -   single: Single
-        -   soundtrack: OST
-        -   live: Live
-        -   compilation: Anthology
-        -   remix: Remix
+    -   ep: EP
+    -   single: Single
+    -   soundtrack: OST
+    -   live: Live
+    -   compilation: Anthology
+    -   remix: Remix
     ignore_va: compilation
     bracket: '[]'
 
@@ -77,8 +82,12 @@ bandcamp:
     include_digital_only_tracks: yes
     search_max: 2
     art: no
-    comments_separator: "\n---\n"
-    exclude_extra_fields: [comments, lyrics]
+    comments_separator: '
+
+        ---
+
+        '
+    exclude_extra_fields: [comments]
     genre:
         capitalize: no
         maximum: 0
@@ -104,7 +113,36 @@ duplicates:
 extrafiles:
     patterns:
         all: '*.*'
+
     paths: {}
+
+fetchart:
+    auto: no
+    cautious: no
+    enforce_ratio: yes
+    minwidth: 1000
+    maxwidth: 3000
+    sources:
+    - filesystem
+    - coverart
+    - albumart
+    - wikipedia
+    store_source: yes
+    quality: 0
+    max_filesize: 0
+    cover_names:
+    - cover
+    - front
+    - art
+    - album
+    - folder
+    google_key: REDACTED
+    google_engine: 001442825323518660753:hrh5ch1gjzm
+    fanarttv_key: REDACTED
+    lastfm_key: REDACTED
+    high_resolution: no
+    deinterlace: no
+    cover_format:
 
 mpdstats:
     host: localhost
@@ -126,11 +164,11 @@ lastgenre:
     force: yes
 
 play:
-    command: mpc --quiet $args load
+    command: /usr/share/musicplayerplus/scripts/mpcplay.sh $args
+    relative_to: ~/Music
     raw: yes
     use_folders: no
-    relative_to:
-    warning_threshold: 100
+    warning_threshold: 500
     bom: no
 
 playlist:
@@ -138,36 +176,49 @@ playlist:
     playlist_dir: ~/.config/mpd/playlists
     relative_to: ~/Music
     forward_slash: no
-
 smartplaylist:
     relative_to: ~/Music
     playlist_dir: ~/.config/mpd/playlists
     forward_slash: no
     playlists:
-        -   name: rating.m3u
-            query: rating:0.4..1.0
-        -   name: ween.m3u
-            query: artist:Ween
-        -   name: 1940s.m3u
-            query: year:1940..1949
-        -   name: 1950s.m3u
-            query: year:1950..1959
-        -   name: 1960s.m3u
-            query: year:1960..1969
-        -   name: 1970s.m3u
-            query: year:1970..1979
-        -   name: 1980s.m3u
-            query: year:1980..1989
-        -   name: 1990s.m3u
-            query: year:1990..1999
-        -   name: 2000s.m3u
-            query: year:2000..2009
-        -   name: 2010s.m3u
-            query: year:2010..2019
-        -   name: 2020s.m3u
-            query: year:2020..2029
-        -   name: ReleasedIn$year.m3u
-            query: year::197(0|1|2|3|4|5|6|7|8|9)
+    -   name: rating.m3u
+        query: rating:0.4..1.0
+    -   name: ween.m3u
+        query: artist:Ween
+    -   name: 1940s.m3u
+        query: original_year:1940..1949
+    -   name: 1950s.m3u
+        query: original_year:1950..1959
+    -   name: 1960s.m3u
+        query: original_year:1960..1969
+    -   name: 1970s.m3u
+        query: original_year:1970..1979
+    -   name: 1980s.m3u
+        query: original_year:1980..1989
+    -   name: 1990s.m3u
+        query: original_year:1990..1999
+    -   name: 2000s.m3u
+        query: original_year:2000..2009
+    -   name: 2010s.m3u
+        query: original_year:2010..2019
+    -   name: 2020s.m3u
+        query: original_year:2020..2029
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::195(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::196(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::197(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::198(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::199(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::200(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::201(0|1|2|3|4|5|6|7|8|9)
+    -   name: ReleasedIn$original_year.m3u
+        query: original_year::202(0|1|2)
     auto: yes
     prefix: REDACTED
     urlencode: no
@@ -178,16 +229,16 @@ mpd:
     rating: yes
     rating_mix: 0.75
     password: REDACTED
-    music_directory: ~/Music
+    music_directory: /home/ronnie/Music
     strip_path: ''
 
 musicbrainz:
     extra_tags:
-        - year
-        - catalognum
-        - country
-        - media
-        - label
+    - year
+    - catalognum
+    - country
+    - media
+    - label
 
 match:
     strong_rec_thresh: 0.075
@@ -205,14 +256,14 @@ match:
         countries: [US, XW, GB|UK]
         media: [Digital Media|File, CD]
     ignored_media:
-        - DVD
-        - DVD-Video
-        - Blu-ray
-        - HD-DVD
-        - VCD
-        - SVCD
-        - UMD
-        - VHS
+    - DVD
+    - DVD-Video
+    - Blu-ray
+    - HD-DVD
+    - VCD
+    - SVCD
+    - UMD
+    - VHS
 
 paths:
     default: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
@@ -253,24 +304,24 @@ xtractor:
         highlevel:
             compute: 1
             svm_models:
-                - /usr/share/musicplayerplus/svm_models/danceability.history
-                - /usr/share/musicplayerplus/svm_models/gender.history
-                - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
-                - /usr/share/musicplayerplus/svm_models/genre_electronic.history
-                - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
-                - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
-                - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
-                - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
-                - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
-                - /usr/share/musicplayerplus/svm_models/mood_electronic.history
-                - /usr/share/musicplayerplus/svm_models/mood_happy.history
-                - /usr/share/musicplayerplus/svm_models/mood_party.history
-                - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
-                - /usr/share/musicplayerplus/svm_models/mood_sad.history
-                - /usr/share/musicplayerplus/svm_models/moods_mirex.history
-                - /usr/share/musicplayerplus/svm_models/timbre.history
-                - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
-                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+            - /usr/share/musicplayerplus/svm_models/danceability.history
+            - /usr/share/musicplayerplus/svm_models/gender.history
+            - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
+            - /usr/share/musicplayerplus/svm_models/genre_electronic.history
+            - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
+            - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
+            - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
+            - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
+            - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
+            - /usr/share/musicplayerplus/svm_models/mood_electronic.history
+            - /usr/share/musicplayerplus/svm_models/mood_happy.history
+            - /usr/share/musicplayerplus/svm_models/mood_party.history
+            - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
+            - /usr/share/musicplayerplus/svm_models/mood_sad.history
+            - /usr/share/musicplayerplus/svm_models/moods_mirex.history
+            - /usr/share/musicplayerplus/svm_models/timbre.history
+            - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
+            - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
     low_level_targets:
         bpm:
             path: rhythm.bpm
@@ -363,6 +414,10 @@ xtractor:
             path: highlevel.moods_mirex.all.Cluster5
             type: float
 
+yearfixer:
+    force: yes
+    auto: no
+
 ui:
     color: yes
     colors:
@@ -373,6 +428,7 @@ ui:
         text_highlight_minor: lightgray
         action_default: turquoise
         action: blue
+
 hook:
     hooks: [{event: import_begin, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin}, {event: import, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end}]
 
@@ -381,11 +437,11 @@ edit:
     itemfields: track title artist album
     ignore_fields: id path
 
-describe:
-    auto: no
-
 missing:
     count: no
     total: no
     album: no
+
+describe:
+    auto: no
 

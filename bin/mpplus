@@ -200,6 +200,7 @@ make_it_so() {
       then
         printf "\n\tInitializing YAMS last.fm scrobbler service\n"
         printf "\n\tOpen the token URL to authenticate with Last.fm\n\n"
+        ${YAMSCOMM} -k > /dev/null 2>&1
         ${YAMSCOMM}
         ${YAMSCOMM} -k > /dev/null 2>&1
         if [ -f "${HOME}/.config/yams/yams.yml" ]
@@ -224,11 +225,13 @@ make_it_so() {
           fi
           systemctl --user is-enabled --quiet yams.service
           [ $? -eq 0 ] || systemctl --user enable --quiet yams.service
+          echo ""
           echo "YAMS Last.fm scrobbler activated and running as a service."
           echo "Music played with MusicPlayerPlus should be reflected"
           echo "in your Last.fm account statistics."
           echo ""
           echo "To disable YAMS run the command 'mpplus -y'."
+          echo ""
         fi
       else
         echo "The yams front-end not found or not executable."
@@ -239,10 +242,11 @@ make_it_so() {
       fi
       [ "${DO_NOT_EXIT}" ] || exit 0
     else
-      echo "A YAMS configuration file has been detected."
+      echo "A YAMS service has been detected."
       echo "This may indicate YAMS has already been activated."
-      echo "Check $HOME/.config/yams/ and $HOME/.yams/ for a yams.yml file."
-      echo "To re-activate YAMS, remove any existing yams.yml found"
+      echo "To re-activate YAMS, disable and de-activate the YAMS service:"
+      echo "    systemctl --user disable yams.service"
+      echo "    systemctl --user stop yams.service"
       echo "and re-run the command 'mpplus -Y'"
       [ "${DO_NOT_EXIT}" ] || exit 0
     fi
@@ -254,7 +258,7 @@ make_it_so() {
     echo "and removing YAMS configuration $HOME/.config/yams/"
     while true
     do
-      read -p "Continue with disabling and removal of YAMS ? (y/n) " yn
+      read -p "Continue to disable and remove YAMS configuration ? (y/n) " yn
       case $yn in
         [Yy]* )
               systemctl --user disable yams.service
@@ -1037,17 +1041,21 @@ else
   CONSOLE_MODE=1
   TMUX_MPC=1
 fi
-if [ -f "${HOME}/.config/yams/yams.yml" ]
+
+systemctl --user is-active --quiet yams.service
+if [ $? -eq 0 ]
 then
   need_yams=
 else
-  if [ -f "${HOME}/.yams/yams.yml" ]
+  systemctl --user is-enabled --quiet yams.service
+  if [ $? -eq 0 ]
   then
     need_yams=
   else
     need_yams=1
   fi
 fi
+
 have_uebz=`type -p ueberzug`
 have_cantata=`type -p cantata`
 have_fzf=`type -p fzf`

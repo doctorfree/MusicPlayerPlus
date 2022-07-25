@@ -41,7 +41,7 @@ playlist_dir=`echo ${playlist_dir} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 # Need to expand the tilda to $HOME
 playlist_dir="${playlist_dir/#\~/$HOME}"
 
-[ -f ${playlist_dir}/${NAME}.m3u ] && {
+[ -f "${playlist_dir}/${NAME}.m3u" ] && {
   [ "${OVER}" ] || {
     echo "Playlist ${playlist_dir}/${NAME}.m3u already exists."
     echo "To overwrite the existing playlist, use the -o option."
@@ -57,7 +57,7 @@ mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
 mpd_music="${mpd_music/#\~/$HOME}"
 
 beet list -p ${QUERY} > /tmp/playlist$$
-cat /tmp/playlist$$ | sed -e "s%${mpd_music}/%%" > ${playlist_dir}/${NAME}.m3u
+cat /tmp/playlist$$ | sed -e "s%${mpd_music}/%%" > "${playlist_dir}/${NAME}.m3u"
 rm -f /tmp/playlist$$
 
 echo "Created new playlist: ${playlist_dir}/${NAME}.m3u"
