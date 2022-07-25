@@ -8,7 +8,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Music Player Daemon and ALSA configuration management
 - ***plus*** Beets media library management
 - ***plus*** Automated audio analysis and audio-based information retrieval
-- ***plus*** YAMS MPD Last.FM scrobbler running as a service
+- ***plus*** YAMS MPD Last.fm scrobbler running as a service
 - ***plus*** `asciimatics` color ASCII animations
 - ***plus*** `asciinema` text-based terminal session recording
 
@@ -26,7 +26,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
     1. [Downloading album cover art](#downloading-album-cover-art)
     1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
-    1. [Activating the YAMS scrobbler for Last.FM](#activating-the-yams-scrobbler-for-last.fm)
+    1. [Activating the YAMS scrobbler for Last.fm](#activating-the-yams-scrobbler-for-last.fm)
     1. [MPD Audio Output Configuration](#mpd-audio-output-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
     1. [Start MPD](#start-mpd)
@@ -79,7 +79,7 @@ The `mpplus` command can be used to invoke:
 * An import of a music library to the Beets media library manager
 * A download of lyrics for all songs in the music library without lyrics
 * Analysis and retrieval of audio-based information for media matching a query
-* YAMS MPD Last.FM scrobbler activation
+* YAMS MPD Last.fm scrobbler activation
 * Any MPD client the user wishes to run
 * One of several asciimatics animations optionally accompanied by audio
 * A fuzzy listing and searching of the audio library using `fzf`
@@ -89,7 +89,7 @@ Integration is provided for:
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
 * [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
 * [beets](https://beets.io/), media library management system
-* [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.FM
+* [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.fm
 * [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
@@ -164,7 +164,7 @@ Some common additional setup steps that can be performed include:
 - Converting WAV format media files to MP3 format
 - Importing a music library into the Beets library management system
 - Downloading additional lyrics
-- Activation of YAMS scrobbler for Last.FM
+- Activation of YAMS scrobbler for Last.fm
 - Analysis and retrieval of audio-based information for media matching a query
 
 Configure the music library location by editing `~/.config/mpd/mpd.conf` and
@@ -183,7 +183,7 @@ with the command `mpplus -I`.
 
 Download additional lyrics with the command `mpplus -L`.
 
-Activate the YAMS scrobbler for Last.FM with the command `mpplus -Y`.
+Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`.
 
 Analysis and retrieval of audio-based information can be performed with
 the command `mpplus -X 'query'` where 'query' is a Beets library query.
@@ -409,26 +409,26 @@ For instructions on Beets media library setup and use see the
 Learn more about the Beets media library management system at
 https://beets.io/
 
-### Activating the YAMS scrobbler for Last.FM
+### Activating the YAMS scrobbler for Last.fm
 
 YAMS is an acronym for "Yet Another MPD Scrobbler".
 When YAMS is configured and running, any songs, artists, or albums
-played through MPD get "scrobbled" to [Last.FM](https://www.last.fm).
+played through MPD get "scrobbled" to [Last.fm](https://www.last.fm).
 This enables a tracking of your listening patterns and habits,
-creating a fairly extensive set of statistics viewable on Last.FM.
+creating a fairly extensive set of statistics viewable on Last.fm.
 
 Features:
 
-- Authenticate with the new Last.FM Scrobbling API v2.0 - without the need to input/store your username/password locally.
-- Update your profile's "Now Playing" track via Last.FM's "Now Playing" API
+- Authenticate with the new Last.fm Scrobbling API v2.0 - without the need to input/store your username/password locally.
+- Update your profile's "Now Playing" track via Last.fm's "Now Playing" API
 - Save failed scrobbles to a disk and upload them at a later date.
 - Timing configuration (e.g. scrobble percentage, real world timing values for scrobbling, etc.).
 - Prevent accidental duplicate scrobbles on rewind/playback restart/etc.
 - Automatic daemonization and config file generation.
 
-In order to activate the YAMS scrobbler you will need an account with Last.FM.
+In order to activate the YAMS scrobbler you will need an account with Last.fm.
 
-Activate the YAMS scrobbler for Last.FM with the command:
+Activate the YAMS scrobbler for Last.fm with the command:
 
 ```
 mpplus -Y
@@ -436,9 +436,9 @@ mpplus -Y
 
 The activation process must be run in a terminal window and will provide
 you with a URL. Copy the URL and navigate to it using a web browser.
-This will take you to Last.FM to authenticate if not already logged in
+This will take you to Last.fm to authenticate if not already logged in
 and authorize YAMS access. Once access is authorized there is no need
-to authenticate for future Last.FM access with YAMS. There is also no
+to authenticate for future Last.fm access with YAMS. There is also no
 need to manually run the `yams` command as a user service is activated
 to run it automatically. Basically, nothing else to do, just play music
 and it will be scrobbled by YAMS.

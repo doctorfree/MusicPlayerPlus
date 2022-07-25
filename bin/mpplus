@@ -198,7 +198,7 @@ make_it_so() {
       if [ "${YAMSCOMM}" ]
       then
         printf "\n\tInitializing YAMS last.fm scrobbler service\n"
-        printf "\n\tOpen the token URL to authenticate with Last.FM\n\n"
+        printf "\n\tOpen the token URL to authenticate with Last.fm\n\n"
         ${YAMSCOMM}
         ${YAMSCOMM} -k > /dev/null 2>&1
         if [ -f "${HOME}/.config/yams/yams.yml" ]
@@ -223,9 +223,9 @@ make_it_so() {
           fi
           systemctl --user is-enabled --quiet yams.service
           [ $? -eq 0 ] || systemctl --user enable --quiet yams.service
-          echo "YAMS Last.FM scrobbler activated and running as a service"
+          echo "YAMS Last.fm scrobbler activated and running as a service."
           echo "Music played with MusicPlayerPlus should be reflected"
-          echo "in your Last.FM account statistics."
+          echo "in your Last.fm account statistics."
         fi
       else
         echo "The yams front-end not found or not executable."
@@ -820,7 +820,7 @@ show_main_menu() {
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
-    [ "${need_yams}" ] && options+=("Activate Last.FM Scrobbler Service")
+    [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler Service")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
     options+=("Extract Audio Information" "Fetch Lyrics")
