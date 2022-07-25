@@ -60,6 +60,11 @@ shift $(( OPTIND - 1 ))
     exit 1
 }
 
+[ -x ${PROJ}/mppcava ] && {
+    echo "${PROJ}/mppcava already built"
+    exit 0
+}
+
 cd ${PROJ}
 [ -x ./configure ] || ./autogen.sh
 [ "${AUTOGEN_ONLY}" ] && exit 0

@@ -1,0 +1,16 @@
+[Unit]
+Description=yams
+# Use mpd as a systemd user service to ensure yams starts up after it.
+# See the following link for more info:
+# https://wiki.archlinux.org/index.php/Music_Player_Daemon#Autostart_with_systemd
+After=mpd.service
+
+[Service]
+Type=simple
+Environment="NON_INTERACTIVE=1"
+# Note: Please update this to your installed yams binary's path, if necessary
+# ExecStart=/usr/bin/python3 -m yams -N
+ExecStart=yams -N
+
+[Install]
+WantedBy=default.target

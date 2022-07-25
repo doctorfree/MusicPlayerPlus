@@ -57,8 +57,8 @@ usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
-  printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]"
-  printf "\n\t\t[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]"
+  printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S]"
+  printf "\n\t\t[-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -108,6 +108,7 @@ usage() {
   printf "\n\t-X 'query' performs an analysis and retrieval of audio-based information"
   printf "\n\t\tfor all music library media matching 'query'. A query of 'all' performs"
   printf "\n\t\tthe analysis  and retrieval on the entire music library."
+  printf "\n\t-Y initializes the YAMS last.fm scrobbler service"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
   printf "\n\t\tlist/search/select media in the MPD library."
   printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
@@ -177,6 +178,47 @@ make_it_so() {
       echo "Manual cover art download may be required:"
       printf "\n\tsacad_r <MUSIC_DIRECTORY> 600 cover.jpg"
       printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
+  [ "${ACT_YAMS}" ] && [ "${need_yams}" ] && {
+    have_yams=`type -p yams`
+    if [ "${have_yams}" ]
+    then
+      printf "\n\tInitializing YAMS last.fm scrobbler service\n"
+      printf "\n\tFollow the printed instructions to authenticate with Last.FM\n"
+      yams
+      yams -k > /dev/null 2>&1
+      if [ -f "${HOME}/.config/yams/yams.yml" ]
+      then
+        need_yams=
+      else
+        need_yams=1
+      fi
+      if [ "${need_yams}" ]
+      then
+        echo "YAMS not activated. Try again."
+      else
+        # Prepare the yams scrobbler user service for later activation
+        systemctl --user is-active --quiet yams.service
+        if [ $? -eq 0 ]
+        then
+          # User service is active, restart to pickup any config changes
+          systemctl --user restart --quiet yams.service
+        else
+          systemctl --user start --quiet yams.service
+        fi
+        systemctl --user is-enabled --quiet yams.service
+        [ $? -eq 0 ] || systemctl --user enable --quiet yams.service
+        echo "YAMS Last.FM scrobbler activated and running as a service"
+        echo "Music played with MusicPlayerPlus should be reflected"
+        echo "in your Last.FM account statistics."
+      fi
+    else
+      echo "yams not found or not executable"
+      echo "Check your MusicPlayerPlus installation"
+      echo ""
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
@@ -756,6 +798,7 @@ show_main_menu() {
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
+    [ "${need_yams}" ] && options+=("Activate Last.FM Scrobbler Service")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
     options+=("Extract Audio Information" "Fetch Lyrics")
@@ -802,6 +845,11 @@ show_main_menu() {
               ;;
           "Convert"*,*|*,"Convert"*)
               CONVERT_WAV=1
+              DO_NOT_EXIT=1
+              break
+              ;;
+          "Activate"*,*|*,"Activate"*)
+              ACT_YAMS=1
               DO_NOT_EXIT=1
               break
               ;;
@@ -893,6 +941,7 @@ init_vars() {
   COVER_ART=
   CONVERT_WAV=
   DOWNLOAD_ART=
+  ACT_YAMS=
   FETCH_LYRICS=
   BEETS_IMPORT=
   XTRACTOR=
@@ -935,6 +984,12 @@ else
   CONSOLE_MODE=1
   TMUX_MPC=1
 fi
+if [ -f "${HOME}/.config/yams/yams.yml" ]
+then
+  need_yams=
+else
+  need_yams=1
+fi
 have_uebz=`type -p ueberzug`
 have_cantata=`type -p cantata`
 have_fzf=`type -p fzf`
@@ -945,7 +1000,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:Yz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1128,6 +1183,9 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:z:u" flag; do
       ;;
     X)
       XTRACTOR="${OPTARG}"
+      ;;
+    Y)
+      ACT_YAMS=1
       ;;
     z)
       FZMPOPT="${OPTARG}"

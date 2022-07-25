@@ -11,8 +11,17 @@
 #    beet play --args --shuffle blue
 #    beet play --args "--debug --shuffle" green
 
+MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+
 debug=
 shuffle=
+
+# Get the MPD playlist directory
+playlist_dir=`grep ^playlist_directory ${MPD_CONF}`
+playlist_dir=`echo ${playlist_dir} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+[ "${playlist_dir}" ] || playlist_dir="${HOME}/.config/mpd/playlists"
+# Need to expand the tilda to $HOME
+playlist_dir="${playlist_dir/#\~/$HOME}"
 
 mpc --quiet clear
 
@@ -26,7 +35,18 @@ do
     then
       debug=1
     else
-      mpc --quiet add "$arg"
+      if [ -f ${playlist_dir}/${arg}.m3u ]
+      then
+        mpc --quiet load "$arg"
+      else
+        if [ -f ${playlist_dir}/${arg} ]
+        then
+          name="${arg%.*}"
+          mpc --quiet load "$name"
+        else
+          mpc --quiet add "$arg"
+        fi
+      fi
     fi
   fi
 done

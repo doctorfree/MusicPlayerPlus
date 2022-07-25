@@ -76,6 +76,11 @@ shift $(( OPTIND - 1 ))
     exit 1
 }
 
+[ -x ${PROJ}/src/mpcplus ] && {
+    echo "${PROJ}/src/mpcplus already built"
+    exit 0
+}
+
 cd ${PROJ}
 [ -x ./configure ] || ./autogen.sh
 [ "${AUTOGEN_ONLY}" ] && exit 0

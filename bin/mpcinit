@@ -414,9 +414,14 @@ fi
 
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
+YAMSTATSD="${SYSTEMDIR}/yams.service"
 [ -f ${MPDSTATSD} ] || {
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+}
+[ -f ${YAMSTATSD} ] || {
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/mpd/yams.service ${YAMSTATSD}
 }
 
 FIFS="mppcava/config-tmux mppcava/config systemd/user/mpdstats.service"
@@ -544,10 +549,12 @@ done
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
-  for pkg in asciimatics beautifulsoup4 beets pylast beets-describe \
-             beets-yearfixer beetcamp beets-extrafiles beets-xtractor \
-             python-mpd2 requests sacad tmuxp ueberzug \
-             python3-discogs-client calliope-music
+  # YAMScrobbler must be installed prior to beetcamp
+  # in order to get the later version of requests
+  for pkg in asciimatics beautifulsoup4 YAMScrobbler beets pylast \
+             beets-describe beets-yearfixer beetcamp beets-extrafiles \
+             beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
+             calliope-music python3-discogs-client
   do
     if pip list | grep ${pkg} > /dev/null
     then
@@ -556,6 +563,14 @@ then
       python -m pip install ${pkg} > /dev/null 2>&1
     fi
   done
+# pkg="YAMScrobbler"
+# constraint="/usr/share/musicplayerplus/mpd/yams-constraints.txt"
+# if pip list | grep ${pkg} > /dev/null
+# then
+#   python -m pip install -c ${constraint} --upgrade ${pkg} > /dev/null 2>&1
+# else
+#   python -m pip install -c ${constraint} ${pkg} > /dev/null 2>&1
+# fi
 else
   echo ""
   echo "WARNING: Python pip module not found."
@@ -603,5 +618,7 @@ printf "\nConvert WAV format media to MP3 format with the command:"
 printf "\n\t${BOLD}mpplus -F${NORM}\n"
 printf "\nImport your music library into the Beets Music Organizer with the command:"
 printf "\n\t${BOLD}mpplus -I${NORM}\n"
+printf "\nActivate the YAMS Last.FM scrobbler with the command:"
+printf "\n\t${BOLD}mpplus -Y${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"
 printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
