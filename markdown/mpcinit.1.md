@@ -9,7 +9,7 @@ date: March 24, 2022
 mpcinit - performs one-time initialization of mpcplus configuration files
 
 # SYNOPSIS
-**mpcinit**
+**mpcinit** [sync]
 
 # DESCRIPTION
 The *mpcinit* command copies and configures default configuration files in
@@ -19,6 +19,9 @@ In addition, *mpcinit* initializes the default tmux configuration for the
 user running the command.
 
 Finally, *mpcinit* installs required pip modules if not already installed.
+
+When invoked with the `sync` argument, *mpcinit* synchronizes the music
+library location across all configuration files.
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

@@ -22,7 +22,7 @@ mpcinit - performs one-time initialization of mpcplus configuration
 files
 .SH SYNOPSIS
 .PP
-\f[B]mpcinit\f[R]
+\f[B]mpcinit\f[R] [sync]
 .SH DESCRIPTION
 .PP
 The \f[I]mpcinit\f[R] command copies and configures default
@@ -33,6 +33,9 @@ configuration for the user running the command.
 .PP
 Finally, \f[I]mpcinit\f[R] installs required pip modules if not already
 installed.
+.PP
+When invoked with the \f[V]sync\f[R] argument, \f[I]mpcinit\f[R]
+synchronizes the music library location across all configuration files.
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

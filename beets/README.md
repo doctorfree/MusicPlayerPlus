@@ -10,6 +10,7 @@
     1. [Download album cover art](#download-album-cover-art)
     1. [Convert WAV format media files](#convert-wav-format-media-files)
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
+1. [Playlist creation](#playlist-creation)
 1. [Fetching lyrics](#fetching-lyrics)
 1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
 1. [Configuring the Discogs metadata source](#configuring-the-discogs-metadata-source)
@@ -384,6 +385,29 @@ https://beets.readthedocs.io/en/latest/reference/cli.html
 
 Learn more about the Beets media library management system at
 https://beets.io/
+
+## Playlist creation
+
+MusicPlayerPlus has configured the `smartplaylist` Beets plugin to create
+several MPD playlists automatically. In addition to these smart playlists
+which get automatically created and updated when the music library changes,
+MusicPlayerPlus includes the `create_playlist` command. This command can
+be used to generate new playlists based on Beets queries. Any valid Beets
+query can be supplied as a command-line argument and all songs matching
+the query will be added to a newly created playlist.
+
+```
+Usage: create_playlist [-n playlist-name] [-q beets-query] [-ou]
+Where:
+	-n 'playlist-name' specifies the playlist name
+	-q 'beets-query' specifies the Beets query to use
+	-o indicates overwrite any pre-existing playlist of same name
+	-u displays this usage message and exits
+```
+
+For example, to create a playlist named "LoveList" of all songs in the
+music library with "love" in the song title, artist name, or album name,
+issue the command `create_playlist -n LoveList -q love`.
 
 ## Fetching lyrics
 

@@ -122,6 +122,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **raise_cava** : raises the mppcava spectrum visualizer window
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
+* **create_playlist** : create a new playlist using a Beets query
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
@@ -610,6 +611,7 @@ e.g. `mpplus -u`.
 - [**beet**](markdown/beet.1.md) : Beets media library management command-line interface
 - [**beetsconfig**](markdown/beetsconfig.5.md) : Beets media library management configuration
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
+- [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries
 
 ### Usage
 
