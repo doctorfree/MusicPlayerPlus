@@ -26,7 +26,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
     1. [Downloading album cover art](#downloading-album-cover-art)
     1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
-    1. [Activating the YAMS scrobbler for Last.fm](#activating-the-yams-scrobbler-for-last.fm)
+    1. [Activating the YAMS scrobbler for Last.fm](#activating-the-yams-scrobbler-for-lastfm)
     1. [MPD Audio Output Configuration](#mpd-audio-output-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
     1. [Start MPD](#start-mpd)
