@@ -56,9 +56,9 @@ SCRIPTS="${MPP_DIR}/scripts"
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]"
-  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status]"
-  printf "\n\t\t[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S]"
-  printf "\n\t\t[-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-Y] [-z fzmpopt]"
+  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-n num]"
+  printf "\n\t\t[-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T]"
+  printf "\n\t\t[-u] [-v viz_comm] [-w|W] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -109,6 +109,7 @@ usage() {
   printf "\n\t\tfor all music library media matching 'query'. A query of 'all' performs"
   printf "\n\t\tthe analysis  and retrieval on the entire music library."
   printf "\n\t-Y initializes the YAMS last.fm scrobbler service"
+  printf "\n\t-y disables the YAMS last.fm scrobbler service"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
   printf "\n\t\tlist/search/select media in the MPD library."
   printf "\n\t\tValid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'"
@@ -226,6 +227,8 @@ make_it_so() {
           echo "YAMS Last.fm scrobbler activated and running as a service."
           echo "Music played with MusicPlayerPlus should be reflected"
           echo "in your Last.fm account statistics."
+          echo ""
+          echo "To disable YAMS run the command 'mpplus -y'."
         fi
       else
         echo "The yams front-end not found or not executable."
@@ -243,6 +246,33 @@ make_it_so() {
       echo "and re-run the command 'mpplus -Y'"
       [ "${DO_NOT_EXIT}" ] || exit 0
     fi
+  }
+
+  [ "${DIS_YAMS}" ] && {
+    # Disable YAMS service
+    echo "Disabling YAMS Last.fm scrobbler service"
+    echo "and removing YAMS configuration $HOME/.config/yams/"
+    while true
+    do
+      read -p "Continue with disabling and removal of YAMS ? (y/n) " yn
+      case $yn in
+        [Yy]* )
+              systemctl --user disable yams.service
+              systemctl --user stop yams.service
+              rm -rf ${HOME}/.config/yams
+              printf "\n\nYAMS disabled and configuration removed."
+              printf "\nTo re-enable YAMS run the command 'mpplus -Y'.\n"
+              exit 0
+              ;;
+        [Nn]* )
+              printf "\n\nYAMS service left as-is, no changes made."
+              printf "\nExiting.\n"
+              exit 0
+              ;;
+            * ) echo "Please answer yes or no."
+              ;;
+      esac
+    done
   }
 
   [ "${FETCH_LYRICS}" ] && {
@@ -964,6 +994,7 @@ init_vars() {
   CONVERT_WAV=
   DOWNLOAD_ART=
   ACT_YAMS=
+  DIS_YAMS=
   FETCH_LYRICS=
   BEETS_IMPORT=
   XTRACTOR=
@@ -1027,7 +1058,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:Yz:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1210,6 +1241,9 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:Yz:u" flag; do
       ;;
     X)
       XTRACTOR="${OPTARG}"
+      ;;
+    y)
+      DIS_YAMS=1
       ;;
     Y)
       ACT_YAMS=1

@@ -427,6 +427,12 @@ Features:
 - Automatic daemonization and config file generation.
 
 In order to activate the YAMS scrobbler you will need an account with Last.fm.
+Free accounts with Last.fm include many of the service features and can
+provide extensive listening history statistics. If you do not wish to
+use Last.fm to analyze MPD track plays then this optional setup step
+can be ignored and no action is required as MusicPlayerPlus disables
+YAMS by default. Disable a previously activated YAMS service with the
+command `mpplus -y`.
 
 Activate the YAMS scrobbler for Last.fm with the command:
 
@@ -443,8 +449,7 @@ need to manually run the `yams` command as a user service is activated
 to run it automatically. Basically, nothing else to do, just play music
 and it will be scrobbled by YAMS.
 
-YAMS creates a configuration file `$HOME/.config/yams/yams.yml` if you
-wish to view its configuration.
+YAMS creates a configuration file `$HOME/.config/yams/yams.yml`.
 
 ### MPD Audio Output Configuration
 
@@ -672,9 +677,9 @@ summary of the command line options:
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]
-		[-M alsaconf|enable|disable|restart|start|stop|status]
-		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S]
-		[-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-Y] [-z fzmpopt]
+		[-M alsaconf|enable|disable|restart|start|stop|status] [-n num]
+		[-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T]
+		[-u] [-v viz_comm] [-w|W] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -725,6 +730,7 @@ General options:
 		for all music library media matching 'query'. A query of 'all' performs
 		the analysis  and retrieval on the entire music library.
 	-Y initializes the YAMS last.fm scrobbler service
+	-y disables the YAMS last.fm scrobbler service
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
 		list/search/select media in the MPD library.
 		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
