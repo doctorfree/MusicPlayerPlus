@@ -182,56 +182,67 @@ make_it_so() {
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
-  [ "${ACT_YAMS}" ] && [ "${need_yams}" ] && {
-    YAMSCOMM=
-    have_yams=`type -p yams`
-    if [ "${have_yams}" ]
+  [ "${ACT_YAMS}" ] && {
+    if [ "${need_yams}" ]
     then
-      YAMSCOMM=yams
-    else
-      [ -x ${HOME}/.local/bin/yams ] && {
-        YAMSCOMM="${HOME}/.local/bin/yams"
-      }
-    fi
-    if [ "${YAMSCOMM}" ]
-    then
-      printf "\n\tInitializing YAMS last.fm scrobbler service\n"
-      printf "\n\tOpen the token URL to authenticate with Last.FM\n\n"
-      ${YAMSCOMM}
-      ${YAMSCOMM} -k > /dev/null 2>&1
-      if [ -f "${HOME}/.config/yams/yams.yml" ]
+      YAMSCOMM=
+      have_yams=`type -p yams`
+      if [ "${have_yams}" ]
       then
-        need_yams=
+        YAMSCOMM=yams
       else
-        need_yams=1
+        [ -x ${HOME}/.local/bin/yams ] && {
+          YAMSCOMM="${HOME}/.local/bin/yams"
+        }
       fi
-      if [ "${need_yams}" ]
+      if [ "${YAMSCOMM}" ]
       then
-        echo "YAMS not activated. Try again."
-      else
-        # Prepare the yams scrobbler user service for later activation
-        systemctl --user is-active --quiet yams.service
-        if [ $? -eq 0 ]
+        printf "\n\tInitializing YAMS last.fm scrobbler service\n"
+        printf "\n\tOpen the token URL to authenticate with Last.FM\n\n"
+        ${YAMSCOMM}
+        ${YAMSCOMM} -k > /dev/null 2>&1
+        if [ -f "${HOME}/.config/yams/yams.yml" ]
         then
-          # User service is active, restart to pickup any config changes
-          systemctl --user restart --quiet yams.service
+          need_yams=
         else
-          systemctl --user start --quiet yams.service
+          need_yams=1
         fi
-        systemctl --user is-enabled --quiet yams.service
-        [ $? -eq 0 ] || systemctl --user enable --quiet yams.service
-        echo "YAMS Last.FM scrobbler activated and running as a service"
-        echo "Music played with MusicPlayerPlus should be reflected"
-        echo "in your Last.FM account statistics."
+        if [ "${need_yams}" ]
+        then
+          echo "YAMS not activated."
+          echo "Activate YAMS manually by executing the command 'yams'."
+        else
+          # Prepare the yams scrobbler user service for later activation
+          systemctl --user is-active --quiet yams.service
+          if [ $? -eq 0 ]
+          then
+            # User service is active, restart to pickup any config changes
+            systemctl --user restart --quiet yams.service
+          else
+            systemctl --user start --quiet yams.service
+          fi
+          systemctl --user is-enabled --quiet yams.service
+          [ $? -eq 0 ] || systemctl --user enable --quiet yams.service
+          echo "YAMS Last.FM scrobbler activated and running as a service"
+          echo "Music played with MusicPlayerPlus should be reflected"
+          echo "in your Last.FM account statistics."
+        fi
+      else
+        echo "The yams front-end not found or not executable."
+        echo "Check your MusicPlayerPlus installation."
+        echo "Yams can be installed with the command:"
+        echo "    python3 -m pip install YAMScrobbler"
+        echo ""
       fi
+      [ "${DO_NOT_EXIT}" ] || exit 0
     else
-      echo "The yams front-end not found or not executable."
-      echo "Check your MusicPlayerPlus installation."
-      echo "Yams can be installed with the command:"
-      echo "    python3 -m pip install YAMScrobbler"
-      echo ""
+      echo "A YAMS configuration file has been detected."
+      echo "This may indicate YAMS has already been activated."
+      echo "Check $HOME/.config/yams/ and $HOME/.yams/ for a yams.yml file."
+      echo "To re-activate YAMS, remove any existing yams.yml found"
+      echo "and re-run the command 'mpplus -Y'"
+      [ "${DO_NOT_EXIT}" ] || exit 0
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
   [ "${FETCH_LYRICS}" ] && {
@@ -999,7 +1010,12 @@ if [ -f "${HOME}/.config/yams/yams.yml" ]
 then
   need_yams=
 else
-  need_yams=1
+  if [ -f "${HOME}/.yams/yams.yml" ]
+  then
+    need_yams=
+  else
+    need_yams=1
+  fi
 fi
 have_uebz=`type -p ueberzug`
 have_cantata=`type -p cantata`
