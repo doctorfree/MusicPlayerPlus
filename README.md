@@ -208,6 +208,11 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Download album cover art with the command `mpplus -D`
     * Convert WAV format files to MP3 format with the command `mpplus -F`
     * Import your music library into Beets with the command `mpplus -I`
+    * Download additional lyrics with the command `mpplus -L`
+    * Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`
+    * Analyze and retrieve audio-based information with a command like:
+        * `mpplus -X 'query'` where 'query' is a Beets library query
+        * `mpplus -X all` indicating analyze the entire Beets library
 
 ## Installation
 
