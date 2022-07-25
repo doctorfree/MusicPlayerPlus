@@ -93,7 +93,10 @@ bandcamp:
 #   extension: mp3
 
 duplicates:
-    album: yes
+    album: no
+    # Uncomment the preferred method to compare tracks, checksum or IDs
+    checksum: ffmpeg -i {file} -f crc -
+#   keys: [mb_trackid, mb_albumid]
 #   tiebreak:
 #       items: [bitrate]
 

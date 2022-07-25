@@ -95,8 +95,8 @@ bandcamp:
         mode: progressive
 
 duplicates:
-    album: yes
-    checksum: ''
+    album: no
+    checksum: ffmpeg -i {file} -f crc -
     copy: ''
     count: no
     delete: no

@@ -12,6 +12,7 @@
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
 1. [Playlist creation](#playlist-creation)
 1. [Fetching lyrics](#fetching-lyrics)
+1. [Finding duplicate tracks](#finding-duplicate-tracks)
 1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
 1. [Configuring the Discogs metadata source](#configuring-the-discogs-metadata-source)
 1. [MusicPlayerPlus Beets plugins](#musicplayerplus-beets-plugins)
@@ -457,6 +458,46 @@ change the `sources: tekstowo` setting in the `lyrics:` section of
 See the
 [Beets lyrics plugin documentation](https://beets.readthedocs.io/en/stable/plugins/lyrics.html)
 for more information on configuring and using the Beets lyrics plugin.
+
+## Finding duplicate tracks
+
+The Beets `duplicates` plugin can be used to identify duplicate tracks
+in the music library. Why and how I ended up with so many duplicate tracks
+in my library is a mystery but Beets helped me find and delete them, saving
+quite a bit of disk space and confusion. MusicPlayerPlus includes a default
+configuration for the duplicates plugin that uses checksums to identify
+duplicate files in the music library. The duplicates plugin has several
+methods available including comparing MusicBrainz IDs, any checksum program
+you wish to configure, and any set of attributes you prefer to use.
+
+MusicPlayerPlus utilizes checksums calculated by `ffmpeg` as the preferred
+method for detecting duplicates. Edit the `duplicates` configuration section
+of `$HOME/.config/beets/config.yaml` to enable an alternate method.
+
+In addition to configuring the method for identifying duplicates, you may
+wish to modify how the duplicates plugin decides which of the duplicates
+to keep and which to delete. By default, the tie-breaking procedure favors
+the most complete metadata attribute set. If you would like to consider the
+lower bitrates as duplicates, set `tiebreak: items: [bitrate]` in the
+duplicates section of the Beets `config.yaml`.
+
+The recommended workflow for identifying and removing duplicate tracks from
+a music library consists of two passes. First, simply list any duplicates
+with the command `beet duplicates`. Review these files manually to confirm
+they are not wanted. The listing of duplicates in the first pass made no
+changes to the music library. To delete the duplicates from the Beets
+library and from disk, run a second pass with the command `beet duplicates -d`.
+
+After deleting duplicates, some filenames may have an inappropriate suffix
+that was added when they were initially created. For example, there may
+have been duplicate files `Some Artist/Some Album/Some Track.mp3` and
+`Some Artist/Some Album/Some Track.2.mp3`. The duplicates plugin may
+have deleted `Some Artist/Some Album/Some Track.mp3` and left
+`Some Artist/Some Album/Some Track.2.mp3` in the library. To rename these
+kinds of files use the `beet move` command. Again, recommended workflow
+is two passes. First perform a dry-run with the command `beet move -p`.
+This will tell you what it would do but not do anything. If that looks
+good then perform the file renaming with the command `beet move`.
 
 ## Automated audio analysis and audio-based information retrieval
 
