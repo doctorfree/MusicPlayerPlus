@@ -7,6 +7,9 @@ This major release of MusicPlayerPlus adds:
     * Beets xtractor plugin performs acoustic analysis and metadata updates
     * Gaia and Essentia for audio analysis and audio-based information retrieval
     * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
+* Support for automated WAV to MP3 conversion with `mpplus -F`
+* Support for automated lyrics download with `mpplus -L`
+* Support for YAMS Last.fm scrobbler activation with `mpplus -Y`
 * Many more improvements and features (See [Changelog](#changelog) below)
 
 ## Installation
@@ -74,6 +77,11 @@ Changes in version 2.0.1 release 1 include:
 * Scripts to convert WAV format media to MP3 format media
 * Custom Beets play plugin configuration to use `mpc`
 * Auto generation of smart MPD playlists
+* Add support for automated WAV to MP3 conversion with `mpplus -F`
+* Add support for automated lyrics download with `mpplus -L`
+* Add support for YAMS Last.fm scrobbler activation with `mpplus -Y`
+* Add `create_playlist` command to create new playlists from Beets queries
+* Add support for Calliope playlist toolkit
 * Enhanced Beets import logging
 * Man pages for `beets` and `beetsconfig`
 * Integrate basic Beets initialization and management in `mpplus`

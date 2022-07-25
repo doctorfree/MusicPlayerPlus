@@ -14,6 +14,11 @@ All notable changes to this project will be documented in this file.
 * Scripts to convert WAV format media to MP3 format media
 * Custom Beets play plugin configuration to use `mpc`
 * Auto generation of smart MPD playlists
+* Add support for automated WAV to MP3 conversion with `mpplus -F`
+* Add support for automated lyrics download with `mpplus -L`
+* Add support for YAMS Last.fm scrobbler activation with `mpplus -Y`
+* Add `create_playlist` command to create new playlists from Beets queries
+* Add support for Calliope playlist toolkit
 * Enhanced Beets import logging
 * Man pages for `beets` and `beetsconfig`
 * Integrate basic Beets initialization and management in `mpplus`
