@@ -25,7 +25,7 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
-[-w|W] [-X query] [-z fzmpopt]
+[-w|W] [-X query] [-Y] [-z fzmpopt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -192,14 +192,17 @@ music library media matching \[aq]query\[aq].
 A query of \[aq]all\[aq] performs the analysis and retrieval on the
 entire music library.
 .TP
+\f[B]-Y\f[R]
+initializes the YAMS last.fm scrobbler service
+.TP
 \f[B]-z opt\f[R]
-Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
+specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
 list/search/select MPD media.
 Valid values for \f[V]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
 \[aq]g\[aq], \[aq]p\[aq], or \[aq]P\[aq]
 .TP
 \f[B]-u\f[R]
-Displays this usage message and exits
+displays this usage message and exits
 .SH EXAMPLES
 .TP
 \f[B]mpplus\f[R]

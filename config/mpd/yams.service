@@ -10,7 +10,7 @@ Type=simple
 Environment="NON_INTERACTIVE=1"
 # Note: Please update this to your installed yams binary's path, if necessary
 # ExecStart=/usr/bin/python3 -m yams -N
-ExecStart=yams -N
+ExecStart=/usr/share/musicplayerplus/scripts/python3.sh -m yams -N
 
 [Install]
 WantedBy=default.target

@@ -183,13 +183,22 @@ make_it_so() {
   }
 
   [ "${ACT_YAMS}" ] && [ "${need_yams}" ] && {
+    YAMSCOMM=
     have_yams=`type -p yams`
     if [ "${have_yams}" ]
     then
+      YAMSCOMM=yams
+    else
+      [ -x ${HOME}/.local/bin/yams ] && {
+        YAMSCOMM="${HOME}/.local/bin/yams"
+      }
+    fi
+    if [ "${YAMSCOMM}" ]
+    then
       printf "\n\tInitializing YAMS last.fm scrobbler service\n"
-      printf "\n\tFollow the printed instructions to authenticate with Last.FM\n"
-      yams
-      yams -k > /dev/null 2>&1
+      printf "\n\tOpen the token URL to authenticate with Last.FM\n\n"
+      ${YAMSCOMM}
+      ${YAMSCOMM} -k > /dev/null 2>&1
       if [ -f "${HOME}/.config/yams/yams.yml" ]
       then
         need_yams=
@@ -216,8 +225,10 @@ make_it_so() {
         echo "in your Last.FM account statistics."
       fi
     else
-      echo "yams not found or not executable"
-      echo "Check your MusicPlayerPlus installation"
+      echo "The yams front-end not found or not executable."
+      echo "Check your MusicPlayerPlus installation."
+      echo "Yams can be installed with the command:"
+      echo "    python3 -m pip install YAMScrobbler"
       echo ""
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0

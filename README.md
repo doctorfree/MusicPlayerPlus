@@ -396,6 +396,13 @@ These additional arguments are passed using the `--args` feature.
 For example, to play all media matching the string "velvet" and shuffle
 the order of play, issue the command `beet play --args --shuffle velvet`.
 
+Example usage of the `beet play` command:
+
+* `beet play velvet`
+* `beet play playlist:1970s`
+* `beet play --args --shuffle playlist:1990s`
+* `beet play --args "--debug --shuffle" green eyes`
+
 For instructions on Beets media library setup and use see the
 [MusicPlayerPlus Beets README](beets/README.md).
 
@@ -666,8 +673,8 @@ summary of the command line options:
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]
 		[-M alsaconf|enable|disable|restart|start|stop|status]
-		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song]
-		[-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-z fzmpopt]
+		[-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S]
+		[-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -706,7 +713,7 @@ General options:
 		In conjunction with '-I', the '-A' flag disables auto-tagging
 	-i indicates start mpplus in interactive mode
 	-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
-    -L indicates download lyrics to the Beets library and exit
+	-L indicates download lyrics to the Beets library and exit
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
 		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
@@ -717,6 +724,7 @@ General options:
 	-X 'query' performs an analysis and retrieval of audio-based information
 		for all music library media matching 'query'. A query of 'all' performs
 		the analysis  and retrieval on the entire music library.
+	-Y initializes the YAMS last.fm scrobbler service
 	-z fzmpopt specifies the fzmp option and invokes fzmp to
 		list/search/select media in the MPD library.
 		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
