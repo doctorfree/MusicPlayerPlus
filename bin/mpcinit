@@ -146,19 +146,6 @@ sync_music_dir() {
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
     }
-    # Don't do beets import here
-    # Let the user decide when this potentially lengthy process runs
-    #
-    # if [ -x ${SCPTDIR}/beet_import.sh ]
-    # then
-    #   ${SCPTDIR}/beet_import.sh -d "${exp_music}" &
-    # else
-    #   echo ""
-    #   echo "WARNING: Could not locate beets import script"
-    #   echo "A manual beets import must be performed by executing the commands:"
-    #   echo "    beet import ${exp_music}"
-    #   echo "    beet import -ps ${exp_music}"
-    # fi
 
     # Disable and stop any system-wide MPD service
     systemctl is-enabled --quiet mpd.service
@@ -202,6 +189,36 @@ sync_music_dir() {
     echo "Manual configuration of ${MPDCONF} and ${HOME}/${MPCDIR}/config required"
   fi
 }
+
+function check_py_version
+{
+	# Full version number e.g. 2.7.1
+	python_version="$(echo "$($1 -V 2>&1)" | sed -e "s/^.* \(.*\)$/\\1/g")"
+
+	# Return (the first letter -lt "3")
+	! [ "$(echo $python_version | head -c 1 )" -lt "3" ]
+}
+
+PYTHON=""
+POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
+PY3_SUPPORT=false
+
+for i in "${POTENTIAL_BINARIES[@]}"
+do
+	PYTHON="$i"
+
+	if  $(check_py_version ${PYTHON}) ;
+	then
+		PY3_SUPPORT=true
+		break
+	fi
+done
+
+if [ ! ${PY3_SUPPORT} ]
+then
+	echo "[ERROR] Could not find python3 binary, please add it to your \$PATH before continuing"
+	exit
+fi
 
 iamroot=
 if [ "${EUID}" ]
@@ -542,35 +559,36 @@ do
   }
 done
 
-# To install latest Beets source tarball:
-#    - Uninstall Beets (python -m pip uninstall beets)
-#    - pip install https://github.com/beetbox/beets/tarball/master
-
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
+  if [ "$1" == "beetsdev" ]
+  then
+    # To install latest Beets source tarball:
+    #    - Uninstall Beets (python -m pip uninstall beets)
+    #    - pip install https://github.com/beetbox/beets/tarball/master
+    ${PYTHON} -m pip uninstall beets > /dev/null 2>&1
+    ${PYTHON} -m pip install --user \
+      https://github.com/beetbox/beets/tarball/master > /dev/null 2>&1
+    BEETS=
+  else
+    BEETS=beets
+  fi
+
   # YAMScrobbler must be installed prior to beetcamp
   # in order to get the later version of requests
-  for pkg in asciimatics beautifulsoup4 YAMScrobbler beets pylast \
+  for pkg in asciimatics beautifulsoup4 YAMScrobbler ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
              calliope-music python3-discogs-client
   do
     if pip list | grep ${pkg} > /dev/null
     then
-      python -m pip install --upgrade ${pkg} > /dev/null 2>&1
+      ${PYTHON} -m pip install --user --upgrade ${pkg} > /dev/null 2>&1
     else
-      python -m pip install ${pkg} > /dev/null 2>&1
+      ${PYTHON} -m pip install --user ${pkg} > /dev/null 2>&1
     fi
   done
-# pkg="YAMScrobbler"
-# constraint="/usr/share/musicplayerplus/mpd/yams-constraints.txt"
-# if pip list | grep ${pkg} > /dev/null
-# then
-#   python -m pip install -c ${constraint} --upgrade ${pkg} > /dev/null 2>&1
-# else
-#   python -m pip install -c ${constraint} ${pkg} > /dev/null 2>&1
-# fi
 else
   echo ""
   echo "WARNING: Python pip module not found."
@@ -585,15 +603,53 @@ else
   echo "rerun the 'mpcinit' MusicPlayer initialization."
 fi
 
+# Patch lastgenre plugin if PyYAML is version 5.1 or greater
+YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
+have_genre=
+[ -x ${SCPTDIR}/vercomp.sh ] && {
+  ${SCPTDIR}/vercomp.sh "${YAMV}" "5.1" > /dev/null
+  [ $? -lt 2 ] && {
+    SITE=`${PYTHON} -m site --user-site`
+    GNRE="${SITE}/beetsplug/lastgenre/__init__.py"
+    if [ -f "${GNRE}" ]
+    then
+      have_genre="${GNRE}"
+    else
+      SITE=`${PYTHON} -m pip show beets-extrafiles | grep Location: | awk ' { print $2 } '`
+      GNRE="${SITE}/beetsplug/lastgenre/__init__.py"
+      [ -f "${GNRE}" ] && have_genre="${GNRE}"
+    fi
+  }
+}
+
+[ "${have_genre}" ] && {
+  # Update Python PyYAML to get support for unsafe_load of YAML
+  # (Needed by lastgenre plugin when used with Python 3.10)
+  YLOC=`${PYTHON} -m pip show PyYAML | grep Location: | awk ' { print $2 } '`
+  pylocal=
+  echo "${YLOC}" | grep "${HOME}" > /dev/null && pylocal=1
+  if [ "${pylocal}" ]
+  then
+    ${PYTHON} -m pip install -U PyYAML > /dev/null 2>&1
+  else
+    sudo ${PYTHON} -m pip install -U PyYAML > /dev/null 2>&1
+  fi
+  grep yaml.safe_load "${have_genre}" > /dev/null && {
+    cat "${have_genre}" | sed -e "s/yaml.safe_load/yaml.unsafe_load/" > /tmp/gen$$
+    cp /tmp/gen$$ "${have_genre}"
+    rm -f /tmp/gen$$
+  }
+}
+
 # Patch beets-extrafiles plugin
 have_extra=
-SITE=`python -m site --user-site`
+SITE=`${PYTHON} -m site --user-site`
 EXTR="${SITE}/beetsplug/extrafiles.py"
 if [ -f "${EXTR}" ]
 then
   have_extra="${EXTR}"
 else
-  SITE=`python -m pip show beets-extrafiles | grep Location: | awk ' { print $2 } '`
+  SITE=`${PYTHON} -m pip show beets-extrafiles | grep Location: | awk ' { print $2 } '`
   EXTR="${SITE}/beetsplug/extrafiles.py"
   [ -f "${EXTR}" ] && have_extra="${EXTR}"
 fi
