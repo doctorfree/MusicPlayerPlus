@@ -603,41 +603,25 @@ else
   echo "rerun the 'mpcinit' MusicPlayer initialization."
 fi
 
-# Patch lastgenre plugin if PyYAML is version 5.1 or greater
+# Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
+VMIN="5.4.1"
+# Ensure PyYAML is version ${VMIN} or greater
 YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
-have_genre=
 [ -x ${SCPTDIR}/vercomp.sh ] && {
-  ${SCPTDIR}/vercomp.sh "${YAMV}" "5.1" > /dev/null
-  [ $? -lt 2 ] && {
-    SITE=`${PYTHON} -m site --user-site`
-    GNRE="${SITE}/beetsplug/lastgenre/__init__.py"
-    if [ -f "${GNRE}" ]
+  ${SCPTDIR}/vercomp.sh "${YAMV}" "${VMIN}" > /dev/null
+  [ $? -eq 2 ] && {
+    # Update Python PyYAML to get support for safe_load of lastgenre
+    # Beets plugin when used with Python 3.10
+    # Specify version ${VMIN} to avoid updating to version 6
+    YLOC=`${PYTHON} -m pip show PyYAML | grep Location: | awk ' { print $2 } '`
+    pylocal=
+    echo "${YLOC}" | grep "${HOME}" > /dev/null && pylocal=1
+    if [ "${pylocal}" ]
     then
-      have_genre="${GNRE}"
+      ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
     else
-      SITE=`${PYTHON} -m pip show beets-extrafiles | grep Location: | awk ' { print $2 } '`
-      GNRE="${SITE}/beetsplug/lastgenre/__init__.py"
-      [ -f "${GNRE}" ] && have_genre="${GNRE}"
+      sudo ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
     fi
-  }
-}
-
-[ "${have_genre}" ] && {
-  # Update Python PyYAML to get support for unsafe_load of YAML
-  # (Needed by lastgenre plugin when used with Python 3.10)
-  YLOC=`${PYTHON} -m pip show PyYAML | grep Location: | awk ' { print $2 } '`
-  pylocal=
-  echo "${YLOC}" | grep "${HOME}" > /dev/null && pylocal=1
-  if [ "${pylocal}" ]
-  then
-    ${PYTHON} -m pip install -U PyYAML > /dev/null 2>&1
-  else
-    sudo ${PYTHON} -m pip install -U PyYAML > /dev/null 2>&1
-  fi
-  grep yaml.safe_load "${have_genre}" > /dev/null && {
-    cat "${have_genre}" | sed -e "s/yaml.safe_load/yaml.unsafe_load/" > /tmp/gen$$
-    cp /tmp/gen$$ "${have_genre}"
-    rm -f /tmp/gen$$
   }
 }
 
