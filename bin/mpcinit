@@ -575,9 +575,10 @@ then
     BEETS=beets
   fi
 
-  # YAMScrobbler must be installed prior to beetcamp
-  # in order to get the later version of requests
-  for pkg in asciimatics beautifulsoup4 YAMScrobbler ${BEETS} pylast \
+  # YAMScrobbler must be installed prior to beetcamp plus
+  # PyPi is confused about the latest release version
+  ${PYTHON} -m pip install --user YAMScrobbler==0.7.3 > /dev/null 2>&1
+  for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
              calliope-music python3-discogs-client
