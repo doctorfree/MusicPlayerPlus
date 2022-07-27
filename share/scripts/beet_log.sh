@@ -11,12 +11,6 @@
 # many hours to import. The length of import time can vary depending
 # upon which plugins are enabled and the settings for those plugins.
 #
-# If import times are unreasonably long, try removing/disabling/reconfiguring
-# some plugins. Plugins that may increase import times include the
-# acousticbrainz and fetchart plugins.
-#
-# Importing "as-is" can avoid long import times.
-#
 # See ~/.config/beets/config.yaml for the hook plugin configuration
 
 LOG="${HOME}/.config/beets/import_time.log"

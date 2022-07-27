@@ -4,7 +4,7 @@ MusicPlayerPlus configuration files for `tmuxp`.
 
 These tmuxp configuration files are copied into the user's
 `~/.config/tmuxp/` folder by the MusicPlayerPlus initialization
-utility `mpcinit`.
+utility `mppinit`.
 
 If a `tmuxp` configuration file (YAML or JSON format) is located
 in `~/.config/tmuxp/` then an invocation of `tmuxp` will find it

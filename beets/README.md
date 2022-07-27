@@ -48,21 +48,21 @@ It is an open source media library management system.
 
 ## Getting started with Beets
 
-MusicPlayerPlus has integrated Beets initialization and use into the `mpcinit`
+MusicPlayerPlus has integrated Beets initialization and use into the `mppinit`
 initialization command and the `mpplus` primary user interface. Due to its
 complexity, flexibility, and power, Beets can be fairly difficult to manage.
 MusicPlayerPlus attempts to ease the task of managing your music library
 with Beets. The following few steps are all that is necessary to get started
-with Beets after installing MusicPlayerPlus and initializing with `mpcinit`.
+with Beets after installing MusicPlayerPlus and initializing with `mppinit`.
 
 ### Quickstart with Beets
 
-- After installing MusicPlayerPlus and running `mpcinit`
+- After installing MusicPlayerPlus and running `mppinit`
 - Create a music library if you do not already have one
 - If your music library is not in `$HOME/Music/`:
     - Edit `$HOME/.config/mpd/mpd.conf`
     - Set `music_directory` to the music library location 
-    - Run the command `mpcinit sync`
+    - Run the command `mppinit sync`
 - Optionally:
     - Download album cover art with the command `mpplus -D`
     - Convert WAV format media to MP3 format with the command `mpplus -F`
@@ -108,7 +108,7 @@ then edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory`
 configuration to the location of your music library.
 
 After configuring `mpd.conf` with the proper `music_directory` setting,
-run the command `mpcinit sync`. This will update other MusicPlayerPlus
+run the command `mppinit sync`. This will update other MusicPlayerPlus
 and Beets configuration files that need to know the music library location.
 
 If your music library location is `$HOME/Music` then you can skip this step.
@@ -508,14 +508,10 @@ variety of audio parameters, and write metadata to the Beets library.
 This process can provide information on audio in a music library that
 can be used to filter and select songs by their detected audio qualities.
 
-The `acousticbrainz` plugin, also installed and pre-configured in
-MusicPlayerPlus 2.0.1, performs the same function and even uses the
-same Essentia technology to analyze audio data. A MusicPlayerPlus
-initialization of the Beets music library database will automatically
-add metadata for songs in the music library using `acousticbrainz`.
-
-However, `acousticbrainz` does not perform an analysis on all songs
-and, worse, the AcousticBrainz service is being retired in 2023.
+**[NOTE on acousticbrainz]** The `acousticbrainz` plugin performs a
+similar function and even uses the same Essentia technology to analyze
+audio data. However, `acousticbrainz` does not perform an analysis on
+all songs and, worse, the AcousticBrainz service is being retired in 2023.
 For these reasons, MusicPlayerPlus provides the built-in capability
 to perform acoustic audio analysis using Essentia and the xtractor plugin.
 
@@ -553,18 +549,25 @@ beet list -f '$artist: $album - $title' mood_party::^$
 ```
 
 Other songs for which the `xtractor` plugin may prove useful are those
-for which `acousticbrainz` mistakenly added a bpm value of 0. To find
-these songs, issue the command:
+for which `acousticbrainz` mistakenly added a bpm value of 0 or those
+for which no bpm attribute has been set. To find songs with a bpm value
+of 0, issue the command:
 
 ```
 beet list -f '$artist: $album - $title' bpm:0
 ```
 
-To analyze and retrieve information for all songs in the music library
-with a bpm value of 0, issue the command:
+To find songs for which no bpm attribute has been set, issue the command:
 
 ```
-mpplus -X bpm:0
+beet list -f '$artist: $album - $title' bpm::^$
+```
+
+To analyze and retrieve information for all songs in the music library
+with a bpm value of 0 or no bpm attribute, issue the command:
+
+```
+mpplus -X bpm:0 bpm::^$
 ```
 
 ## Configuring the Discogs metadata source
@@ -598,7 +601,7 @@ this automatically. It must be performed by the Beets user. Follow these
 steps to enable Discogs as a metadata source:
 
 * Register for a free Discogs account by visiting https://www.discogs.com
-* No need to install `python3-discogs-client` as this was done during the MusicPlayerPlus initialization with `mpcinit`
+* No need to install `python3-discogs-client` as this was done during the MusicPlayerPlus initialization with `mppinit`
 * Login to Discogs to generate a user token
     * Visit the [Developer settings page](https://www.discogs.com/settings/developers) at https://www.discogs.com/settings/developers
     * Press the `Generate new token` button

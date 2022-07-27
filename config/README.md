@@ -192,7 +192,7 @@ Although powerful and extremely useful, `tmux` is not frequently employed
 by most users due to its complexity. There is a steep learning curve.
 
 MusicPlayerPlus attempts to surmount that hurdle by providing a sophisticated
-`tmux` configuration out of the box. The `mpcinit` utility, executed after
+`tmux` configuration out of the box. The `mppinit` utility, executed after
 installing MusicPlayerPlus, installs a `tmux` configuration file located at
 `~/.tmux.config` which automatically sets up tmux key bindings and settings
 making it easy to incorporate tmux into a user's routine.
@@ -359,7 +359,7 @@ else
   then
     MPCDIR=".mpcplus"
   else
-    mpcinit
+    mppinit
     MPCDIR=".config/mpcplus"
   fi
 fi
@@ -392,7 +392,7 @@ else
   then
     MPCDIR=".mpcplus"
   else
-    mpcinit
+    mppinit
     MPCDIR=".config/mpcplus"
   fi
 fi

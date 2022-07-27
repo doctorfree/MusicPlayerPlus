@@ -58,11 +58,21 @@ prefix="--prefix=/usr"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 
 [ -d ${PROJ} ] || {
-   git clone https://github.com/MTG/gaia.git
+    git clone https://github.com/MTG/gaia.git
 }
 
 cd ${PROJ}
 git switch qt5
+
+# Prior to configure, determine architecture and set CXXFLAGS
+arch=`uname -m`
+[ "${arch}" == "armv7l" ] && {
+    # Remove -msse2 from CXXFLAGS
+    cat wscript | sed -e "s/'-O2', '-msse2'/'-O2'/" > /tmp/wsc$$
+    cp /tmp/wsc$$ wscript
+    rm -f /tmp/wsc$$
+}
+
 ./waf configure ${prefix} --with-python-bindings --with-asserts
 
 [ "${CONFIGURE_ONLY}" ] && exit 0

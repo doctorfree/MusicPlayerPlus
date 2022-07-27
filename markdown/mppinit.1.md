@@ -2,25 +2,31 @@
 title: MPCINIT
 section: 1
 header: User Manual
-footer: mpcinit 1.0.0
+footer: mppinit 1.0.0
 date: March 24, 2022
 ---
 # NAME
-mpcinit - performs one-time initialization of mpcplus configuration files
+mppinit - performs one-time MusicPlayerPlus initialization
 
 # SYNOPSIS
-**mpcinit** [sync]
+**mppinit** [import|metadata|sync]
 
 # DESCRIPTION
-The *mpcinit* command copies and configures default configuration files in
+The *mppinit* command copies and configures default configuration files in
 $HOME/.config/mpcplus/
 
-In addition, *mpcinit* initializes the default tmux configuration for the
+In addition, *mppinit* initializes the default tmux configuration for the
 user running the command.
 
-Finally, *mpcinit* installs required pip modules if not already installed.
+Finally, *mppinit* installs required pip modules if not already installed.
 
-When invoked with the `sync` argument, *mpcinit* synchronizes the music
+Invoked with the `import` argument, *mppinit import* imports the music
+library to the Beets media management system.
+
+Invoked with the `metadata` argument, *mppinit metadata* updates the Beets
+library with analyzed and retrieved metadata.
+
+Invoked with the `sync` argument, *mppinit sync* synchronizes the music
 library location across all configuration files.
 
 # AUTHORS

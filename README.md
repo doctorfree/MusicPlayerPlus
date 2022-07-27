@@ -116,7 +116,7 @@ MusicPlayerPlus adds the following commands to your system:
 
 * **mpplus** : primary user interface, invokes an MPD client, spectrum visualizer, and more
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
-* **mpcinit** : one-time initializaton of a user's mpcplus configuration
+* **mppinit** : one-time initializaton of a user's mpcplus configuration
 * **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
 * **mppsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
 * **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:
@@ -150,12 +150,12 @@ Additional detail and info can be found in the
 ### Required setup
 
 * Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
-* Run the `mpcinit` command (must be done as your normal user, no need for `sudo`)
+* Run the `mppinit` command (must be done as your normal user, no need for `sudo`)
 
 ### Optional additional setup steps
 
 For many installations, installing the MusicPlayerPlus package and initializing
-the user configuration with the `mpcinit` command is all that need be done.
+the user configuration with the `mppinit` command is all that need be done.
 
 Some common additional setup steps that can be performed include:
 
@@ -170,7 +170,26 @@ Some common additional setup steps that can be performed include:
 Configure the music library location by editing `~/.config/mpd/mpd.conf` and
 setting the `music_directory` to your music library location (default setting
 is `~/Music`). If you change the `music_directory` setting in mpd.conf then
-run the command `mpcinit sync`.
+run the command `mppinit sync`.
+
+The following optional post-initialization steps can be performed individually
+as described below or they can be performed in two steps using `mppinit`:
+
+```
+mppinit import
+```
+
+When the import is complete
+
+```
+mppinit metadata
+```
+
+The `mppinit import` command downloads album cover art, converts any
+WAV format media to MP3 format, and imports the music library into Beets.
+The `mppinit metadata` command identifies and deletes duplicate tracks,
+retrieves album genres from Last.fm, and optionally analyzes and
+retrieves metadata for all songs in the music library.
 
 Album cover art can be downloaded with the command `mpplus -D`.
 
@@ -200,19 +219,23 @@ section below.
 To summarize, a MusicPlayer quickstart can be accomplished by:
 
 * Install the latest Debian or RPM format installation package
-* Run the `mpcinit` command as your normal user
+* Run the `mppinit` command as your normal user
 * If the music library is not located at `$HOME/Music`:
     * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
-    * Run the command `mpcinit sync`
+    * Run the command `mppinit sync`
 * Optionally:
-    * Download album cover art with the command `mpplus -D`
-    * Convert WAV format files to MP3 format with the command `mpplus -F`
-    * Import your music library into Beets with the command `mpplus -I`
-    * Download additional lyrics with the command `mpplus -L`
+    * Perform these three steps with the command `mppinit import`
+        * Download album cover art with the command `mpplus -D`
+        * Convert WAV format files to MP3 format with the command `mpplus -F`
+        * Import your music library into Beets with the command `mpplus -I`
+    * Perform these steps with the command `mppinit metadata`
+        * Remove duplicate tracks with the command `beet duplicates -d`
+        * Rename tracks left after duplicate removal with `beet move`
+        * Analyze and retrieve audio-based information with a command like:
+            * `mpplus -X 'query'` where 'query' is a Beets library query
+            * `mpplus -X all` indicating analyze the entire Beets library
     * Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`
-    * Analyze and retrieve audio-based information with a command like:
-        * `mpplus -X 'query'` where 'query' is a Beets library query
-        * `mpplus -X all` indicating analyze the entire Beets library
+    * Download additional lyrics with the command `mpplus -L`
 
 ## Installation
 
@@ -284,7 +307,7 @@ sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 
 **[NOTE:]** Extensive post-installation steps are covered here.
 Minimal post-installation configuration required is the execution
-of the command `mpcinit`. If the MPD music library is located in
+of the command `mppinit`. If the MPD music library is located in
 the default `$HOME/Music` directory then no further configuration
 may be necessary. See the [Quickstart](#quickstart) section.
 
@@ -294,20 +317,20 @@ will need to know where to locate your music library. This can
 be configured by editing the MPD configuration file `~/.config/mpd/mpd.conf`.
 
 Following any modification of the music library location in
-`~/.config/mpd/mpd.conf` execute `mpcinit sync`.
+`~/.config/mpd/mpd.conf` execute `mppinit sync`.
 
 ### Client Configuration (required)
 
 Initialize the `mpcplus` client configuration by executing the command:
 
 ```
-mpcinit
+mppinit
 ```
 
 Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
 and `~/.config/mpcplus/bindings` and make any desired changes.
 
-The client configuration performed by `mpcinit` includes the configuration
+The client configuration performed by `mppinit` includes the configuration
 of an MPD user service. The configuration, files, and folders used by
 this user level MPD service are stored in `~/.config/mpd/`. Examine the
 generated MPD configuration file `~/.config/mpd/mpd.conf`.
@@ -316,7 +339,7 @@ generated MPD configuration file `~/.config/mpd/mpd.conf`.
 
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
-This is performed by the `mpcinit` command. MusicPlayerPlus 1.0.3r1
+This is performed by the `mppinit` command. MusicPlayerPlus 1.0.3r1
 and later installations need not perform the following manual procedures
 but users may wish to review the automated MPD configuration and alter
 the default MPD music directory location.
@@ -326,10 +349,10 @@ The default MPD and `mpcplus` music directory is set to:
 `$HOME/Music`
 
 If your media library resides in another location then perform the following
-steps and run `mpcinit sync`:
+steps and run `mppinit sync`:
 
 * Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
-* Run the `mpcinit sync` command
+* Run the `mppinit sync` command
 
 For example, to set the MPD music directory to the `/u/audio/music` directory,
 edit `$HOME/.config/mpd/mpd.conf` and change the *music_directory* setting:
@@ -340,7 +363,7 @@ music_directory		"/u/audio/music"
 
 The *music_directory* location must be writeable by your user.
 
-Any time the MPD music directory is manually modified, run `mpcinit sync`.
+Any time the MPD music directory is manually modified, run `mppinit sync`.
 
 ### Downloading album cover art
 
@@ -518,7 +541,7 @@ options. Additional MPD configuration may be desired. See the
 
 The `fzmp` command lists, searches, and selects media from the MPD
 library using the `fzf` fuzzy finder command line utility. A default
-`fzmp` configuration file for each user is created when the `mpcinit`
+`fzmp` configuration file for each user is created when the `mppinit`
 command is executed. The `fzmp` configuration file is located at:
 
 ```
@@ -560,7 +583,7 @@ for details.
 
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
-Initialization with `mpcinit` for these installations should automatically
+Initialization with `mppinit` for these installations should automatically
 start the user MPD service. No further action should be required for
 MusicPlayerPlus v1.0.3r1 or later installations.
 
@@ -587,7 +610,7 @@ attempts to connect:
 ### System verification checks
 
 Once the music directory has been set correctly, album art downloaded,
-music library imported, and `mpcinit sync` has completed initialization,
+music library imported, and `mppinit sync` has completed initialization,
 some system checks can optionally be performed.
 
 * Verify the `mpd` service is running and if not then start it:
@@ -605,7 +628,7 @@ some system checks can optionally be performed.
 ### Initialize Music Database
 
 **NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform an
-automated MPD music database initialization during execution of `mpcinit`.
+automated MPD music database initialization during execution of `mppinit`.
 
 For versions of MusicPlayerPlus prior to v1.0.3r1, initialize the music
 database with an MPD client and update the database. The `mpcplus` MPD
@@ -628,7 +651,7 @@ an enhanced visual presentation.
 
 There are four terminal profiles in two terminal emulators used by
 MusicPlayerPlus. The `gnome-terminal` emulator and the `tilix` terminal
-emulator each have two custom profiles created during `mpcinit` initialization.
+emulator each have two custom profiles created during `mppinit` initialization.
 These profiles are named "MusicPlayer" and "Visualizer".
 
 The custom MusicPlayerPlus terminal profiles are used to provide font sizes
@@ -663,7 +686,7 @@ e.g. `mpplus -u`.
 - [**mppjulia**](markdown/mppjulia.1.md) : asciimatics animation of a Julia Set
 - [**mpprocks**](markdown/mpprocks.1.md) : asciimatics animation of MusicPlayerPlus intro
 - [**mppplasma**](markdown/mppplasma.1.md) : asciimatics animation with Plasma effect
-- [**mpcinit**](markdown/mpcinit.1.md) : MusicPlayerPlus initialization
+- [**mppinit**](markdown/mppinit.1.md) : MusicPlayerPlus initialization
 - [**mpcplus-tmux**](markdown/mpcplus-tmux.1.md) : MusicPlayerPlus in a tmux session
 - [**mpcplus**](markdown/mpcplus.1.md) : MusicPlayerPlus MPD client
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
@@ -885,7 +908,7 @@ Existing cover art is preserved.
 ### Custom key bindings
 
 A few custom key bindings are configured during MusicPlayerPlus initialization
-with the `mpcinit` command. These are purely for convenience and can be altered or
+with the `mppinit` command. These are purely for convenience and can be altered or
 removed if desired.
 
 Tmux custom key bindings are defined in `$HOME/.tmux.conf`.

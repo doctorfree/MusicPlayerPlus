@@ -10,7 +10,7 @@ else
   then
     MPCDIR=".mpcplus"
   else
-    mpcinit
+    mppinit
     MPCDIR=".config/mpcplus"
   fi
 fi

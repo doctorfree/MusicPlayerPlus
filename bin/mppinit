@@ -1,10 +1,11 @@
 #!/bin/bash
 #
-# mpcinit - initialize mpcplus configuration files
+# mppinit - initialize MusicPlayerPlus
 #
 # Copy and configure default configuration files in $HOME/.config/mpcplus/
-# Also setup default tmux configuration for this user
+# Setup default tmux configuration for this user
 # Install required pip modules if not already installed
+# Optionally perform Beets initialization and metadata retrieval
 
 MPPCDIR=/usr/share/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
@@ -230,7 +231,7 @@ else
 fi
 
 [ "${iamroot}" ] && {
-  printf "\nThe ${BOLD}mpcinit${NORM} command should be run as a normal user."
+  printf "\nThe ${BOLD}mppinit${NORM} command should be run as a normal user."
   printf "\nIt appears it has been invoked with 'root' user privileges.\n\n"
   while true
   do
@@ -279,6 +280,100 @@ fi
   printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
   sync_music_dir
   printf "\n\nMusicPlayerPlus music directory synchronized.\n"
+  exit 0
+}
+
+[ "$1" == "import" ] && {
+  printf "\nPerforming Beets Media Library Management Import"
+  printf "\n\nThis process may take hours depending on the library size."
+  printf "\nNotifications of each step will be provided."
+  printf "\nThe steps performed include:"
+  printf "\n\t- Album cover art download"
+  printf "\n\t- WAV to MP3 file format conversion"
+  printf "\n\t- Beets media library import\n\n"
+  while true
+  do
+    read -p "Proceed with this potentially long process ? (y/n) " yn
+    case $yn in
+        [Yy]* )
+                break
+                ;;
+        [Nn]* )
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+            * ) echo "Please answer yes or no."
+                ;;
+    esac
+  done
+  printf "\n\n\tDownloading album cover art\n"
+  mpplus -D > /dev/null 2>&1
+  printf "\n\tConverting WAV format media to MP3 format media\n"
+  mpplus -F > /dev/null 2>&1
+  printf "\n\tImporting music library into Beets media management system\n"
+  mpplus -I
+  printf "\n\nAfter the Beets Import is complete, update metadata with:"
+  printf "\n\tmppinit metadata\n"
+  printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+  printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+  printf "\nVisit the MusicPlayerPlus Wiki at:"
+  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+  exit 0
+}
+
+[ "$1" == "metadata" ] && {
+  printf "\nPerforming Beets Media Library Metadata Retrieval"
+  printf "\n\nThis process may take hours depending on the library size."
+  printf "\nNotifications of each step will be provided."
+  printf "\nThe steps performed include:"
+  printf "\n\t- Duplicate tracks identified and deleted"
+  printf "\n\t- Album genre retrieved"
+  printf "\n\t- Acoustic information analyzed and retrieved (optional)\n\n"
+  while true
+  do
+    read -p "Proceed with this potentially long process ? (y/n) " yn
+    case $yn in
+        [Yy]* )
+                break
+                ;;
+        [Nn]* )
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+            * ) echo "Please answer yes or no."
+                ;;
+    esac
+  done
+  printf "\n\tRemoving duplicate tracks in music library\n"
+  beet duplicates -d > /dev/null 2>&1
+  printf "\n\tRenaming tracks that were duplicates\n"
+  beet move > /dev/null 2>&1
+  printf "\n\tRetrieving genre from Last.fm\n"
+  beet lastgenre > /dev/null 2>&1
+  while true
+  do
+    read -p "Retrieve acoustic information for all tracks (possibly long) ? (y/n) " yn
+    case $yn in
+      [Yy]* )
+        printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
+        mpplus -X all
+        printf "\n\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
+        break
+        ;;
+      [Nn]* )
+        printf "\nAcoustic information can be retrieved later with the command:"
+        printf "\n\tmpplus -X all\n"
+        printf "\n\nMusicPlayerPlus Metadata Retrieval Complete.\n"
+        break
+        ;;
+      * ) echo "Please answer yes or no."
+        ;;
+    esac
+  done
+  printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+  printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+  printf "\nVisit the MusicPlayerPlus Wiki at:"
+  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
   exit 0
 }
 
@@ -577,7 +672,23 @@ then
 
   # YAMScrobbler must be installed prior to beetcamp plus
   # PyPi is confused about the latest release version
-  ${PYTHON} -m pip install --user YAMScrobbler==0.7.3 > /dev/null 2>&1
+  YMIN="0.7"
+  SCRB="YAMScrobbler"
+  if pip list | grep ${SCRB} > /dev/null
+  then
+    # Ensure YAMScrobbler is version ${YMIN} or greater
+    [ -x ${SCPTDIR}/vercomp.sh ] && {
+      YSCV=`${PYTHON} -m pip show ${SCRB} | grep Version: | awk ' { print $2 } '`
+      # Only check first two digits of version as they screwed up
+      YSCV=${YSCV:0:3}
+      ${SCPTDIR}/vercomp.sh "${YSCV}" "${YMIN}" > /dev/null
+      [ $? -eq 2 ] && {
+        ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
+      }
+    }
+  else
+    ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
+  fi
   for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
@@ -601,7 +712,7 @@ else
   printf "\n\tsudo dnf install python3-pip\n"
   echo ""
   echo "After verifying that pip is installed,"
-  echo "rerun the 'mpcinit' MusicPlayer initialization."
+  echo "rerun the 'mppinit' MusicPlayer initialization."
 fi
 
 # Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
@@ -647,18 +758,45 @@ fi
   }
 }
 
+# Patch xtractor plugin
+have_xtractor=
+SITE=`${PYTHON} -m site --user-site`
+XTRA="${SITE}/beetsplug/xtractor/command.py"
+if [ -f "${XTRA}" ]
+then
+  have_xtractor="${XTRA}"
+else
+  SITE=`${PYTHON} -m pip show beets-xtractor | grep Location: | awk ' { print $2 } '`
+  XTRA="${SITE}/beetsplug/xtractor/command.py"
+  [ -f "${XTRA}" ] && have_xtractor="${XTRA}"
+fi
+
+[ "${have_xtractor}" ] && {
+  grep self._run_write_to_item "${have_xtractor}" > /dev/null && {
+    cat "${have_xtractor}" | \
+      sed -e "s/# self._run_write_to_item/self._run_write_to_item/" \
+          -e "s%if not identifier:%if (not identifier or identifier.find('/') != -1):%" > /tmp/ext$$
+    cp /tmp/ext$$ "${have_xtractor}"
+    rm -f /tmp/ext$$
+  }
+}
+
 sync_music_dir
+
+printf " done.\n"
 
 printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
 printf "\nMusic directory set to ${BOLD}${mpd_music}${NORM} in ${MPDCONF}"
 printf "\nModify ${MPDCONF} 'music_directory' to change this."
-printf "\nIf 'music_directory' is modified, run '${BOLD}mpcinit sync${NORM}'\n"
+printf "\nIf 'music_directory' is modified, run '${BOLD}mppinit sync${NORM}'\n"
 printf "\nDownload album cover art with the command:"
-printf "\n\t${BOLD}mpplus -D${NORM}\n"
+printf "\n\t${BOLD}mpplus -D${NORM}"
 printf "\nConvert WAV format media to MP3 format with the command:"
-printf "\n\t${BOLD}mpplus -F${NORM}\n"
+printf "\n\t${BOLD}mpplus -F${NORM}"
 printf "\nImport your music library into the Beets Music Organizer with the command:"
-printf "\n\t${BOLD}mpplus -I${NORM}\n"
+printf "\n\t${BOLD}mpplus -I${NORM}"
+printf "\nPerform all of the above with the command:"
+printf "\n\t${BOLD}mppinit import${NORM}"
 printf "\nActivate the YAMS Last.fm scrobbler with the command:"
 printf "\n\t${BOLD}mpplus -Y${NORM}\n"
 printf "\nVisit the MusicPlayerPlus Wiki at:"

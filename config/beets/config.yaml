@@ -28,7 +28,7 @@ import:
     log: ~/.config/beets/import.log
 
 plugins:
-    - acousticbrainz
+#   - acousticbrainz
     - albumtypes
     - bandcamp
 #   - convert
@@ -55,12 +55,13 @@ plugins:
     - xtractor
     - yearfixer
 
-acousticbrainz:
-    auto: yes
-    force: no
+# acousticbrainz:
+#   auto: no
+#   force: no
 
 albumtypes:
     types:
+        - album: ''
         - ep: 'EP'
         - single: 'Single'
         - soundtrack: 'OST'
@@ -141,7 +142,7 @@ mpdstats:
 
 lastgenre:
     # Fetch genres automatically during import. Default: yes.
-    auto: yes
+    auto: no
     #
     # Use a canonicalization tree. Setting this to yes will use a built-in tree.
     # You can also set it to a path, like the whitelist config value,

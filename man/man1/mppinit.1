@@ -14,27 +14,32 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "MPCINIT" "1" "March 24, 2022" "mpcinit 1.0.0" "User Manual"
+.TH "MPCINIT" "1" "March 24, 2022" "mppinit 1.0.0" "User Manual"
 .hy
 .SH NAME
 .PP
-mpcinit - performs one-time initialization of mpcplus configuration
-files
+mppinit - performs one-time MusicPlayerPlus initialization
 .SH SYNOPSIS
 .PP
-\f[B]mpcinit\f[R] [sync]
+\f[B]mppinit\f[R] [import|metadata|sync]
 .SH DESCRIPTION
 .PP
-The \f[I]mpcinit\f[R] command copies and configures default
+The \f[I]mppinit\f[R] command copies and configures default
 configuration files in $HOME/.config/mpcplus/
 .PP
-In addition, \f[I]mpcinit\f[R] initializes the default tmux
+In addition, \f[I]mppinit\f[R] initializes the default tmux
 configuration for the user running the command.
 .PP
-Finally, \f[I]mpcinit\f[R] installs required pip modules if not already
+Finally, \f[I]mppinit\f[R] installs required pip modules if not already
 installed.
 .PP
-When invoked with the \f[V]sync\f[R] argument, \f[I]mpcinit\f[R]
+Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
+imports the music library to the Beets media management system.
+.PP
+Invoked with the \f[V]metadata\f[R] argument, \f[I]mppinit metadata\f[R]
+updates the Beets library with analyzed and retrieved metadata.
+.PP
+Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
 synchronizes the music library location across all configuration files.
 .SH AUTHORS
 .PP
