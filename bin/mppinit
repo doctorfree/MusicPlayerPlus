@@ -295,15 +295,19 @@ fi
   do
     read -p "Proceed with this potentially long process ? (y/n) " yn
     case $yn in
-        [Yy]* )
-                break
-                ;;
-        [Nn]* )
-                printf "\nExiting.\n\n"
-                exit 0
-                ;;
-            * ) echo "Please answer yes or no."
-                ;;
+      [Yy]* )
+        break
+        ;;
+      [Nn]* )
+        printf "\nThese post-initialization steps can be performed individually:"
+        printf "\n\tmpplus -D"
+        printf "\n\tmpplus -F"
+        printf "\n\tmpplus -I"
+        printf "\n\nExiting.\n\n"
+        exit 0
+        ;;
+      * ) echo "Please answer yes or no."
+        ;;
     esac
   done
   printf "\n\n\tDownloading album cover art\n"
@@ -312,7 +316,7 @@ fi
   mpplus -F > /dev/null 2>&1
   printf "\n\tImporting music library into Beets media management system\n"
   mpplus -I
-  printf "\n\nAfter the Beets Import is complete, update metadata with:"
+  printf "\nAfter the Beets Import is complete, update metadata with:"
   printf "\n\tmppinit metadata\n"
   printf "\nActivate the YAMS Last.fm scrobbler with the command:"
   printf "\n\t${BOLD}mpplus -Y${NORM}\n"
@@ -333,15 +337,20 @@ fi
   do
     read -p "Proceed with this potentially long process ? (y/n) " yn
     case $yn in
-        [Yy]* )
-                break
-                ;;
-        [Nn]* )
-                printf "\nExiting.\n\n"
-                exit 0
-                ;;
-            * ) echo "Please answer yes or no."
-                ;;
+      [Yy]* )
+        break
+        ;;
+      [Nn]* )
+        printf "\nThese post-initialization steps can be performed individually:"
+        printf "\n\tbeet duplicates -d"
+        printf "\n\tbeet move"
+        printf "\n\tbeet lastgenre"
+        printf "\n\tmpplus -X all"
+        printf "\nExiting.\n\n"
+        exit 0
+        ;;
+      * ) echo "Please answer yes or no."
+        ;;
     esac
   done
   printf "\n\tRemoving duplicate tracks in music library\n"
