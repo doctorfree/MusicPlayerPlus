@@ -565,23 +565,24 @@ make_it_so() {
   # End MPD client startup section
 }
 
-mpd_services() {
-  MPD_SERVICE_ACTION=$1
-  case ${MPD_SERVICE_ACTION} in
+mpp_service() {
+  MPP_SERVICE_ACTION=$1
+  SERVICE=${2}.service
+  case ${MPP_SERVICE_ACTION} in
     alsaconf)
       echo "Executing: sudo alsa_conf -e -m"
       sudo alsa_conf -e -m
       ;;
     start|stop|disable|enable|restart)
-      echo "Executing: systemctl --user ${MPD_SERVICE_ACTION} mpd.service"
-      systemctl --user ${MPD_SERVICE_ACTION} mpd.service
+      echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
+      systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
       ;;
     status)
-      echo "Executing: systemctl --user --full ${MPD_SERVICE_ACTION} mpd.service"
-      systemctl --user --full ${MPD_SERVICE_ACTION} mpd.service
+      echo "Executing: systemctl --user --full ${MPP_SERVICE_ACTION} ${SERVICE}"
+      systemctl --user --full ${MPP_SERVICE_ACTION} ${SERVICE}
       ;;
     *)
-      echo "Unrecognized MPD service action: ${MPD_SERVICE_ACTION}"
+      echo "Unrecognized service action: ${MPP_SERVICE_ACTION}"
       ;;
   esac
 }
@@ -591,10 +592,18 @@ show_services_menu() {
   do
     systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
-    printf "\nCurrent status of Music Player Service:"
-    printf "\n\tMusic Player Service is ${m_enabled} and ${m_active}\n\n"
+    systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
+    systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
+    systemctl --user is-active yams.service >/dev/null 2>&1 && y_active="active" || y_active="inactive"
+    systemctl --user is-enabled yams.service >/dev/null 2>&1 && y_enabled="enabled" || y_enabled="disabled"
+    printf "\nCurrent status of MusicPlayerPlus Services:"
+    printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
+    printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
+    printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
-    options=("Configure ALSA Sound System" "Enable Music Player Services" "Disable Music Player Services" "Start Music Player Services" "Stop Music Player Services" "Restart Music Player Services" "Get Status of Music Player Services")
+    options=("Configure ALSA Sound System" "Enable Music Player Daemon" "Disable Music Player Daemon" "Start Music Player Daemon" "Stop Music Player Daemon" "Restart Music Player Daemon" "Status of Music Player Daemon")
+    options+=("Enable Music Player Stats" "Disable Music Player Stats" "Start Music Player Stats" "Stop Music Player Stats" "Restart Music Player Stats" "Status of Music Player Stats")
+    options+=("Enable Music Player Scrobbler" "Disable Music Player Scrobbler" "Start Music Player Scrobbler" "Stop Music Player Scrobbler" "Restart Music Player Scrobbler" "Status of Music Player Scrobbler")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -605,31 +614,79 @@ show_services_menu() {
               break 2
               ;;
           "Configure ALSA Sound System",*|*,"Configure ALSA Sound System")
-              mpd_services alsaconf
+              mpp_service alsaconf
               break
               ;;
-          "Enable Music Player Services",*|*,"Enable Music Player Services")
-              mpd_services enable
+          "Enable Music Player Daemon",*|*,"Enable Music Player Daemon")
+              mpp_service enable mpd
               break
               ;;
-          "Disable Music Player Services",*|*,"Disable Music Player Services")
-              mpd_services disable
+          "Disable Music Player Daemon",*|*,"Disable Music Player Daemon")
+              mpp_service disable mpd
               break
               ;;
-          "Start Music Player Services",*|*,"Start Music Player Services")
-              mpd_services start
+          "Start Music Player Daemon",*|*,"Start Music Player Daemon")
+              mpp_service start mpd
               break
               ;;
-          "Stop Music Player Services",*|*,"Stop Music Player Services")
-              mpd_services stop
+          "Stop Music Player Daemon",*|*,"Stop Music Player Daemon")
+              mpp_service stop mpd
               break
               ;;
-          "Restart Music Player Services",*|*,"Restart Music Player Services")
-              mpd_services restart
+          "Restart Music Player Daemon",*|*,"Restart Music Player Daemon")
+              mpp_service restart mpd
               break
               ;;
-          "Get Status of Music Player Services",*|*,"Get Status of Music Player Services")
-              mpd_services status
+          "Status of Music Player Daemon",*|*,"Status of Music Player Daemon")
+              mpp_service status mpd
+              break
+              ;;
+          "Enable Music Player Stats",*|*,"Enable Music Player Stats")
+              mpp_service enable mpdstats
+              break
+              ;;
+          "Disable Music Player Stats",*|*,"Disable Music Player Stats")
+              mpp_service disable mpdstats
+              break
+              ;;
+          "Start Music Player Stats",*|*,"Start Music Player Stats")
+              mpp_service start mpdstats
+              break
+              ;;
+          "Stop Music Player Stats",*|*,"Stop Music Player Stats")
+              mpp_service stop mpdstats
+              break
+              ;;
+          "Restart Music Player Stats",*|*,"Restart Music Player Stats")
+              mpp_service restart mpdstats
+              break
+              ;;
+          "Status of Music Player Stats",*|*,"Status of Music Player Stats")
+              mpp_service status mpdstats
+              break
+              ;;
+          "Enable Music Player Scrobbler",*|*,"Enable Music Player Scrobbler")
+              mpp_service enable yams
+              break
+              ;;
+          "Disable Music Player Scrobbler",*|*,"Disable Music Player Scrobbler")
+              mpp_service disable yams
+              break
+              ;;
+          "Start Music Player Scrobbler",*|*,"Start Music Player Scrobbler")
+              mpp_service start yams
+              break
+              ;;
+          "Stop Music Player Scrobbler",*|*,"Stop Music Player Scrobbler")
+              mpp_service stop yams
+              break
+              ;;
+          "Restart Music Player Scrobbler",*|*,"Restart Music Player Scrobbler")
+              mpp_service restart yams
+              break
+              ;;
+          "Status of Music Player Scrobbler",*|*,"Status of Music Player Scrobbler")
+              mpp_service status yams
               break
               ;;
           "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -858,7 +915,7 @@ show_main_menu() {
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Import Music to Beets")
     options+=("Extract Audio Information" "Fetch Lyrics")
-    options+=("Manage Music Player Services")
+    options+=("Manage MusicPlayerPlus Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
@@ -889,7 +946,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Manage Music Player Services",*|*,"Manage Music Player Services")
+          "Manage"*,*|*,"Manage"*)
               show_services_menu
               skip_it_so=1
               break
@@ -1164,7 +1221,7 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:yYz:u" flag; do
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l rocks"
       ;;
     M)
-      mpd_services ${OPTARG}
+      mpp_service ${OPTARG} mpd
       echo "Exiting"
       exit 0
       ;;

@@ -24,6 +24,24 @@ BOLD=$(tput bold)
 NORM=$(tput sgr0)
 mpd_music="~/Music"
 
+usage() {
+  printf "\nUsage: mppinit [-d] [-o] [-q] [-U] [-y] [-u] [import|metadata|sync]"
+  printf "\nWhere:"
+  printf "\n\t'-d' indicates install latest Beets development branch rather"
+  printf "\n\t\tthan the latest stable release (for testing purposes)"
+  printf "\n\t'-o' indicates overwrite any pre-existing configuration"
+  printf "\n\t'-q' indicates quiet execution, no status messages"
+  printf "\n\t'-U' indicates upgrade installed Python modules if needed"
+  printf "\n\t'-y' indicates answer 'yes' to all and proceed"
+  printf "\n\t'-u' displays this usage message and exits\n"
+  printf "\n\t'import' performs a Beets music library import"
+  printf "\n\t'metadata' performs a Beets library metadata update"
+  printf "\n\t'sync' synchronizes the music library location across configs\n"
+  printf "\n\n'mppinit' must be performed before a sync, metadata, or import"
+  printf "\nOnly one of 'import', 'metadata', or 'sync' can be specified\n\n"
+  exit 1
+}
+
 create_new_profile() {
   local proterm="$1"
   local proname="$2"
@@ -193,11 +211,24 @@ sync_music_dir() {
 
 function check_py_version
 {
-	# Full version number e.g. 2.7.1
-	python_version="$(echo "$($1 -V 2>&1)" | sed -e "s/^.* \(.*\)$/\\1/g")"
+  # Full version number e.g. 2.7.1
+  python_version="$(echo "$($1 -V 2>&1)" | sed -e "s/^.* \(.*\)$/\\1/g")"
 
-	# Return (the first letter -lt "3")
-	! [ "$(echo $python_version | head -c 1 )" -lt "3" ]
+  # Return (the first letter -lt "3")
+  ! [ "$(echo $python_version | head -c 1 )" -lt "3" ]
+}
+
+init_warn() {
+  printf "\nMusicPlayerPlus is not yet initialized."
+  printf "\nInitialize with ${BOLD}mppinit${NORM} prior to running "
+  printf "${BOLD}mppinit $1${NORM}\n"
+  printf "\nExiting."
+  usage
+}
+
+visit_wiki() {
+  printf "\nVisit the MusicPlayerPlus Wiki at:"
+  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 }
 
 PYTHON=""
@@ -276,143 +307,253 @@ else
   fi
 fi
 
+if [ -f ${HOME}/${MPCDIR}/config ]
+then
+  initialized=1
+else
+  initialized=
+fi
+
+overwrite=
+proceed=
+upgrade=
+quiet=
+beetsdev=
+while getopts "doqUyu" flag; do
+    case $flag in
+        d)
+            beetsdev=1
+            ;;
+        o)
+            overwrite=1
+            ;;
+        q)
+            quiet=1
+            ;;
+        U)
+            upgrade=1
+            ;;
+        y)
+            proceed=1
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "$2" ] && {
+  printf "\nUnknown or extaneous arguments $*"
+  printf "\nExiting."
+  usage
+}
+
 [ "$1" == "sync" ] && {
-  printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
-  sync_music_dir
-  printf "\n\nMusicPlayerPlus music directory synchronized.\n"
+  if [ "${initialized}" ]
+  then
+    printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
+    sync_music_dir
+    printf "\n\nMusicPlayerPlus music directory synchronized.\n"
+  else
+    init_warn sync
+  fi
   exit 0
 }
 
 [ "$1" == "import" ] && {
-  printf "\nPerforming Beets Media Library Management Import"
-  printf "\n\nThis process may take hours depending on the library size."
-  printf "\nNotifications of each step will be provided."
-  printf "\nThe steps performed include:"
-  printf "\n\t- Album cover art download"
-  printf "\n\t- WAV to MP3 file format conversion"
-  printf "\n\t- Beets media library import\n\n"
-  while true
-  do
-    read -p "Proceed with this potentially long process ? (y/n) " yn
-    case $yn in
-      [Yy]* )
-        break
-        ;;
-      [Nn]* )
-        printf "\nThese post-initialization steps can be performed individually:"
-        printf "\n\tmpplus -D"
-        printf "\n\tmpplus -F"
-        printf "\n\tmpplus -I"
-        printf "\n\nExiting.\n\n"
-        exit 0
-        ;;
-      * ) echo "Please answer yes or no."
-        ;;
-    esac
-  done
-  printf "\n\n\tDownloading album cover art\n"
-  mpplus -D > /dev/null 2>&1
-  printf "\n\tConverting WAV format media to MP3 format media\n"
-  mpplus -F > /dev/null 2>&1
-  printf "\n\tImporting music library into Beets media management system\n"
-  mpplus -I
-  printf "\nAfter the Beets Import is complete, update metadata with:"
-  printf "\n\tmppinit metadata\n"
-  printf "\nActivate the YAMS Last.fm scrobbler with the command:"
-  printf "\n\t${BOLD}mpplus -Y${NORM}\n"
-  printf "\nVisit the MusicPlayerPlus Wiki at:"
-  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+  if [ "${initialized}" ]
+  then
+    printf "\nPerforming Beets Media Library Management Import"
+    printf "\n\nThis process may take hours depending on the library size."
+    printf "\nNotifications of each step will be provided."
+    printf "\nThe steps performed include:"
+    printf "\n\t- Album cover art download"
+    printf "\n\t- WAV to MP3 file format conversion"
+    printf "\n\t- Beets media library import\n\n"
+    [ "${proceed}" ] || {
+      while true
+      do
+        read -p "Proceed with this potentially long process ? (y/n) " yn
+        case $yn in
+          [Yy]* )
+            break
+            ;;
+          [Nn]* )
+            printf "\nImport initialization steps can be performed individually:"
+            printf "\n\tmpplus -D"
+            printf "\n\tmpplus -F"
+            printf "\n\tmpplus -I"
+            printf "\n\nExiting.\n\n"
+            exit 0
+            ;;
+          * ) echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    printf "\n\n\tDownloading album cover art\n"
+    mpplus -D > /dev/null 2>&1
+    printf "\n\tConverting WAV format media to MP3 format media\n"
+    mpplus -F > /dev/null 2>&1
+    printf "\n\tImporting music library into Beets media management system\n"
+    mpplus -I
+    printf "\nAfter the Beets Import is complete, update metadata with:"
+    printf "\n\tmppinit metadata\n"
+    printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+    printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+    visit_wiki
+  else
+    init_warn import
+  fi
   exit 0
 }
 
 [ "$1" == "metadata" ] && {
-  printf "\nPerforming Beets Media Library Metadata Retrieval"
-  printf "\n\nThis process may take hours depending on the library size."
-  printf "\nNotifications of each step will be provided."
-  printf "\nThe steps performed include:"
-  printf "\n\t- Duplicate tracks identified and deleted"
-  printf "\n\t- Album genre retrieved"
-  printf "\n\t- Acoustic information analyzed and retrieved (optional)\n\n"
-  while true
-  do
-    read -p "Proceed with this potentially long process ? (y/n) " yn
-    case $yn in
-      [Yy]* )
-        break
-        ;;
-      [Nn]* )
-        printf "\nThese post-initialization steps can be performed individually:"
-        printf "\n\tbeet duplicates -d"
-        printf "\n\tbeet move"
-        printf "\n\tbeet lastgenre"
-        printf "\n\tmpplus -X all"
-        printf "\nExiting.\n\n"
-        exit 0
-        ;;
-      * ) echo "Please answer yes or no."
-        ;;
-    esac
-  done
-  printf "\n\tRemoving duplicate tracks in music library\n"
-  beet duplicates -d > /dev/null 2>&1
-  printf "\n\tRenaming tracks that were duplicates\n"
-  beet move > /dev/null 2>&1
-  printf "\n\tRetrieving genre from Last.fm\n"
-  beet lastgenre > /dev/null 2>&1
-  while true
-  do
-    read -p "Retrieve acoustic information for all tracks (possibly long) ? (y/n) " yn
-    case $yn in
-      [Yy]* )
-        printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
-        mpplus -X all
-        printf "\n\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
-        break
-        ;;
-      [Nn]* )
-        printf "\nAcoustic information can be retrieved later with the command:"
-        printf "\n\tmpplus -X all\n"
-        printf "\n\nMusicPlayerPlus Metadata Retrieval Complete.\n"
-        break
-        ;;
-      * ) echo "Please answer yes or no."
-        ;;
-    esac
-  done
-  printf "\nActivate the YAMS Last.fm scrobbler with the command:"
-  printf "\n\t${BOLD}mpplus -Y${NORM}\n"
-  printf "\nVisit the MusicPlayerPlus Wiki at:"
-  printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+  if [ "${initialized}" ]
+  then
+    printf "\nPerforming Beets Media Library Metadata Retrieval"
+    printf "\n\nThis process may take hours depending on the library size."
+    printf "\nNotifications of each step will be provided."
+    printf "\nThe steps performed include:"
+    printf "\n\t- Duplicate tracks identified and deleted"
+    printf "\n\t- Album genre retrieved"
+    printf "\n\t- Acoustic information analyzed and retrieved (optional)\n\n"
+    [ "${proceed}" ] || {
+      while true
+      do
+        read -p "Proceed with this potentially long process ? (y/n) " yn
+        case $yn in
+          [Yy]* )
+            break
+            ;;
+          [Nn]* )
+            printf "\nMetadata initialization steps can be performed individually:"
+            printf "\n\tbeet duplicates -d"
+            printf "\n\tbeet move"
+            printf "\n\tbeet lastgenre"
+            printf "\n\tmpplus -X all"
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          * ) echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    printf "\n\tRemoving duplicate tracks in music library\n"
+    beet duplicates -d > /dev/null 2>&1
+    printf "\n\tRenaming tracks that were duplicates\n"
+    beet move > /dev/null 2>&1
+    printf "\n\tRetrieving genre from Last.fm\n\n"
+    beet lastgenre > /dev/null 2>&1
+    [ "${proceed}" ] || {
+      while true
+      do
+        read -p "Retrieve acoustic information for all tracks (possibly long) ? (y/n) " yn
+        case $yn in
+          [Yy]* )
+            break
+            ;;
+          [Nn]* )
+            printf "\nAcoustic information not analyzed or retrieved."
+            printf "\nAcoustic information can be retrieved with the command:"
+            printf "\n\tmpplus -X all\n"
+            printf "\n\nMusicPlayerPlus Metadata Retrieval Complete.\n"
+            exit 0
+            ;;
+          * ) echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
+    mpplus -X all
+    printf "\n\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
+    printf "\nActivate the YAMS Last.fm scrobbler with the command:"
+    printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+    visit_wiki
+  else
+    init_warn metadata
+  fi
   exit 0
 }
 
-printf "\nInitializing MusicPlayerPlus, please wait ..."
-[ -f ${HOME}/${MPCDIR}/bindings ] || {
-  cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+[ -f ${HOME}/${MPCDIR}/config ] && {
+  [ "${proceed}" ] || {
+    [ "${overwrite}" ] || {
+      printf "\nMusicPlayerPlus initialization has previously been performed"
+      printf "\nand there is an existing MusicPlayerPlus configuration.\n\n"
+      while true
+      do
+        read -p "Preserve existing, Overwrite existing, Skip ? (p/o/s) " pos
+        case $pos in
+          [Pp]* )
+            break
+            ;;
+          [Oo]* )
+            overwrite=1
+            break
+            ;;
+          [Ss]* )
+            printf "\nExiting.\n\n"
+            exit 0
+            ;;
+          * ) echo "Please answer 'p', 'o', or 's'."
+            ;;
+        esac
+      done
+    }
+  }
 }
+
+printf "\nInitializing MusicPlayerPlus, please wait ..."
+[ "${quiet}" ] || {
+  printf "\n\tInstalling configuration files in $CONF ..."
+}
+if [ -f ${HOME}/${MPCDIR}/bindings ]
+then
+  [ "${overwrite}" ] && cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+else
+  cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+fi
 
 for cfg in ${CFGS}
 do
-  [ -f ${HOME}/${MPCDIR}/${cfg} ] || {
+  if [ -f ${HOME}/${MPCDIR}/${cfg} ]
+  then
+    [ "${overwrite}" ] && cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+  else
     cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
-    chmod 644 ${HOME}/${MPCDIR}/${cfg}
-  }
+  fi
+  chmod 644 ${HOME}/${MPCDIR}/${cfg}
 done
 for scp in ${SCPS}
 do
-  [ -f ${HOME}/${MPCDIR}/${scp} ] || {
+  if [ -f ${HOME}/${MPCDIR}/${scp} ]
+  then
+    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+  else
     cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
-    chmod 755 ${HOME}/${MPCDIR}/${scp}
-  }
+  fi
+  chmod 755 ${HOME}/${MPCDIR}/${scp}
 done
 
 [ -d ${CONF}/mppcava ] || mkdir -p ${CONF}/mppcava
-[ -f ${CONF}/mppcava/config ] || {
+if [ -f ${CONF}/mppcava/config ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${CONF}/mppcava/config
+else
   cp ${MPPCDIR}/mppcava/config ${CONF}/mppcava/config
-}
-[ -f ${CONF}/mppcava/config-tmux ] || {
+fi
+if [ -f ${CONF}/mppcava/config-tmux ]
+then
+  [ "${overwrite}" ] && {
+    cp ${MPPCDIR}/mppcava/config-tmux ${CONF}/mppcava/config-tmux
+  }
+else
   cp ${MPPCDIR}/mppcava/config-tmux ${CONF}/mppcava/config-tmux
-}
+fi
 
 if [ -d ${CONF}/tmuxp ]
 then
@@ -425,9 +566,12 @@ then
         cp -a "${tmc}" "${CONF}/tmuxp/${tmcbase}"
       }
     else
-      [ -f "${CONF}/tmuxp/${tmcbase}" ] || {
+      if [ -f "${CONF}/tmuxp/${tmcbase}" ]
+      then
+        [ "${overwrite}" ] && cp "${tmc}" "${CONF}/tmuxp/${tmcbase}"
+      else
         cp "${tmc}" "${CONF}/tmuxp/${tmcbase}"
-      }
+      fi
     fi
   done
 else
@@ -435,6 +579,9 @@ else
 fi
 
 # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
+[ "${quiet}" ] || {
+  printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
+}
 declare -a profiles
 dconfdir=/org/gnome/terminal/legacy/profiles:
 profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
@@ -488,32 +635,49 @@ do
   }
 done
 
+[ "${quiet}" ] || {
+  printf "\n\tInstalling MPD configuration in ${MPDCONFDIR} ..."
+}
 # If there is no user MPD config
 # then copy the MusicPlayerPlus MPD config folder
 # into the user's home and setup user MPD service
-[ -f ${MPDCONF} ] || {
+if [ -f ${MPDCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
+else
   if [ -d ${MPDCONFDIR} ]
   then
     cp ${MPPCDIR}/mpd/mpd.conf ${MPDCONF}
   else
     cp -a ${MPPCDIR}/mpd ${MPDCONFDIR}
   fi
-}
+fi
 
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Beets configuration in ${BEETSCONFDIR} ..."
+}
 # If there is no user beets config.yaml and genres folder then
 # copy the MusicPlayerPlus beets config.yaml and genres folder
 # into the user's home and setup user mpdstats service
-[ -f ${BEETSCONF} ] || {
+if [ -f ${BEETSCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
+else
   [ -d ${BEETSCONFDIR} ] || mkdir -p ${BEETSCONFDIR}
   cp ${MPPCDIR}/beets/config.yaml ${BEETSCONF}
-}
+fi
 if [ -d ${BEETSGENR} ]
 then
   for genconf in genres-tree.yaml genres.txt
   do
-    [ -f ${BEETSGENR}/${genconf} ] || {
+    if [ -f ${BEETSGENR}/${genconf} ]
+    then
+      [ "${overwrite}" ] && {
+        cp ${MPPCDIR}/beets/genres/${genconf} ${BEETSGENR}/${genconf}
+      }
+    else
       cp ${MPPCDIR}/beets/genres/${genconf} ${BEETSGENR}/${genconf}
-    }
+    fi
   done
 else
   cp -a ${MPPCDIR}/beets/genres ${BEETSGENR}
@@ -521,39 +685,68 @@ fi
 
 [ -d ${BEETSCONFDIR}/xtraction_data ] || mkdir -p ${BEETSCONFDIR}/xtraction_data
 
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Calliope configuration in ${CALIPCONFDIR} ..."
+}
 # If there is no user calliope config folder then
 # copy the MusicPlayerPlus calliope config folder
 # into the user's home
-[ -f ${CALIPCONF} ] || {
+if [ -f ${CALIPCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
+else
   if [ -d ${CALIPCONFDIR} ]
   then
     cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
   else
     cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
   fi
-}
+fi
 
+[ "${quiet}" ] || {
+  printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
+}
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 YAMSTATSD="${SYSTEMDIR}/yams.service"
-[ -f ${MPDSTATSD} ] || {
+if [ -f ${MPDSTATSD} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+else
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
-}
-[ -f ${YAMSTATSD} ] || {
+fi
+if [ -f ${YAMSTATSD} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mpd/yams.service ${YAMSTATSD}
+else
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/mpd/yams.service ${YAMSTATSD}
-}
+fi
 
+[ "${quiet}" ] || {
+  printf "\n\tSetting HOME in configuration files ..."
+}
 FIFS="mppcava/config-tmux mppcava/config systemd/user/mpdstats.service"
 for cnf in ${FIFS}
 do
-  [ -f ${CONF}/${cnf} ] || continue
-  cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
-  cp /tmp/cnf$$ ${CONF}/${cnf}
-  rm -f /tmp/cnf$$
+  if [ -f ${CONF}/${cnf} ]
+  then
+    [ "${overwrite}" ] && {
+      cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
+      cp /tmp/cnf$$ ${CONF}/${cnf}
+      rm -f /tmp/cnf$$
+    }
+  else
+    cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
+    cp /tmp/cnf$$ ${CONF}/${cnf}
+    rm -f /tmp/cnf$$
+  fi
 done
 
+[ "${quiet}" ] || {
+  printf "\n\tSetting up default tmux configuration ..."
+}
 # Setup default tmux configuration for this user
 [ -f ${MPPCDIR}/tmux.conf ] && {
   if [ -f ${HOME}/.tmux.conf ]
@@ -565,62 +758,91 @@ done
       echo "In order to enable many MusicPlayerPlus tmux features,"
       echo "it is necessary to install a customized $HOME/.tmux.conf."
       echo ""
-      echo "Please answer if you would like to:"
-      printf "\n\t[A]ppend customization"
-      printf "\n\t[B]ackup and customize"
-      printf "\n\t[O]verwrite existing"
-      printf "\n\t[S]kip customization\n"
-      echo "Answer 'a', 'b', 'o', or 's'"
-      echo ""
-      while true
-      do
-        read -p "Append/Backup/Overwrite/Skip tmux configuration? (a/b/o/s) " customize
-        case $customize in
-          [Aa]* )
-              cat ${MPPCDIR}/tmux.conf >> ${HOME}/.tmux.conf
-              echo ""
-              echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${MPPCDIR}/tmux.conf"
-              echo "was appended to $HOME/.tmux.conf"
-              echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
-              echo "Please review these changes and customize as needed"
-              break
-              ;;
-          [Bb]* )
-              cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.bak$$
-              cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
-              echo ""
-              echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${MPPCDIR}/tmux.conf"
-              echo "was copied to $HOME/.tmux.conf"
-              echo "A backup of the previous file was created at $HOME/.tmux.conf.bak$$"
-              break
-              ;;
-          [Oo]* )
-              cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
-              echo ""
-              echo "MusicPlayerPlus tmux configurations are applied"
-              echo "The file ${MPPCDIR}/tmux.conf"
-              echo "was copied to $HOME/.tmux.conf"
-              break
-              ;;
-          [Ss]* )
-              echo ""
-              echo "MusicPlayerPlus tmux configurations have not been applied"
-              echo "The file $HOME/.tmux.conf remains unmodified"
-              echo "Some MusicPlayerPlus features will not work properly with tmux"
-              echo ""
-              echo "The file ${MPPCDIR}/tmux.conf"
-              echo "contains the MusicPlayerPlus tmux customizations."
-              echo "To fully enable MusicPlayerPlus tmux features, merge"
-              echo "${MPPCDIR}/tmux.conf with $HOME/.tmux.conf"
-              break
-              ;;
-          * )
-              echo "Please answer 'a', 'b', 'o', or 's'"
-              ;;
-        esac
-      done
+      if [ "${proceed}" ]
+      then
+        if [ "${overwrite}" ]
+        then
+          cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was copied to $HOME/.tmux.conf"
+        else
+          cat ${MPPCDIR}/tmux.conf >> ${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was appended to $HOME/.tmux.conf"
+          echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
+          echo "Please review these changes and customize as needed"
+        fi
+      else
+        if [ "${overwrite}" ]
+        then
+          cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+          echo ""
+          echo "MusicPlayerPlus tmux configurations are applied"
+          echo "The file ${MPPCDIR}/tmux.conf"
+          echo "was copied to $HOME/.tmux.conf"
+        else
+          echo "Please answer if you would like to:"
+          printf "\n\t[A]ppend customization"
+          printf "\n\t[B]ackup and customize"
+          printf "\n\t[O]verwrite existing"
+          printf "\n\t[S]kip customization\n"
+          echo "Answer 'a', 'b', 'o', or 's'"
+          echo ""
+          while true
+          do
+            read -p "Append/Backup/Overwrite/Skip tmux configuration? (a/b/o/s) " customize
+            case $customize in
+              [Aa]* )
+                cat ${MPPCDIR}/tmux.conf >> ${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was appended to $HOME/.tmux.conf"
+                echo "The MusicPlayerPlus additions follow the comment 'MusicPlayerPlus'"
+                echo "Please review these changes and customize as needed"
+                break
+                ;;
+              [Bb]* )
+                cp ${HOME}/.tmux.conf ${HOME}/.tmux.conf.bak$$
+                cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was copied to $HOME/.tmux.conf"
+                echo "A backup of the previous file was created at $HOME/.tmux.conf.bak$$"
+                break
+                ;;
+              [Oo]* )
+                cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
+                echo ""
+                echo "MusicPlayerPlus tmux configurations are applied"
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "was copied to $HOME/.tmux.conf"
+                break
+                ;;
+              [Ss]* )
+                echo ""
+                echo "MusicPlayerPlus tmux configurations have not been applied"
+                echo "The file $HOME/.tmux.conf remains unmodified"
+                echo "Some MusicPlayerPlus features will not work properly with tmux"
+                echo ""
+                echo "The file ${MPPCDIR}/tmux.conf"
+                echo "contains the MusicPlayerPlus tmux customizations."
+                echo "To fully enable MusicPlayerPlus tmux features, merge"
+                echo "${MPPCDIR}/tmux.conf with $HOME/.tmux.conf"
+                break
+                ;;
+              * )
+                echo "Please answer 'a', 'b', 'o', or 's'"
+                ;;
+            esac
+          done
+        fi
+      fi
     }
   else
     cp ${MPPCDIR}/tmux.conf ${HOME}/.tmux.conf
@@ -636,11 +858,17 @@ TPM="${HOME}/.tmux/plugins/tpm"
   }
 }
 
+[ "${quiet}" ] || {
+  printf "\n\tInstalling tmux plugins ..."
+}
 [ -x ${TPM}/bin/install_plugins ] && ${TPM}/bin/install_plugins > /dev/null 2>&1
 
 # If there is no user beets plugin folder
 # then copy the MusicPlayerPlus beets plugin folder
 # into the user's home and install these plugins
+[ "${quiet}" ] || {
+  printf "\n\tInstalling custom Beets plugins ..."
+}
 for plugin in ${MPPCDIR}/beets/plugins/*
 do
   [ "${plugin}" == "${MPPCDIR}/beets/plugins/*" ] && continue
@@ -666,7 +894,10 @@ done
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
 then
-  if [ "$1" == "beetsdev" ]
+  [ "${quiet}" ] || {
+    printf "\n\tInstalling Python modules and Beets plugins ..."
+  }
+  if [ "${beetsdev}" ]
   then
     # To install latest Beets source tarball:
     #    - Uninstall Beets (python -m pip uninstall beets)
@@ -683,6 +914,9 @@ then
   # PyPi is confused about the latest release version
   YMIN="0.7"
   SCRB="YAMScrobbler"
+  [ "${quiet}" ] || {
+    printf "\n\tEnsure YAMScrobbler module is current version ..."
+  }
   if pip list | grep ${SCRB} > /dev/null
   then
     # Ensure YAMScrobbler is version ${YMIN} or greater
@@ -698,6 +932,7 @@ then
   else
     ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
   fi
+  [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
@@ -705,11 +940,25 @@ then
   do
     if pip list | grep ${pkg} > /dev/null
     then
-      ${PYTHON} -m pip install --user --upgrade ${pkg} > /dev/null 2>&1
+      if [ "${upgrade}" ]
+      then
+        [ "${quiet}" ] || {
+          printf " upgrade ${pkg},"
+        }
+        ${PYTHON} -m pip install --user --upgrade ${pkg} > /dev/null 2>&1
+      else
+        [ "${quiet}" ] || {
+          printf " ${pkg} installed,"
+        }
+      fi
     else
+      [ "${quiet}" ] || {
+        printf " install ${pkg},"
+      }
       ${PYTHON} -m pip install --user ${pkg} > /dev/null 2>&1
     fi
   done
+  [ "${quiet}" ] || printf " done!\n"
 else
   echo ""
   echo "WARNING: Python pip module not found."
@@ -724,6 +973,9 @@ else
   echo "rerun the 'mppinit' MusicPlayer initialization."
 fi
 
+[ "${quiet}" ] || {
+  printf "\n\tVerifying minimum version of Python PyYAML module is installed ..."
+}
 # Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
 VMIN="5.4.1"
 # Ensure PyYAML is version ${VMIN} or greater
@@ -746,6 +998,9 @@ YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
   }
 }
 
+[ "${quiet}" ] || {
+  printf "\n\tPatching Beets plugins ..."
+}
 # Patch beets-extrafiles plugin
 have_extra=
 SITE=`${PYTHON} -m site --user-site`
@@ -790,6 +1045,9 @@ fi
   }
 }
 
+[ "${quiet}" ] || {
+  printf "\n\tSyncing music directory across configs ..."
+}
 sync_music_dir
 
 printf " done.\n"
@@ -808,5 +1066,4 @@ printf "\nPerform all of the above with the command:"
 printf "\n\t${BOLD}mppinit import${NORM}"
 printf "\nActivate the YAMS Last.fm scrobbler with the command:"
 printf "\n\t${BOLD}mpplus -Y${NORM}\n"
-printf "\nVisit the MusicPlayerPlus Wiki at:"
-printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+visit_wiki
