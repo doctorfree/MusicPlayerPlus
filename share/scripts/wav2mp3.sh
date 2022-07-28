@@ -94,7 +94,7 @@ wavfiles=()
 while IFS=  read -r -d $'\0'
 do
   wavfiles+=("$REPLY")
-done < <(find "${mpd_music}" -type f -name \*\.wav -print0)
+done < <(find "${mpd_music}" ! -path "*/WAV/*"  -type f -name \*\.wav -print0)
 
 folders=()
 for wav in "${wavfiles[@]}"
@@ -124,6 +124,14 @@ do
   ${ANY2ANY} -i wav -o mp3 WAV/*.wav > /dev/null 2>&1
   mv MP3/*.mp3 .
   rmdir MP3
+  if [ -f .mpdignore ]
+  then
+    grep WAV .mpdignore > /dev/null || {
+      echo "WAV" >> .mpdignore
+    }
+  else
+    echo "WAV" > .mpdignore
+  fi
   cd "${HERE}"
 done
 
