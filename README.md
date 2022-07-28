@@ -50,6 +50,10 @@ MusicPlayerPlus is a character-based console and terminal window music player
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
 1. [Building MusicPlayerPlus from source](#Building MusicPlayerPlus from source)
+1. [Contributing](#contributing)
+    1. [Testing and Issue Reporting](#testing-and-Issue-Reporting)
+    1. [Sponsor MusicPlayerPlus](#sponsor-musicplayerplus)
+    1. [Contribute to Development](#contribute-to-development)
 
 ## Overview
 
@@ -1227,6 +1231,13 @@ https://wiki.archlinux.org/title/Music_Player_Daemon/Tips_and_tricks#Control_MPD
 
 ## Building MusicPlayerPlus from source
 
+### Clone MusicPlayerPlus repository
+
+```
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
+cd MusicPlayerPlus
+```
+
 ### Install build dependencies
 
 MusicPlayerPlus components have build dependencies on the following:
@@ -1254,14 +1265,29 @@ MusicPlayerPlus components have build dependencies on the following:
 On Debian based systems like Ubuntu Linux, install build dependencies via:
 
 ```
-sudo apt install build-essential libfftw3-dev libasound2-dev libncursesw5-dev \
-     libpulse-dev libtool automake libiniparser-dev libsdl2-2.0-0 libsdl2-dev \
-     libeigen3-dev libyaml-dev libavcodec-dev libavformat-dev libavutil-dev \
-     libswresample-dev libsamplerate0-dev libtag1-dev libchromaprint-dev \
-     python3-dev python3-numpy-dev python3-numpy python3-yaml python3-six
+./install-dev-env.sh
+```
+
+or manually with:
+
+```
+sudo apt-get install \
+    build-essential libeigen3-dev libyaml-dev libfftw3-dev \
+    libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
+    libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev \
+    autotools-dev autoconf libtool libboost-all-dev fftw-dev libtag1-dev \
+    libiniparser-dev libyaml-dev swig python3-dev pkg-config \
+    libncurses-dev libasound2-dev libreadline-dev libpulse-dev \
+    libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
 ```
 
 On RPM based systems like Fedora Linux, install build dependencies via:
+
+```
+./install-dev-env.sh
+```
+
+or manually with:
 
 ```
 sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
@@ -1271,9 +1297,7 @@ sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
      python3-devel python3-yaml python3-six
 ```
 
-It is necessary to build and install Gaia from source.
-After cloning MusicPlayerPlus (see below), `cd MusicPlayerPlus`
-and run the Gaia build script:
+It is necessary to build and install Gaia from source:
 
 ```
 ./build-gaia.sh -i
@@ -1293,13 +1317,6 @@ On RPM based systems like Fedora Linux, install packaging dependencies via:
 
 ```
 sudo dnf install rpm-build rpm-devel rpmlint rpmdevtools
-```
-
-### Clone MusicPlayerPlus repository
-
-```
-git clone https://github.com/doctorfree/MusicPlayerPlus.git
-cd MusicPlayerPlus
 ```
 
 ### Build and package MusicPlayerPlus
@@ -1324,3 +1341,116 @@ After successfully building and packaging MusicPlayerPlus with either
 ```
 ./Install
 ```
+
+## Contributing
+
+There are a variety of ways to contribute to the MusicPlayerPlus project.
+All forms of contribution are appreciated and valuable. Also, it's fun to
+collaborate. Here are a few ways to contribute to the further improvement
+and evolution of MusicPlayerPlus:
+
+### Testing and Issue Reporting
+
+MusicPlayerPlus is fairly complex with many components, features, options,
+configurations, and use cases. Although currently only supported on
+Linux platforms, there are a plethora of Linux platforms on which
+MusicPlayerPlus can be deployed. Testing all of the above is time consuming
+and tedious. If you have a Linux platform on which you can install
+MusicPlayerPlus and you have the time and will to put it through its paces,
+then issue reports on problems you encounter would greatly help improve the
+robustness and quality of MusicPlayerPlus. Open issue reports at
+[https://github.com/doctorfree/MusicPlayerPlus/issues](https://github.com/doctorfree/MusicPlayerPlus/issues)
+
+### Sponsor MusicPlayerPlus
+
+MusicPlayerPlus is completely free and open source software. All of the
+MusicPlayerPlus components are freely licensed and may be copied, modified,
+and redistributed freely. Nobody gets paid, nobody is making any money,
+it's a project fully motivated by curiousity and love of music. However,
+it does take some money to procure development and testing resources.
+Right now MusicPlayerPlus needs a multi-boot test platform to extend support
+to a wider variety of Linux platforms and potentially Mac OS X.
+
+If you have the means and you would like to sponsor MusicPlayerPlus development,
+testing, platform support, and continued improvement then your monetary
+support could play a very critical role. A little bit goes a long way
+in MusicPlayerPlus. For example, a bootable USB SSD device could serve as a 
+means of porting and testing support for additional platforms. Or, a
+decent cup of coffee could be the difference between a bug filled
+release and a glorious musical adventure.
+
+Sponsor the MusicPlayerPlus project at
+[https://github.com/sponsors/doctorfree](https://github.com/sponsors/doctorfree)
+
+### Contribute to Development
+
+If you have programming skills and find the management and ease-of-use of
+digital music libraries to be an interesting area, you can contribute to
+MusicPlayerPlus development through the standard Github "fork, clone,
+pull request" process. There are many guides to contributing to Github hosted
+open source projects on the Internet. A good one is available at
+[https://www.dataschool.io/how-to-contribute-on-github/](https://www.dataschool.io/how-to-contribute-on-github/). Another short succinct guide is at
+[https://gist.github.com/MarcDiethelm/7303312](https://gist.github.com/MarcDiethelm/7303312).
+
+Once you have forked and cloned the MusicPlayerPlus repository, it's time to
+setup a development environment. Although many of the MusicPlayerPlus commands
+are Bash shell scripts, there are also applicatons written in C and C++ along
+with documentation in Markdown format, configuration files in a variety of
+formats, examples, screenshots, video demos, build scripts, packaging, and more.
+
+The development environment consists of several packages needed to build,
+package, and test MusicPlayerPlus components. These include:
+
+```
+    build-essential libeigen3-dev libyaml-dev libfftw3-dev
+    libavcodec-dev libavformat-dev libavutil-dev libswresample-dev
+    libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev
+    autotools-dev autoconf libtool libboost-all-dev fftw-dev libtag1-dev
+    libiniparser-dev libyaml-dev swig python3-dev pkg-config
+    libncurses-dev libasound2-dev libreadline-dev libpulse-dev
+    libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+```
+
+Utilities and applications built from source in MusicPlayerPlus include:
+
+- essentia audio analysis and extraction
+- gaia audio similarity and classification library
+- mpcplus character based MPD client
+- mppcava character based spectrum visualizer
+
+The build scripts in the top-level directory of the MusicPlayerPlus repository
+can be used to compile essentia, gaia, mpcplus, and mppcava. These are:
+
+- build-essentia.sh
+- build-gaia.sh
+- build-mpcplus.sh
+- build-mppcava.sh
+
+Invoke the appropriate build script for the utility you wish to compile.
+For example, to compile the MPD client `mpcplus` from source, run the command:
+
+```
+./build-mpcplus.sh
+```
+
+On Debian and RPM based systems the MusicPlayerPlus installation package can be
+created with the `mkdeb` and `mkrpm` scripts. These scripts invoke the build
+scripts for each of the projects included with MusicPlayerPlus, populate a
+distribution tree, and call the respective packaging utilities. Packages are
+saved in the `./releases/<version>/` folder. Once a package has been created
+it can be installed with the `Install` script.
+
+It's not necessary to have C/C++ expertise to contribute to MusicPlayerPlus
+development. Many of the MusicPlayerPlus commands are Bash scripts and require
+no compilaton. Script commands reside in the `bin` and `share/scripts`
+directories. To modify a shell script, install MusicPlayerPlus and edit the
+`bin/<script>` or `share/scripts/<script.sh>` you wish to improve. After making
+your changes simply copy the revised script to `/usr/bin` and test your changes.
+
+Modifying the configuration files is a little more tricky. Configuration
+files generally live in the `config` directory but each has its own installation
+location and some are modified by the `mppinit` command during installation.
+If you are just modifying the shell scripts or configuration files then
+you don't need to worry about the extensive list of dependencies listed above.
+
+Feel free to email me at github@ronrecord.com with questions or comments.
