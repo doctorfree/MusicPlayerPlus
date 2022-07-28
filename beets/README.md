@@ -57,18 +57,84 @@ with Beets after installing MusicPlayerPlus and initializing with `mppinit`.
 
 ### Quickstart with Beets
 
-- After installing MusicPlayerPlus and running `mppinit`
-- Create a music library if you do not already have one
-- If your music library is not in `$HOME/Music/`:
-    - Edit `$HOME/.config/mpd/mpd.conf`
-    - Set `music_directory` to the music library location 
-    - Run the command `mppinit sync`
-- Optionally:
-    - Download album cover art with the command `mpplus -D`
-    - Convert WAV format media to MP3 format with the command `mpplus -F`
-- Import the music library into Beets with the command `mpplus -I`
+After installing MusicPlayerPlus and running `mppinit` some common additional
+setup steps that can be performed include:
 
-Try playing something with a command like:
+- Configuring the music library location
+- Downloading album cover art
+- Converting WAV format media files to MP3 format
+- Importing a music library into the Beets library management system
+- Downloading additional lyrics
+- Activation of YAMS scrobbler for Last.fm
+- Analysis and retrieval of audio-based information for media matching a query
+
+Configure the music library location by editing `~/.config/mpd/mpd.conf` and
+setting the `music_directory` to your music library location (default setting
+is `~/Music`). If you change the `music_directory` setting in mpd.conf then
+run the command `mppinit sync`.
+
+The following optional post-initialization steps can be performed individually
+as described below or they can be performed in two steps using `mppinit`:
+
+```
+mppinit import
+```
+
+When the import is complete
+
+```
+mppinit metadata
+```
+
+The `mppinit import` command downloads album cover art, converts any
+WAV format media to MP3 format, and imports the music library into Beets.
+The `mppinit metadata` command identifies and deletes duplicate tracks,
+retrieves album genres from Last.fm, and optionally analyzes and
+retrieves metadata for all songs in the music library.
+
+Album cover art can be downloaded with the command `mpplus -D`.
+
+Convert WAV format media files in your library to MP3 format files with
+the command `mpplus -F`. Conversion from WAV to MP3 allows these files to
+be imported into the Beets media library management system.
+
+If you wish to manage your music library with Beets, import the music library
+with the command `mpplus -I`.
+
+Download additional lyrics with the command `mpplus -L`.
+
+Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`.
+
+Analysis and retrieval of audio-based information can be performed with
+the command `mpplus -X 'query'` where 'query' is a Beets library query.
+The special query term 'all' indicates the entire music library, i.e.
+`mpplus -X all`.
+
+#### Quickstart summary
+
+To summarize, a MusicPlayer quickstart can be accomplished by:
+
+* Install the latest Debian or RPM format installation package
+* Run the `mppinit` command as your normal user
+* If the music library is not located at `$HOME/Music`:
+    * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
+    * Run the command `mppinit sync`
+* Optionally:
+    * Perform these three steps with the command `mppinit import`
+        * Download album cover art with the command `mpplus -D`
+        * Convert WAV format files to MP3 format with the command `mpplus -F`
+        * Import your music library into Beets with the command `mpplus -I`
+    * Perform these steps with the command `mppinit metadata`
+        * Remove duplicate tracks with the command `beet duplicates -d`
+        * Rename tracks left after duplicate removal with `beet move`
+        * Analyze and retrieve audio-based information with a command like:
+            * `mpplus -X 'query'` where 'query' is a Beets library query
+            * `mpplus -X all` indicating analyze the entire Beets library
+    * Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`
+    * Download additional lyrics with the command `mpplus -L`
+
+After initializing the Beets media library management system try playing
+something with a command like:
 
 ```
 beet play QUERY
@@ -304,11 +370,19 @@ items and import items the previous import failed to reach.
 
 A rough estimate of the time to import a music library into Beets can be
 obtained by calculating the size of the library. On a moderately equipped
-Ubuntu Linux system, a test import of a 4GB music library of ~200 songs
-took about 15 minutes. Import times will vary with network speed, how quickly
+Ubuntu Linux system, a test import of an 11GB music library of over 500 songs
+took about 10 minutes. Import times will vary with network speed, how quickly
 metadata sources like MusicBrainz and Bandcamp can locate media matches,
 and many other factors. Unfortunately, it is not possible to speed an
 import beyond the frequency with which MusicBrainz permits API requests.
+
+A very large music library of hundreds of Gigabytes and thousands of songs
+will take hours to import. For this reason MusicPlayerPlus disables many
+of the automatic retrieval of metadata and tagging during import that some
+of the Beets plugins are capable of. This minimizes the import time. For
+example, the auto fetching of cover art, lyrics, and genre during import
+is disabled. These and other music library metadata retrieval can be
+performed post-import using MusicPlayerPlus commands.
 
 A good workflow might be: Kickoff a Beets import, Enjoy some Sun with a good
 book, Check the import progress, Return to reading, Check progress, Repeat.

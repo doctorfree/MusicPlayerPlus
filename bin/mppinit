@@ -296,22 +296,18 @@ fi
 if [ -f ${CONF}/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
+  initialized=1
 else
   if [ -f ${HOME}/.mpcplus/config ]
   then
     MPCDIR=".mpcplus"
+    initialized=1
   else
     [ -d ${CONF}/mpcplus ] || mkdir -p ${CONF}/mpcplus
     cp ${CONFDIR}/config ${CONF}/mpcplus/config
     MPCDIR=".config/mpcplus"
+    initialized=
   fi
-fi
-
-if [ -f ${HOME}/${MPCDIR}/config ]
-then
-  initialized=1
-else
-  initialized=
 fi
 
 overwrite=
@@ -479,7 +475,7 @@ shift $(( OPTIND - 1 ))
   exit 0
 }
 
-[ -f ${HOME}/${MPCDIR}/config ] && {
+[ ${initialized} ] && {
   [ "${proceed}" ] || {
     [ "${overwrite}" ] || {
       printf "\nMusicPlayerPlus initialization has previously been performed"
