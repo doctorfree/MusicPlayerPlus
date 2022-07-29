@@ -14,24 +14,19 @@
 . ftr VB CB
 . ftr VBI CBI
 .\}
-.TH "MPCINIT" "1" "March 24, 2022" "mppinit 1.0.0" "User Manual"
+.TH "MPPINIT" "1" "March 24, 2022" "mppinit 1.0.0" "User Manual"
 .hy
 .SH NAME
 .PP
 mppinit - performs one-time MusicPlayerPlus initialization
 .SH SYNOPSIS
 .PP
-\f[B]mppinit\f[R] [import|metadata|sync]
+\f[B]mppinit\f[R] [-d] [-o] [-q] [-U] [-y] [-u] [import|metadata|sync]
 .SH DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
-configuration files in $HOME/.config/mpcplus/
-.PP
-In addition, \f[I]mppinit\f[R] initializes the default tmux
-configuration for the user running the command.
-.PP
-Finally, \f[I]mppinit\f[R] installs required pip modules if not already
-installed.
+MusicPlayerPlus configuration files in \f[V]$HOME/.config/\f[R] and
+installs required Python modules if not already installed.
 .PP
 Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
 imports the music library to the Beets media management system.
@@ -41,14 +36,49 @@ updates the Beets library with analyzed and retrieved metadata.
 .PP
 Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
 synchronizes the music library location across all configuration files.
+.SH COMMAND LINE OPTIONS
+.TP
+\f[B]-d\f[R]
+indicates install latest Beets development branch rather than the latest
+stable release (for testing purposes)
+.TP
+\f[B]-o\f[R]
+indicates overwrite any pre-existing configuration
+.TP
+\f[B]-q\f[R]
+indicates quiet execution, no status messages
+.TP
+\f[B]-U\f[R]
+indicates upgrade installed Python modules if needed
+.TP
+\f[B]-y\f[R]
+indicates answer \[aq]yes\[aq] to all and proceed
+.TP
+\f[B]-u\f[R]
+displays usage message and exits
+.TP
+\f[B]import\f[R]
+performs a Beets music library import
+.TP
+\f[B]metadata\f[R]
+performs a Beets library metadata update
+.TP
+\f[B]sync\f[R]
+synchronizes the music library location across configs
+.PP
+\f[I]mppinit\f[R] must be performed before a \f[I]sync\f[R],
+\f[I]metadata\f[R], or \f[I]import\f[R]
+.PP
+Only one of \f[I]import\f[R], \f[I]metadata\f[R], or \f[I]sync\f[R] can
+be specified
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
 .SH LICENSING
 .PP
-MPCINIT is distributed under an Open Source license.
-See the file LICENSE in the MPCINIT source distribution for information
-on terms & conditions for accessing and otherwise using MPCINIT and for
+MPPINIT is distributed under an Open Source license.
+See the file LICENSE in the MPPINIT source distribution for information
+on terms & conditions for accessing and otherwise using MPPINIT and for
 a DISCLAIMER OF ALL WARRANTIES.
 .SH BUGS
 .PP
@@ -57,7 +87,7 @@ Submit bug reports online at:
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
 .SH SEE ALSO
 .PP
-\f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
+\f[B]mpplus\f[R](1), \f[B]mpcplus\f[R](1), \f[B]mpcpluskeys\f[R](1)
 .PP
 Full documentation and sources at:
 .PP

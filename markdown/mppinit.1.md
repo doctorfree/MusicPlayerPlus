@@ -1,5 +1,5 @@
 ---
-title: MPCINIT
+title: MPPINIT
 section: 1
 header: User Manual
 footer: mppinit 1.0.0
@@ -9,16 +9,12 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 # SYNOPSIS
-**mppinit** [import|metadata|sync]
+**mppinit** [-d] [-o] [-q] [-U] [-y] [-u] [import|metadata|sync]
 
 # DESCRIPTION
-The *mppinit* command copies and configures default configuration files in
-$HOME/.config/mpcplus/
-
-In addition, *mppinit* initializes the default tmux configuration for the
-user running the command.
-
-Finally, *mppinit* installs required pip modules if not already installed.
+The *mppinit* command copies and configures default MusicPlayerPlus
+configuration files in `$HOME/.config/` and installs required Python
+modules if not already installed.
 
 Invoked with the `import` argument, *mppinit import* imports the music
 library to the Beets media management system.
@@ -29,14 +25,47 @@ library with analyzed and retrieved metadata.
 Invoked with the `sync` argument, *mppinit sync* synchronizes the music
 library location across all configuration files.
 
+# COMMAND LINE OPTIONS
+
+**-d**
+: indicates install latest Beets development branch rather than the latest stable release (for testing purposes)
+
+**-o**
+: indicates overwrite any pre-existing configuration
+
+**-q**
+: indicates quiet execution, no status messages
+
+**-U**
+: indicates upgrade installed Python modules if needed
+
+**-y**
+: indicates answer 'yes' to all and proceed
+
+**-u**
+: displays usage message and exits
+
+**import**
+: performs a Beets music library import
+
+**metadata**
+: performs a Beets library metadata update
+
+**sync**
+: synchronizes the music library location across configs
+
+*mppinit* must be performed before a *sync*, *metadata*, or *import*
+
+Only one of *import*, *metadata*, or *sync* can be specified
+
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
 
 # LICENSING
-MPCINIT is distributed under an Open Source license.
-See the file LICENSE in the MPCINIT source distribution
+MPPINIT is distributed under an Open Source license.
+See the file LICENSE in the MPPINIT source distribution
 for information on terms &amp; conditions for accessing and
-otherwise using MPCINIT and for a DISCLAIMER OF ALL WARRANTIES.
+otherwise using MPPINIT and for a DISCLAIMER OF ALL WARRANTIES.
 
 # BUGS
 Submit bug reports online at:
@@ -44,7 +73,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 # SEE ALSO
-**mpcplus**(1), **mpcpluskeys**(1)
+**mpplus**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 

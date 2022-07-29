@@ -94,14 +94,14 @@ wavfiles=()
 while IFS=  read -r -d $'\0'
 do
   wavfiles+=("$REPLY")
-done < <(find "${mpd_music}" ! -path "*/WAV/*"  -type f -name \*\.wav -print0)
+done < <(find "${mpd_music}" ! -path "*/__WAV__/*"  -type f -name \*\.wav -print0)
 
 folders=()
 for wav in "${wavfiles[@]}"
 do
   folder=`dirname "${wav}"`
   base=`basename "${folder}"`
-  [ "${base}" == "WAV" ] && continue
+  [ "${base}" == "__WAV__" ] && continue
   haveit=
   for item in "${folders[@]}"
   do
@@ -116,21 +116,21 @@ done
 HERE=`pwd`
 for folder in "${folders[@]}"
 do
-  [ -d "${folder}/WAV" ] || mkdir -p "${folder}/WAV"
+  [ -d "${folder}/__WAV__" ] || mkdir -p "${folder}/__WAV__"
   [ -d "${folder}/MP3" ] || mkdir -p "${folder}/MP3"
   cd "${folder}"
-  mv *.wav WAV
+  mv *.wav __WAV__
   echo "Converting WAV to MP3 in ${folder}"
-  ${ANY2ANY} -i wav -o mp3 WAV/*.wav > /dev/null 2>&1
+  ${ANY2ANY} -i wav -o mp3 __WAV__/*.wav > /dev/null 2>&1
   mv MP3/*.mp3 .
   rmdir MP3
   if [ -f .mpdignore ]
   then
-    grep WAV .mpdignore > /dev/null || {
-      echo "WAV" >> .mpdignore
+    grep __WAV__ .mpdignore > /dev/null || {
+      echo "__WAV__" >> .mpdignore
     }
   else
-    echo "WAV" > .mpdignore
+    echo "__WAV__" > .mpdignore
   fi
   cd "${HERE}"
 done

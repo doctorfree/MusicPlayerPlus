@@ -383,15 +383,19 @@ match:
 
 paths:
     # Default paths configuration
+    #
     # default: $albumartist/$album%aunique{}/$track $title
     # singleton: Non-Album/$artist/$title
     # comp: Compilations/$album%aunique{}/$track $title
-    default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
-    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
-    comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
-    albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+    #
+    # MusicPlayerPlus paths configuration
+    #
+    default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    comp: Compilations/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 
-ignore: ['.DS_Store', 'WAV', '.*', '*~', 'System Volume Information', 'lost+found']
+ignore: ['.DS_Store', '__WAV__', '.*', '*~', 'System Volume Information', 'lost+found']
 
 importadded:
     preserve_mtimes: yes
