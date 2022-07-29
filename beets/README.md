@@ -644,6 +644,31 @@ with a bpm value of 0 or no bpm attribute, issue the command:
 mpplus -X bpm:0 bpm::^$
 ```
 
+If audio analysis and extraction of metadata on a large music library is
+too time consuming then it may be preferable to use the `acousticbrainz`
+plugin to download metadata from MusicBrainz followed by selective use
+of the Beets xtractor plugin. Using `acousticbrainz` is faster because
+no audio analysis is needed, the MusicBrainz database already has the
+metadata for songs recognized by their MusicBrainz ID. Unfortunately,
+the MusicBrainz metadata is not always correct and the AcousticBrainz
+service is being retired. But until that day (sometime in 2023) it may
+be preferable to enable the `acousticbrainz` Beets plugin and perform
+a two-pass metadata update of the music library:
+
+- Uncomment the acousticbrainz plugin in `$HOME/.config/beets/config.yaml`
+- Run `beet acousticbrainz`
+- Repair those songs for which acousticbrainz set bpm to 0
+    - `beet xt bpm:0`
+
+This two-pass solution will not repair all of the mistakes that AcousticBrainz
+has made, only the beets-per-minute metadata, but it is a lot faster than
+a full analysis and extraction using `beet xt`.
+
+It is preferable to perform the time consuming full analysis and extraction
+using `beet xt` or `mpplus -X all` as this will extract metadata with a much
+higher accuracy and it will continue to be supported after AcousticBrainz is
+no longer available.
+
 ## Configuring the Discogs metadata source
 
 Beets uses [MusicBrainz](https://musicbrainz.org) as the default source

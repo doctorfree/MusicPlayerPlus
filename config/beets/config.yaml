@@ -391,6 +391,8 @@ paths:
     comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
     albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 
+ignore: ['.DS_Store', 'WAV', '.*', '*~', 'System Volume Information', 'lost+found']
+
 importadded:
     preserve_mtimes: yes
     preserve_write_mtimes: yes
