@@ -103,7 +103,23 @@ duplicates:
 
 extrafiles:
     patterns:
-        all: '*.*'
+        mpd: 'mpdignore'
+        log: '*.log'
+        cue: '*.cue'
+        jpg: '*.jpg'
+        png: '*.png'
+        pdf: '*.pdf'
+        m3u: '*.m3u'
+        wav: '__WAV__/'
+    paths:
+        mpd: '$albumpath/mpdignore'
+        log: '$albumpath/$filename'
+        cue: '$albumpath/$filename'
+        jpg: '$albumpath/$filename'
+        png: '$albumpath/$filename'
+        pdf: '$albumpath/$filename'
+        m3u: '$albumpath/$filename'
+        wav: '$albumpath/__WAV__'
 
 fetchart:
   # Enable automatic album art fetching during import.
@@ -115,7 +131,7 @@ fetchart:
   enforce_ratio: yes
   # Only images with a width bigger or equal to minwidth are considered as
   # valid album art candidates.
-  minwidth: 1000
+  minwidth: 256
   # A maximum image width to downscale fetched images if they are too big.
   # The height is recomputed so that the aspect ratio is preserved.
   maxwidth: 3000
