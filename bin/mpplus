@@ -351,12 +351,10 @@ make_it_so() {
         echo "tail -f ${XLOG}"
       else
         echo "A terminal window will be opened to monitor the progress of the extraction."
-        echo ""
         gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f ${XLOG} &
       fi
       echo "===================================================================="
-      echo ""
     else
       echo "The 'beet' command is not in your PATH or is not executable."
       echo "Check your MusicPlayerPlus installation."

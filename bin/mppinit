@@ -465,7 +465,7 @@ shift $(( OPTIND - 1 ))
     }
     printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
     mpplus -X all
-    printf "\n\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
+    printf "\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
     printf "\n\t${BOLD}mpplus -Y${NORM}\n"
     visit_wiki

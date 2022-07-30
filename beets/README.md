@@ -10,6 +10,7 @@
     1. [Download album cover art](#download-album-cover-art)
     1. [Convert WAV format media files](#convert-wav-format-media-files)
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
+        1. [Beets import followup steps](#beets-import-followup-steps)
 1. [Playlist creation](#playlist-creation)
 1. [Fetching lyrics](#fetching-lyrics)
 1. [Finding duplicate tracks](#finding-duplicate-tracks)
@@ -405,7 +406,7 @@ The `mpplus -I ...` command performs both an import of the music library
 albums and an import of singleton songs.
 
 Music library folders that are skipped are likely those for which `beet import`
-did not find the entire album. These songs should be picked up and imported
+did not find the entire album. These songs will be picked up and imported
 during the subsequent import where singletons are identified and imported.
 
 If a manual beets import is desired, it may be performed by issuing the commands:
@@ -460,6 +461,91 @@ https://beets.readthedocs.io/en/latest/reference/cli.html
 
 Learn more about the Beets media library management system at
 https://beets.io/
+
+### Beets import followup steps
+
+The Beets import process is very smart and able to detect most albums and
+song titles. It uses an extensive database and several algorithms. But it
+does fail to correctly identify some albums and songs. MusicPlayerPlus
+has done quite a bit of work behind the scenes to make the Beets setup
+process as simple as possible. The import process is run non-interactively
+and in the background as is the metadata analysis and retrieval. For this
+reason, the Beets import process has made intelligent choices for you
+during import. These are almost always correct due to the algorithms used.
+
+After completing a Beets import it is recommended to manually review the
+resulting music library. If there are albums with Beets was not able to
+identify then they will be in folders named something like:
+
+```
+$HOME/Music/John Doe/[0000] Unknown Album (6_19_2007 4_56_26 PM)
+```
+
+The Beet list command can be used to display a list of all albums or
+tracks in the imported library. Run `beet ls -a` to list all albums
+and `beet ls` to list all tracks. A summary of music library statistics
+can be obtained with `beet stats`. Information on a particular item
+or items can be obtained with `beet info -l [QUERY]` where `QUERY` is
+a Beets query. An empty query returns the entire library. To view info
+on a particular item, provide enough of the item filename or path to
+identify it as the query. For example, to view info on the items in
+the above unknown album by artist John Doe: `beet info -l 'John Doe'`.
+
+Find and review all albums in the music library with folders containing
+'Unknown Album`. Often a simple interactive re-import of these folders
+can be performed to properly identify them. Using the above unknown album
+as an example, to perform an interactive re-import of this unknown album:
+
+```
+beet import "$HOME/Music/John Doe/*Unknown Album*"
+```
+
+The interactive import process will provide a list of candidates to
+select from, display the changes it would make, and ask to apply
+those changes. If prompted, enter the number of the candidate best
+matching the album you wish to identify and apply those changes when
+subsequently prompted for your approval. If none of the candidates
+displayed matches the album, display additional candidates or cancel
+the import if no match can be found. The MusicBrainz database contains
+information on roughly 1.9 million artists, 3 million releases, and 26.5
+million recordings. But not everything. If one or more of the albums
+in the music library cannot be identified by MusicBrainz or Beetcamp
+(or Discogs if you have enabled that plugin) then it may need to be
+updated manually.
+
+Use the
+[beet modify](https://beets.readthedocs.io/en/stable/reference/cli.html#modify)
+command to selectively add titles, artists, track names, and other
+metadata to items in the music library for which there is no match in
+any of the configured metadata sources. For example, if the above unknown
+album by John Doe is not matched by MusicBrainz or Beetcamp but you know
+the album title is "Eldorado" then the `beet modify` command can be used
+to set the album title for these items:
+
+```
+beet modify -a john doe unknown album 'album=Eldorado'
+```
+
+Provide enough of a query to uniquely identify the album or track(s) you wish
+to modify. To verify that the query uniquely identifies the album in question,
+prior to issuing the modify command, list it with
+
+```
+beet ls -a john doe unknown album
+```
+
+Manual modification of the Beets music library should be needed infrequently
+unless the library contains unreleased, unpublished, or otherwise
+unavailable digital audio recordings.
+
+After manually identifying and updating an album or track that MusicBrainz
+could not match, it is possible to update the MusicBrainz database with
+that new information. Beets even has a
+[MusicBrainz Submit Plugin](https://beets.readthedocs.io/en/stable/plugins/mbsubmit.html)
+to ease this process but that is beyond the scope of this document.
+
+Generally, an interactive Beets re-import of unmatched, miscategorized
+or misnamed items in the music library is all that is needed.
 
 ## Playlist creation
 
