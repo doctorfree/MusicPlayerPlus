@@ -123,15 +123,16 @@ do
   echo "Converting WAV to MP3 in ${folder}"
   ${ANY2ANY} -i wav -o mp3 __WAV__/*.wav > /dev/null 2>&1
   mv MP3/*.mp3 .
+  rm -rf __WAV__
   rmdir MP3
-  if [ -f .mpdignore ]
-  then
-    grep __WAV__ .mpdignore > /dev/null || {
-      echo "__WAV__" >> .mpdignore
-    }
-  else
-    echo "__WAV__" > .mpdignore
-  fi
+# if [ -f .mpdignore ]
+# then
+#   grep __WAV__ .mpdignore > /dev/null || {
+#     echo "__WAV__" >> .mpdignore
+#   }
+# else
+#   echo "__WAV__" > .mpdignore
+# fi
   cd "${HERE}"
 done
 

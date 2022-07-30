@@ -126,8 +126,18 @@ do
   [ "${artist}" == "${mpd_music}/*" ] && continue
   if [ -d "${artist}" ]
   then
-    echo "# Importing ${artist}" >> "${LOGTIME}"
-    ${BEET} import -q ${impflags} -l "${LOGFILE}" "${artist}"
+    for album in "${artist}"/*
+    do
+      [ "${album}" == "${artist}/*" ] && continue
+      if [ -d "${album}" ]
+      then
+        echo "# Importing ${album}" >> "${LOGTIME}"
+        ${BEET} import -q ${impflags} -l "${LOGFILE}" "${album}"
+      else
+        echo "# Importing singleton ${album}" >> "${LOGTIME}"
+        ${BEET} import -q ${impflags} -s -l "${SINGLE_LOG}" "${album}" >> "${SINGLE_LOG}" 2>&1
+      fi
+    done
   else
     echo "# Importing singleton ${artist}" >> "${LOGTIME}"
     ${BEET} import -q ${impflags} -s -l "${SINGLE_LOG}" "${artist}" >> "${SINGLE_LOG}" 2>&1

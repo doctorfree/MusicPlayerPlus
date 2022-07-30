@@ -36,7 +36,7 @@ plugins:
 #   - discogs
     - duplicates
     - edit
-    - extrafiles
+#   - extrafiles
     - fetchart
     - fromfilename
     - hook
@@ -101,25 +101,23 @@ duplicates:
 #   tiebreak:
 #       items: [bitrate]
 
-extrafiles:
-    patterns:
-        mpd: '.mpd*'
-        log: '*.log'
-        cue: '*.cue'
-        jpg: '*.jpg'
-        pdf: '*.pdf'
-        png: '*.png'
-        m3u: '*.m3u'
-        wav: '__WAV__/'
-    paths:
-        mpd: '$albumpath/$filename'
-        log: '$albumpath/$filename'
-        cue: '$albumpath/$filename'
-        jpg: '$albumpath/$filename'
-        pdf: '$albumpath/$filename'
-        png: '$albumpath/$filename'
-        m3u: '$albumpath/$filename'
-        wav: '$albumpath/__WAV__'
+#extrafiles:
+#   patterns:
+#       mpd: '.mpd*'
+#       log: '*.log'
+#       cue: '*.cue'
+#       jpg: '*.jpg'
+#       pdf: '*.pdf'
+#       png: '*.png'
+#       m3u: '*.m3u'
+#   paths:
+#       mpd: '$albumpath/$filename'
+#       log: '$albumpath/$filename'
+#       cue: '$albumpath/$filename'
+#       jpg: '$albumpath/$filename'
+#       pdf: '$albumpath/$filename'
+#       png: '$albumpath/$filename'
+#       m3u: '$albumpath/$filename'
 
 fetchart:
   # Enable automatic album art fetching during import.
@@ -277,72 +275,73 @@ playlist:
   relative_to: ~/Music
 
 smartplaylist:
-    relative_to: ~/Music
-    playlist_dir: ~/.config/mpd/playlists
-    forward_slash: no
-    playlists:
-        - name: 'rating.m3u'
-          query: 'rating:0.4..1.0'
+  auto: no
+  relative_to: ~/Music
+  playlist_dir: ~/.config/mpd/playlists
+  forward_slash: no
+  playlists:
+    - name: 'rating.m3u'
+      query: 'rating:0.4..1.0'
 
-#       - name: 'not_played.m3u'
-#         query: '-play_count: artist:'
+#   - name: 'not_played.m3u'
+#     query: '-play_count: artist:'
 
-#       - name: beatles.m3u
-#         query: 'artist:Beatles'
+#   - name: beatles.m3u
+#     query: 'artist:Beatles'
 
-        - name: 'ween.m3u'
-          query: 'artist:Ween'
+    - name: 'ween.m3u'
+      query: 'artist:Ween'
 
-        - name: 1940s.m3u
-          query: 'original_year:1940..1949'
+    - name: 1940s.m3u
+      query: 'original_year:1940..1949'
 
-        - name: 1950s.m3u
-          query: 'original_year:1950..1959'
+    - name: 1950s.m3u
+      query: 'original_year:1950..1959'
 
-        - name: 1960s.m3u
-          query: 'original_year:1960..1969'
+    - name: 1960s.m3u
+      query: 'original_year:1960..1969'
 
-        - name: 1970s.m3u
-          query: 'original_year:1970..1979'
+    - name: 1970s.m3u
+      query: 'original_year:1970..1979'
 
-        - name: 1980s.m3u
-          query: 'original_year:1980..1989'
+    - name: 1980s.m3u
+      query: 'original_year:1980..1989'
 
-        - name: 1990s.m3u
-          query: 'original_year:1990..1999'
+    - name: 1990s.m3u
+      query: 'original_year:1990..1999'
 
-        - name: 2000s.m3u
-          query: 'original_year:2000..2009'
+    - name: 2000s.m3u
+      query: 'original_year:2000..2009'
 
-        - name: 2010s.m3u
-          query: 'original_year:2010..2019'
+    - name: 2010s.m3u
+      query: 'original_year:2010..2019'
 
-        - name: 2020s.m3u
-          query: 'original_year:2020..2029'
+    - name: 2020s.m3u
+      query: 'original_year:2020..2029'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::195(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::195(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::196(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::196(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::197(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::197(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::198(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::198(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::199(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::199(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::200(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::200(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::201(0|1|2|3|4|5|6|7|8|9)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::201(0|1|2|3|4|5|6|7|8|9)'
 
-        - name: 'ReleasedIn$original_year.m3u'
-          query: 'original_year::202(0|1|2)'
+    - name: 'ReleasedIn$original_year.m3u'
+      query: 'original_year::202(0|1|2)'
 
 mpd:
     host: localhost
@@ -368,15 +367,15 @@ musicbrainz:
 #   enabled: no
 
 match:
-    #strong_rec_thresh: 0.10
-    #medium_rec_thresh: 0.25
-    strong_rec_thresh: 0.075
-    medium_rec_thresh: 0.125
+    strong_rec_thresh: 0.10
+    medium_rec_thresh: 0.25
+    #strong_rec_thresh: 0.075
+    #medium_rec_thresh: 0.125
     max_rec:
       unmatched_tracks: low
       missing_tracks: strong
-    # The higher the weight, the lower the items go in the candidate list (greater
-    # distance) when this penalty is applied.
+    # The higher the weight, the lower the items go in the candidate list
+    # (greater distance) when this penalty is applied.
     distance_weights:
       # Default: 3.0
       album: 6.0
@@ -407,11 +406,11 @@ paths:
     # MusicPlayerPlus paths configuration
     #
     default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
-    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}/$track - $title"
     comp: Compilations/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
     albumtype:soundtrack: Soundtracks/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 
-ignore: ['.DS_Store', '__WAV__', '.*', '*~', 'System Volume Information', 'lost+found']
+ignore: ['.DS_Store', '.*', '*~', 'System Volume Information', 'lost+found']
 
 importadded:
     preserve_mtimes: yes

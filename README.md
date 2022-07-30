@@ -483,6 +483,15 @@ and it will be scrobbled by YAMS.
 
 YAMS creates a configuration file `$HOME/.config/yams/yams.yml`.
 
+#### Using YAMScrobbler with Libre.fm
+
+YAMS works fine with Libre.fm, a Free Software replacement for Last.fm.
+If you prefer to use Libre.fm rather than Last.fm, do the following:
+
+- Set the `base_url` config variable to `https://libre.fm/2.0/` in `$HOME/.config/yams/yams.yml` (don't forget the trailing slash!)
+- Delete any leftover `.lastfm_session` files
+- Authenticate like you normally would with Last.fm, however replace `last.fm` with `libre.fm` in the authorization URL printed out by YAMS
+
 ### MPD Audio Output Configuration
 
 Adjust the `audio_output` settings in `~/.config/mpd/mpd.conf`.
