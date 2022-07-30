@@ -54,7 +54,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 1. [Infrared remote control of MPD](#infrared-remote-control-of-mpd)
 1. [Screenshots](#screenshots)
 1. [Videos](#videos)
-1. [Building MusicPlayerPlus from source](#Building MusicPlayerPlus from source)
+1. [Building MusicPlayerPlus from source](#building-musicplayerplus-from-source)
 1. [Contributing](#contributing)
     1. [Testing and Issue Reporting](#testing-and-Issue-Reporting)
     1. [Sponsor MusicPlayerPlus](#sponsor-musicplayerplus)
