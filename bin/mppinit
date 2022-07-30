@@ -726,18 +726,11 @@ fi
 FIFS="mppcava/config-tmux mppcava/config systemd/user/mpdstats.service"
 for cnf in ${FIFS}
 do
-  if [ -f ${CONF}/${cnf} ]
-  then
-    [ "${overwrite}" ] && {
-      cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
-      cp /tmp/cnf$$ ${CONF}/${cnf}
-      rm -f /tmp/cnf$$
-    }
-  else
+  [ -f ${CONF}/${cnf} ] && {
     cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
     cp /tmp/cnf$$ ${CONF}/${cnf}
     rm -f /tmp/cnf$$
-  fi
+  }
 done
 
 [ "${quiet}" ] || {
