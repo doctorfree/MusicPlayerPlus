@@ -171,15 +171,15 @@ make_it_so() {
       else
         ${SCRIPTS}/download_cover_art.sh
       fi
-      printf " done\n\n"
+      printf "\n\n"
     else
       echo "${SCRIPTS}/download_cover_art.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
       echo ""
-      echo "Manual cover art download may be required:"
-      printf "\n\tsacad_r <MUSIC_DIRECTORY> 600 cover.jpg"
-      printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library\n"
     fi
+    printf "\n\tDownloading album cover art for missed albums ..."
+    beet fetchart > /dev/null 2>&1
+    printf " done\n\n"
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
@@ -372,8 +372,8 @@ make_it_so() {
       echo ""
       echo "===================================================================="
       echo "Importing, tagging, and organizing your music library with the Beets"
-      echo "media library management system. The import can take about a minute"
-      echo "per album. A large music library may take several hours to import."
+      echo "media library management system. A large music library may require"
+      echo "several hours to fully complete the import process."
       echo ""
       echo "The import process is performed in the background and non-interactively."
       echo "As long as your computer remains on and connected to the Internet, the"
@@ -402,7 +402,6 @@ make_it_so() {
                        -- tail --pid=${beetpid} -f $HOME/.config/beets/import_time.log &
       fi
       echo "===================================================================="
-      echo ""
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
