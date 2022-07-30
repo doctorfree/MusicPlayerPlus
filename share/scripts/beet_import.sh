@@ -182,17 +182,17 @@ do
 done
 
 # Append/Move mpdignore files that extrafiles could not move for us
-find "${mpd_music}" -type f -name mpdignore | while read mpd
-do
-  b=`dirname "$mpd"`
-  if [ -f "$b/.mpdignore" ]
-  then
-    cat "$mpd" >> "$b/.mpdignore"
-    rm -f "$mpd"
-  else
-    mv "$mpd" "$b/.mpdignore"
-  fi
-done
+# find "${mpd_music}" -type f -name mpdignore | while read mpd
+# do
+#   b=`dirname "$mpd"`
+#   if [ -f "$b/.mpdignore" ]
+#   then
+#     cat "$mpd" >> "$b/.mpdignore"
+#     rm -f "$mpd"
+#   else
+#     mv "$mpd" "$b/.mpdignore"
+#   fi
+# done
 
 # Then remove empty folders
 find "${mpd_music}" -depth -type d -empty -delete

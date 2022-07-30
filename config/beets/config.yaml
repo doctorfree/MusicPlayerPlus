@@ -103,21 +103,21 @@ duplicates:
 
 extrafiles:
     patterns:
-        mpd: 'mpdignore'
+        mpd: '.mpd*'
         log: '*.log'
         cue: '*.cue'
         jpg: '*.jpg'
-        png: '*.png'
         pdf: '*.pdf'
+        png: '*.png'
         m3u: '*.m3u'
         wav: '__WAV__/'
     paths:
-        mpd: '$albumpath/mpdignore'
+        mpd: '$albumpath/$filename'
         log: '$albumpath/$filename'
         cue: '$albumpath/$filename'
         jpg: '$albumpath/$filename'
-        png: '$albumpath/$filename'
         pdf: '$albumpath/$filename'
+        png: '$albumpath/$filename'
         m3u: '$albumpath/$filename'
         wav: '$albumpath/__WAV__'
 

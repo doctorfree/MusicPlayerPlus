@@ -124,13 +124,13 @@ do
   ${ANY2ANY} -i wav -o mp3 __WAV__/*.wav > /dev/null 2>&1
   mv MP3/*.mp3 .
   rmdir MP3
-  if [ -f mpdignore ]
+  if [ -f .mpdignore ]
   then
-    grep __WAV__ mpdignore > /dev/null || {
-      echo "__WAV__" >> mpdignore
+    grep __WAV__ .mpdignore > /dev/null || {
+      echo "__WAV__" >> .mpdignore
     }
   else
-    echo "__WAV__" > mpdignore
+    echo "__WAV__" > .mpdignore
   fi
   cd "${HERE}"
 done
