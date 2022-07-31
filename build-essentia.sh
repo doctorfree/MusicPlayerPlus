@@ -36,9 +36,10 @@
 # Where -i indicates install essentia after configuring and compiling
 
 usage() {
-    printf "\nUsage: ./build-essentia.sh [-Ci] [-p prefix] [-u]"
+    printf "\nUsage: ./build-essentia.sh [-Ci] [-d destdir] [-p prefix] [-u]"
     printf "\nWhere:"
     printf "\n\t-C indicates run configure and exit"
+    printf "\n\t-d destdir specifies installation destination root (default /)"
     printf "\n\t-i indicates configure, build, and install"
     printf "\n\t-p prefix specifies installation prefix (default /usr)"
     printf "\n\t-u displays this usage message and exits\n"
@@ -50,10 +51,14 @@ PROJ=essentia
 CONFIGURE_ONLY=
 INSTALL=
 PREFIX=
-while getopts "Cip:u" flag; do
+DESTDIR=
+while getopts "Cd:ip:u" flag; do
     case $flag in
         C)
             CONFIGURE_ONLY=1
+            ;;
+        d)
+            DESTDIR="${OPTARG}"
             ;;
         i)
             INSTALL=1
@@ -75,11 +80,13 @@ shift $(( OPTIND - 1 ))
     exit 1
 }
 
+destdir=
 prefix="--prefix=/usr"
+[ "${DESTDIR}" ] && destdir="--destdir=${DESTDIR}"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
 
-[ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music ] && {
-  [ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music_svm ] && {
+[ "${INSTALL}" ] || {
+  [ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music ] && {
     echo "Essentia binaries already built"
     exit 0
   }
@@ -96,5 +103,5 @@ python3 waf configure ${prefix} --build-static --with-python \
 
 python3 waf
 
-[ "${INSTALL}" ] && python3 waf install
+[ "${INSTALL}" ] && python3 waf install ${destdir}
 

@@ -765,13 +765,32 @@ Usage: create_playlist [-n playlist-name] [-q beets-query] [-ou]
 Where:
 	-n 'playlist-name' specifies the playlist name
 	-q 'beets-query' specifies the Beets query to use
+        multiple '-q query' arguments may be provided
 	-o indicates overwrite any pre-existing playlist of same name
 	-u displays this usage message and exits
 ```
 
 For example, to create a playlist named "LoveList" of all songs in the
 music library with "love" in the song title, artist name, or album name,
-issue the command `create_playlist -n LoveList -q love`.
+issue the command `create_playlist -n LoveList -q love`. To create a
+playlist named "Dance Party" with all songs whose metadata attributes
+include both "danceable" and "party" values, issue the command:
+
+```
+create_playlist -n "Dance Party" -q mood_party:party -q danceable:danceable
+```
+
+**[NOTE:]** The flexible tags that Essentia adds based on the acoustic
+analysis it performs are interesting but not necessarily accurate. Tags
+like *gender*, *danceable*, *mood_party*, and others reflect an aspect
+of the acoustic profile but may not reflect the tag name. For example,
+the *gender* tag can have the value *male* or *female* but it does not
+mean that the vocalist is actually male or female, just that the acoustics
+in the song are more that of a male or female. Many of the songs by
+progressive rock band "Uriah Heep" are tagged as *gender:female*
+because the vocalist for that band, a male, has a high pitched voice.
+Think of these flexible tags based on acoustic analysis as representing
+various aspects of the acoustics rather than strictly how they are named.
 
 ## Fetching lyrics
 

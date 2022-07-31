@@ -25,7 +25,8 @@ NORM=$(tput sgr0)
 mpd_music="~/Music"
 
 usage() {
-  printf "\nUsage: mppinit [-d] [-o] [-q] [-U] [-y] [-u] [import|metadata|sync]"
+  printf "\nUsage: mppinit [-d] [-o] [-q] [-U] [-y] [-u] "
+  printf "[import|metadata|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-d' indicates install latest Beets development branch rather"
   printf "\n\t\tthan the latest stable release (for testing purposes)"
@@ -36,7 +37,8 @@ usage() {
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'metadata' performs a Beets library metadata update"
-  printf "\n\t'sync' synchronizes the music library location across configs\n"
+  printf "\n\t'sync' synchronizes the music library location across configs"
+  printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
   printf "\n\n'mppinit' must be performed before a sync, metadata, or import"
   printf "\nOnly one of 'import', 'metadata', or 'sync' can be specified\n\n"
   exit 1
@@ -391,9 +393,9 @@ shift $(( OPTIND - 1 ))
     printf "\n\tImporting music library into Beets media management system\n"
     mpplus -I
     printf "\nAfter the Beets Import is complete, update metadata with:"
-    printf "\n\tmppinit metadata\n"
+    printf "\n\t${BOLD}mppinit metadata${NORM}\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
-    printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
     visit_wiki
   else
     init_warn import
@@ -471,6 +473,17 @@ shift $(( OPTIND - 1 ))
     visit_wiki
   else
     init_warn metadata
+  fi
+  exit 0
+}
+
+[ "$1" == "yams" ] && {
+  if [ "${initialized}" ]
+  then
+    mpplus -Y
+    visit_wiki
+  else
+    init_warn yams
   fi
   exit 0
 }
@@ -699,12 +712,12 @@ else
   fi
 fi
 
-[ "${quiet}" ] || {
-  printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
-}
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 YAMSTATSD="${SYSTEMDIR}/yams.service"
+[ "${quiet}" ] || {
+  printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
+}
 if [ -f ${MPDSTATSD} ]
 then
   [ "${overwrite}" ] && cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
@@ -1045,14 +1058,11 @@ printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
 printf "\nMusic directory set to ${BOLD}${mpd_music}${NORM} in ${MPDCONF}"
 printf "\nModify ${MPDCONF} 'music_directory' to change this."
 printf "\nIf 'music_directory' is modified, run '${BOLD}mppinit sync${NORM}'\n"
-printf "\nConvert WAV format media to MP3 format with the command:"
-printf "\n\t${BOLD}mpplus -F${NORM}"
-printf "\nImport your music library into the Beets Music Organizer with the command:"
-printf "\n\t${BOLD}mpplus -I${NORM}"
-printf "\nPerform both WAV conversion and music library import with the command:"
+printf "\nImport the music library into the Beets media management system:"
 printf "\n\t${BOLD}mppinit import${NORM}"
-printf "\nUpdate library metadata, genres, and album cover art with the command:"
+printf "\nAfter the import has completed, perform an update of the Beets"
+printf "\nlibrary metadata, genres, and album cover art:"
 printf "\n\t${BOLD}mppinit metadata${NORM}"
-printf "\nActivate the YAMS Last.fm scrobbler with the command:"
-printf "\n\t${BOLD}mpplus -Y${NORM}\n"
+printf "\nActivate the YAMS Last.fm scrobbler:"
+printf "\n\t${BOLD}mppinit yams${NORM}\n"
 visit_wiki
