@@ -25,6 +25,7 @@
 1. [Fetching lyrics](#fetching-lyrics)
 1. [Finding duplicate tracks](#finding-duplicate-tracks)
 1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
+    1. [MusicPlayerPlus custom xtractor metadata configuration](#musicplayerplus-custom-xtractor-metadata-configuration)
 1. [Configuring the Discogs metadata source](#configuring-the-discogs-metadata-source)
 1. [MusicPlayerPlus Beets plugins](#musicplayerplus-beets-plugins)
 
@@ -976,6 +977,111 @@ It is preferable to perform the time consuming full analysis and extraction
 using `beet xt` or `mpplus -X all` as this will extract metadata with a much
 higher accuracy and it will continue to be supported after AcousticBrainz is
 no longer available.
+
+### MusicPlayerPlus custom xtractor metadata configuration
+
+The default MusicPlayerPlus Beets configuration includes a customized
+`xtractor` plugin configuration providing many flexible metadata tags.
+These include metadata tags for AcousticID Fingerprint, Key and Scale,
+Replay Gain, Integrated Loudness, Loudness Range, Timbre, Danceability,
+and Moods. The metadata names for these custom flexible tags are
+
+- *acousticid_fingerprint*
+- *key_edma*
+- *scale_edma*
+- *replay_gain*
+- *integrated_loudness*
+- *loudness_range*
+- *timbre*
+- *danceable*
+- *is_danceable*
+- *mood_acoustic*
+- *mood_aggressive*
+- *mood_electronic*
+- *mood_happy*
+- *mood_sad*
+- *mood_party*
+- *mood_relaxed*
+
+If the music library has been analyzed with Essentia using the xtractor
+plugin (e.g. `mpplus -X all` or `mppinit metadata` with acoustic information
+retrieved) then these custom tags can be used in Beets queries.
+
+For example, to list all songs which have been tagged as being in the key of G:
+
+```
+beet list key_edma:G scale_edma:major
+```
+
+To list all songs in the key of G minor:
+
+```
+beet list key_edma:G scale_edma:minor
+```
+
+The customized entry for these high-level metadata targets in the xtractor
+section of the Beets configuration `$HOME/.config/beets/config.yaml` is:
+
+```
+    high_level_targets:
+      acoustid_fingerprint:
+        path: "chromaprint.string"
+        type: string
+      key_edma:
+        path: "tonal.key_edma.key"
+        type: string
+      scale_edma:
+        path: "tonal.key_edma.scale"
+        type: string
+      replay_gain:
+        path: "metadata.audio_properties.replay_gain"
+        type: float
+      integrated_loudness:
+        path: "lowlevel.loudness_ebu128.integrated"
+        type: float
+      loudness_range:
+        path: "lowlevel.loudness_ebu128.loudness_range"
+        type: float
+      timbre:
+        path: "highlevel.timbre.value"
+        type: string
+        required: yes
+      danceable:
+        path: "highlevel.danceability.value"
+        type: string
+        required: yes
+      is_danceable:
+        path: "highlevel.danceability.all.danceable"
+        type: float
+      mood_acoustic:
+        path: "highlevel.mood_acoustic.value"
+        type: string
+        required: yes
+      mood_aggressive:
+        path: "highlevel.mood_aggressive.value"
+        type: string
+        required: yes
+      mood_electronic:
+        path: "highlevel.mood_electronic.value"
+        type: string
+        required: yes
+      mood_happy:
+        path: "highlevel.mood_happy.value"
+        type: string
+        required: yes
+      mood_sad:
+        path: "highlevel.mood_sad.value"
+        type: string
+        required: yes
+      mood_party:
+        path: "highlevel.mood_party.value"
+        type: string
+        required: yes
+      mood_relaxed:
+        path: "highlevel.mood_relaxed.value"
+        type: string
+        required: yes
+```
 
 ## Configuring the Discogs metadata source
 

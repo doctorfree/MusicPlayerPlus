@@ -37,13 +37,11 @@ import:
     log: ~/.config/beets/import.log
 
 plugins:
-    - acousticbrainz
     - albumtypes
     - bandcamp
     - describe
     - duplicates
     - edit
-    - extrafiles
     - fetchart
     - fromfilename
     - hook
@@ -62,13 +60,9 @@ plugins:
     - xtractor
     - yearfixer
 
-acousticbrainz:
-    auto: yes
-    force: no
-    tags: []
-
 albumtypes:
     types:
+    -   album: ''
     -   ep: EP
     -   single: Single
     -   soundtrack: OST
@@ -110,17 +104,11 @@ duplicates:
     strict: no
     tag: ''
 
-extrafiles:
-    patterns:
-        all: '*.*'
-
-    paths: {}
-
 fetchart:
     auto: no
     cautious: no
     enforce_ratio: yes
-    minwidth: 1000
+    minwidth: 256
     maxwidth: 3000
     sources:
     - filesystem
@@ -151,7 +139,7 @@ mpdstats:
     rating_mix: 0.75
 
 lastgenre:
-    auto: yes
+    auto: no
     canonical: ~/.config/beets/genres/genres-tree.yaml
     count: 1
     fallback: Unknown
@@ -167,8 +155,8 @@ play:
     command: /usr/share/musicplayerplus/scripts/mpcplay.sh $args
     relative_to: ~/Music
     raw: yes
-    use_folders: no
     warning_threshold: 500
+    use_folders: no
     bom: no
 
 playlist:
@@ -176,7 +164,9 @@ playlist:
     playlist_dir: ~/.config/mpd/playlists
     relative_to: ~/Music
     forward_slash: no
+
 smartplaylist:
+    auto: no
     relative_to: ~/Music
     playlist_dir: ~/.config/mpd/playlists
     forward_slash: no
@@ -219,7 +209,6 @@ smartplaylist:
         query: original_year::201(0|1|2|3|4|5|6|7|8|9)
     -   name: ReleasedIn$original_year.m3u
         query: original_year::202(0|1|2)
-    auto: yes
     prefix: REDACTED
     urlencode: no
 
@@ -241,8 +230,8 @@ musicbrainz:
     - label
 
 match:
-    strong_rec_thresh: 0.075
-    medium_rec_thresh: 0.125
+    strong_rec_thresh: 0.1
+    medium_rec_thresh: 0.25
     max_rec:
         unmatched_tracks: low
         missing_tracks: strong
@@ -266,10 +255,17 @@ match:
     - VHS
 
 paths:
-    default: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
-    singleton: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
-    comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
-    albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+    default: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title'
+    singleton: '%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}/$track - $title'
+    comp: Compilations/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+
+ignore:
+- .DS_Store
+- .*
+- '*~'
+- System Volume Information
+- lost+found
 
 importadded:
     preserve_mtimes: yes
@@ -322,25 +318,63 @@ xtractor:
             - /usr/share/musicplayerplus/svm_models/timbre.history
             - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
             - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
-    low_level_targets:
-        bpm:
-            path: rhythm.bpm
-            type: integer
-            required: yes
-        danceability:
-            path: rhythm.danceability
-            type: float
-        beats_count:
-            path: rhythm.beats_count
-            type: integer
-        average_loudness:
-            path: lowlevel.average_loudness
-            type: float
-            required: yes
     high_level_targets:
+        acoustid_fingerprint:
+            path: chromaprint.string
+            type: string
+        key_edma:
+            path: tonal.key_edma.key
+            type: string
+        scale_edma:
+            path: tonal.key_edma.scale
+            type: string
+        replay_gain:
+            path: metadata.audio_properties.replay_gain
+            type: float
+        integrated_loudness:
+            path: lowlevel.loudness_ebu128.integrated
+            type: float
+        loudness_range:
+            path: lowlevel.loudness_ebu128.loudness_range
+            type: float
+        timbre:
+            path: highlevel.timbre.value
+            type: string
+            required: yes
         danceable:
+            path: highlevel.danceability.value
+            type: string
+            required: yes
+        is_danceable:
             path: highlevel.danceability.all.danceable
             type: float
+        mood_acoustic:
+            path: highlevel.mood_acoustic.value
+            type: string
+            required: yes
+        mood_aggressive:
+            path: highlevel.mood_aggressive.value
+            type: string
+            required: yes
+        mood_electronic:
+            path: highlevel.mood_electronic.value
+            type: string
+            required: yes
+        mood_happy:
+            path: highlevel.mood_happy.value
+            type: string
+            required: yes
+        mood_sad:
+            path: highlevel.mood_sad.value
+            type: string
+            required: yes
+        mood_party:
+            path: highlevel.mood_party.value
+            type: string
+            required: yes
+        mood_relaxed:
+            path: highlevel.mood_relaxed.value
+            type: string
             required: yes
         gender:
             path: highlevel.gender.value
@@ -366,34 +400,6 @@ xtractor:
         is_instrumental:
             path: highlevel.voice_instrumental.all.instrumental
             type: float
-        mood_acoustic:
-            path: highlevel.mood_acoustic.all.acoustic
-            type: float
-            required: yes
-        mood_aggressive:
-            path: highlevel.mood_aggressive.all.aggressive
-            type: float
-            required: yes
-        mood_electronic:
-            path: highlevel.mood_electronic.all.electronic
-            type: float
-            required: yes
-        mood_happy:
-            path: highlevel.mood_happy.all.happy
-            type: float
-            required: yes
-        mood_sad:
-            path: highlevel.mood_sad.all.sad
-            type: float
-            required: yes
-        mood_party:
-            path: highlevel.mood_party.all.party
-            type: float
-            required: yes
-        mood_relaxed:
-            path: highlevel.mood_relaxed.all.relaxed
-            type: float
-            required: yes
         mood_mirex:
             path: highlevel.moods_mirex.value
             type: string
@@ -413,6 +419,21 @@ xtractor:
         mood_mirex_cluster_5:
             path: highlevel.moods_mirex.all.Cluster5
             type: float
+    low_level_targets:
+        bpm:
+            path: rhythm.bpm
+            type: integer
+            required: yes
+        danceability:
+            path: rhythm.danceability
+            type: float
+        beats_count:
+            path: rhythm.beats_count
+            type: integer
+        average_loudness:
+            path: lowlevel.average_loudness
+            type: float
+            required: yes
 
 yearfixer:
     force: yes
@@ -432,11 +453,6 @@ ui:
 hook:
     hooks: [{event: import_begin, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin}, {event: import, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end}]
 
-edit:
-    albumfields: album albumartist
-    itemfields: track title artist album
-    ignore_fields: id path
-
 missing:
     count: no
     total: no
@@ -444,4 +460,9 @@ missing:
 
 describe:
     auto: no
+
+edit:
+    albumfields: album albumartist
+    itemfields: track title artist album
+    ignore_fields: id path
 

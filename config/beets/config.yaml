@@ -473,10 +473,35 @@ xtractor:
 #
 # We prefer the value as a string for the danceable attribute
     high_level_targets:
+      acoustid_fingerprint:
+        path: "chromaprint.string"
+        type: string
+      key_edma:
+        path: "tonal.key_edma.key"
+        type: string
+      scale_edma:
+        path: "tonal.key_edma.scale"
+        type: string
+      replay_gain:
+        path: "metadata.audio_properties.replay_gain"
+        type: float
+      integrated_loudness:
+        path: "lowlevel.loudness_ebu128.integrated"
+        type: float
+      loudness_range:
+        path: "lowlevel.loudness_ebu128.loudness_range"
+        type: float
+      timbre:
+        path: "highlevel.timbre.value"
+        type: string
+        required: yes
       danceable:
         path: "highlevel.danceability.value"
         type: string
         required: yes
+      is_danceable:
+        path: "highlevel.danceability.all.danceable"
+        type: float
       mood_acoustic:
         path: "highlevel.mood_acoustic.value"
         type: string
