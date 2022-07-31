@@ -223,11 +223,13 @@ lyrics:
     # Users may wish to go through the trouble of activating Google.
     sources: tekstowo
     #
-    # Your Bing Translation application password (to Activate On-the-Fly Translation)
+    # Your Bing Translation application password
+    # (to Activate On-the-Fly Translation)
     # bing_client_secret:
     #
-    # By default all lyrics with a language other than bing_lang_to are translated.
-    # Use a list of lang codes to restrict the set of source languages to translate.
+    # By default all lyrics with a language other than bing_lang_to
+    # are translated. Use a list of lang codes to restrict the set of
+    # source languages to translate.
     # Default: []
     # bing_lang_from: [ en ]
     #
@@ -242,7 +244,9 @@ lyrics:
     # To instead always fetch lyrics, set the force option to yes. Default: no.
     # force: yes
     #
-    # Your Google API key (to enable the Google Custom Search backend). Default: None.
+    # Your Google API key (to enable the Google Custom Search backend).
+    # Default: None.
+    #
     # google_API_key:
     #
     # The custom search engine to use. Default: The beets custom search engine
@@ -435,36 +439,75 @@ xtractor:
     output_path: ~/.config/beets/xtraction_data
     essentia_extractor: /usr/bin/essentia_streaming_extractor_music
     extractor_profile:
-        outputFormat: json
-        outputFrames: 0
-        lowlevel:
-            frameSize: 2048
-            hopSize: 1024
-        chromaprint:
-            compute: 1
-            duration: 20.0
-        highlevel:
-            compute: 1
-            svm_models:
-                - /usr/share/musicplayerplus/svm_models/danceability.history
-                - /usr/share/musicplayerplus/svm_models/gender.history
-                - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
-                - /usr/share/musicplayerplus/svm_models/genre_electronic.history
-                - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
-                - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
-                - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
-                - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
-                - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
-                - /usr/share/musicplayerplus/svm_models/mood_electronic.history
-                - /usr/share/musicplayerplus/svm_models/mood_happy.history
-                - /usr/share/musicplayerplus/svm_models/mood_party.history
-                - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
-                - /usr/share/musicplayerplus/svm_models/mood_sad.history
-                - /usr/share/musicplayerplus/svm_models/moods_mirex.history
-                - /usr/share/musicplayerplus/svm_models/timbre.history
-                - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
-                - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+      outputFormat: json
+      outputFrames: 0
+      lowlevel:
+        frameSize: 2048
+        hopSize: 1024
+      chromaprint:
+        compute: 1
+        duration: 20.0
+      highlevel:
+        compute: 1
+        svm_models:
+          - /usr/share/musicplayerplus/svm_models/danceability.history
+          - /usr/share/musicplayerplus/svm_models/gender.history
+          - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
+          - /usr/share/musicplayerplus/svm_models/genre_electronic.history
+          - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
+          - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
+          - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
+          - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
+          - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
+          - /usr/share/musicplayerplus/svm_models/mood_electronic.history
+          - /usr/share/musicplayerplus/svm_models/mood_happy.history
+          - /usr/share/musicplayerplus/svm_models/mood_party.history
+          - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
+          - /usr/share/musicplayerplus/svm_models/mood_sad.history
+          - /usr/share/musicplayerplus/svm_models/moods_mirex.history
+          - /usr/share/musicplayerplus/svm_models/timbre.history
+          - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
+          - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+#
+# MusicPlayerPlus custom xtractor targets configuration
+#
+# We prefer the value as a string for the danceable attribute
+    high_level_targets:
+      danceable:
+        path: "highlevel.danceability.value"
+        type: string
+        required: yes
+      mood_acoustic:
+        path: "highlevel.mood_acoustic.value"
+        type: string
+        required: yes
+      mood_aggressive:
+        path: "highlevel.mood_aggressive.value"
+        type: string
+        required: yes
+      mood_electronic:
+        path: "highlevel.mood_electronic.value"
+        type: string
+        required: yes
+      mood_happy:
+        path: "highlevel.mood_happy.value"
+        type: string
+        required: yes
+      mood_sad:
+        path: "highlevel.mood_sad.value"
+        type: string
+        required: yes
+      mood_party:
+        path: "highlevel.mood_party.value"
+        type: string
+        required: yes
+      mood_relaxed:
+        path: "highlevel.mood_relaxed.value"
+        type: string
+        required: yes
+#
 # xtractor configuration defaults:
+#
 #   low_level_targets:
 #       bpm:
 #           path: "rhythm.bpm"

@@ -26,11 +26,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
     1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
     1. [Additional Beets metadata analysis and retrieval](#additional-beets-metadata-analysis-and-retrieval)
-        1. [Remove duplicate tracks](#remove-duplicate-tracks)
-        1. [Rename tracks that were duplicates](#rename-tracks-that-were-duplicates)
-        1. [Retrieve genres from Last.fm](#retrieve-genres-from-lastfm)
-        1. [Download album cover art](#download-album-cover-art)
-        1. [Analyze and extract additional metadata with Essentia](#analyze-and-extract-additional-metadata-with-essentia)
     1. [Activating the YAMS scrobbler for Last.fm](#activating-the-yams-scrobbler-for-lastfm)
     1. [MPD Audio Output Configuration](#mpd-audio-output-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
@@ -476,70 +471,8 @@ command performs several metadata retrieval steps in a non-interactive
 manner and in the background so it can be left unattended if desired.
 
 The individual metadata retrieval steps performed automatically by
-`mppinit metadata` can be performed manually using the following instructions:
-
-#### Remove duplicate tracks
-
-Duplicate tracks in the Beets library can be removed with the command:
-
-```
-beet duplicates -d
-```
-
-The '-d' option removes duplicate files from the music library location
-on disk as well as removing duplicates in the Beets library. Omit the '-d'
-option to remove duplicates in the Beets library only.
-
-The Beets configuration file at `$HOME/.config/beets/config.yaml` has
-been configured to use checksums to find duplicates. This can be a fairly
-slow process for a large library. Beets can also find duplicates using
-MusicBrainz IDs or other methods. MusicPlayerPlus prefers checksums but
-if this process is too time consuming, it may be preferable to use IDs.
-
-#### Rename tracks that were duplicates
-
-After removing duplicates it is often the case that filenames contain
-no longer needed characters (e.g. "Love Song 2.mp3" which was a duplicate
-of "Love Song.mp3"). To correct these filenames, simply run `beet move`.
-
-#### Retrieve genres from Last.fm
-
-The Beets lastgenre plugin can be used to augment the genre metadata of
-a Beets music library. The MusicPlayerPlus configuration of the lastgenre
-Beets plugin includes a customized local copy of the genre tree and whitelist.
-To retrieve genres using the Beets lastgenre plugin, run the command
-`beet lastgenre`.
-
-#### Download album cover art
-
-To download album cover art for all albums in your music library,
-run the command `mpplus -D`.
-
-For details on album cover art download, manual art download, and
-converting WAV format media files to MP3 format see the
-[MusicPlayerPlus Beets README](beets/README.md).
-
-#### Analyze and extract additional metadata with Essentia
-
-To analyze and extract a wealth of additional metadata directly from
-all of the audio files in the music library, run the command `mpplus -X all`.
-To limit the analysis and extraction to a subset of audio files in the
-music library, run the command `mpplus -X [QUERY]` where 'QUERY' is a
-[Beets query](https://beets.readthedocs.io/en/stable/reference/query.html).
-For example, to analyze and extract metadata for all audio files
-with beets-per-minute set to 0, run the command `mpplus -X bpm:0`.
-
-The analysis and extraction of metadata with Essentia can be a time consuming
-process. For this reason, it is run non-interactively in the background with
-a terminal window being used to monitor the progress. The extraction
-process can be left unattended and may need to run for hours. If the length
-of time required to analyze and extract metadata using Essentia is
-prohibitive then it may be preferable to use the Beets acousticbrainz plugin
-to retrieve additional metadata. To use acousticbrainz, uncomment the
-acousticbrainz entries in `$HOME/.config/beets/config.yaml` and run the
-command `beet acousticbrainz [QUERY]`. Using the acousticbrainz plugin is
-faster (the analysis has already been performed) but incomplete, often
-incorrect, out-of-date, and will no longer be available in 2023.
+`mppinit metadata` can be performed manually using the instructions in
+the [MusicPlayerPlus Beets README](beets/README.md).
 
 ### Activating the YAMS scrobbler for Last.fm
 

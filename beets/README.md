@@ -7,10 +7,20 @@
     1. [Quickstart with Beets](#quickstart-with-beets)
     1. [Create a music library](#create-a-music-library)
     1. [Configure the music library location](#configure-the-music-library-location)
-    1. [Download album cover art](#download-album-cover-art)
+    1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
+    1. [Additional Beets metadata analysis and retrieval](#additional-beets-metadata-analysis-and-retrieval)
+        1. [Remove duplicate tracks](#remove-duplicate-tracks)
+        1. [Rename tracks that were duplicates](#rename-tracks-that-were-duplicates)
+        1. [Retrieve genres from Last.fm](#retrieve-genres-from-lastfm)
+        1. [Download album cover art](#download-album-cover-art)
+        1. [Analyze and extract additional metadata with Essentia](#analyze-and-extract-additional-metadata-with-essentia)
     1. [Convert WAV format media files](#convert-wav-format-media-files)
     1. [Import the music library into Beets](#import-the-music-library-into-beets)
-        1. [Beets import followup steps](#beets-import-followup-steps)
+    1. [Beets import followup steps](#beets-import-followup-steps)
+        1. [Performing an interactive Beets import](#performing-an-interactive-beets-import)
+        1. [Performing a Beets import with a MusicBrainz ID](#performing-a-beets-import-with-a-musicbrainz-id)
+    1. [Downloading album cover art with the mpplus command](#downloading-album-cover-art-with-the-mpplus-command)
+    1. [Downloading album cover art with the fetchart Beets plugin](#downloading-album-cover-art-with-the-fetchart-beets-plugin)
 1. [Playlist creation](#playlist-creation)
 1. [Fetching lyrics](#fetching-lyrics)
 1. [Finding duplicate tracks](#finding-duplicate-tracks)
@@ -62,9 +72,9 @@ After installing MusicPlayerPlus and running `mppinit` some common additional
 setup steps that can be performed include:
 
 - Configuring the music library location
-- Downloading album cover art
 - Converting WAV format media files to MP3 format
 - Importing a music library into the Beets library management system
+- Downloading album cover art
 - Downloading additional lyrics
 - Activation of YAMS scrobbler for Last.fm
 - Analysis and retrieval of audio-based information for media matching a query
@@ -180,81 +190,163 @@ and Beets configuration files that need to know the music library location.
 
 If your music library location is `$HOME/Music` then you can skip this step.
 
-### Download album cover art
+### Initializing the Beets media library management system
 
-Once your music library has been created and the library location set,
-you can download album cover art with the command `mpplus -D`.
+**[NOTE:]** Beets is NOT the now defunct music service purchased by Apple.
+It is an open source media library management system.
 
-This step is optional as album cover art is not required by either Beets
-or MusicPlayerPlus. However, cover art can be displayed by many MPD clients
-and enhances the user experience. Pre-existing album cover art is retained
-and only albums with no cover art are updated.
+MusicPlayerPlus includes the Beets media library management system
+and preconfigured settings to allow easy integration with MPD and `mpcplus`.
+Beets is an application that catalogs your music collection, automatically
+improving its metadata. It then provides a suite of tools for manipulating
+and accessing your music. Beets includes an extensive set of plugins that
+can be used to enhance and extend the functionality of the media library
+management Beets provides. Many Beets plugins are installed and configured
+automatically by MusicPlayerPlus.
 
-Note, for large libraries with many albums missing cover art this process
-may take a long time. Monitor the download process with the command
-`tail -f ${HOME}/.config/mpcplus/download_art.log`.
-
-The `mpplus -D` command downloads album cover art for each album in your
-music library and places the album cover art in the file `cover.jpg` in the
-album folder. The `mpplus -D` command downloads images of size 600x600.
-
-If you wish to name album cover art differently or if you wish to create
-a different sized album cover art, then execute the `sacad_r` command
-directly rather than with `mpplus -D` as follows:
-
+To get started using the Beets media library management system, it is
+necessary to import your music library into the Beets database. This process
+catalogs your music collection and improves its metadata. The default
+Beets configuration provided by MusicPlayerPlus moves and tags files in the
+music library during this process. It adds music library data to the Beets
+database. To import your music library into Beets, issue the following command:
 
 ```
-sacad_r <MUSIC_DIRECTORY> <SIZE> <FILENAME>
+mppinit import
 ```
 
-Where <MUSIC_DIRECTORY> is the full pathname to your music library, <SIZE>
-is the desired size of the image, and <FILENAME> is the desired filename.
-
-For example, to download album art for a music library located in
-`/u/audio/music` with an image size of 500x500, in PNG image format,
-and album art filenames `album_cover.png` execute the command:
+or to skip WAV format media conversion and just perform the Beets import:
 
 ```
-sacad_r /u/audio/music 500 album_cover.png
+mpplus -I
 ```
 
-Learn more about the Smart Automatic Cover Art Downloader `sacad` at
-https://github.com/desbma/sacad
-
-#### Alternative album cover art download
-
-MusicPlayerPlus includes the `fetchart` Beets plugin. This plugin is
-pre-installed, pre-configured, and enabled. The fetchart Beets plugin
-can be used as an alternative method of downloading album cover art and
-provides significant flexibility and options not available to `sacad`.
-
-Our experience here at MusicPlayerPlus labs has found that `mpplus -D` finds
-and downloads a higher number of album cover art than the fetchart plugin.
-The fetchart plugin is useful for augmenting an initial cover art download
-with `mpplus -D`. The fetchart plugin also has many configurable options
-allowing the user to specify download parameters and sources. The choice
-of which method to use to download cover art is left to the user, both
-methods being supported and useful.
-
-The fetchart plugin can also be used to selectively download album cover
-art by specifying a Beets query limiting the download to those albums
-that do not already have album cover art. This can be useful as a way
-to augment a previous cover art download with `mpplus -D`.
-
-To identify albums without cover art, issue the command:
+Try playing something with a command like:
 
 ```
-/usr/share/musicplayerplus/scripts/find-no-covers.sh
+beet play QUERY
 ```
 
-After identifying music library folders without album cover art using the
-above command, the `fetchart` Beets plugin, can be used to download cover
-art for those albums with no cover art by specifying a Beets query. For
-example, if the artist "John Doe" has no album cover art, issue the command:
+Where 'QUERY' is a valid
+[Beets query](https://beets.readthedocs.io/en/stable/reference/query.html).
+This can be a simple string like
+"blue" or "love" or a more complicated expression as described in the
+Beets query documentation. The Beets `play` plugin should match the
+query string to songs in your music library, add those songs to the
+MPD queue, and play them. Use `beet ls QUERY` to see what would be played.
+
+**[NOTE:]** MusicPlayerPlus has configured the Beets play plugin
+to use the command `/usr/share/musicplayerplus/scripts/mpcplay.sh`
+to play media with this plugin. This script clears the MPD queue,
+adds any songs matching the query to the queue, and plays the MPD queue.
+In addition, two arguments are supported: `--shuffle` and `--debug`.
+These additional arguments are passed using the `--args` feature.
+For example, to play all media matching the string "velvet" and shuffle
+the order of play, issue the command `beet play --args --shuffle velvet`.
+
+Example usage of the `beet play` command:
+
+* `beet play velvet`
+* `beet play playlist:1970s`
+* `beet play --args --shuffle playlist:1990s`
+* `beet play --args "--debug --shuffle" green eyes`
+
+### Additional Beets metadata analysis and retrieval
+
+After completing the Beets music library import with either `mppinit import`
+or `mpplus -I`, additional Beets metadata can be retrieved with the command:
 
 ```
-beet fetchart 'John Doe'
+mppinit metadata
 ```
+
+This will identify and delete duplicate tracks, retrieve album genres,
+download album cover art, and optionally analyze and retrieve metadata
+for all songs in the music library using the
+[Essentia extractor](https://essentia.upf.edu/index.html) and
+[Essentia trained models](https://essentia.upf.edu/models.html).
+
+MusicPlayerPlus uses Essentia for extracting acoustic characteristics
+of music, including low-level spectral information, rhythm, keys, scales,
+and much more, and automatic annotation by genres, moods, and instrumentation.
+
+This is the same sort of thing that
+[AcousticBrainz](https://acousticbrainz.org/) does but the AcousticBrainz
+project is no longer collecting data and will be withdrawn in 2023.
+MusicPlayerPlus provides the same functionality using pre-compiled and
+packaged Essentia binaries and models.
+
+However, the process of analyzing, extracting, and retrieving metadata
+can be time consuming for a large music library. The `mppinit metadata`
+command performs several metadata retrieval steps in a non-interactive
+manner and in the background so it can be left unattended if desired.
+
+The individual metadata retrieval steps performed automatically by
+`mppinit metadata` can be performed manually using the instructions
+in the following sections.
+
+#### Remove duplicate tracks
+
+Duplicate tracks in the Beets library can be removed with the command:
+
+```
+beet duplicates -d
+```
+
+The '-d' option removes duplicate files from the music library location
+on disk as well as removing duplicates in the Beets library. Omit the '-d'
+option to remove duplicates in the Beets library only.
+
+The Beets configuration file at `$HOME/.config/beets/config.yaml` has
+been configured to use checksums to find duplicates. This can be a fairly
+slow process for a large library. Beets can also find duplicates using
+MusicBrainz IDs or other methods. MusicPlayerPlus prefers checksums but
+if this process is too time consuming, it may be preferable to use IDs.
+
+#### Rename tracks that were duplicates
+
+After removing duplicates it is often the case that filenames contain
+no longer needed characters (e.g. "Love Song 2.mp3" which was a duplicate
+of "Love Song.mp3"). To correct these filenames, simply run `beet move`.
+
+#### Retrieve genres from Last.fm
+
+The Beets lastgenre plugin can be used to augment the genre metadata of
+a Beets music library. The MusicPlayerPlus configuration of the lastgenre
+Beets plugin includes a customized local copy of the genre tree and whitelist.
+To retrieve genres using the Beets lastgenre plugin, run the command
+`beet lastgenre`.
+
+#### Download album cover art
+
+To download album cover art for all albums in your music library,
+run the command `mpplus -D`.
+
+For details on album cover art download, manual art download, and
+converting WAV format media files to MP3 format see the
+[MusicPlayerPlus Beets README](beets/README.md).
+
+#### Analyze and extract additional metadata with Essentia
+
+To analyze and extract a wealth of additional metadata directly from
+all of the audio files in the music library, run the command `mpplus -X all`.
+To limit the analysis and extraction to a subset of audio files in the
+music library, run the command `mpplus -X [QUERY]` where 'QUERY' is a
+[Beets query](https://beets.readthedocs.io/en/stable/reference/query.html).
+For example, to analyze and extract metadata for all audio files
+with beets-per-minute set to 0, run the command `mpplus -X bpm:0`.
+
+The analysis and extraction of metadata with Essentia can be a time consuming
+process. For this reason, it is run non-interactively in the background with
+a terminal window being used to monitor the progress. The extraction
+process can be left unattended and may need to run for hours. If the length
+of time required to analyze and extract metadata using Essentia is
+prohibitive then it may be preferable to use the Beets acousticbrainz plugin
+to retrieve additional metadata. To use acousticbrainz, uncomment the
+acousticbrainz entries in `$HOME/.config/beets/config.yaml` and run the
+command `beet acousticbrainz [QUERY]`. Using the acousticbrainz plugin is
+faster (the analysis has already been performed) but incomplete, often
+incorrect, out-of-date, and will no longer be available in 2023.
 
 ### Convert WAV format media files
 
@@ -500,6 +592,8 @@ as an example, to perform an interactive re-import of this unknown album:
 beet import "$HOME/Music/John Doe/*Unknown Album*"
 ```
 
+#### Performing an interactive Beets import
+
 The interactive import process will provide a list of candidates to
 select from, display the changes it would make, and ask to apply
 those changes. If prompted, enter the number of the candidate best
@@ -534,6 +628,39 @@ prior to issuing the modify command, list it with
 beet ls -a john doe unknown album
 ```
 
+#### Performing a Beets import with a MusicBrainz ID
+
+Another method of identifying an album or tracks is by searching the
+MusicBrainz website, locating the release you have, and setting the
+MusicBrainz ID for that release during import. There are several ways
+to do this. Suppose you have a digital rip of the "Snow Crash" audio
+book by Neil Stephenson on cassette tape. The non-interactive Beets
+import will probably misidentify it as one of the more recent releases
+of the audio book as the cassette release is lower in the candidate list.
+
+To correct the non-interactive import or to import this audio book for
+the first time, first visit the musicbrainz.org and search for "Snow Crash"
+in Releases. Locate the cassette release of Snow Crash at
+https://musicbrainz.org/release/d5f4b4eb-0b58-4886-872b-d538863941dc
+
+The long string of digits and letters in the URL is the MusicBrainz ID
+for this release. Copy that string. Perform an interactive Beets import
+of the Snow Crash audio book digital media in the music library:
+
+```
+beet import "$HOME/Music/Neil Stephenson/Snow Crash"
+```
+
+At the Beets import prompt:
+
+```
+Enter search, enter Id, aBort, eDit, edit Candidates, plaY?
+```
+
+Enter 'I' to "enter Id". At the following prompt for ID enter the
+MusicBrainz ID copied earlier from the URL of the release followed
+at the next prompt with 'A' to Apply these changes.
+
 Manual modification of the Beets music library should be needed infrequently
 unless the library contains unreleased, unpublished, or otherwise
 unavailable digital audio recordings.
@@ -546,6 +673,82 @@ to ease this process but that is beyond the scope of this document.
 
 Generally, an interactive Beets re-import of unmatched, miscategorized
 or misnamed items in the music library is all that is needed.
+
+### Download album cover art with the mpplus command
+
+Once your music library has been created and the library location set,
+you can download album cover art with the command `mpplus -D`.
+
+This step is optional as album cover art is not required by either Beets
+or MusicPlayerPlus. However, cover art can be displayed by many MPD clients
+and enhances the user experience. Pre-existing album cover art is retained
+and only albums with no cover art are updated.
+
+Note, for large libraries with many albums missing cover art this process
+may take a long time. Monitor the download process with the command
+`tail -f ${HOME}/.config/mpcplus/download_art.log`.
+
+The `mpplus -D` command downloads album cover art for each album in your
+music library and places the album cover art in the file `cover.jpg` in the
+album folder. The `mpplus -D` command downloads images of size 600x600.
+
+If you wish to name album cover art differently or if you wish to create
+a different sized album cover art, then execute the `sacad_r` command
+directly rather than with `mpplus -D` as follows:
+
+
+```
+sacad_r <MUSIC_DIRECTORY> <SIZE> <FILENAME>
+```
+
+Where <MUSIC_DIRECTORY> is the full pathname to your music library, <SIZE>
+is the desired size of the image, and <FILENAME> is the desired filename.
+
+For example, to download album art for a music library located in
+`/u/audio/music` with an image size of 500x500, in PNG image format,
+and album art filenames `album_cover.png` execute the command:
+
+```
+sacad_r /u/audio/music 500 album_cover.png
+```
+
+Learn more about the Smart Automatic Cover Art Downloader `sacad` at
+https://github.com/desbma/sacad
+
+### Downloading album cover art with the fetchart Beets plugin
+
+MusicPlayerPlus includes the `fetchart` Beets plugin. This plugin is
+pre-installed, pre-configured, and enabled. The fetchart Beets plugin
+can be used as an alternative method of downloading album cover art and
+provides significant flexibility and options not available to `sacad`.
+
+Our experience here at MusicPlayerPlus labs has found that `mpplus -D` finds
+and downloads a higher number of album cover art than the fetchart plugin.
+The fetchart plugin is useful for augmenting an initial cover art download
+with `mpplus -D`. The fetchart plugin also has many configurable options
+allowing the user to specify download parameters and sources. The choice
+of which method to use to download cover art is left to the user, both
+methods being supported and useful.
+
+The fetchart plugin can also be used to selectively download album cover
+art by specifying a Beets query limiting the download to those albums
+that do not already have album cover art. This can be useful as a way
+to augment a previous cover art download with `mpplus -D`.
+
+To identify albums without cover art, issue the command:
+
+```
+/usr/share/musicplayerplus/scripts/find-no-covers.sh
+```
+
+After identifying music library folders without album cover art using the
+above command, the `fetchart` Beets plugin, can be used to download cover
+art for those albums with no cover art by specifying a Beets query. For
+example, if the artist "John Doe" has no album cover art, issue the command:
+
+```
+beet fetchart 'John Doe'
+```
 
 ## Playlist creation
 

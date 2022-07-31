@@ -12,6 +12,7 @@ usage() {
   printf "\nWhere:"
   printf "\n\t-n 'playlist-name' specifies the playlist name"
   printf "\n\t-q 'beets-query' specifies the Beets query to use"
+  printf "\n\t\tmultiple '-q query' arguments may be provided"
   printf "\n\t-o indicates overwrite any pre-existing playlist of same name"
   printf "\n\t-u displays this usage message and exits\n"
   exit 1
@@ -26,7 +27,7 @@ while getopts "n:q:ou" flag; do
             OVER=1
             ;;
         q)
-            QUERY="$OPTARG"
+            QUERY="${QUERY} $OPTARG"
             ;;
         u)
             usage
