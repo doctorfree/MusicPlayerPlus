@@ -179,23 +179,53 @@ run the command `mppinit sync`.
 #### Two step post-initialization setup
 
 The following optional post-initialization steps can be performed individually
-as described below or they can be performed in two steps using `mppinit`:
+as described below or they can be performed in two steps using `mppinit`.
+
+**Step 1**, import the music library into Beets:
 
 ```
 mppinit import
 ```
 
+The `mppinit import` command converts any WAV format media to MP3 format
+and imports the music library into the Beets media library management system.
+
+**[NOTE:]** A Beets import can take hours for a large music library.
+A test import using a music library over 500GB in size, with nearly
+4000 artists, 3000 albums, and over 30,000 tracks consumed nearly 12 hours.
+Import times will vary from system to system and library to library
+depending on several factors. The above test may provide a ballpark idea
+of the length of time a Beets library import might take.
+
 When the import is complete
+
+**Step 2**, retrieve additional metadata:
 
 ```
 mppinit metadata
 ```
 
-The `mppinit import` command converts any WAV format media to MP3 format
-and imports the music library into Beets. The `mppinit metadata` command
-identifies and deletes duplicate tracks, retrieves album genres from Last.fm,
-downloads album cover art, and optionally analyzes and retrieves metadata
-for all songs in the music library.
+The `mppinit metadata` command identifies and deletes duplicate tracks,
+retrieves album genres from Last.fm, downloads album cover art, and
+(optionally) analyzes and retrieves metadata for all songs in the music library.
+
+**[NOTE:]** A Beets metadata retrieval can take hours for a large music library.
+The MusicPlayerPlus default Beets configuration uses `ffmpeg` to compute
+checksums for every track in the library to find duplicates. The optional
+audio analysis is performed by Essentia and involves a deep statistical
+analysis of every track in the library. Both of these processes are time
+consuming but the results are stored so subsequent duplicate checks and
+acoustic analysis will be rapid.
+
+An alternate method of metadata retrieval can be specified using the `-a`
+flag to `mppinit`. This would use the AcousticBrainz service rather than
+Essentia to retrieve acoustic audio metadata. The AcousticBrainz service
+is being retired in 2023 but if it is still available at the time of
+initialization, use the following command to retrieve metadata more quickly:
+
+```
+mppinit -a metadata
+```
 
 #### Individual commands post-initialization setup
 

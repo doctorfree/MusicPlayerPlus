@@ -2,10 +2,11 @@
 #
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
-LOGTEMP="${HOME}/.config/beets/import.log$$"
-LOGFILE="${HOME}/.config/beets/import.log"
-LOGTIME="${HOME}/.config/beets/import_time.log"
-SINGLE_LOG="${HOME}/.config/beets/import_singletons.log"
+BEETSLOGDIR="${HOME}/.config/beets/logs"
+LOGTEMP="${BEETSLOGDIR}/import.log"
+LOGFILE="${BEETSLOGDIR}/import.log"
+LOGTIME="${BEETSLOGDIR}/import_time.log"
+SINGLE_LOG="${BEETSLOGDIR}/import_singletons.log"
 
 usage() {
   printf "\nUsage: beet_import.sh [-a] -[w|W] [-d music_directory] [-u]"
@@ -118,6 +119,7 @@ else
   fi
 fi
 
+[ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
 [ -f "${LOGFILE}" ] && mv "${LOGFILE}" "${LOGTEMP}"
 echo "# Importing artists from ${mpd_music}, auto-tag ${tagging}" >> "${LOGTIME}"
 START_SECONDS=$(date +%s)

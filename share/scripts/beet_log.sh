@@ -13,10 +13,12 @@
 #
 # See ~/.config/beets/config.yaml for the hook plugin configuration
 
-LOG="${HOME}/.config/beets/import_time.log"
+LOGDIR="${HOME}/.config/beets/logs"
+LOG="${LOGDIR}/import_time.log"
 DATE=$(date "+%Y/%m/%d at %H:%M:%S")
 SECONDS=$(date +%s)
 
+[ -d ${LOGDIR} ] || mkdir -p ${LOGDIR}
 [ -f ${LOG} ] || touch ${LOG}
 
 if tail -1 ${LOG} | grep 'Import end' > /dev/null

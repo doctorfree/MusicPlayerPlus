@@ -387,10 +387,10 @@ at `$HOME/.config/beets/config.yaml` and command-line options to the
 library into Beets, moving rather than copying files to conform with
 standard detected artist/album/song naming conventions, and writing
 detected metadata. A log of the album import is written to the file
-`$HOME/.config/beets/import.log`. A log of the singletons import
-is written to the file `$HOME/.config/beets/import_singletons.log`.
+`$HOME/.config/beets/logs/import.log`. A log of the singletons import
+is written to the file `$HOME/.config/beets/logs/import_singletons.log`.
 A log of the import times is written to the file
-`$HOME/.config/beets/import_time.log`.
+`$HOME/.config/beets/logs/import_time.log`.
 
 Prior to performing the intial Beets import of your music library,
 examine the *import* section of the Beets configuration at
@@ -417,7 +417,7 @@ import:
     group_albums: no
     autotag: yes
     bell: no
-    log: ~/.config/beets/import.log
+    log: ~/.config/beets/logs/import.log
 ```
 
 You may prefer to set `move: no` if you do not wish your files and folders
@@ -444,7 +444,7 @@ import:
     incremental_skip_later: no
     from_scratch: no
     timid: yes
-    log: ~/.config/beets/import.log
+    log: ~/.config/beets/logs/import.log
     group_albums: no
     autotag: yes
     bell: no
@@ -486,13 +486,13 @@ examining the log file. For example, to view the progress of the album
 import in real-time:
 
 ```
-tail -f $HOME/.config/beets/import_time.log
+tail -f $HOME/.config/beets/logs/import_time.log
 ```
 
 To view the progress of the singletons import in real-time:
 
 ```
-tail -f $HOME/.config/beets/import_singletons.log
+tail -f $HOME/.config/beets/logs/import_singletons.log
 ```
 
 The `mpplus -I ...` command performs both an import of the music library

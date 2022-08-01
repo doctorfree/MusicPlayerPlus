@@ -52,6 +52,7 @@ DO_NOT_EXIT=
 USE_GRAD=1
 MPP_DIR="/usr/share/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
+BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
@@ -298,8 +299,9 @@ make_it_so() {
       echo "process should run uninterrupted and without need for attention."
       echo "You may continue working and leave the lyrics update unattended."
       echo ""
-      LLOG="/tmp/lyrics_$$.log"
-      nohup beet lyrics > ${LLOG} 2>&1 &
+      [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
+      LLOG="${BEETSLOGDIR}/lyrics.log"
+      nohup beet lyrics >> ${LLOG} 2>&1 &
       beetpid=$!
       if [ "${CONSOLE_MODE}" ]
       then
@@ -345,8 +347,9 @@ make_it_so() {
       else
         extquery="${ACBRAINZ}"
       fi
-      XLOG="/tmp/acoustic_$$.log"
-      nohup beet -v acousticbrainz ${extquery} > ${XLOG} 2>&1 &
+      [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
+      XLOG="${BEETSLOGDIR}/acousticbrainz.log"
+      nohup beet -v acousticbrainz ${extquery} >> ${XLOG} 2>&1 &
       beetpid=$!
       if [ "${CONSOLE_MODE}" ]
       then
@@ -392,8 +395,9 @@ make_it_so() {
       else
         extquery="${XTRACTOR}"
       fi
-      XLOG="/tmp/xtractor_$$.log"
-      nohup beet -v xt ${extquery} > ${XLOG} 2>&1 &
+      [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
+      XLOG="${BEETSCONFDIR}/xtractor.log"
+      nohup beet -v xt ${extquery} >> ${XLOG} 2>&1 &
       beetpid=$!
       if [ "${CONSOLE_MODE}" ]
       then
@@ -430,6 +434,7 @@ make_it_so() {
       echo "You may continue working and leave the import unattended."
       echo ""
 
+      [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
       if [ "${MUSIC_DIRECTORY}" ]
       then
         nohup ${SCRIPTS}/beet_import.sh ${impflags} -d "${MUSIC_DIRECTORY}" > /dev/null 2>&1 &
@@ -440,15 +445,15 @@ make_it_so() {
       beetpid=$!
       if [ "${CONSOLE_MODE}" ]
       then
-        echo "To monitor the progress of the import, examine the import time log:"
+        echo "To monitor the progress of the import, examine the import log:"
         echo ""
-        echo "tail -f $HOME/.config/beets/import_time.log"
+        echo "tail -f $BEETSLOGDIR/import_time.log"
       else
         echo "A terminal window will be opened to monitor the progress of the import."
         echo ""
-        echo "Beets log files can be found in $HOME/.config/beets/"
+        echo "Beets log files can be found in $HOME/.config/beets/logs/"
         gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${beetpid} -f $HOME/.config/beets/import_time.log &
+                       -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
       fi
       echo "===================================================================="
     else

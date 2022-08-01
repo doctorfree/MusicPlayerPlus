@@ -14,6 +14,7 @@ CONF=${HOME}/.config
 MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 BEETSCONFDIR="${CONF}/beets"
+BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
 CALIPCONFDIR="${CONF}/calliope"
@@ -418,10 +419,10 @@ shift $(( OPTIND - 1 ))
     printf "\n\nThis process may take hours depending on the library size."
     printf "\nNotifications of each step will be provided."
     printf "\nThe steps performed include:"
-    printf "\n\t- Duplicate tracks identified and deleted"
-    printf "\n\t- Album genre retrieved"
-    printf "\n\t- Album cover art downloaded"
-    printf "\n\t- Acoustic information analyzed and retrieved (optional)\n\n"
+    printf "\n\t- Identify and delete duplicate tracks"
+    printf "\n\t- Retrieve album genres"
+    printf "\n\t- Download album cover art"
+    printf "\n\t- Analyze and retrieve acoustic information (optional)\n\n"
     [ "${proceed}" ] || {
       while true
       do
@@ -450,15 +451,22 @@ shift $(( OPTIND - 1 ))
         esac
       done
     }
-    DUP_LOG="${BEETSCONFDIR}/duplicates.log"
+    [ -d ${BEETSLOGDIR} ] || mkdir -p ${BEETSLOGDIR}
+    DUP_LOG="${BEETSLOGDIR}/duplicates.log"
     printf "\n\tRemoving duplicate tracks in music library"
     printf "\n\tMonitor this potentially long process with:"
     printf "\n\t\ttail -f ${DUP_LOG}\n"
-    beet duplicates -d >> "${DUP_LOG}" 2>&1
-    printf "\n\tRenaming tracks that were duplicates\n"
-    beet move > /dev/null 2>&1
-    printf "\n\tRetrieving genre from Last.fm\n"
-    beet lastgenre > /dev/null 2>&1
+    beet -v duplicates -d >> "${DUP_LOG}" 2>&1
+    MOV_LOG="${BEETSLOGDIR}/move.log"
+    printf "\n\tRenaming tracks that were duplicates"
+    printf "\n\tMonitor this process with:"
+    printf "\n\t\ttail -f ${MOV_LOG}\n"
+    beet -v move >> "${MOV_LOG}" 2>&1
+    GEN_LOG="${BEETSLOGDIR}/lastgenre.log"
+    printf "\n\tRetrieving genre from Last.fm"
+    printf "\n\tMonitor this process with:"
+    printf "\n\t\ttail -f ${GEN_LOG}\n"
+    beet -v lastgenre >> "${GEN_LOG}" 2>&1
     printf "\n\tDownloading album cover art\n\n"
     mpplus -D > /dev/null 2>&1
     [ "${proceed}" ] || {
@@ -720,6 +728,7 @@ else
 fi
 
 [ -d ${BEETSCONFDIR}/xtraction_data ] || mkdir -p ${BEETSCONFDIR}/xtraction_data
+[ -d ${BEETSLOGDIR} ] || mkdir -p ${BEETSLOGDIR}
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling Calliope configuration in ${CALIPCONFDIR} ..."
