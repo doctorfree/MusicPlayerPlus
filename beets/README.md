@@ -567,7 +567,7 @@ reason, the Beets import process has made intelligent choices for you
 during import. These are almost always correct due to the algorithms used.
 
 After completing a Beets import it is recommended to manually review the
-resulting music library. If there are albums with Beets was not able to
+resulting music library. If there are albums which Beets was not able to
 identify then they will be in folders named something like:
 
 ```
@@ -585,9 +585,13 @@ identify it as the query. For example, to view info on the items in
 the above unknown album by artist John Doe: `beet info -l 'John Doe'`.
 
 Find and review all albums in the music library with folders containing
-'Unknown Album`. Often a simple interactive re-import of these folders
-can be performed to properly identify them. Using the above unknown album
-as an example, to perform an interactive re-import of this unknown album:
+`Unknown Album` with the command `beet list -a 'Unknown Album'` or by
+listing the folders in the music library itself with a command like
+`ls -d "/path/to/music_library/*/*Unknown Album*"`.
+
+Often a simple interactive re-import of these folders can be performed
+to properly identify them. Using the above unknown album as an example,
+to perform an interactive re-import of this unknown album:
 
 ```
 beet import "$HOME/Music/John Doe/*Unknown Album*"
