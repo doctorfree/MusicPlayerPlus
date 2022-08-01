@@ -25,9 +25,11 @@ NORM=$(tput sgr0)
 mpd_music="~/Music"
 
 usage() {
-  printf "\nUsage: mppinit [-d] [-o] [-q] [-U] [-y] [-u] "
+  printf "\nUsage: mppinit [-a] [-d] [-o] [-q] [-U] [-y] [-u] "
   printf "[import|metadata|sync|yams]"
   printf "\nWhere:"
+  printf "\n\t'-a' indicates use AcousticBrainz to retrieve audio information"
+  printf "\n\t\trather than using Essentia to analyze audio files"
   printf "\n\t'-d' indicates install latest Beets development branch rather"
   printf "\n\t\tthan the latest stable release (for testing purposes)"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
@@ -312,13 +314,17 @@ else
   fi
 fi
 
+acbrainz=
 overwrite=
 proceed=
 upgrade=
 quiet=
 beetsdev=
-while getopts "doqUyu" flag; do
+while getopts "adoqUyu" flag; do
     case $flag in
+        a)
+            acbrainz=1
+            ;;
         d)
             beetsdev=1
             ;;
@@ -394,6 +400,8 @@ shift $(( OPTIND - 1 ))
     mpplus -I
     printf "\nAfter the Beets Import is complete, update metadata with:"
     printf "\n\t${BOLD}mppinit metadata${NORM}\n"
+    printf "\nor, to use AcousticBrainz rather than Essentia"
+    printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
     printf "\n\t${BOLD}mppinit yams${NORM}\n"
     visit_wiki
@@ -428,7 +436,12 @@ shift $(( OPTIND - 1 ))
             printf "\n\tbeet move"
             printf "\n\tbeet lastgenre"
             printf "\n\tmpplus -D"
-            printf "\n\tmpplus -X all"
+            if [ "${acbrainz}" ]
+            then
+              printf "\n\tmpplus -x all"
+            else
+              printf "\n\tmpplus -X all"
+            fi
             printf "\nExiting.\n\n"
             exit 0
             ;;
@@ -437,8 +450,11 @@ shift $(( OPTIND - 1 ))
         esac
       done
     }
-    printf "\n\tRemoving duplicate tracks in music library\n"
-    beet duplicates -d > /dev/null 2>&1
+    DUP_LOG="${BEETSCONFDIR}/duplicates.log"
+    printf "\n\tRemoving duplicate tracks in music library"
+    printf "\n\tMonitor this potentially long process with:"
+    printf "\n\t\ttail -f ${DUP_LOG}\n"
+    beet duplicates -d >> "${DUP_LOG}" 2>&1
     printf "\n\tRenaming tracks that were duplicates\n"
     beet move > /dev/null 2>&1
     printf "\n\tRetrieving genre from Last.fm\n"
@@ -456,7 +472,12 @@ shift $(( OPTIND - 1 ))
           [Nn]* )
             printf "\nAcoustic information not analyzed or retrieved."
             printf "\nAcoustic information can be retrieved with the command:\n"
-            printf "\n\tmpplus -X all\n"
+            if [ "${acbrainz}" ]
+            then
+              printf "\n\tmpplus -x all\n"
+            else
+              printf "\n\tmpplus -X all\n"
+            fi
             printf "\nMusicPlayerPlus Metadata Retrieval Complete.\n"
             exit 0
             ;;
@@ -465,8 +486,14 @@ shift $(( OPTIND - 1 ))
         esac
       done
     }
-    printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
-    mpplus -X all
+    if [ "${acbrainz}" ]
+    then
+      printf "\n\tRetrieving acoustic information with AcousticBrainz plugin\n"
+      mpplus -x all
+    else
+      printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
+      mpplus -X all
+    fi
     printf "\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
     printf "\n\t${BOLD}mpplus -Y${NORM}\n"

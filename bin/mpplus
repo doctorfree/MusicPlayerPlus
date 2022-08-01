@@ -55,10 +55,10 @@ SCRIPTS="${MPP_DIR}/scripts"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]"
-  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-n num]"
-  printf "\n\t\t[-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T]"
-  printf "\n\t\t[-u] [-v viz_comm] [-w|W] [-X query] [-y] [-Y] [-z fzmpopt]"
+  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]"
+  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-N]"
+  printf "\n\t\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
+  printf "\n\t\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
@@ -105,9 +105,13 @@ usage() {
   printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
   printf "\n\t-w indicates write metadata during beets import"
   printf "\n\t-W indicates do not write metadata during beets import"
-  printf "\n\t-X 'query' performs an analysis and retrieval of audio-based information"
-  printf "\n\t\tfor all music library media matching 'query'. A query of 'all' performs"
-  printf "\n\t\tthe analysis  and retrieval on the entire music library."
+  printf "\n\t-x 'query' uses AcousticBrainz to retrieve audio-based information"
+  printf "\n\t\tfor all music library media matching 'query'. A query"
+  printf "\n\t\tof 'all' performs the retrieval on the entire music library."
+  printf "\n\t-X 'query' performs an analysis and retrieval, using Essentia,"
+  printf "\n\t\tof audio-based information for all music library media"
+  printf "\n\t\tmatching 'query'. A query of 'all' performs the analysis"
+  printf "\n\t\tand retrieval on the entire music library."
   printf "\n\t-Y initializes the YAMS last.fm scrobbler service"
   printf "\n\t-y disables the YAMS last.fm scrobbler service"
   printf "\n\t-z fzmpopt specifies the fzmp option and invokes fzmp to"
@@ -319,20 +323,67 @@ make_it_so() {
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
+  [ "${ACBRAINZ}" ] && {
+    have_beet=`type -p beet`
+    if [ "${have_beet}" ]
+    then
+      echo ""
+      echo "==================================================================="
+      echo "Retrieving audio-based information for media matching '${ACBRAINZ}'"
+      echo "in the Beets music library management system. The retrieval can"
+      echo "take a few seconds or more per album. A large music library may"
+      echo "take hours to retrieve all the metadata."
+      echo ""
+      echo "The process is performed in the background and non-interactively."
+      echo "As long as your computer remains on and connected to the Internet,"
+      echo "the process should run uninterrupted and without need for attention."
+      echo "You may continue working and leave the extraction unattended."
+      echo ""
+      if [ "${ACBRAINZ}" == "all" ]
+      then
+        extquery=
+      else
+        extquery="${ACBRAINZ}"
+      fi
+      XLOG="/tmp/acoustic_$$.log"
+      nohup beet -v acousticbrainz ${extquery} > ${XLOG} 2>&1 &
+      beetpid=$!
+      if [ "${CONSOLE_MODE}" ]
+      then
+        echo "To monitor the progress of the acoustic metadata retrieval,"
+        echo "examine the extraction log:"
+        echo ""
+        echo "tail -f ${XLOG}"
+      else
+        echo "A terminal window will be opened to monitor the progress"
+        echo "of the acoustic metadata retrieval."
+        gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
+                       -- tail --pid=${beetpid} -f ${XLOG} &
+      fi
+      echo "==================================================================="
+    else
+      echo "The 'beet' command is not in your PATH or is not executable."
+      echo "Check your MusicPlayerPlus installation."
+      echo "Once the 'beet' command is executable and in the execution PATH,"
+      echo "Re-run this command."
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
   [ "${XTRACTOR}" ] && {
     have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""
-      echo "===================================================================="
-      echo "Performing audio analysis and audio-based information retrieval"
-      echo "for media matching ${XTRACTOR} in the Beets music library management"
-      echo "system. The analysis and retrieval can take several minutes per"
-      echo "album. A large music library may take several hours to extract."
+      echo "==========================================================================="
+      echo "Performing audio analysis and audio-based information retrieval for media"
+      echo "matching '${XTRACTOR}' in the Beets music library management system."
+      echo "The analysis and retrieval can take a minute or so per album."
+      echo "A large music library may take several hours to extract."
       echo ""
       echo "The process is performed in the background and non-interactively."
-      echo "As long as your computer remains on and connected to the Internet, the"
-      echo "process should run uninterrupted and without need for attention."
+      echo "As long as your computer remains on and connected to the Internet,"
+      echo "the process should run uninterrupted and without need for attention."
       echo "You may continue working and leave the extraction unattended."
       echo ""
       if [ "${XTRACTOR}" == "all" ]
@@ -354,7 +405,7 @@ make_it_so() {
         gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f ${XLOG} &
       fi
-      echo "===================================================================="
+      echo "==========================================================================="
     else
       echo "The 'beet' command is not in your PATH or is not executable."
       echo "Check your MusicPlayerPlus installation."
@@ -910,8 +961,9 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler Service")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
-    options+=("Download Album Cover Art" "Import Music to Beets")
-    options+=("Extract Audio Information" "Fetch Lyrics")
+    options+=("Download Album Cover Art" "Fetch Lyrics" "Import Music to Beets")
+    options+=("Extract Audio Information")
+    options+=("Retrieve Audio Information")
     options+=("Manage MusicPlayerPlus Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -970,6 +1022,11 @@ show_main_menu() {
               ;;
           "Extract"*,*|*,"Extract"*)
               XTRACTOR="all"
+              DO_NOT_EXIT=1
+              break
+              ;;
+          "Retrieve"*,*|*,"Retrieve"*)
+              ACBRAINZ="all"
               DO_NOT_EXIT=1
               break
               ;;
@@ -1055,6 +1112,7 @@ init_vars() {
   DIS_YAMS=
   FETCH_LYRICS=
   BEETS_IMPORT=
+  ACBRAINZ=
   XTRACTOR=
   FULLSCREEN=
   HALFHEIGHT=
@@ -1120,7 +1178,7 @@ have_gnome=`type -p gnome-terminal`
 writeflag=
 tagflag=
 
-while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:yYz:u" flag; do
+while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1300,6 +1358,9 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWX:yYz:u" flag; do
       ;;
     W)
       writeflag="-W"
+      ;;
+    x)
+      ACBRAINZ="${OPTARG}"
       ;;
     X)
       XTRACTOR="${OPTARG}"

@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 # SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-M alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 # DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch the cantata MPD client or any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -136,8 +136,11 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-W**
 : indicates do not write metadata during Beets import
 
+**-x 'query'**
+: uses AcousticBrainz to retrieve audio-based information for all music library media matching 'query'. A query of 'all' performs the retrieval on the entire music library.
+
 **-X 'query'**
-: performs an analysis and retrieval of audio-based information for all music library media matching 'query'. A query of 'all' performs the analysis  and retrieval on the entire music library.
+: performs an analysis and retrieval, using Essentia, of audio-based information for all music library media matching 'query'. A query of 'all' performs the analysis and retrieval on the entire music library.
 
 **-Y**
 : initializes the YAMS last.fm scrobbler service
@@ -198,7 +201,10 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : Download lyrics for any songs in the music library that do not already have lyrics
 
 **mpplus -X all**
-: Analyze audio and retrieve information for the entire music library
+: Analyze audio using Essentia and retrieve information for the entire music library
+
+**mpplus -x all**
+: Retrieve audio information for the entire music library using AcousticBrainz
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com

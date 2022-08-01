@@ -1083,6 +1083,30 @@ section of the Beets configuration `$HOME/.config/beets/config.yaml` is:
         required: yes
 ```
 
+The MusicPlayerPlus Beets xtractor plugin configuration can be modified to
+suit the use case. However, if the xtractor has been run prior to modifying
+its configuration, it may be necessary to re-analyze the digital audio in
+order to update the metadata to reflect the revised configuration. To force
+re-analysis and metadata update using the xtractor plugin, use the `-f` flag:
+
+```
+beet xtractor -f -w [QUERY]
+```
+
+Previously analyzed xtractro output files are stored in
+`$HOME/.config/beets/xtraction_data/` as JSON format files named either by
+the audio's MusicBrainz track ID or a randomly generated UUID.
+
+To manually examine the acoustic properties calculated using Essentia
+of a particular song, identify that song's MusicBrainz track ID then look
+for the JSON file with that ID in the above directory. To identify a
+song's MusicBrainz track ID, use a Beets query that uniquely identifies the
+song in a command like:
+
+```
+beet info -l [QUERY] | grep mb_trackid
+```
+
 ## Configuring the Discogs metadata source
 
 Beets uses [MusicBrainz](https://musicbrainz.org) as the default source

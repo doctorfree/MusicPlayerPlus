@@ -21,7 +21,8 @@
 mppinit - performs one-time MusicPlayerPlus initialization
 .SH SYNOPSIS
 .PP
-\f[B]mppinit\f[R] [-d] [-o] [-q] [-U] [-y] [-u] [import|metadata|sync]
+\f[B]mppinit\f[R] [-a] [-d] [-o] [-q] [-U] [-y] [-u]
+[import|metadata|sync]
 .SH DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -33,10 +34,17 @@ imports the music library to the Beets media management system.
 .PP
 Invoked with the \f[V]metadata\f[R] argument, \f[I]mppinit metadata\f[R]
 updates the Beets library with analyzed and retrieved metadata.
+If accompanied by the \f[V]-a\f[R] argument, AcousticBrainz is used to
+retrieve audio information rather than analyzing audio files with
+Essentia.
 .PP
 Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
 synchronizes the music library location across all configuration files.
 .SH COMMAND LINE OPTIONS
+.TP
+\f[B]-a\f[R]
+indicates use AcousticBrainz to retrieve audio information rather than
+using Essentia to analyze audio files
 .TP
 \f[B]-d\f[R]
 indicates install latest Beets development branch rather than the latest

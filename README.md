@@ -750,10 +750,10 @@ summary of the command line options:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
-		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m]
-		[-M alsaconf|enable|disable|restart|start|stop|status] [-n num]
-		[-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T]
-		[-u] [-v viz_comm] [-w|W] [-X query] [-y] [-Y] [-z fzmpopt]
+		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]
+		[-M alsaconf|enable|disable|restart|start|stop|status] [-N]
+		[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+		[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-c indicates use cantata MPD client rather than mpcplus
@@ -800,9 +800,13 @@ General options:
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-w indicates write metadata during beets import
 	-W indicates do not write metadata during beets import
-	-X 'query' performs an analysis and retrieval of audio-based information
-		for all music library media matching 'query'. A query of 'all' performs
-		the analysis  and retrieval on the entire music library.
+	-x 'query' uses AcousticBrainz to retrieve audio-based information
+		for all music library media matching 'query'. A query
+		of 'all' performs the retrieval on the entire music library.
+	-X 'query' performs an analysis and retrieval, using Essentia,
+		of audio-based information for all music library media
+		matching 'query'. A query of 'all' performs the analysis
+		and retrieval on the entire music library.
 	-Y initializes the YAMS last.fm scrobbler service
 	-y disables the YAMS last.fm scrobbler service
 	-z fzmpopt specifies the fzmp option and invokes fzmp to

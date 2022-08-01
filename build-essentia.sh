@@ -34,17 +34,39 @@
 #
 # Usage: ./build-essentia.sh [-i]
 # Where -i indicates install essentia after configuring and compiling
+#
+# MusicPlayerPlus Essentia builds disable Tensorflow by default.
+# Use the "-t" option to this script to enable Tensorflow support.
+# However:
+#
+# Note: TensorFlow binaries use AVX instructions which may not run on older CPUs
+# The following GPU-enabled devices are supported:
+#  - NVIDIA® GPU card with CUDA® architectures 3.5, 5.0, 6.0, 7.0, 7.5, 8.0
+#    and higher. See the list of CUDA®-enabled GPU cards.
+#  - For GPUs with unsupported CUDA® architectures, or to avoid JIT compilation
+#    from PTX, or to use different versions of the NVIDIA® libraries,
+#    see the Linux build from source guide.
+#  - Packages do not contain PTX code except for the latest supported CUDA®
+#    architecture; therefore, TensorFlow fails to load on older GPUs when
+#    CUDA_FORCE_PTX_JIT=1 is set. (See Application Compatibility for details.)
+#
+# Note: The error message "Status: device kernel image is invalid" indicates
+# that the TensorFlow package does not contain PTX for your architecture.
+# You can enable compute capabilities by building TensorFlow from source.
+#
+# Note: GPU support is available for Ubuntu and Windows with CUDA®-enabled cards.
 
 usage() {
-    printf "\nUsage: ./build-essentia.sh [-Ci] [-d destdir] [-p prefix] [-u]"
-    printf "\nWhere:"
-    printf "\n\t-C indicates run configure and exit"
-    printf "\n\t-d destdir specifies installation destination root (default /)"
-    printf "\n\t-i indicates configure, build, and install"
-    printf "\n\t-p prefix specifies installation prefix (default /usr)"
-    printf "\n\t-u displays this usage message and exits\n"
-    printf "\nNo arguments: configure, build\n"
-    exit 1
+  printf "\nUsage: ./build-essentia.sh [-Ci] [-d destdir] [-p prefix] [-t] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-C indicates run configure and exit"
+  printf "\n\t-d destdir specifies installation destination root (default /)"
+  printf "\n\t-i indicates configure, build, and install"
+  printf "\n\t-p prefix specifies installation prefix (default /usr)"
+  printf "\n\t-t indicates configure with tensorflow support"
+  printf "\n\t-u displays this usage message and exits\n"
+  printf "\nNo arguments: configure, build\n"
+  exit 1
 }
 
 PROJ=essentia
@@ -52,7 +74,8 @@ CONFIGURE_ONLY=
 INSTALL=
 PREFIX=
 DESTDIR=
-while getopts "Cd:ip:u" flag; do
+TENSOR=
+while getopts "Cd:ip:tu" flag; do
     case $flag in
         C)
             CONFIGURE_ONLY=1
@@ -65,6 +88,9 @@ while getopts "Cd:ip:u" flag; do
             ;;
         p)
             PREFIX="${OPTARG}"
+            ;;
+        t)
+            TENSOR=1
             ;;
         u)
             usage
@@ -82,8 +108,10 @@ shift $(( OPTIND - 1 ))
 
 destdir=
 prefix="--prefix=/usr"
+tensor=
 [ "${DESTDIR}" ] && destdir="--destdir=${DESTDIR}"
 [ "${PREFIX}" ] && prefix="--prefix=${PREFIX}"
+[ "${TENSOR}" ] && tensor="--with-tensorflow"
 
 [ "${INSTALL}" ] || {
   [ -x ${PROJ}/build/src/examples/essentia_streaming_extractor_music ] && {
@@ -96,7 +124,7 @@ PKGPATH=`pkg-config --variable pc_path pkg-config`
 export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
 
 cd ${PROJ}
-python3 waf configure ${prefix} --build-static --with-python \
+python3 waf configure ${prefix} --build-static --with-python ${tensor} \
                                 --with-gaia --with-examples
 
 [ "${CONFIGURE_ONLY}" ] && exit 0

@@ -22,10 +22,10 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-c] [-C client] [-D] [-d
-music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-M
-alsaconf|enable|disable|restart|start|stop|status] [-n num] [-N] [-p]
+music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n
+num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
-[-w|W] [-X query] [-y] [-Y] [-z fzmpopt]
+[-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SH DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -186,9 +186,15 @@ indicates write metadata during Beets import
 \f[B]-W\f[R]
 indicates do not write metadata during Beets import
 .TP
+\f[B]-x \[aq]query\[aq]\f[R]
+uses AcousticBrainz to retrieve audio-based information for all music
+library media matching \[aq]query\[aq].
+A query of \[aq]all\[aq] performs the retrieval on the entire music
+library.
+.TP
 \f[B]-X \[aq]query\[aq]\f[R]
-performs an analysis and retrieval of audio-based information for all
-music library media matching \[aq]query\[aq].
+performs an analysis and retrieval, using Essentia, of audio-based
+information for all music library media matching \[aq]query\[aq].
 A query of \[aq]all\[aq] performs the analysis and retrieval on the
 entire music library.
 .TP
@@ -273,7 +279,12 @@ Download lyrics for any songs in the music library that do not already
 have lyrics
 .TP
 \f[B]mpplus -X all\f[R]
-Analyze audio and retrieve information for the entire music library
+Analyze audio using Essentia and retrieve information for the entire
+music library
+.TP
+\f[B]mpplus -x all\f[R]
+Retrieve audio information for the entire music library using
+AcousticBrainz
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
