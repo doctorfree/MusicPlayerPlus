@@ -349,8 +349,14 @@ make_it_so() {
       fi
       [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
       XLOG="${BEETSLOGDIR}/acousticbrainz.log"
+      echo "# Retrieving audio metadata with acousticbrainz plugin" >> "${XLOG}"
+      START_SECONDS=$(date +%s)
       nohup beet -v acousticbrainz ${extquery} >> ${XLOG} 2>&1 &
       beetpid=$!
+      [ -x ${SCRIPTS}/logtime.sh ] && {
+        ${SCRIPTS}/logtime.sh -s "${START_SECONDS}" -l "${XLOG}" \
+                              -p "${beetpid}" -d "Acoustic retrieval" 2>&1 &
+      }
       if [ "${CONSOLE_MODE}" ]
       then
         echo "To monitor the progress of the acoustic metadata retrieval,"
@@ -397,8 +403,14 @@ make_it_so() {
       fi
       [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
       XLOG="${BEETSCONFDIR}/xtractor.log"
+      echo "# Extracting audio metadata with xtractor plugin" >> "${XLOG}"
+      START_SECONDS=$(date +%s)
       nohup beet -v xt ${extquery} >> ${XLOG} 2>&1 &
       beetpid=$!
+      [ -x ${SCRIPTS}/logtime.sh ] && {
+        ${SCRIPTS}/logtime.sh -s "${START_SECONDS}" -l "${XLOG}" \
+                              -p "${beetpid}" -d "Acoustic extraction" 2>&1 &
+      }
       if [ "${CONSOLE_MODE}" ]
       then
         echo "To monitor the progress of the extraction, examine the extraction log:"

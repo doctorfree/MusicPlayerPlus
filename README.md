@@ -1,14 +1,14 @@
 # MusicPlayerPlus
 
 MusicPlayerPlus is a character-based console and terminal window music player
-- ***plus*** album cover art
-- ***plus*** media fuzzy finder using `fzf`
-- ***plus*** `tmux` sessions managed by `tmuxp`
+- ***plus*** Beets media library management
 - ***plus*** character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
-- ***plus*** Beets media library management
 - ***plus*** Automated audio analysis and audio-based information retrieval
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
+- ***plus*** media fuzzy finder using `fzf`
+- ***plus*** album cover art
+- ***plus*** `tmux` sessions managed by `tmuxp`
 - ***plus*** `asciimatics` color ASCII animations
 - ***plus*** `asciinema` text-based terminal session recording
 

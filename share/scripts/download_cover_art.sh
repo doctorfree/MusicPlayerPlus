@@ -101,4 +101,9 @@ have_sacad=`type -p sacad_r`
 
 [ -f ${LOG} ] || touch ${LOG}
 echo "Downloading album cover art for Artist/Albums in ${mpd_music}" >> ${LOG}
+START_SECONDS=$(date +%s)
 sacad_r "${mpd_music}" 600 ${cover_name}.jpg >> ${LOG} 2>&1
+FINISH_SECONDS=$(date +%s)
+ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
+ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+printf "\n# Download ${ELAPSED}\n" >> ${LOG}

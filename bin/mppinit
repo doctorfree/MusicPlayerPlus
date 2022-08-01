@@ -456,17 +456,41 @@ shift $(( OPTIND - 1 ))
     printf "\n\tRemoving duplicate tracks in music library"
     printf "\n\tMonitor this potentially long process with:"
     printf "\n\t\ttail -f ${DUP_LOG}\n"
+    echo "# Starting duplicate track identification and removal" >> "${DUP_LOG}"
+    START_SECONDS=$(date +%s)
     beet -v duplicates -d >> "${DUP_LOG}" 2>&1
+    echo "# Completed duplicate track identification and removal" >> "${DUP_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
+    ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+    printf "\n# Duplicates ${ELAPSED}\n" >> "${DUP_LOG}"
+
     MOV_LOG="${BEETSLOGDIR}/move.log"
     printf "\n\tRenaming tracks that were duplicates"
     printf "\n\tMonitor this process with:"
     printf "\n\t\ttail -f ${MOV_LOG}\n"
+    echo "# Starting track renaming" >> "${MOV_LOG}"
+    START_SECONDS=$(date +%s)
     beet -v move >> "${MOV_LOG}" 2>&1
+    echo "# Completed track renaming" >> "${MOV_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
+    ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+    printf "\n# Renaming ${ELAPSED}\n" >> "${MOV_LOG}"
+
     GEN_LOG="${BEETSLOGDIR}/lastgenre.log"
     printf "\n\tRetrieving genre from Last.fm"
     printf "\n\tMonitor this process with:"
     printf "\n\t\ttail -f ${GEN_LOG}\n"
+    echo "# Starting genre retrieval" >> "${GEN_LOG}"
+    START_SECONDS=$(date +%s)
     beet -v lastgenre >> "${GEN_LOG}" 2>&1
+    echo "# Completed genre retrieval" >> "${GEN_LOG}"
+    FINISH_SECONDS=$(date +%s)
+    ELAPSECS=$(( FINISH_SECONDS - START_SECONDS ))
+    ELAPSED=`eval "echo total elapsed time: $(date -ud "@$ELAPSECS" +'$((%s/3600/24)) days %H hr %M min %S sec')"`
+    printf "\n# Genre retrieval ${ELAPSED}\n" >> "${GEN_LOG}"
+
     printf "\n\tDownloading album cover art\n\n"
     mpplus -D > /dev/null 2>&1
     [ "${proceed}" ] || {
