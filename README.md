@@ -227,6 +227,17 @@ initialization, use the following command to retrieve metadata more quickly:
 mppinit -a metadata
 ```
 
+Unfortunately, the AcousticBrainz service seems to think a lot of songs
+have 0 beets per minute and tags them erroneously. After retrieving
+metadata using AcousticBrainz, list the songs that have a bpm value of 0:
+
+```
+beet list bpm:0
+```
+
+These songs can get an accurate setting for bpm and other audio parameters
+by following the `mppinit -a metadata` command with `mpplus -X bpm:0`.
+
 #### Individual commands post-initialization setup
 
 Convert WAV format media files in your library to MP3 format files with

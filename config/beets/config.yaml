@@ -95,7 +95,6 @@ bandcamp:
 
 duplicates:
     album: no
-    # Uncomment the preferred method to compare tracks, checksum or IDs
     checksum: ffmpeg -i {file} -f crc -
 #   keys: [mb_trackid, mb_albumid]
 #   tiebreak:
@@ -176,7 +175,7 @@ lastgenre:
     # have one. To instead leave genres in place in when they pass the whitelist,
     # set the force option to no. Default: yes.
     # NOTE: May not be working as expected. Perhaps fixed in 1.6.1 Investigating
-    # force: yes
+    force: no
     #
     # Minimum popularity factor below which genres are discarded.
     # Default: 10.
@@ -431,7 +430,7 @@ xtractor:
     auto: no
     dry-run: no
     write: yes
-    threads: 1
+    threads: 4
     force: no
     quiet: no
     keep_output: yes
@@ -445,17 +444,16 @@ xtractor:
         frameSize: 2048
         hopSize: 1024
       chromaprint:
-        compute: 1
-        duration: 20.0
+        compute: 0
       highlevel:
         compute: 1
         svm_models:
           - /usr/share/musicplayerplus/svm_models/danceability.history
           - /usr/share/musicplayerplus/svm_models/gender.history
-          - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
-          - /usr/share/musicplayerplus/svm_models/genre_electronic.history
+#         - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
+#         - /usr/share/musicplayerplus/svm_models/genre_electronic.history
+#         - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
           - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
-          - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
           - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
           - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
           - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
@@ -471,16 +469,39 @@ xtractor:
 #
 # MusicPlayerPlus custom xtractor targets configuration
 #
-# We prefer the value as a string for the danceable attribute
-    high_level_targets:
-      acoustid_fingerprint:
-        path: "chromaprint.string"
+    low_level_targets:
+      bpm:
+        path: "rhythm.bpm"
+        type: integer
+        required: yes
+      danceability:
+        path: "rhythm.danceability"
+        type: float
+      beats_count:
+        path: "rhythm.beats_count"
+        type: integer
+      average_loudness:
+        path: "lowlevel.average_loudness"
+        type: float
+        required: yes
+      initial_key:
+        path: "tonal.initial_key"
         type: string
-      key_edma:
+    high_level_targets:
+#     acoustid_fingerprint:
+#       path: "chromaprint.string"
+#       type: string
+      key_key:
         path: "tonal.key_edma.key"
         type: string
-      scale_edma:
+      key_scale:
         path: "tonal.key_edma.scale"
+        type: string
+      chords_key:
+        path: "tonal.chords_key"
+        type: string
+      chords_scale:
+        path: "tonal.chords_scale"
         type: string
       replay_gain:
         path: "metadata.audio_properties.replay_gain"
@@ -502,6 +523,9 @@ xtractor:
       is_danceable:
         path: "highlevel.danceability.all.danceable"
         type: float
+      genre_rosamerica:
+        path: "highlevel.genre_rosamerica.value"
+        type: string
       mood_acoustic:
         path: "highlevel.mood_acoustic.value"
         type: string
@@ -530,100 +554,6 @@ xtractor:
         path: "highlevel.mood_relaxed.value"
         type: string
         required: yes
-#
-# xtractor configuration defaults:
-#
-#   low_level_targets:
-#       bpm:
-#           path: "rhythm.bpm"
-#           type: integer
-#           required: yes
-#       danceability:
-#           path: "rhythm.danceability"
-#           type: float
-#       beats_count:
-#           path: "rhythm.beats_count"
-#           type: integer
-#       average_loudness:
-#           path: "lowlevel.average_loudness"
-#           type: float
-#           required: yes
-#   high_level_targets:
-#       danceable:
-#           path: "highlevel.danceability.all.danceable"
-#           type: float
-#           required: yes
-#       gender:
-#           path: "highlevel.gender.value"
-#           type: string
-#           required: yes
-#       is_male:
-#           path: "highlevel.gender.all.male"
-#           type: float
-#       is_female:
-#           path: "highlevel.gender.all.female"
-#           type: float
-#       genre_rosamerica:
-#           path: "highlevel.genre_rosamerica.value"
-#           type: string
-#           required: yes
-#       voice_instrumental:
-#           path: "highlevel.voice_instrumental.value"
-#           type: string
-#           required: yes
-#       is_voice:
-#           path: "highlevel.voice_instrumental.all.voice"
-#           type: float
-#       is_instrumental:
-#           path: "highlevel.voice_instrumental.all.instrumental"
-#           type: float
-#       mood_acoustic:
-#           path: "highlevel.mood_acoustic.all.acoustic"
-#           type: float
-#           required: yes
-#       mood_aggressive:
-#           path: "highlevel.mood_aggressive.all.aggressive"
-#           type: float
-#           required: yes
-#       mood_electronic:
-#           path: "highlevel.mood_electronic.all.electronic"
-#           type: float
-#           required: yes
-#       mood_happy:
-#           path: "highlevel.mood_happy.all.happy"
-#           type: float
-#           required: yes
-#       mood_sad:
-#           path: "highlevel.mood_sad.all.sad"
-#           type: float
-#           required: yes
-#       mood_party:
-#           path: "highlevel.mood_party.all.party"
-#           type: float
-#           required: yes
-#       mood_relaxed:
-#           path: "highlevel.mood_relaxed.all.relaxed"
-#           type: float
-#           required: yes
-#       mood_mirex:
-#           path: "highlevel.moods_mirex.value"
-#           type: string
-#           required: yes
-#       mood_mirex_cluster_1:
-#           path: "highlevel.moods_mirex.all.Cluster1"
-#           type: float
-#       mood_mirex_cluster_2:
-#           path: "highlevel.moods_mirex.all.Cluster2"
-#           type: float
-#       mood_mirex_cluster_3:
-#           path: "highlevel.moods_mirex.all.Cluster3"
-#           type: float
-#       mood_mirex_cluster_4:
-#           path: "highlevel.moods_mirex.all.Cluster4"
-#           type: float
-#       mood_mirex_cluster_5:
-#           path: "highlevel.moods_mirex.all.Cluster5"
-#           type: float
 
 yearfixer:
     force: yes

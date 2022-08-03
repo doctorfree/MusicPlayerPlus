@@ -351,7 +351,12 @@ make_it_so() {
       XLOG="${BEETSLOGDIR}/acousticbrainz.log"
       echo "# Retrieving audio metadata with acousticbrainz plugin" >> "${XLOG}"
       START_SECONDS=$(date +%s)
-      nohup beet -v acousticbrainz ${extquery} >> ${XLOG} 2>&1 &
+      if [ "${extquery}" ]
+      then
+        nohup beet -v --plugins=acousticbrainz acousticbrainz ${extquery} >> ${XLOG} 2>&1 &
+      else
+        ${SCRIPTS}/ab_albums.sh "${XLOG}" &
+      fi
       beetpid=$!
       [ -x ${SCRIPTS}/logtime.sh ] && {
         ${SCRIPTS}/logtime.sh -s "${START_SECONDS}" -l "${XLOG}" \
@@ -369,6 +374,10 @@ make_it_so() {
         gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f ${XLOG} &
       fi
+      echo ""
+      echo "The AcousticBrainz service is depracated and no longer updated."
+      echo "To augment acoustic metadata, run '${BOLD}mpplus -X all${NORM}' or"
+      echo "'${BOLD}mpplus -X bpm:0${NORM}' after this retrieval is completed"
       echo "==================================================================="
     else
       echo "The 'beet' command is not in your PATH or is not executable."
@@ -402,10 +411,10 @@ make_it_so() {
         extquery="${XTRACTOR}"
       fi
       [ -d "${BEETSLOGDIR}" ] || mkdir -p "${BEETSLOGDIR}"
-      XLOG="${BEETSCONFDIR}/xtractor.log"
+      XLOG="${BEETSLOGDIR}/xtractor.log"
       echo "# Extracting audio metadata with xtractor plugin" >> "${XLOG}"
       START_SECONDS=$(date +%s)
-      nohup beet -v xt ${extquery} >> ${XLOG} 2>&1 &
+      nohup beet -v --plugins=xtractor xtractor ${extquery} >> ${XLOG} 2>&1 &
       beetpid=$!
       [ -x ${SCRIPTS}/logtime.sh ] && {
         ${SCRIPTS}/logtime.sh -s "${START_SECONDS}" -l "${XLOG}" \
