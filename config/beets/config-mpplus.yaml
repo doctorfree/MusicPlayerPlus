@@ -37,6 +37,7 @@ import:
     log: ~/.config/beets/logs/import.log
 
 plugins:
+    - acousticbrainz
     - albumtypes
     - bandcamp
     - describe
@@ -59,6 +60,11 @@ plugins:
     - unimported
     - xtractor
     - yearfixer
+
+acousticbrainz:
+    auto: no
+    force: no
+    tags: []
 
 albumtypes:
     types:
@@ -143,13 +149,13 @@ lastgenre:
     canonical: ~/.config/beets/genres/genres-tree.yaml
     count: 1
     fallback: Unknown
+    force: no
     min_weight: 10
     prefer_specific: yes
     source: track
     separator: ', '
     whitelist: ~/.config/beets/genres/genres.txt
     title_case: yes
-    force: yes
 
 play:
     command: /usr/share/musicplayerplus/scripts/mpcplay.sh $args
@@ -217,9 +223,9 @@ mpd:
     port: 6600
     rating: yes
     rating_mix: 0.75
-    password: REDACTED
-    music_directory: /home/ronnie/Music
+    music_directory: ~/Music
     strip_path: ''
+    password: REDACTED
 
 musicbrainz:
     extra_tags:
@@ -281,7 +287,7 @@ xtractor:
     auto: no
     dry-run: no
     write: yes
-    threads: 1
+    threads: 4
     force: no
     quiet: no
     keep_output: yes
@@ -295,17 +301,13 @@ xtractor:
             frameSize: 2048
             hopSize: 1024
         chromaprint:
-            compute: 1
-            duration: 20.0
+            compute: 0
         highlevel:
             compute: 1
             svm_models:
             - /usr/share/musicplayerplus/svm_models/danceability.history
             - /usr/share/musicplayerplus/svm_models/gender.history
-            - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
-            - /usr/share/musicplayerplus/svm_models/genre_electronic.history
             - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
-            - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
             - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
             - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
             - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
@@ -318,15 +320,36 @@ xtractor:
             - /usr/share/musicplayerplus/svm_models/timbre.history
             - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
             - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
-    high_level_targets:
-        acoustid_fingerprint:
-            path: chromaprint.string
+    low_level_targets:
+        bpm:
+            path: rhythm.bpm
+            type: integer
+            required: yes
+        danceability:
+            path: rhythm.danceability
+            type: float
+        beats_count:
+            path: rhythm.beats_count
+            type: integer
+        average_loudness:
+            path: lowlevel.average_loudness
+            type: float
+            required: yes
+        initial_key:
+            path: tonal.initial_key
             type: string
-        key_edma:
+    high_level_targets:
+        key_key:
             path: tonal.key_edma.key
             type: string
-        scale_edma:
+        key_scale:
             path: tonal.key_edma.scale
+            type: string
+        chords_key:
+            path: tonal.chords_key
+            type: string
+        chords_scale:
+            path: tonal.chords_scale
             type: string
         replay_gain:
             path: metadata.audio_properties.replay_gain
@@ -348,6 +371,10 @@ xtractor:
         is_danceable:
             path: highlevel.danceability.all.danceable
             type: float
+        genre_rosamerica:
+            path: highlevel.genre_rosamerica.value
+            type: string
+            required: yes
         mood_acoustic:
             path: highlevel.mood_acoustic.value
             type: string
@@ -386,10 +413,6 @@ xtractor:
         is_female:
             path: highlevel.gender.all.female
             type: float
-        genre_rosamerica:
-            path: highlevel.genre_rosamerica.value
-            type: string
-            required: yes
         voice_instrumental:
             path: highlevel.voice_instrumental.value
             type: string
@@ -419,21 +442,6 @@ xtractor:
         mood_mirex_cluster_5:
             path: highlevel.moods_mirex.all.Cluster5
             type: float
-    low_level_targets:
-        bpm:
-            path: rhythm.bpm
-            type: integer
-            required: yes
-        danceability:
-            path: rhythm.danceability
-            type: float
-        beats_count:
-            path: rhythm.beats_count
-            type: integer
-        average_loudness:
-            path: lowlevel.average_loudness
-            type: float
-            required: yes
 
 yearfixer:
     force: yes
@@ -453,6 +461,11 @@ ui:
 hook:
     hooks: [{event: import_begin, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import begin}, {event: import, command: /usr/share/musicplayerplus/scripts/beet_log.sh Import end}]
 
+edit:
+    albumfields: album albumartist
+    itemfields: track title artist album
+    ignore_fields: id path
+
 missing:
     count: no
     total: no
@@ -460,9 +473,4 @@ missing:
 
 describe:
     auto: no
-
-edit:
-    albumfields: album albumartist
-    itemfields: track title artist album
-    ignore_fields: id path
 

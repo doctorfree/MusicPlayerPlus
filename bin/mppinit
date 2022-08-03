@@ -10,6 +10,7 @@
 MPPCDIR=/usr/share/musicplayerplus
 CONFDIR=${MPPCDIR}/mpcplus
 SCPTDIR=${MPPCDIR}/scripts
+CCPTDIR=${MPPCDIR}/calliope
 CONF=${HOME}/.config
 MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
@@ -27,7 +28,7 @@ mpd_music="~/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-d] [-o] [-q] [-U] [-y] [-u] "
-  printf "[import|metadata|sync|yams]"
+  printf "[bandcamp|import|metadata|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' indicates use AcousticBrainz to retrieve audio information"
   printf "\n\t\trather than using Essentia to analyze audio files"
@@ -38,12 +39,13 @@ usage() {
   printf "\n\t'-U' indicates upgrade installed Python modules if needed"
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
+  printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'metadata' performs a Beets library metadata update"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
-  printf "\n\n'mppinit' must be performed before a sync, metadata, or import"
-  printf "\nOnly one of 'import', 'metadata', or 'sync' can be specified\n\n"
+  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp, or import"
+  printf "\nOnly one of bandcamp, import, metadata, or sync can be specified\n\n"
   exit 1
 }
 
@@ -362,6 +364,54 @@ shift $(( OPTIND - 1 ))
     printf "\n\nMusicPlayerPlus music directory synchronized.\n"
   else
     init_warn sync
+  fi
+  exit 0
+}
+
+[ "$1" == "bandcamp" ] && {
+  if [ "${initialized}" ]
+  then
+    printf "\nDownloading albums in your Bandcamp collections"
+    printf "\nA Bandcamp username must be configured in:"
+    printf "\n\t${CALIPCONF}\n\n"
+    [ "${proceed}" ] || {
+      while true
+      do
+        read -p "My Bandcamp username is configured, proceed with download ? (y/n) " yn
+        case $yn in
+          [Yy]* )
+            break
+            ;;
+          [Nn]* )
+            printf "\nBandcamp collections download can be performed with:"
+            printf "\n\t${CCPTDIR}/bandcamp-download"
+            printf "\n\nExiting.\n\n"
+            exit 0
+            ;;
+          * ) echo "Please answer yes or no."
+            ;;
+        esac
+      done
+    }
+    if [ -x ${CCPTDIR}/bandcamp-download ]
+    then
+      printf "\n\tInvoking Bandcamp collections download script\n"
+      ${CCPTDIR}/bandcamp-download
+    else
+      printf "\nBandcamp collections download script "
+      printf "${CCPTDIR}/bandcamp-download"
+      printf "\nis not found or not executable. No download performed.\n"
+    fi
+    printf "\nImport the music library into the Beets media management system:"
+    printf "\n\t${BOLD}mppinit import${NORM}"
+    printf "\nAfter the import has completed, perform an update of the Beets"
+    printf "\nlibrary metadata, genres, and album cover art:"
+    printf "\n\t${BOLD}mppinit metadata${NORM}"
+    printf "\nActivate the YAMS Last.fm scrobbler:"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
+    visit_wiki
+  else
+    init_warn bandcamp
   fi
   exit 0
 }
@@ -998,7 +1048,7 @@ then
   for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
-             calliope-music python3-discogs-client
+             calliope-music python3-discogs-client bandcamp-downloader
   do
     if pip list | grep ${pkg} > /dev/null
     then
@@ -1118,6 +1168,8 @@ printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
 printf "\nMusic directory set to ${BOLD}${mpd_music}${NORM} in ${MPDCONF}"
 printf "\nModify ${MPDCONF} 'music_directory' to change this."
 printf "\nIf 'music_directory' is modified, run '${BOLD}mppinit sync${NORM}'\n"
+printf "\nDownload albums in your Bandcamp collections with:"
+printf "\n\t${BOLD}mppinit bandcamp${NORM}"
 printf "\nImport the music library into the Beets media management system:"
 printf "\n\t${BOLD}mppinit import${NORM}"
 printf "\nAfter the import has completed, perform an update of the Beets"

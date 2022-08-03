@@ -1,0 +1,66 @@
+#!/bin/bash
+#
+# bandcamp-download - download all the albums in your Bandcamp collection
+#
+# Set Bandcamp username here or in $HOME/.config/calliope/calliope.conf
+# It's best to set it in calliope.conf for all 'cpe bandcamp' commands.
+# The username, if set here, takes precedence over that in calliope.conf
+USERNAME=
+
+if [ "${USERNAME}" ]
+then
+  USEROPT="--user ${USERNAME}"
+else
+  USEROPT=
+fi
+
+# Make sure we have the required utilities
+have_bdl=`type -p bandcamp-dl`
+[ "${have_bdl}" ] || {
+  echo "Required download utility, bandcamp-dl, not found."
+  echo "Install the bandcamp-download Python module with:"
+  echo "    python3 -m pip install bandcamp-downloader"
+  echo "Exiting"
+  exit 1
+}
+have_cpe=`type -p cpe`
+[ "${have_cpe}" ] || {
+  echo "Required utility, Calliope, not found."
+  echo "Install the Calliope Python module with:"
+  echo "    python3 -m pip install calliope-music"
+  echo "Exiting"
+  exit 1
+}
+have_jq=`type -p jq`
+[ "${have_jq}" ] || {
+  echo "Required utility, jq, not found."
+  echo "Install the jq json processor with:"
+  echo "    sudo apt install jq"
+  echo "or"
+  echo "    sudo dnf install jq"
+  echo "Exiting"
+  exit 1
+}
+
+# Try to download in the MPD music_directory
+MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+mpd_music=`grep ^music_directory ${MPD_CONF}`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+[ "${mpd_music}" ] || mpd_music="${HOME}/Music"
+# Need to expand the tilda to $HOME
+mpd_music="${mpd_music/#\~/$HOME}"
+
+MUSIC_DIR="${mpd_music}/Bandcamp"
+[ -d "${MUSIC_DIR}" ] || mkdir -p "${MUSIC_DIR}"
+
+printf "\nBandcamp collections will be downloaded to ${MUSIC_DIR}\n"
+cpe bandcamp ${USEROPT} collection | jq .location | while read url
+do
+  # Remove quotes from URL
+  url=`echo ${url} | sed -e "s/\"//g"`
+  printf "\nDownloading ${url} ... "
+  bandcamp-dl --base-dir="${MUSIC_DIR}" \
+              --keep-spaces \
+              --no-slugify ${url} > /dev/null 2>&1
+done
+printf "\n\nBandcamp collections downloads complete\n"

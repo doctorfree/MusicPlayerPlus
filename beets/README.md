@@ -26,6 +26,7 @@
 1. [Finding duplicate tracks](#finding-duplicate-tracks)
 1. [Automated audio analysis and audio-based information retrieval](#automated-audio-analysis-and-audio-based-information-retrieval)
     1. [MusicPlayerPlus custom xtractor metadata configuration](#musicplayerplus-custom-xtractor-metadata-configuration)
+    1. [MusicPlayerPlus acousticbrainz metadata configuration](#musicplayerplus-acousticbrainz-metadata-configuration)
 1. [Configuring the Discogs metadata source](#configuring-the-discogs-metadata-source)
 1. [MusicPlayerPlus Beets plugins](#musicplayerplus-beets-plugins)
 
@@ -986,18 +987,25 @@ no longer available.
 
 The default MusicPlayerPlus Beets configuration includes a customized
 `xtractor` plugin configuration providing many flexible metadata tags.
-These include metadata tags for AcousticID Fingerprint, Key and Scale,
+These include metadata tags for Beets per Minute, Key and Scale,
 Replay Gain, Integrated Loudness, Loudness Range, Timbre, Danceability,
 and Moods. The metadata names for these custom flexible tags are
 
-- *acousticid_fingerprint*
-- *key_edma*
-- *scale_edma*
+- *bpm*
+- *danceability*
+- *beats_count*
+- *average_loudness*
+- *initial_key*
+- *key_key*
+- *key_scale*
+- *chords_key*
+- *chords_scale*
 - *replay_gain*
 - *integrated_loudness*
 - *loudness_range*
 - *timbre*
 - *danceable*
+- *genre_rosamerica*
 - *is_danceable*
 - *mood_acoustic*
 - *mood_aggressive*
@@ -1008,34 +1016,55 @@ and Moods. The metadata names for these custom flexible tags are
 - *mood_relaxed*
 
 If the music library has been analyzed with Essentia using the xtractor
-plugin (e.g. `mpplus -X all` or `mppinit metadata` with acoustic information
-retrieved) then these custom tags can be used in Beets queries.
+plugin (e.g. `mpplus -X all` or `mppinit metadata`) then these custom tags
+can be used in Beets queries.
 
 For example, to list all songs which have been tagged as being in the key of G:
 
 ```
-beet list key_edma:G scale_edma:major
+beet list key_key:G key_scale:major
 ```
 
 To list all songs in the key of G minor:
 
 ```
-beet list key_edma:G scale_edma:minor
+beet list key_key:G key_scale:minor
 ```
 
-The customized entry for these high-level metadata targets in the xtractor
-section of the Beets configuration `$HOME/.config/beets/config.yaml` is:
+The customized entry for these metadata targets in the xtractor section
+of the Beets configuration `$HOME/.config/beets/config.yaml` is:
 
 ```
-    high_level_targets:
-      acoustid_fingerprint:
-        path: "chromaprint.string"
+    low_level_targets:
+      bpm:
+        path: "rhythm.bpm"
+        type: integer
+        required: yes
+      danceability:
+        path: "rhythm.danceability"
+        type: float
+      beats_count:
+        path: "rhythm.beats_count"
+        type: integer
+      average_loudness:
+        path: "lowlevel.average_loudness"
+        type: float
+        required: yes
+      initial_key:
+        path: "tonal.initial_key"
         type: string
-      key_edma:
+    high_level_targets:
+      key_key:
         path: "tonal.key_edma.key"
         type: string
-      scale_edma:
+      key_scale:
         path: "tonal.key_edma.scale"
+        type: string
+      chords_key:
+        path: "tonal.chords_key"
+        type: string
+      chords_scale:
+        path: "tonal.chords_scale"
         type: string
       replay_gain:
         path: "metadata.audio_properties.replay_gain"
@@ -1057,6 +1086,9 @@ section of the Beets configuration `$HOME/.config/beets/config.yaml` is:
       is_danceable:
         path: "highlevel.danceability.all.danceable"
         type: float
+      genre_rosamerica:
+        path: "highlevel.genre_rosamerica.value"
+        type: string
       mood_acoustic:
         path: "highlevel.mood_acoustic.value"
         type: string
@@ -1110,6 +1142,57 @@ song in a command like:
 ```
 beet info -l [QUERY] | grep mb_trackid
 ```
+
+### MusicPlayerPlus acousticbrainz metadata configuration
+
+MusicPlayerPlus supports two different methods for retrieving audio-based
+track metadata. The previous section described the configuration of the
+Beets Xtractor plugin which utilizes Essentia to analyze and retrieve
+audio-based information. The Xtractor process can be extremely time
+consuming, especially for large music libraries, as it entails a complex
+analysis of each audio track. For this reason, an alternative method
+of retrieving audio-based information is provided.
+
+The Beets `acousticbrainz` plugin can be used to query the AcousticBrainz
+database and retrieve already analyzed audio-based information for tracks
+in that database. This process is much faster than the Xtractro process
+as the analysis has previously been performed by the AcousticBrainz service.
+
+If the music library metadata has been updated using the acousticbrainz
+plugin (e.g. `mpplus -x all` or `mppinit -a metadata`) then these custom
+tags can be used in Beets queries.
+
+- *average_loudness*
+- *bpm*
+- *chords_changes_rate*
+- *chords_key*
+- *chords_number_rate*
+- *chords_scale*
+- *danceable*
+- *gender*
+- *genre_rosamerica*
+- *initial_key*
+- *key_strength*
+- *mood_acoustic*
+- *mood_aggressive*
+- *mood_electronic*
+- *mood_happy*
+- *mood_party*
+- *mood_relaxed*
+- *mood_sad*
+- *moods_mirex*
+- *rhythm*
+- *timbre*
+- *tonal*
+- *voice_instrumental*
+
+Unfortunately, the AcousticBrainz service is deprecated, no longer updated,
+and will be disabled in 2023. Further, it does not provide accurate
+information on some metadata. Locally analyzed acoustic information using
+Essentia is of higher quality and reliable. The AcousticBrainz service provides
+lower quality information and is not reliable. However, the significant
+advantage to using AcousticBrainz is the overhead in time is much much
+lower than that with the Xtractor plugin.
 
 ## Configuring the Discogs metadata source
 

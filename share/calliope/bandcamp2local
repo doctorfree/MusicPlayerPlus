@@ -3,8 +3,16 @@
 # Albums in your Bandcamp online collection
 # that are missing from your local collection.
 
-USERNAME="your_bandcamp_username"
-ONLINE_ALBUMS="cpe bandcamp --user ${USERNAME} collection"
+# Set Bandcamp username here or in $HOME/.config/calliope/calliope.conf
+USERNAME=
+
+if [ "${USERNAME}" ]
+then
+  ONLINE_ALBUMS="cpe bandcamp --user ${USERNAME} collection"
+else
+  ONLINE_ALBUMS="cpe bandcamp collection"
+fi
+
 #LOCAL_ALBUMS="cpe tracker albums"
 LOCAL_ALBUMS="cpe beets albums"
 

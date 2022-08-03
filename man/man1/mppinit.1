@@ -22,12 +22,20 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .SH SYNOPSIS
 .PP
 \f[B]mppinit\f[R] [-a] [-d] [-o] [-q] [-U] [-y] [-u]
-[import|metadata|sync]
+[bandcamp|import|metadata|sync]
 .SH DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
 MusicPlayerPlus configuration files in \f[V]$HOME/.config/\f[R] and
 installs required Python modules if not already installed.
+.PP
+Invoked with the \f[V]bandcamp\f[R] argument, \f[I]mppinit bandcamp\f[R]
+downloads the albums in your Bandcamp collections.
+A valid Bandcamp username must be configured in
+\f[V]$HOME/.config/calliope/calliope.conf\f[R].
+The Bandcamp albums are downloaded to the \f[V]music_directory\f[R]
+folder configured in \f[V]$HOME/.config/mpd/mpd.conf\f[R] in a
+\f[V]Bandcamp\f[R] sub-folder.
 .PP
 Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
 imports the music library to the Beets media management system.
@@ -75,10 +83,10 @@ performs a Beets library metadata update
 synchronizes the music library location across configs
 .PP
 \f[I]mppinit\f[R] must be performed before a \f[I]sync\f[R],
-\f[I]metadata\f[R], or \f[I]import\f[R]
+\f[I]metadata\f[R], \f[I]bandcamp\f[R], or \f[I]import\f[R]
 .PP
-Only one of \f[I]import\f[R], \f[I]metadata\f[R], or \f[I]sync\f[R] can
-be specified
+Only one of \f[I]bandcamp\f[R], \f[I]import\f[R], \f[I]metadata\f[R], or
+\f[I]sync\f[R] can be specified
 .SH AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

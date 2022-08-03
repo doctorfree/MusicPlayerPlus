@@ -7,7 +7,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Automated audio analysis and audio-based information retrieval
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
 - ***plus*** media fuzzy finder using `fzf`
-- ***plus*** album cover art
+- ***plus*** Bandcamp collections and album cover art download
 - ***plus*** `tmux` sessions managed by `tmuxp`
 - ***plus*** `asciimatics` color ASCII animations
 - ***plus*** `asciinema` text-based terminal session recording
@@ -164,6 +164,7 @@ the user configuration with the `mppinit` command is all that need be done.
 Some common additional setup steps that can be performed include:
 
 - Configuring the music library location
+- Download albums in your Bandcamp collections
 - Converting WAV format media files to MP3 format
 - Importing a music library into the Beets library management system
 - Downloading album cover art
@@ -175,6 +176,8 @@ Configure the music library location by editing `~/.config/mpd/mpd.conf` and
 setting the `music_directory` to your music library location (default setting
 is `~/Music`). If you change the `music_directory` setting in mpd.conf then
 run the command `mppinit sync`.
+
+Download albums in your Bandcamp collections with `mppinit bandcamp`.
 
 #### Two step post-initialization setup
 
@@ -240,6 +243,8 @@ by following the `mppinit -a metadata` command with `mpplus -X bpm:0`.
 
 #### Individual commands post-initialization setup
 
+Download albums in your Bandcamp collections with the command `mppinit bandcamp`.
+
 Convert WAV format media files in your library to MP3 format files with
 the command `mpplus -F`. Conversion from WAV to MP3 allows these files to
 be imported into the Beets media library management system.
@@ -273,7 +278,8 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
     * Run the command `mppinit sync`
 * Optionally:
-    * Perform these three steps with the command `mppinit import`
+    * Download albums in your Bandcamp collections with `mppinit bandcamp`
+    * Perform these steps with the command `mppinit import`
         * Convert WAV format files to MP3 format with the command `mpplus -F`
         * Import your music library into Beets with the command `mpplus -I`
     * Perform these steps with the command `mppinit metadata`
