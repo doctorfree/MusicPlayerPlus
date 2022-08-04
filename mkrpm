@@ -102,19 +102,19 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
-#${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
-#           ${OUT_DIR}/${DESTDIR}/bin
-#${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
-#           ${OUT_DIR}/${DESTDIR}/bin
+${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
+           ${OUT_DIR}/${DESTDIR}/bin
+${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
+           ${OUT_DIR}/${DESTDIR}/bin
 # Install essentia
-if [ -x build-essentia.sh ]
-then
-  ${SUDO} ./build-essentia.sh -i -d "${SRC}/${SRC_NAME}/${OUT_DIR}"
-else
-  cd essentia
-  ${SUDO} python3 waf install --destdir="${SRC}/${SRC_NAME}/${OUT_DIR}"
-  cd ..
-fi
+# if [ -x build-essentia.sh ]
+# then
+#   ${SUDO} ./build-essentia.sh -i -d "${SRC}/${SRC_NAME}/${OUT_DIR}"
+# else
+#   cd essentia
+#   ${SUDO} python3 waf install --destdir="${SRC}/${SRC_NAME}/${OUT_DIR}"
+#   cd ..
+# fi
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
