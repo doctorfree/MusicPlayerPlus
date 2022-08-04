@@ -1,0 +1,61 @@
+#!/bin/bash
+#
+# soundcloud-download - download all the 'likes' in your Soundcloud library
+#
+# Set Soundcloud user slug here or input when prompted.
+#
+# The Soundcloud user slug can be found by logging in to Soundcloud
+# click on the username at top right then 'Profile'. The user slug
+# is the last component of the URL when viewing your Soundcloud Profile.
+#
+USERSLUG=
+
+# Make sure we have the required utilities
+have_scdl=`type -p scdl`
+[ "${have_scdl}" ] || {
+  echo "Required download utility, scdl, not found."
+  echo "Install the Soundcloud download Python module with:"
+  echo "    python3 -m pip install scdl"
+  echo "Exiting"
+  exit 1
+}
+
+[ "${USERSLUG}" ] || {
+  echo "Enter your Soundcloud account 'user slug' at the prompt."
+  echo ""
+  echo "The Soundcloud user slug can be found by logging in to soundcloud.com,"
+  echo "click on the username at top right then 'Profile'. The user slug"
+  echo "is the last component of the URL when viewing your Soundcloud Profile."
+  echo "Or, in the Soundcloud app, view your Library, click on the User Icon"
+  echo "at the top right, and the user slug is shown as 'Your profile'"
+  echo ""
+  echo "For example, Soundcloud user johndoe might have a Soundcloud user slug"
+  echo "that is the last component of his Soundcloud Profile URL:"
+  echo "    https://soundcloud.com/john-doe"
+  echo "Soundcloud user johndoe would enter the Soundcloud user slug 'john-doe'"
+  echo ""
+  read -p "Enter your Soundcloud user slug: " USERSLUG
+}
+
+[ "${USERSLUG}" ] || {
+  echo "Soundcloud user slug required."
+  scdl --help
+  exit 1
+}
+
+# Try to download in the MPD music_directory
+MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+mpd_music=`grep ^music_directory ${MPD_CONF}`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+[ "${mpd_music}" ] || mpd_music="${HOME}/Music"
+# Need to expand the tilda to $HOME
+mpd_music="${mpd_music/#\~/$HOME}"
+
+MUSIC_DIR="${mpd_music}/Soundcloud"
+[ -d "${MUSIC_DIR}" ] || mkdir -p "${MUSIC_DIR}"
+
+printf "\nSoundcloud favorites will be downloaded to ${MUSIC_DIR}\n"
+
+scdl -l https://soundcloud.com/${USERSLUG} -c -f --path "${MUSIC_DIR}"
+
+printf "\n\nSoundcloud favorites downloads complete\n"

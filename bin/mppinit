@@ -28,7 +28,7 @@ mpd_music="~/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-d] [-o] [-q] [-U] [-y] [-u] "
-  printf "[bandcamp|import|metadata|sync|yams]"
+  printf "[bandcamp|import|metadata|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' indicates use AcousticBrainz to retrieve audio information"
   printf "\n\t\trather than using Essentia to analyze audio files"
@@ -42,10 +42,11 @@ usage() {
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'metadata' performs a Beets library metadata update"
+  printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
-  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp, or import"
-  printf "\nOnly one of bandcamp, import, metadata, or sync can be specified\n\n"
+  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import"
+  printf "\nOnly one of bandcamp, soundcloud, import, metadata, or sync can be specified\n\n"
   exit 1
 }
 
@@ -412,6 +413,33 @@ shift $(( OPTIND - 1 ))
     visit_wiki
   else
     init_warn bandcamp
+  fi
+  exit 0
+}
+
+[ "$1" == "soundcloud" ] && {
+  if [ "${initialized}" ]
+  then
+    printf "\nDownloading favorites in your Soundcloud account\n\n"
+    if [ -x ${SCPTDIR}/soundcloud-download ]
+    then
+      printf "\n\tInvoking Soundcloud favorites download script\n"
+      ${SCPTDIR}/soundcloud-download
+    else
+      printf "\nSoundcloud favorites download script "
+      printf "${SCPTDIR}/soundcloud-download"
+      printf "\nis not found or not executable. No download performed.\n"
+    fi
+    printf "\nImport the music library into the Beets media management system:"
+    printf "\n\t${BOLD}mppinit import${NORM}"
+    printf "\nAfter the import has completed, perform an update of the Beets"
+    printf "\nlibrary metadata, genres, and album cover art:"
+    printf "\n\t${BOLD}mppinit metadata${NORM}"
+    printf "\nActivate the YAMS Last.fm scrobbler:"
+    printf "\n\t${BOLD}mppinit yams${NORM}\n"
+    visit_wiki
+  else
+    init_warn soundcloud
   fi
   exit 0
 }
@@ -1048,7 +1076,7 @@ then
   for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
              beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
-             calliope-music python3-discogs-client bandcamp-downloader
+             calliope-music python3-discogs-client bandcamp-downloader scdl
   do
     if pip list | grep ${pkg} > /dev/null
     then
@@ -1170,6 +1198,8 @@ printf "\nModify ${MPDCONF} 'music_directory' to change this."
 printf "\nIf 'music_directory' is modified, run '${BOLD}mppinit sync${NORM}'\n"
 printf "\nDownload albums in your Bandcamp collections with:"
 printf "\n\t${BOLD}mppinit bandcamp${NORM}"
+printf "\nDownload favorites in your Soundcloud account with:"
+printf "\n\t${BOLD}mppinit soundcloud${NORM}"
 printf "\nImport the music library into the Beets media management system:"
 printf "\n\t${BOLD}mppinit import${NORM}"
 printf "\nAfter the import has completed, perform an update of the Beets"

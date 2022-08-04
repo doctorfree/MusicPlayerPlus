@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 # SYNOPSIS
-**mppinit** [-a] [-d] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|sync]
+**mppinit** [-a] [-d] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync]
 
 # DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -21,6 +21,12 @@ albums in your Bandcamp collections. A valid Bandcamp username must be
 configured in `$HOME/.config/calliope/calliope.conf`. The Bandcamp albums
 are downloaded to the `music_directory` folder configured in
 `$HOME/.config/mpd/mpd.conf` in a `Bandcamp` sub-folder.
+
+Invoked with the `soundcloud` argument, *mppinit soundcloud* downloads the
+favorites in your Soundcloud account. A valid Soundcloud user slug must be
+provided at the prompt. The Soundcloud favorites are downloaded to the
+`music_directory` folder configured in `$HOME/.config/mpd/mpd.conf` in a
+`Soundcloud` sub-folder.
 
 Invoked with the `import` argument, *mppinit import* imports the music
 library to the Beets media management system.
@@ -65,9 +71,9 @@ library location across all configuration files.
 **sync**
 : synchronizes the music library location across configs
 
-*mppinit* must be performed before a *sync*, *metadata*, *bandcamp*, or *import*
+*mppinit* must be performed before a *sync*, *metadata*, *bandcamp*, *soundcloud*, or *import*
 
-Only one of *bandcamp*, *import*, *metadata*, or *sync* can be specified
+Only one of *bandcamp*, *soundcloud*, *import*, *metadata*, or *sync* can be specified
 
 # AUTHORS
 Written by Ronald Record github@ronrecord.com
