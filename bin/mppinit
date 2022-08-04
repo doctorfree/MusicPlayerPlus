@@ -420,10 +420,9 @@ shift $(( OPTIND - 1 ))
 [ "$1" == "soundcloud" ] && {
   if [ "${initialized}" ]
   then
-    printf "\nDownloading favorites in your Soundcloud account\n\n"
+    printf "\nDownloading favorites in your Soundcloud account\n"
     if [ -x ${SCPTDIR}/soundcloud-download ]
     then
-      printf "\n\tInvoking Soundcloud favorites download script\n"
       ${SCPTDIR}/soundcloud-download
     else
       printf "\nSoundcloud favorites download script "
@@ -449,8 +448,7 @@ shift $(( OPTIND - 1 ))
   then
     printf "\nPerforming Beets Media Library Management Import"
     printf "\n\nThis process may take hours depending on the library size."
-    printf "\nNotifications of each step will be provided."
-    printf "\nThe steps performed include:"
+    printf "\nThe actions performed include:"
     printf "\n\t- WAV to MP3 file format conversion"
     printf "\n\t- Beets media library import\n\n"
     [ "${proceed}" ] || {

@@ -19,6 +19,8 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Quickstart](#quickstart)
+    1. [Quickstart summary](#quickstart-summary)
+    1. [Full Tilt Boogie](#full-tilt-boogie)
 1. [Installation](#installation)
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
@@ -298,6 +300,24 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
             * `mpplus -X all` indicating analyze the entire Beets library
     * Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`
     * Download additional lyrics with the command `mpplus -L`
+
+### Full Tilt Boogie
+
+The entire full tilt boogie initialization, for those with both Bandcamp
+and Soundcloud accounts with songs and albums in a collection or liked,
+and who wish to apply thorough, reliable, complete, and accurate metadata,
+might go something like:
+
+```
+mppinit
+mppinit bandcamp
+mppinit soundcloud
+mppinit import
+mppinit metadata
+```
+
+The above initiialization process will produce the most accurate and thorough
+music library initialization at a cost of potentially many hours of time.
 
 ## Installation
 
