@@ -156,8 +156,11 @@ Additional detail and info can be found in the
 
 ### Required setup
 
+* Create a music library if you do not already have one
+    * Default MusicPlayerPlus location for the music library is `$HOME/Music`
+    * Recommended structure of the music library is `artist/album/songs`
 * Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
-* Run the `mppinit` command (must be done as your normal user, no need for `sudo`)
+* Run the `mppinit` command as your normal user
 
 ### Optional additional setup steps
 
