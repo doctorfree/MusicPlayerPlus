@@ -42,13 +42,16 @@
 # In addition, an alternate MPD client can be specified on the command line.
 
 BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+NORM=$(tput sgr0)
 PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
 DO_NOT_EXIT=
+FIG_FONTS="/usr/share/figlet-fonts"
+FIG_TEXT="MusicPlayerPlus"
+USE_FONT="Standard"
 USE_GRAD=1
 MPP_DIR="/usr/share/musicplayerplus"
 DOC_DIR="/usr/share/doc/musicplayerplus"
@@ -640,6 +643,99 @@ make_it_so() {
   # End MPD client startup section
 }
 
+select_font() {
+  # Array with font names
+  fonts=("Bolger" "Lean" "sblood" "Slant" "Shadow" "Speed" "Varsity" "Small" "Small Script" "Small Shadow" "Small Slant")
+  smallfonts=("Small" "Small Script" "Small Shadow" "Small Slant")
+
+  # Seed random generator
+  RANDOM=$$$(date +%s)
+
+  if [ "$2" == "small" ]
+  then
+    USE_FONT=${smallfonts[ $RANDOM % ${#smallfonts[@]} ]}
+  else
+    USE_FONT=${fonts[ $RANDOM % ${#fonts[@]} ]}
+  fi
+  [ "${USE_FONT}" == "Lean" ] && {
+    [ "${FULLSCREEN}" ] || {
+      while [ "${USE_FONT}" == "Lean" ]
+      do
+        USE_FONT=${fonts[ $RANDOM % ${#fonts[@]} ]}
+      done
+    }
+  }
+  [ -r "${FIG_FONTS}/${USE_FONT}.flf" ] || USE_FONT="Standard"
+
+  goBig=
+  for font in "${smallfonts[@]}"
+  do
+    [[ "${USE_FONT}" == "$font" ]] && {
+      goBig=1
+      break
+    }
+  done
+
+  case "$1" in
+    Asciimatics)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="Asciimatics"
+      else
+        FIG_TEXT="Animation"
+      fi
+      ;;
+    MusicPlayer)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayerPlus"
+      else
+        FIG_TEXT="MusicPlayer"
+      fi
+      ;;
+    MusicPlayerPlus)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayerPlus"
+      else
+        FIG_TEXT="MusicPlayer"
+      fi
+      ;;
+    Fzmp)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayer Fuzzy Search"
+      else
+        FIG_TEXT="Fuzzy Search"
+      fi
+      ;;
+    Help)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayer Help"
+      else
+        FIG_TEXT="Help"
+      fi
+      ;;
+    Service)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayer Services"
+      else
+        FIG_TEXT="Services"
+      fi
+      ;;
+    *)
+      if [ "${goBig}" ]
+      then
+        FIG_TEXT="MusicPlayerPlus"
+      else
+        FIG_TEXT="MusicPlayer"
+      fi
+      ;;
+  esac
+}
+
 mpp_service() {
   MPP_SERVICE_ACTION=$1
   SERVICE=${2}.service
@@ -662,10 +758,33 @@ mpp_service() {
   esac
 }
 
+show_figlet() {
+  if [ "${have_lolcat}" ]
+  then
+    if [ "${USE_FONT}" == "Lean" ]
+    then
+      figlet -c -d ${FIG_FONTS} -f "${USE_FONT}" -k -t ${FIG_TEXT} | tr ' _/' ' ()' | lolcat
+    else
+      figlet -c -d ${FIG_FONTS} -f "${USE_FONT}" -k -t ${FIG_TEXT} | lolcat
+    fi
+  else
+    if [ "${USE_FONT}" == "Lean" ]
+    then
+      figlet -c -d ${FIG_FONTS} -f "${USE_FONT}" -k -t ${FIG_TEXT} | tr ' _/' ' ()'
+    else
+      figlet -c -d ${FIG_FONTS} -f "${USE_FONT}" -k -t ${FIG_TEXT}
+    fi
+  fi
+}
+
 show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
+    [ "${use_figlet}" ] && {
+      select_font Help small
+      show_figlet
+    }
     PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
     options=()
     options+=("MusicPlayerPlus README")
@@ -857,6 +976,10 @@ show_help_menu() {
 show_services_menu() {
   while true
   do
+    [ "${use_figlet}" ] && {
+      select_font Service small
+      show_figlet
+    }
     systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
     systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
@@ -867,7 +990,7 @@ show_services_menu() {
     printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
     printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
     printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n\n"
-    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound System" "Enable Music Player Daemon" "Disable Music Player Daemon" "Start Music Player Daemon" "Stop Music Player Daemon" "Restart Music Player Daemon" "Status of Music Player Daemon")
     options+=("Enable Music Player Stats" "Disable Music Player Stats" "Start Music Player Stats" "Stop Music Player Stats" "Restart Music Player Stats" "Status of Music Player Stats")
     options+=("Enable Music Player Scrobbler" "Disable Music Player Scrobbler" "Start Music Player Scrobbler" "Stop Music Player Scrobbler" "Restart Music Player Scrobbler" "Status of Music Player Scrobbler")
@@ -976,7 +1099,11 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
-    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
+    [ "${use_figlet}" ] && {
+      select_font Fzmp small
+      show_figlet
+    }
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Search artist filtered by album")
     options+=("Search all songs in library")
     options+=("List genres in library")
@@ -1029,6 +1156,10 @@ show_fzmp_menu() {
 show_ascii_menu() {
   while true
   do
+    [ "${use_figlet}" ] && {
+      select_font Asciimatics small
+      show_figlet
+    }
     SPLASH=1
     if [ "${COVER_ART}" ]
     then
@@ -1055,7 +1186,7 @@ show_ascii_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
-    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
     [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
@@ -1191,7 +1322,11 @@ show_main_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
-    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
+    [ "${use_figlet}" ] && {
+      select_font MusicPlayerPlus small
+      show_figlet
+    }
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
@@ -1419,11 +1554,29 @@ have_fzf=`type -p fzf`
 have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
+have_figlet=`type -p figlet`
 have_gnome=`type -p gnome-terminal`
+have_lolcat=`type -p lolcat`
 have_lynx=`type -p lynx`
 have_w3m=`type -p w3m`
 writeflag=
 tagflag=
+
+if [ "${have_figlet}" ]
+then
+  use_figlet=1
+  [ -d "${FIG_FONTS}" ] || {
+    DEF_FIG_FONTS=`figlet -I2`
+    if [ -d "${DEF_FIG_FONTS}" ]
+    then
+      FIG_FONTS="${DEF_FIG_FONTS}"
+    else
+      use_figlet=
+    fi
+  }
+else
+  use_figlet=
+fi
 
 while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
