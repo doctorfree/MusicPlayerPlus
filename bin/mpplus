@@ -758,6 +758,16 @@ mpp_service() {
   esac
 }
 
+show_menu_title() {
+  columns="$(tput cols)"
+  if [ "${have_lolcat}" ]
+  then
+    printf "%*s\n" $(( (${#menu_title} + columns) / 2)) "${menu_title}" | lolcat
+  else
+    printf "%*s\n" $(( (${#menu_title} + columns) / 2)) "${menu_title}"
+  fi
+}
+
 show_figlet() {
   if [ "${have_lolcat}" ]
   then
@@ -781,10 +791,14 @@ show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
-    [ "${use_figlet}" ] && {
+    if [ "${use_figlet}" ]
+    then
       select_font Help small
       show_figlet
-    }
+    else
+      menu_title="MusicPlayerPlus Help Menu"
+      show_menu_title
+    fi
     PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
     options=()
     options+=("MusicPlayerPlus README")
@@ -972,14 +986,17 @@ show_help_menu() {
   printf "\n"
 }
 
-
 show_services_menu() {
   while true
   do
-    [ "${use_figlet}" ] && {
+    if [ "${use_figlet}" ]
+    then
       select_font Service small
       show_figlet
-    }
+    else
+      menu_title="MusicPlayerPlus Services Menu"
+      show_menu_title
+    fi
     systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
     systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
@@ -1099,10 +1116,14 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
-    [ "${use_figlet}" ] && {
+    if [ "${use_figlet}" ]
+    then
       select_font Fzmp small
       show_figlet
-    }
+    else
+      menu_title="MusicPlayerPlus Fuzzy Search Menu"
+      show_menu_title
+    fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Search artist filtered by album")
     options+=("Search all songs in library")
@@ -1156,10 +1177,14 @@ show_fzmp_menu() {
 show_ascii_menu() {
   while true
   do
-    [ "${use_figlet}" ] && {
+    if [ "${use_figlet}" ]
+    then
       select_font Asciimatics small
       show_figlet
-    }
+    else
+      menu_title="MusicPlayerPlus Asciimatics Menu"
+      show_menu_title
+    fi
     SPLASH=1
     if [ "${COVER_ART}" ]
     then
@@ -1322,10 +1347,14 @@ show_main_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
-    [ "${use_figlet}" ] && {
+    if [ "${use_figlet}" ]
+    then
       select_font MusicPlayerPlus small
       show_figlet
-    }
+    else
+      menu_title="MusicPlayerPlus Interactive Menu System"
+      show_menu_title
+    fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
