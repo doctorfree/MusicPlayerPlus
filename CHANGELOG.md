@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-2.0.1r1 (2022-08-01)
+# MusicPlayerPlus-2.0.1r1 (2022-08-06)
 
 * Added Beets media library management integration
 * Automated Beets xtractor plugin installation and configuration
@@ -29,6 +29,14 @@ All notable changes to this project will be documented in this file.
     * edit, extrafiles, fromfilename, hook, importadded, info
     * lyrics, lastgenre, missing, mbsync, mpdstats, play, playlist
     * smartplaylist, mpdupdate, unimported, xtractor
+* Add help menu to mpplus
+* Add man pages for scdl and bandcamp-dl
+* Add script to download Soundcloud favorites
+* Add script to download Bandcamp collections
+* Add options to use AcousticBrainz rather than Essentia for audio information
+* Add custom targets to xtractor config
+* Add Bandcamp and Soundcloud downloads to mppinit
+* Add import and metadata retrieval to mppinit
 
 # MusicPlayerPlus-1.0.3r1 (2022-07-09)
 

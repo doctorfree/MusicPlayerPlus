@@ -10,6 +10,14 @@ This major release of MusicPlayerPlus adds:
 * Support for automated WAV to MP3 conversion with `mpplus -F`
 * Support for automated lyrics download with `mpplus -L`
 * Support for YAMS Last.fm scrobbler activation with `mpplus -Y`
+* Help menu to `mpplus`
+* Man pages for `scdl` and `bandcamp-dl`
+* Script to download Soundcloud favorites
+* Script to download Bandcamp collections
+* Options to use AcousticBrainz rather than Essentia for audio information
+* Custom targets to xtractor config
+* Bandcamp and Soundcloud downloads to mppinit
+* Import and metadata retrieval to `mppinit`
 * Many more improvements and features (See [Changelog](#changelog) below)
 
 ## Installation
@@ -35,17 +43,18 @@ sudo yum localinstall ./MusicPlayerPlus-2.0.1-1.x86_64.rpm
 
 ## Configuration
 
-Execute the `mpcinit` command.
+Execute the `mppinit` command (Required).
 
 Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
 
-If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then run `mpcinit sync`.
+If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then run `mppinit sync`.
 
-To enable the Beets media library management system:
+To enable the Beets media library management system (Optional):
 
-* Run `mpplus -D` to download album cover art
-* Run `mpplus -F` to convert WAV format media to MP3 format media
-* Run `mpplus -I` to import and auto-tag the music library
+* Run `mppinit bandcamp` to download Bandcamp collections (Optional)
+* Run `mppinit soundcloud` to download Soundcloud favorites (Optional)
+* Run `mppinit import` to import the music library into Beets (Required)
+* Run `mppinit metadata` to organize and improve library metadata (Optional)
 
 See the [MusicPlayerPlus README](https://github.com/doctorfree/MusicPlayerPlus#readme) for additional configuration info.
 
@@ -92,6 +101,14 @@ Changes in version 2.0.1 release 1 include:
     * edit, extrafiles, fromfilename, hook, importadded, info
     * lyrics, lastgenre, missing, mbsync, mpdstats, play, playlist
     * smartplaylist, mpdupdate, unimported, xtractor
+* Add help menu to mpplus
+* Add man pages for scdl and bandcamp-dl
+* Add script to download Soundcloud favorites
+* Add script to download Bandcamp collections
+* Add options to use AcousticBrainz rather than Essentia for audio information
+* Add custom targets to xtractor config
+* Add Bandcamp and Soundcloud downloads to mppinit
+* Add import and metadata retrieval to mppinit
 
 Changes in version 1.0.3 release 1 include:
 
