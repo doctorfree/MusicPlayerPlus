@@ -817,6 +817,8 @@ e.g. `mpplus -u`.
 - [**mppsplash**](markdown/mppsplash.1.md) : MusicPlayerPlus asciimatics animations
 - [**beet**](markdown/beet.1.md) : Beets media library management command-line interface
 - [**beetsconfig**](markdown/beetsconfig.5.md) : Beets media library management configuration
+- [**bandcamp-dl**](markdown/bandcamp-dl.1.md) : Download Bandcamp collections
+- [**scdl**](markdown/scdl.1.md) : Download Soundcloud favorites
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
 - [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries
 
