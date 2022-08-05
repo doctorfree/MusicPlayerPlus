@@ -51,6 +51,7 @@ CONSOLE_MODE=
 DO_NOT_EXIT=
 USE_GRAD=1
 MPP_DIR="/usr/share/musicplayerplus"
+DOC_DIR="/usr/share/doc/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
@@ -661,6 +662,198 @@ mpp_service() {
   esac
 }
 
+show_help_menu() {
+  MTITLE="MusicPlayerPlus Help"
+  while true
+  do
+    PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
+    options=()
+    options+=("MusicPlayerPlus README")
+    options+=("MusicPlayerPlus Man Page")
+    options+=("MusicPlayerPlus Animation Man Page")
+    options+=("ASCIInema Man Page")
+    options+=("Julia Set Animation Man Page")
+    options+=("MusicPlayer Animation Man Page")
+    options+=("ASCII Splash Man Page")
+    options+=("ASCII Splash Tmux Man Page")
+    options+=("Alsa Conf Man Page")
+    options+=("Beet Man Page")
+    options+=("Create Playlist Man Page")
+    options+=("Bandcamp Download Man Page")
+    options+=("Soundcloud Download Man Page")
+    options+=("Fzmp Man Page")
+    options+=("Mpcplus-tmux Man Page")
+    options+=("Mpcplus Man Page")
+    options+=("Mpcpluskeys Man Page")
+    options+=("Mppcava Man Page")
+    options+=("Mppinit Man Page")
+    options+=("Mppjulia Man Page")
+    options+=("Mpplus Man Page")
+    options+=("Mppplasma Man Page")
+    options+=("Mpprocks Man Page")
+    options+=("Mppsplash-tmux Man Page")
+    options+=("Mppsplash Man Page")
+    options+=("Beetsconfig Man Page")
+    options+=("Tmux Multiplexer Man Page")
+    [ "${have_lynx}" ] && options+=("Lynx Web Browser Man Page")
+    [ "${have_w3m}" ] && options+=("W3m Web Browser Man Page")
+    [ "${have_retro}" ] && options+=("Retro Terminal Man Page")
+    [ "${have_gnome}" ] && options+=("Gnome Terminal Man Page")
+    [ "${have_tilix}" ] && options+=("Tilix Terminal Man Page")
+    options+=("Done / Back" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+        "Done"*,*|*,"Done"*|"done"*,*|*,"done"*|"Back"*,*|*,"Back"*|"back"*,*|*,"back"*)
+          break 2
+          ;;
+        "MusicPlayerPlus README",*|*,"MusicPlayerPlus README")
+          if [ "${have_w3m}" ]
+          then
+            w3m ${DOC_DIR}/README.html
+          else
+            if [ "${have_lynx}" ]
+            then
+              lynx ${DOC_DIR}/README.html
+            else
+              less ${DOC_DIR}/README.md
+            fi
+          fi
+          break
+          ;;
+        "MusicPlayerPlus Man"*,*|*,"MusicPlayerPlus Man"*)
+          man mpplus
+          break
+          ;;
+        "MusicPlayerPlus Animation"*,*|*,"MusicPlayerPlus Animation"*)
+          man mpprocks
+          break
+          ;;
+        "ASCIInema"*,*|*,"ASCIInema"*)
+          man asciinema
+          break
+          ;;
+        "ASCII Splash Tmux"*,*|*,"ASCII Splash Tmux"*)
+          man mppsplash-tmux
+          break
+          ;;
+        "ASCII Splash"*,*|*,"ASCII Splash"*)
+          man mppsplash
+          break
+          ;;
+        "Alsa Conf"*,*|*,"Alsa Conf"*)
+          man alsa_conf
+          break
+          ;;
+        "Beet"*,*|*,"Beet"*)
+          man beet
+          break
+          ;;
+        "Beetsconfig"*,*|*,"Beetsconfig"*)
+          man beetsconfig
+          break
+          ;;
+        "Create Playlist"*,*|*,"Create Playlist"*)
+          man create_playlist
+          break
+          ;;
+        "Bandcamp"*,*|*,"Bandcamp"*)
+          man bandcamp-dl
+          break
+          ;;
+        "Soundcloud"*,*|*,"Soundcloud"*)
+          man scdl
+          break
+          ;;
+        "Fzmp"*,*|*,"Fzmp"*)
+          man fzmp
+          break
+          ;;
+        "Mpcplus-tmux"*,*|*,"Mpcplus-tmux"*)
+          man mpcplus-tmux
+          break
+          ;;
+        "Mpcplus"*,*|*,"Mpcplus"*)
+          man mpcplus
+          break
+          ;;
+        "Mpcpluskeys"*,*|*,"Mpcpluskeys"*)
+          man mpcpluskeys
+          break
+          ;;
+        "Mppcava"*,*|*,"Mppcava"*)
+          man mppcava
+          break
+          ;;
+        "Mppinit"*,*|*,"Mppinit"*)
+          man mppinit
+          break
+          ;;
+        "Mppjulia"*,*|*,"Mppjulia"*)
+          man mppjulia
+          break
+          ;;
+        "Mppplasma"*,*|*,"Mppplasma"*)
+          man mppplasma
+          break
+          ;;
+        "Mpprocks"*,*|*,"Mpprocks"*)
+          man mpprocks
+          break
+          ;;
+        "Mpplus"*,*|*,"Mpplus"*)
+          man mpplus
+          break
+          ;;
+        "Mppsplash-tmux"*,*|*,"Mppsplash-tmux"*)
+          man mppsplash-tmux
+          break
+          ;;
+        "Mppsplash"*,*|*,"Mppsplash"*)
+          man mppsplash
+          break
+          ;;
+        "Tmux"*,*|*,"Tmux"*)
+          man tmux
+          break
+          ;;
+        "Lynx"*,*|*,"Lynx"*)
+          man lynx
+          break
+          ;;
+        "W3m"*,*|*,"W3m"*)
+          man w3m
+          break
+          ;;
+        "Retro"*,*|*,"Retro"*)
+          man cool-retro-term
+          break
+          ;;
+        "Gnome"*,*|*,"Gnome"*)
+          man gnome-terminal
+          break
+          ;;
+        "Tilix"*,*|*,"Tilix"*)
+          man tilix
+          break
+          ;;
+        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          printf "\nExiting MusicPlayerPlus\n"
+          exit 0
+          ;;
+        *,*|*,*)
+          printf "\nCould not match '${REPLY}' with a menu entry."
+          printf "\nPlease try again with an exact match.\n"
+          ;;
+      esac
+      REPLY=
+    done
+  done
+  clear
+  printf "\n"
+}
+
+
 show_services_menu() {
   while true
   do
@@ -674,7 +867,7 @@ show_services_menu() {
     printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
     printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
     printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n\n"
-    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
     options=("Configure ALSA Sound System" "Enable Music Player Daemon" "Disable Music Player Daemon" "Start Music Player Daemon" "Stop Music Player Daemon" "Restart Music Player Daemon" "Status of Music Player Daemon")
     options+=("Enable Music Player Stats" "Disable Music Player Stats" "Start Music Player Stats" "Stop Music Player Stats" "Restart Music Player Stats" "Status of Music Player Stats")
     options+=("Enable Music Player Scrobbler" "Disable Music Player Scrobbler" "Start Music Player Scrobbler" "Stop Music Player Scrobbler" "Restart Music Player Scrobbler" "Status of Music Player Scrobbler")
@@ -682,6 +875,12 @@ show_services_menu() {
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              break
+              ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
               printf "Returning\n\n"
               init_vars
@@ -777,7 +976,7 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
-    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
     options=("Search artist filtered by album")
     options+=("Search all songs in library")
     options+=("List genres in library")
@@ -787,6 +986,12 @@ show_fzmp_menu() {
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              break
+              ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
               printf "Returning\n\n"
               init_vars
@@ -850,7 +1055,7 @@ show_ascii_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
-    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
     [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
@@ -858,6 +1063,13 @@ show_ascii_menu() {
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              skip_it_so=1
+              break
+              ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
               printf "Returning\n\n"
               init_vars
@@ -979,7 +1191,7 @@ show_main_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
-    PS3="${BOLD}${PLEASE} command choice (numeric or text): ${NORMAL}"
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORMAL}"
     options=()
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
@@ -998,6 +1210,13 @@ show_main_menu() {
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              skip_it_so=1
+              break
+              ;;
           "GNOME Music Player Plus",*|*,"GNOME Music Player Plus")
               MPCPLUS="mpcplus"
               break
@@ -1201,6 +1420,8 @@ have_retro=`type -p cool-retro-term`
 have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_gnome=`type -p gnome-terminal`
+have_lynx=`type -p lynx`
+have_w3m=`type -p w3m`
 writeflag=
 tagflag=
 
