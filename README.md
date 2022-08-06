@@ -1397,13 +1397,14 @@ or manually with:
 
 ```
 sudo apt-get install \
-    build-essential libeigen3-dev libyaml-dev libfftw3-dev \
+    build-essential libeigen3-dev libfftw3-dev clang \
     libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
     libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev \
-    autotools-dev autoconf libtool libboost-all-dev fftw-dev libtag1-dev \
+    autotools-dev autoconf libtool libboost-all-dev fftw-dev \
     libiniparser-dev libyaml-dev swig python3-dev pkg-config \
     libncurses-dev libasound2-dev libreadline-dev libpulse-dev \
-    libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+    libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
+    libavfilter-dev libavdevice-dev libsqlite3-dev
 ```
 
 On RPM based systems like Fedora Linux, install build dependencies via:
@@ -1417,9 +1418,9 @@ or manually with:
 ```
 sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
      pulseaudio-libs-devel libtool automake iniparser-devel \
-     SDL2-devel eigen3-devel libyaml-devel \
+     SDL2-devel eigen3-devel libyaml-devel clang-devel \
      ffmpeg-devel libchromaprint-devel python-devel \
-     python3-devel python3-yaml python3-six
+     python3-devel python3-yaml python3-six sqlite-devel
 ```
 
 It is necessary to build and install Gaia from source:
@@ -1527,13 +1528,14 @@ The development environment consists of several packages needed to build,
 package, and test MusicPlayerPlus components. These include:
 
 ```
-    build-essential libeigen3-dev libyaml-dev libfftw3-dev
+    build-essential libeigen3-dev libfftw3-dev clang
     libavcodec-dev libavformat-dev libavutil-dev libswresample-dev
     libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev
-    autotools-dev autoconf libtool libboost-all-dev fftw-dev libtag1-dev
+    autotools-dev autoconf libtool libboost-all-dev fftw-dev
     libiniparser-dev libyaml-dev swig python3-dev pkg-config
     libncurses-dev libasound2-dev libreadline-dev libpulse-dev
     libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
+    libavfilter-dev libavdevice-dev libsqlite3-dev
 ```
 
 Utilities and applications built from source in MusicPlayerPlus include:

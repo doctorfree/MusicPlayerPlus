@@ -1357,6 +1357,7 @@ show_main_menu() {
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
+    [ "${CONSOLE_MODE}" ] && options+=("Console Music Player Plus")
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
@@ -1379,6 +1380,10 @@ show_main_menu() {
               printf "\n"
               show_help_menu
               skip_it_so=1
+              break
+              ;;
+          "Console Music Player Plus",*|*,"Console Music Player Plus")
+              MPCPLUS="mpcplus"
               break
               ;;
           "GNOME Music Player Plus",*|*,"GNOME Music Player Plus")
@@ -1577,14 +1582,22 @@ else
   fi
 fi
 
+if [ "${CONSOLE_MODE}" ]
+then
+  have_cantata=
+  have_gnome=
+  have_retro=
+  have_tilix=
+else
+  have_cantata=`type -p cantata`
+  have_gnome=`type -p gnome-terminal`
+  have_retro=`type -p cool-retro-term`
+  have_tilix=`type -p tilix`
+fi
 have_uebz=`type -p ueberzug`
-have_cantata=`type -p cantata`
 have_fzf=`type -p fzf`
-have_retro=`type -p cool-retro-term`
-have_tilix=`type -p tilix`
 have_nema=`type -p asciinema`
 have_figlet=`type -p figlet`
-have_gnome=`type -p gnome-terminal`
 have_lolcat=`type -p lolcat`
 have_lynx=`type -p lynx`
 have_w3m=`type -p w3m`
@@ -1759,7 +1772,7 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
     t)
       [ "${have_tilix}" ] || {
         echo "Option '-t' indicates use tilix terminal emulator."
-        echo "However, tilix is not installed or not in your path."
+        echo "However, tilix is not installed, unavailable, or not in your path."
         echo "You can install tilix using apt or dnf as follows:"
         printf "\n\n\tsudo apt install tilix\nor"
         printf "\n\tsudo dnf install tilix\n\n"
@@ -1823,32 +1836,34 @@ impflags="${tagflag} ${writeflag}"
   fi
 }
 
-[ "${TILIX}" ] || {
-  [ "${RETRO}" ] || {
-    [ "${have_gnome}" ] || {
-      echo "No option '-t' or '-r' indicates use gnome-terminal"
-      echo "terminal emulator. However, gnome-terminal is either"
-      echo "not installed or not in your path."
-      echo "You can install gnome-terminal using apt or dnf as follows:"
-      printf "\n\n\tsudo apt install gnome-terminal\nor"
-      printf "\n\tsudo dnf install gnome-terminal\n\n"
-      [ "${have_tilix}" ] || usage
-      echo "Alternately, invoke mpplus with the '-t' option to use tilix."
-      echo "Continuing with tilix as the terminal emulator."
-      TILIX=1
-    }
-  }
+[ "${CONSOLE_MODE}" ] || {
   [ "${TILIX}" ] || {
-    [ "${have_gnome}" ] || {
-      echo "No option '-t' indicates use gnome-terminal terminal emulator."
-      echo "However, gnome-terminal is not installed or not in your path."
-      echo "You can install gnome-terminal using apt or dnf as follows:"
-      printf "\n\n\tsudo apt install gnome-terminal\nor"
-      printf "\n\tsudo dnf install gnome-terminal\n\n"
-      [ "${have_tilix}" ] || usage
-      echo "Alternately, invoke mpplus with the '-t' option to use tilix."
-      echo "Continuing with tilix as the terminal emulator."
-      TILIX=1
+    [ "${RETRO}" ] || {
+      [ "${have_gnome}" ] || {
+        echo "No option '-t' or '-r' indicates use gnome-terminal"
+        echo "terminal emulator. However, gnome-terminal is not installed,"
+        echo "unavailable, or not in your path."
+        echo "You can install gnome-terminal using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install gnome-terminal\nor"
+        printf "\n\tsudo dnf install gnome-terminal\n\n"
+        [ "${have_tilix}" ] || usage
+        echo "Alternately, invoke mpplus with the '-t' option to use tilix."
+        echo "Continuing with tilix as the terminal emulator."
+        TILIX=1
+      }
+    }
+    [ "${TILIX}" ] || {
+      [ "${have_gnome}" ] || {
+        echo "No option '-t' indicates use gnome-terminal terminal emulator."
+        echo "However, gnome-terminal is not installed or not in your path."
+        echo "You can install gnome-terminal using apt or dnf as follows:"
+        printf "\n\n\tsudo apt install gnome-terminal\nor"
+        printf "\n\tsudo dnf install gnome-terminal\n\n"
+        [ "${have_tilix}" ] || usage
+        echo "Alternately, invoke mpplus with the '-t' option to use tilix."
+        echo "Continuing with tilix as the terminal emulator."
+        TILIX=1
+      }
     }
   }
 }

@@ -79,6 +79,26 @@ else
   cd ..
 fi
 
+# Build blissify
+if [ -x build-blissify.sh ]
+then
+  ./build-blissify.sh
+else
+  PROJ=blissify
+  [ -d ${PROJ} ] || git clone https://github.com/doctorfree/blissify
+  [ -x ${PROJ}/target/release/blissify ] || {
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+      echo "The cargo tool cannot be located."
+      echo "Cargo is required to build blissify. Exiting."
+      exit 1
+    }
+    cd ${PROJ}
+    cargo build -r
+    cd ..
+  }
+fi
+
 # Build essentia
 if [ -x build-essentia.sh ]
 then
@@ -103,7 +123,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: ${ARCH}
-Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), gnome-terminal, tilix (>= 1.9.1), cool-retro-term (>= 1.1.1), cantata (>= 2.4.1), tmux, ffmpeg, inotify-tools, fzf, mpc, python3-dev, python3-pip, mplayer, asciinema, libchromaprint-dev, dconf-cli, uuid-runtime
+Depends: libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), gnome-terminal, tilix (>= 1.9.1), cool-retro-term (>= 1.1.1), tmux, ffmpeg, inotify-tools, fzf, mpc, python3-dev, python3-pip, mplayer, asciinema, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3, libfftw3, libsamplerate0, libiniparser, libyaml, libasound2, libpulse, libcurl4-openssl, libsqlite3-0 (>= 3.6.0), libavformat58 (>= 7:4.1), libavfilter7 (>= 7:4.0), libswresample3 (>= 7:4.0), libavcodec58 (>= 7:4.2), libswscale5 (>= 7:4.0), libavdevice58 (>= 7:4.0), libavutil56 (>= 7:4.0)
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 190000
 Build-Depends: debhelper (>= 11)
@@ -135,7 +155,8 @@ for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
            "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
            "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
-           "${DESTDIR}/share/${PKG}/mpcplus"
+           "${DESTDIR}/share/${PKG}/mpcplus" \
+           "${DESTDIR}/share/doc/${PKG}/blissify"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -150,6 +171,7 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
+${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
@@ -177,6 +199,9 @@ ${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 ${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
+
+${SUDO} cp blissify/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
+${SUDO} cp blissify/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 
 ${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
