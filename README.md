@@ -1,17 +1,17 @@
 # MusicPlayerPlus
 
 MusicPlayerPlus is a character-based console and terminal window music player
-- ***plus*** Beets media library management
-- ***plus*** character-based spectrum visualizer `mppcava`
+- ***plus*** Beets media library management with preconfigured plugins
+- ***plus*** Character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
-- ***plus*** Automated audio analysis and audio-based information retrieval
+- ***plus*** Blissify acoustic analysis and song similarity database
+- ***plus*** Essentia acoustic analysis and metadata extraction
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
-- ***plus*** media fuzzy finder using `fzf`
-- ***plus*** Bandcamp collections and album cover art download
-- ***plus*** Soundcloud account favorites download
-- ***plus*** `tmux` sessions managed by `tmuxp`
-- ***plus*** `asciimatics` color ASCII animations
-- ***plus*** `asciinema` text-based terminal session recording
+- ***plus*** Media fuzzy finder using `fzf`
+- ***plus*** Album cover art download
+- ***plus*** Bandcamp collections download
+- ***plus*** Soundcloud favorites download
+- ***plus*** Automated setup, import and organization, metadata, playlists, ...
 
 ## Table of contents
 
@@ -137,6 +137,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 * **create_playlist** : create a new playlist using a Beets query
+* **blissify** : create MPD playlists using song similarity
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
