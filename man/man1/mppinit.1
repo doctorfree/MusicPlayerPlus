@@ -21,7 +21,7 @@
 mppinit - performs one-time MusicPlayerPlus initialization
 .SH SYNOPSIS
 .PP
-\f[B]mppinit\f[R] [-a] [-d] [-o] [-q] [-U] [-y] [-u]
+\f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u]
 [bandcamp|import|metadata|soundcloud|sync]
 .SH DESCRIPTION
 .PP
@@ -48,7 +48,11 @@ Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
 imports the music library to the Beets media management system.
 .PP
 Invoked with the \f[V]metadata\f[R] argument, \f[I]mppinit metadata\f[R]
-updates the Beets library with analyzed and retrieved metadata.
+analyzess the MPD music library and creates a song similarity database
+for playlist creation.
+If accompanied by the \f[V]-e\f[R] argument, Essentia is used to
+analyze, extract, and update the Beets library with acoustic
+information.
 If accompanied by the \f[V]-a\f[R] argument, AcousticBrainz is used to
 retrieve audio information rather than analyzing audio files with
 Essentia.
@@ -61,9 +65,16 @@ synchronizes the music library location across all configuration files.
 indicates use AcousticBrainz to retrieve audio information rather than
 using Essentia to analyze audio files
 .TP
+\f[B]-b\f[R]
+indicates use Blissify to analyze audio information rather than using
+Essentia to analyze audio files
+.TP
 \f[B]-d\f[R]
 indicates install latest Beets development branch rather than the latest
 stable release (for testing purposes)
+.TP
+\f[B]-e\f[R]
+indicates use Essentia to analyze audio information
 .TP
 \f[B]-o\f[R]
 indicates overwrite any pre-existing configuration

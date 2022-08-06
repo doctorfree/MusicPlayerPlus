@@ -59,7 +59,7 @@ SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-N]"
   printf "\n\t\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
@@ -91,6 +91,7 @@ usage() {
   printf "\n\t\tor $HOME/Music/"
   printf "\n\t-S indicates display ASCIImatics splash animation"
   printf "\nGeneral options:"
+  printf "\n\t-B indicates analyze MPD music dir with Blissify and exit"
   printf "\n\t-D indicates download album cover art and exit"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
@@ -392,6 +393,75 @@ make_it_so() {
     [ "${DO_NOT_EXIT}" ] || exit 0
   }
 
+  [ "${BLISSIFY}" ] && {
+    have_bliss=`type -p blissify`
+    if [ "${have_bliss}" ]
+    then
+      echo ""
+      echo "==========================================================================="
+      echo "Performing audio analysis and audio-based information retrieval for media"
+      echo "in the Music Player Daemon (MPD) music directory with Blissify."
+      echo "The analysis and retrieval can take a minute or so per album."
+      echo "A large music library may take several hours to extract."
+      echo ""
+      echo "The process is performed in the background and non-interactively."
+      echo "As long as your computer remains on and connected to the Internet,"
+      echo "the process should run uninterrupted and without need for attention."
+      echo "You may continue working and leave the extraction unattended."
+      echo ""
+      MPDLOGDIR="${HOME}/.config/mpd"
+      [ -d "${MPDLOGDIR}" ] || mkdir -p "${MPDLOGDIR}"
+      XLOG="${MPDLOGDIR}/blissify.log"
+
+      MPD_CONF="${MPDLOGDIR}/mpd.conf"
+      mpd_music=`grep ^music_directory ${MPD_CONF}`
+      mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+      [ "${mpd_music}" ] || mpd_music="${HOME}/Music"
+      # Need to expand the tilda to $HOME
+      mpd_music="${mpd_music/#\~/$HOME}"
+
+      [ "${MPD_HOST}" ] || {
+        mpd_host=`grep ^bind_to_address ${MPD_CONF}`
+        mpd_host=`echo ${mpd_host} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+        [ "${mpd_host}" ] || mpd_host="localhost"
+        MPD_HOST="${mpd_host}"
+      }
+      [ "${MPD_PORT}" ] || {
+        mpd_port=`grep ^port ${MPD_CONF}`
+        mpd_port=`echo ${mpd_port} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+        [ "${mpd_port}" ] || mpd_port="6600"
+        MPD_PORT="${mpd_port}"
+      }
+      export MPD_HOST MPD_PORT
+
+      echo "# Extracting audio metadata with Blissify" >> "${XLOG}"
+      START_SECONDS=$(date +%s)
+      nohup blissify update "${mpd_music}" >> ${XLOG} 2>&1 &
+      blisspid=$!
+      [ -x ${SCRIPTS}/logtime.sh ] && {
+        ${SCRIPTS}/logtime.sh -s "${START_SECONDS}" -l "${XLOG}" \
+                  -p "${blisspid}" -d "Blissify acoustic extraction" 2>&1 &
+      }
+      if [ "${CONSOLE_MODE}" ]
+      then
+        echo "To monitor the progress of the extraction, examine the extraction log:"
+        echo ""
+        echo "tail -f ${XLOG}"
+      else
+        echo "A terminal window will be opened to monitor the progress of the extraction."
+        gnome-terminal --title="Blissify Extraction Log" --geometry=90x25+50+25 \
+                       -- tail --pid=${blisspid} -f ${XLOG} &
+      fi
+      echo "==========================================================================="
+    else
+      echo "The 'blissify' command is not in your PATH or is not executable."
+      echo "Check your MusicPlayerPlus installation."
+      echo "Once the 'blissify' command is executable and in the execution PATH,"
+      echo "Re-run this command."
+    fi
+    [ "${DO_NOT_EXIT}" ] || exit 0
+  }
+
   [ "${XTRACTOR}" ] && {
     have_beet=`type -p beet`
     if [ "${have_beet}" ]
@@ -476,7 +546,7 @@ make_it_so() {
       else
         echo "A terminal window will be opened to monitor the progress of the import."
         echo ""
-        echo "Beets log files can be found in $HOME/.config/beets/logs/"
+        echo "Beets log files can be found in $BEETSLOGDIR"
         gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
       fi
@@ -1365,8 +1435,9 @@ show_main_menu() {
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler Service")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
     options+=("Download Album Cover Art" "Fetch Lyrics" "Import Music to Beets")
-    options+=("Extract Audio Information")
-    options+=("Retrieve Audio Information")
+    options+=("Blissify Audio Info Extraction")
+    options+=("Essentia Audio Info Extraction")
+    options+=("AcousticBrainz Audio Info Retrieval")
     options+=("Manage MusicPlayerPlus Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
@@ -1434,12 +1505,17 @@ show_main_menu() {
               DO_NOT_EXIT=1
               break
               ;;
-          "Extract"*,*|*,"Extract"*)
+          "Blissify"*,*|*,"Blissify"*)
+              BLISSIFY=1
+              DO_NOT_EXIT=1
+              break
+              ;;
+          "Essentia"*,*|*,"Essentia"*)
               XTRACTOR="all"
               DO_NOT_EXIT=1
               break
               ;;
-          "Retrieve"*,*|*,"Retrieve"*)
+          "AcousticBrainz"*,*|*,"AcousticBrainz"*)
               ACBRAINZ="all"
               DO_NOT_EXIT=1
               break
@@ -1527,6 +1603,7 @@ init_vars() {
   FETCH_LYRICS=
   BEETS_IMPORT=
   ACBRAINZ=
+  BLISSIFY=
   XTRACTOR=
   FULLSCREEN=
   HALFHEIGHT=
@@ -1620,7 +1697,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1641,6 +1718,9 @@ while getopts "AabcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
     b)
       MPPSPLASH="${MPPSPLASH} -b"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -b"
+      ;;
+    B)
+      BLISSIFY=1
       ;;
     c)
       CLIENT=1

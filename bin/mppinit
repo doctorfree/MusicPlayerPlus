@@ -27,13 +27,14 @@ NORM=$(tput sgr0)
 mpd_music="~/Music"
 
 usage() {
-  printf "\nUsage: mppinit [-a] [-d] [-o] [-q] [-U] [-y] [-u] "
+  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] "
   printf "[bandcamp|import|metadata|soundcloud|sync|yams]"
   printf "\nWhere:"
-  printf "\n\t'-a' indicates use AcousticBrainz to retrieve audio information"
-  printf "\n\t\trather than using Essentia to analyze audio files"
-  printf "\n\t'-d' indicates install latest Beets development branch rather"
-  printf "\n\t\tthan the latest stable release (for testing purposes)"
+  printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
+  printf "\n\t'-b' use Blissify for MPD acoustic audio analysis (default)"
+  printf "\n\t'-d' install latest Beets development branch rather than"
+  printf "\n\t\tthe latest stable release (for testing purposes)"
+  printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (long)"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
   printf "\n\t'-U' indicates upgrade installed Python modules if needed"
@@ -41,7 +42,7 @@ usage() {
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
   printf "\n\t'import' performs a Beets music library import"
-  printf "\n\t'metadata' performs a Beets library metadata update"
+  printf "\n\t'metadata' performs a library metadata update"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
@@ -319,18 +320,26 @@ else
 fi
 
 acbrainz=
+blissify=
+essentia=
 overwrite=
 proceed=
 upgrade=
 quiet=
 beetsdev=
-while getopts "adoqUyu" flag; do
+while getopts "abdeoqUyu" flag; do
     case $flag in
         a)
             acbrainz=1
             ;;
+        b)
+            blissify=1
+            ;;
         d)
             beetsdev=1
+            ;;
+        e)
+            essentia=1
             ;;
         o)
             overwrite=1
@@ -513,11 +522,16 @@ shift $(( OPTIND - 1 ))
             printf "\n\tbeet move"
             printf "\n\tbeet lastgenre"
             printf "\n\tmpplus -D"
-            if [ "${acbrainz}" ]
+            if [ "${essentia}" ]
             then
-              printf "\n\tmpplus -x all"
-            else
               printf "\n\tmpplus -X all"
+            else
+              if [ "${acbrainz}" ]
+              then
+                printf "\n\tmpplus -x all"
+              else
+                printf "\n\tmpplus -B"
+              fi
             fi
             printf "\nExiting.\n\n"
             exit 0
@@ -580,11 +594,16 @@ shift $(( OPTIND - 1 ))
           [Nn]* )
             printf "\nAcoustic information not analyzed or retrieved."
             printf "\nAcoustic information can be retrieved with the command:\n"
-            if [ "${acbrainz}" ]
+            if [ "${essentia}" ]
             then
-              printf "\n\tmpplus -x all\n"
+              printf "\n\tmpplus -X all"
             else
-              printf "\n\tmpplus -X all\n"
+              if [ "${acbrainz}" ]
+              then
+                printf "\n\tmpplus -x all"
+              else
+                printf "\n\tmpplus -B"
+              fi
             fi
             printf "\nMusicPlayerPlus Metadata Retrieval Complete.\n"
             exit 0
@@ -594,13 +613,19 @@ shift $(( OPTIND - 1 ))
         esac
       done
     }
-    if [ "${acbrainz}" ]
+    if [ "${essentia}" ]
     then
-      printf "\n\tRetrieving acoustic information with AcousticBrainz plugin\n"
-      mpplus -x all
-    else
       printf "\n\tRetrieving acoustic information with Beets Xtractor plugin\n"
       mpplus -X all
+    else
+      if [ "${acbrainz}" ]
+      then
+        printf "\n\tRetrieving acoustic information with AcousticBrainz plugin\n"
+        mpplus -x all
+      else
+        printf "\n\tRetrieving acoustic information with Blissify\n"
+        mpplus -B
+      fi
     fi
     printf "\nMusicPlayerPlus Metadata Retrieval In Progress.\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"

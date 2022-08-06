@@ -223,23 +223,39 @@ retrieves album genres from Last.fm, downloads album cover art, and
 
 **[NOTE:]** A Beets metadata retrieval can take hours for a large music library.
 The MusicPlayerPlus default Beets configuration uses `ffmpeg` to compute
-checksums for every track in the library to find duplicates. The optional
-audio analysis is performed by Essentia and involves a deep statistical
-analysis of every track in the library. Both of these processes are time
-consuming but the results are stored so subsequent duplicate checks and
-acoustic analysis will be rapid.
+checksums for every track in the library to find duplicates.
 
-An alternate method of metadata retrieval can be specified using the `-a`
-flag to `mppinit`. This would use the AcousticBrainz service rather than
-Essentia to retrieve acoustic audio metadata. The AcousticBrainz service
-is being retired in 2023 but if it is still available at the time of
-initialization, use the following command to retrieve metadata more quickly:
+An optional audio analysis can be performed during metadata retrieval.
+MusicPlayerPlus provides several optional methods for acoustic analysis.
+The method used for acoustic analysis and retrieval can be specified
+on the command line:
 
-```
-mppinit -a metadata
-```
+- AcousticBrainz metadata retrieval (deprecated)
+    - `mppinit -a metadata`
+- Blissify acoustic analysis of the MPD music library (the default)
+    - `mppinit -b metadata`
+- Essentia acoustic analysis and Beets metadata retrieval (long)
+    - `mppinit -e metadata`
 
-Unfortunately, the AcousticBrainz service seems to think a lot of songs
+If none of the `-a, -b, or -e` options are specified then acoustic
+analysis, extraction, and retrieval is performed by Blissify.
+
+The AcousticBrainz service is the fastest method but is being retired in
+2023, the service is no longer being updated, and it is often inaccurate.
+
+The Essentia acoustic analysis is the most thorough, adds acoustic
+metadata to the Beets library management system, and provides the greatest
+flexibility but at a cost of possibly days of analysis and extraction time.
+
+The Blissify analysis is the default method employed by `mppinit metadata`.
+Blissify creates a similarity database of all songs in the MPD music library.
+This can be used to automate the creation of playlists and other actions.
+The drawback of using Blissify is it does not add acoustic metadata to
+the Beets library so the results of a Blissify analysis are only available
+to Blissify and not Beets.
+
+It is sometimes desirable to augment one acoustic analysis with another.
+For example, the AcousticBrainz service seems to think a lot of songs
 have 0 beets per minute and tags them erroneously. After retrieving
 metadata using AcousticBrainz, list the songs that have a bpm value of 0:
 
@@ -272,7 +288,9 @@ Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`.
 Analysis and retrieval of audio-based information can be performed with
 the command `mpplus -X 'query'` where 'query' is a Beets library query.
 The special query term 'all' indicates the entire music library, i.e.
-`mpplus -X all`.
+`mpplus -X all`. Alternatively, query the AcousticBrainz service with
+`mpplus -x all` or create a "song similarity" database using Blissify
+with `mpplus -B`.
 
 These common additional setup steps and more are covered in greater
 detail in the [MusicPlayerPlus Beets README](beets/README.md) and the
@@ -299,8 +317,10 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
         * Rename tracks left after duplicate removal with `beet move`
         * Download album cover art with the command `mpplus -D`
         * Analyze and retrieve audio-based information with a command like:
+		    * `mpplus -B` creates a "song similarity" database with Blissify
+            * `mpplus -X all` analyze the entire Beets library with Essentia
             * `mpplus -X 'query'` where 'query' is a Beets library query
-            * `mpplus -X all` indicating analyze the entire Beets library
+            * `mpplus -x all` query AcousticBrainz for the entire Beets library
     * Activate the YAMS scrobbler for Last.fm with the command `mpplus -Y`
     * Download additional lyrics with the command `mpplus -L`
 
@@ -316,11 +336,11 @@ mppinit
 mppinit bandcamp
 mppinit soundcloud
 mppinit import
-mppinit metadata
+# One of the acoustic analyses supported by MusicPlayerPlus
+mppinit -a metadata # AcousticBrainz analysis is faster but flawed
+mppinit -b metadata # Blissify analysis is faster but no Beets support
+mppinit -e metadata # Essentia analysis is thorough but may take days
 ```
-
-The above initiialization process will produce the most accurate and thorough
-music library initialization at a cost of potentially many hours of time.
 
 ## Installation
 
@@ -824,11 +844,36 @@ e.g. `mpplus -u`.
 
 ### Usage
 
-The usage messages for `mpplus`, `mpcplus`, and `mppcava` provide a brief
-summary of the command line options:
+The usage messages for `mppinit`, `mpplus`, `mpcplus`, and `mppcava`
+provide a brief summary of the command line options:
 
 ```
-Usage: mpplus [-A] [-a] [-b] [-c] [-C client] [-D] [-d music_directory]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync|yams]
+Where:
+	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
+	'-b' use Blissify for MPD acoustic audio analysis (default)
+	'-d' install latest Beets development branch rather than
+		the latest stable release (for testing purposes)
+	'-e' use Essentia for Beets acoustic audio analysis (long)
+	'-o' indicates overwrite any pre-existing configuration
+	'-q' indicates quiet execution, no status messages
+	'-U' indicates upgrade installed Python modules if needed
+	'-y' indicates answer 'yes' to all and proceed
+	'-u' displays this usage message and exits
+
+	'bandcamp' downloads all albums in your Bandcamp collections
+	'import' performs a Beets music library import
+	'metadata' performs a library metadata update
+	'soundcloud' downloads all favorites in your Soundcloud account
+	'sync' synchronizes the music library location across configs
+	'yams' activates the YAMS Last.fm scrobbler service
+
+'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import
+Only one of bandcamp, soundcloud, import, metadata, or sync can be specified
+```
+
+```
+Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]
 		[-M alsaconf|enable|disable|restart|start|stop|status] [-N]
 		[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
@@ -860,6 +905,7 @@ ASCIImatics animation options:
 		or $HOME/Music/
 	-S indicates display ASCIImatics splash animation
 General options:
+	-B indicates analyze MPD music dir with Blissify and exit
 	-D indicates download album cover art and exit
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
