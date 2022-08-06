@@ -138,6 +138,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 * **create_playlist** : create a new playlist using a Beets query
 * **blissify** : create MPD playlists using song similarity
+* **essentia_streaming_extractor_music** : analyze and extract acoustic characteristics
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
