@@ -28,7 +28,10 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Client Configuration (required)](#client-configuration-required)
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
     1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
-    1. [Additional Beets metadata analysis and retrieval](#additional-beets-metadata-analysis-and-retrieval)
+    1. [Additional metadata analysis and retrieval](#additional-metadata-analysis-and-retrieval)
+        1. [Acoustic analysis with Blissify](#acoustic-analysis-with-blissify)
+        1. [Acoustic analysis with Essentia](#acoustic-analysis-with-essentia)
+        1. [Acoustic retrieval with AcousticBrainz](#acoustic-retrieval-with-acousticbrainz)
     1. [Activating the YAMS scrobbler for Last.fm](#activating-the-yams-scrobbler-for-lastfm)
     1. [MPD Audio Output Configuration](#mpd-audio-output-configuration)
     1. [Fuzzy Finder Configuration](#fuzzy-finder-configuration)
@@ -537,13 +540,66 @@ For instructions on Beets media library setup and use see the
 Learn more about the Beets media library management system at
 https://beets.io/
 
-### Additional Beets metadata analysis and retrieval
+### Additional metadata analysis and retrieval
+
+MusicPlayerPlus includes three methods for augmenting music library
+metadata through acoustic analysis. These three methods are:
+
+- AcousticBrainz metadata retrieval (deprecated)
+    - initialized with `mppinit -a metadata`
+- Blissify acoustic analysis of the MPD music library
+    - initialized with `mppinit -b metadata`
+- Essentia acoustic analysis and Beets metadata retrieval
+    - initialized with `mppinit -e metadata`
+
+#### Acoustic analysis with Blissify
+
+Acoustic analysis with Blissify does not require a prior Beets import.
+The Blissify acoustic analysis creates a song similarity database for
+all the songs in the MPD music library. Initialize the Blissify database
+with the command `blissify update <mpd music directory>`. For example,
+assuming the default MPD music directory:
+
+```
+blissify update ~/Music
+```
+
+Blissify database initialization would have been automatically performed
+during setup if metadata initialization were done with:
+
+```
+mppinit -b metadata
+```
+
+After initialization of the Blissify database, the `blissify` command can
+be used to create an MPD playlist based on song similarities. For example,
+to make a 30 song playlist that queues the closest song to the currently
+playing song, then the closest song to the second song, etc, effectively
+making a "path" through the songs, execute the command:
+
+```
+blissify playlist --seed-song 30
+```
+
+To save the current MPD playlist (queue), execute the command:
+
+```
+mpc save <playlist-name>
+```
+
+Note that the acoustic analysis and database creation performed by
+Blissify does not update the Beets library database. In order to add
+this additional acoustic metadata to the Beets library it is necessary
+to perform an acoustic analysis with Essentia or acoustic metadata
+retrieval with AcousticBrainz, both described in the next sections.
+
+#### Acoustic analysis with Essentia
 
 After completing the Beets music library import with either `mppinit import`
 or `mpplus -I`, additional Beets metadata can be retrieved with the command:
 
 ```
-mppinit metadata
+mppinit -e metadata
 ```
 
 This will identify and delete duplicate tracks, retrieve album genres,
@@ -552,9 +608,10 @@ for all songs in the music library using the
 [Essentia extractor](https://essentia.upf.edu/index.html) and
 [Essentia trained models](https://essentia.upf.edu/models.html).
 
-MusicPlayerPlus uses Essentia for extracting acoustic characteristics
-of music, including low-level spectral information, rhythm, keys, scales,
-and much more, and automatic annotation by genres, moods, and instrumentation.
+MusicPlayerPlus `mppinit -e metadata` uses Essentia for extracting acoustic
+characteristics of music, including low-level spectral information, rhythm,
+keys, scales, and much more, and automatic annotation by genres, moods, and
+instrumentation.
 
 This is the same sort of thing that
 [AcousticBrainz](https://acousticbrainz.org/) does but the AcousticBrainz
@@ -563,12 +620,23 @@ MusicPlayerPlus provides the same functionality using pre-compiled and
 packaged Essentia binaries and models.
 
 However, the process of analyzing, extracting, and retrieving metadata
-can be time consuming for a large music library. The `mppinit metadata`
+can be time consuming for a large music library. The `mppinit -e metadata`
 command performs several metadata retrieval steps in a non-interactive
 manner and in the background so it can be left unattended if desired.
 
+#### Acoustic retrieval with AcousticBrainz
+
+While it still exists the AcousticBrainz service can be queried to provide
+a relatively quick way to update the Beets library with additional
+acoustic metadata. The AcousticBrainz service has already analyzed the
+acoustic characteristics of songs in the MusicBrainz catalog. To retrieve
+this metadata for songs in your music library, after Beets import is complete,
+run the command `mppinit -a metadata`. Or, at any time after Beets import
+run the command `beet acousticbrainz`. The AcousticBrainz service is no longer
+updated and will be retired in 2023.
+
 The individual metadata retrieval steps performed automatically by
-`mppinit metadata` can be performed manually using the instructions in
+`mppinit [-a|-b|-e] metadata` can be performed manually using the instructions in
 the [MusicPlayerPlus Beets README](beets/README.md).
 
 ### Activating the YAMS scrobbler for Last.fm
@@ -838,6 +906,7 @@ e.g. `mpplus -u`.
 - [**beet**](markdown/beet.1.md) : Beets media library management command-line interface
 - [**beetsconfig**](markdown/beetsconfig.5.md) : Beets media library management configuration
 - [**bandcamp-dl**](markdown/bandcamp-dl.1.md) : Download Bandcamp collections
+- [**blissify**](markdown/blissify.1.md) : create MPD playlists using song similarity database
 - [**scdl**](markdown/scdl.1.md) : Download Soundcloud favorites
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
 - [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries
