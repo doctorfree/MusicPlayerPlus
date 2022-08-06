@@ -331,18 +331,25 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
 
 The entire full tilt boogie initialization, for those with both Bandcamp
 and Soundcloud accounts with songs and albums in a collection or liked,
-and who wish to apply thorough, reliable, complete, and accurate metadata,
-might go something like:
+and who wish to apply thorough, reliable, complete, and accurate metadata:
 
 ```
+# This is the only required setup step
 mppinit
+
+# For Bandcamp and Soundcloud users, a convenient way to download
 mppinit bandcamp
 mppinit soundcloud
+
+# Beets library import can take hours
 mppinit import
-# One of the acoustic analyses supported by MusicPlayerPlus
-mppinit -a metadata # AcousticBrainz analysis is faster but flawed
-mppinit -b metadata # Blissify analysis is faster but no Beets support
-mppinit -e metadata # Essentia analysis is thorough but may take days
+
+# Additional metadata including Blissify "song similarity" database
+mppinit -b metadata
+
+# Perform analysis and extraction of acoustic metadata with Essentia
+# This background process can take hours or even days for a large library
+mpplus -X all
 ```
 
 ## Installation
