@@ -1109,8 +1109,8 @@ then
     ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
   fi
   [ "${quiet}" ] || printf "\n\tModules:"
-  for pkg in asciimatics beautifulsoup4 ${BEETS} pylast \
-             beets-describe beets-yearfixer beetcamp beets-extrafiles \
+  for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
+             pylast beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
              calliope-music python3-discogs-client bandcamp-downloader scdl
   do
