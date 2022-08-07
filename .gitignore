@@ -39,7 +39,8 @@ config/beets/configs/*
 config/beets/secrets.yaml
 beets/*/__pycache__/
 beets/*/*.egg-info/
-.DS_Store
+blissify/
+bliss-analyze/
 essentia/*.pyc
 essentia/build
 essentia/utils/__pycache__/
@@ -123,3 +124,4 @@ tools/*
 Session.vim
 .netrwhist
 tmux*log
+.DS_Store

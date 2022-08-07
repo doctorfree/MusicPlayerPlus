@@ -59,6 +59,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 1. [Contributing](#contributing)
     1. [Testing and Issue Reporting](#testing-and-Issue-Reporting)
     1. [Sponsor MusicPlayerPlus](#sponsor-musicplayerplus)
+    1. [TODO List](#todo-list)
     1. [Contribute to Development](#contribute-to-development)
 
 ## Overview
@@ -1630,6 +1631,12 @@ release and a glorious musical adventure.
 
 Sponsor the MusicPlayerPlus project at
 [https://github.com/sponsors/doctorfree](https://github.com/sponsors/doctorfree)
+
+### TODO List
+
+Check out the features, issues, and projects to explore for upcoming
+releases of MusicPlayerPlus by reviewing the
+[MusicPlayerPlus TODO List](TODO.md).
 
 ### Contribute to Development
 
