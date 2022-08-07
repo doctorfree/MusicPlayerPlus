@@ -79,6 +79,26 @@ else
   cd ..
 fi
 
+# Build bliss-analyze
+if [ -x scripts/build-bliss-analyze.sh ]
+then
+  scripts/build-bliss-analyze.sh
+else
+  PROJ=bliss-analyze
+  [ -d ${PROJ} ] || git clone https://github.com/doctorfree/bliss-analyze
+  [ -x ${PROJ}/target/release/bliss-analyze ] || {
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+      echo "The cargo tool cannot be located."
+      echo "Cargo is required to build bliss-analyze. Exiting."
+      exit 1
+    }
+    cd ${PROJ}
+    cargo build -r
+    cd ..
+  }
+fi
+
 # Build blissify
 if [ -x scripts/build-blissify.sh ]
 then
@@ -156,7 +176,8 @@ for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
            "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
            "${DESTDIR}/share/${PKG}/mpcplus" \
-           "${DESTDIR}/share/doc/${PKG}/blissify"
+           "${DESTDIR}/share/doc/${PKG}/blissify" \
+           "${DESTDIR}/share/doc/${PKG}/bliss-analyze"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -172,6 +193,7 @@ ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 ${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
+${SUDO} cp bliss-analyze/target/release/bliss-analyze ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
@@ -202,6 +224,10 @@ ${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
 
 ${SUDO} cp blissify/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 ${SUDO} cp blissify/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
+
+${SUDO} cp bliss-analyze/ChangeLog ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/bliss-analyze
+${SUDO} cp bliss-analyze/LICENSE ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/bliss-analyze
+${SUDO} cp bliss-analyze/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/bliss-analyze
 
 ${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus

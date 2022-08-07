@@ -10,8 +10,9 @@ usage() {
     printf "\n\t-d destdir specifies installation destdir (default /)"
     printf "\n\t-p prefix specifies installation prefix (default /usr)"
     printf "\n\t-u displays this usage message and exits\n"
-    printf "\n'project' can be one or more of 'blissify', 'essentia', 'gaia',"
-    printf "\n'mppcava', and 'mpcplus'\n"
+    printf "\n'project' can be one or more of:"
+    printf "\n\t'blissify', 'bliss-analyze', 'essentia',"
+    printf "\n\t'gaia', 'mppcava', and 'mpcplus'\n"
     exit 1
 }
 

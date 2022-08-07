@@ -4,7 +4,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Beets media library management with preconfigured plugins
 - ***plus*** Character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
-- ***plus*** Blissify acoustic analysis and song similarity database
+- ***plus*** Bliss acoustic analysis and song similarity database
 - ***plus*** Essentia acoustic analysis and metadata extraction
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
 - ***plus*** Media fuzzy finder using `fzf`
@@ -136,6 +136,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **set_term_trans** : sets an xfce4-terminal window's transparency level
 * **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 * **create_playlist** : create a new playlist using a Beets query
+* **bliss-analyze** : acoustic analysis of audio files
 * **blissify** : create MPD playlists using song similarity
 * **essentia_streaming_extractor_music** : analyze and extract acoustic characteristics
 
@@ -1667,9 +1668,11 @@ Utilities and applications built from source in MusicPlayerPlus include:
 - mpcplus character based MPD client
 - mppcava character based spectrum visualizer
 
-The build scripts in the `scripts/` directory of the MusicPlayerPlus repository
-can be used to compile blissify, essentia, gaia, mpcplus, and mppcava. These are:
+The build scripts in the `scripts/` directory of the MusicPlayerPlus
+repository can be used to compile bliss-analyze, blissify, essentia,
+gaia, mpcplus, and mppcava. These are:
 
+- scripts/build-bliss-analyze.sh
 - scripts/build-blissify.sh
 - scripts/build-essentia.sh
 - scripts/build-gaia.sh
