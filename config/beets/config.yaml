@@ -484,9 +484,9 @@ xtractor:
         path: "lowlevel.average_loudness"
         type: float
         required: yes
-      initial_key:
-        path: "tonal.initial_key"
-        type: string
+#     initial_key:
+#       path: "tonal.initial_key"
+#       type: string
     high_level_targets:
 #     acoustid_fingerprint:
 #       path: "chromaprint.string"
