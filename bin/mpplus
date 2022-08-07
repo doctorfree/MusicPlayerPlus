@@ -448,6 +448,7 @@ make_it_so() {
     else
       echo "The 'blissify' command is not in your PATH or is not executable."
       echo "Check your MusicPlayerPlus installation."
+      echo "(Blissify is currently unavailable on Raspberry Pi installs)
       echo "Once the 'blissify' command is executable and in the execution PATH,"
       echo "Re-run this command."
     fi

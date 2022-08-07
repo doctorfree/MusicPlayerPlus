@@ -192,8 +192,12 @@ ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
-${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp bliss-analyze/target/release/bliss-analyze ${OUT_DIR}/${DESTDIR}/bin
+[ -f blissify/target/release/blissify ] && {
+  ${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
+}
+[ -f bliss-analyze/target/release/bliss-analyze ] && {
+  ${SUDO} cp bliss-analyze/target/release/bliss-analyze ${OUT_DIR}/${DESTDIR}/bin
+}
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \

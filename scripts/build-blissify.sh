@@ -54,4 +54,12 @@ have_cargo=`type -p cargo`
 
 cd ${PROJ}
 
-cargo build -r
+arch=
+have_dpkg=`type -p dpkg`
+[ "${have_dpkg}" ] && arch=`dpkg --print-architecture`
+if [ "${arch}" == "armhf" ]
+then
+  cargo build --release --features=ffmpeg-next/rpi
+else
+  cargo build --release
+fi

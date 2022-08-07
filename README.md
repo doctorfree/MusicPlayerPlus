@@ -125,22 +125,27 @@ in a character-based environment.
 
 MusicPlayerPlus adds the following commands to your system:
 
-* **mpplus** : primary user interface, invokes an MPD client, spectrum visualizer, and more
+* **mpplus** : Primary user interface, invokes an MPD client, spectrum visualizer, and more
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
-* **mppinit** : one-time initializaton of a user's mpcplus configuration
-* **mpcplus-tmux** : runs mpcplus, a visualizer, and displays album art in a tmux session
-* **mppsplash-tmux** : runs mppsplash, a visualizer, in a tmux session
-* **mppsplash** : fun ascii art screens using ASCIImatics animations. Ascii art commands:
+* **mppinit** : One-time initializaton of a user's mpcplus configuration
+* **mppcover** : Display album cover art for currently playing song
+* **mpcplus-tmux** : Runs mpcplus, a visualizer, and displays album art in a tmux session
+* **mppsplash-tmux** : Runs mppsplash, a visualizer, in a tmux session
+* **mppsplash** : Fun ascii art screens using ASCIImatics animations. Ascii art commands:
     * **mppjulia** : ASCIImatics animated zoom on a Julia Set
     * **mppplasma** : ASCIImatics animated plasma graphic
     * **mpprocks** : ASCIImatics animated MusicPlayerPlus splash screen
-* **raise_cava** : raises the mppcava spectrum visualizer window
-* **set_term_trans** : sets an xfce4-terminal window's transparency level
-* **fzmp** : browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
-* **create_playlist** : create a new playlist using a Beets query
-* **bliss-analyze** : acoustic analysis of audio files
-* **blissify** : create MPD playlists using song similarity
-* **essentia_streaming_extractor_music** : analyze and extract acoustic characteristics
+* **raise_cava** : Raises the mppcava spectrum visualizer window
+* **set_term_trans** : Sets an xfce4-terminal window's transparency level
+* **fzmp** : Browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
+* **create_playlist** : Create a new playlist using a Beets query
+* **bliss-analyze** : Acoustic analysis of audio files
+* **blissify** : Create MPD playlists using song similarity
+* **essentia_streaming_extractor_music** : Analyze and extract acoustic characteristics
+
+The `bliss-analyze` and `blissify` commands are currently not available on
+Raspberry Pi installations due to lack of support for that architecture in
+the `ffmpeg` library.
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
@@ -260,6 +265,10 @@ This can be used to automate the creation of playlists and other actions.
 The drawback of using Blissify is it does not add acoustic metadata to
 the Beets library so the results of a Blissify analysis are only available
 to Blissify and not Beets.
+
+**[NOTE:]** Acoustic analysis with `blissify` is currently not available on
+Raspberry Pi installations due to lack of support for that architecture in
+the `ffmpeg` library.
 
 It is sometimes desirable to augment one acoustic analysis with another.
 For example, the AcousticBrainz service seems to think a lot of songs

@@ -31,10 +31,10 @@ usage() {
   printf "[bandcamp|import|metadata|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
-  printf "\n\t'-b' use Blissify for MPD acoustic audio analysis (default)"
+  printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
   printf "\n\t'-d' install latest Beets development branch rather than"
   printf "\n\t\tthe latest stable release (for testing purposes)"
-  printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (long)"
+  printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (default)"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
   printf "\n\t'-U' indicates upgrade installed Python modules if needed"
@@ -320,8 +320,7 @@ else
 fi
 
 acbrainz=
-blissify=
-essentia=
+essentia=1
 overwrite=
 proceed=
 upgrade=
@@ -331,15 +330,26 @@ while getopts "abdeoqUyu" flag; do
     case $flag in
         a)
             acbrainz=1
+            essentia=
             ;;
         b)
-            blissify=1
+            have_bliss=`type -p blissify`
+            if [ "${have_bliss}" ]
+            then
+              essentia=
+              acbrainz=
+            else
+              echo "Blissify unavailable. Using Essentia."
+              essentia=1
+              acbrainz=
+            fi
             ;;
         d)
             beetsdev=1
             ;;
         e)
             essentia=1
+            acbrainz=
             ;;
         o)
             overwrite=1
@@ -359,6 +369,12 @@ while getopts "abdeoqUyu" flag; do
     esac
 done
 shift $(( OPTIND - 1 ))
+
+[ "${essentia}" ] && [ "${acbrainz}" ] && {
+  printf "\nOnly one of '-a' and '-e' can be specified."
+  printf "\nExiting."
+  usage
+}
 
 [ "$2" ] && {
   printf "\nUnknown or extaneous arguments $*"
@@ -484,11 +500,11 @@ shift $(( OPTIND - 1 ))
     mpplus -F > /dev/null 2>&1
     printf "\n\tImporting music library into Beets media management system\n"
     mpplus -I
-    printf "\nAfter the Beets Import is complete, update metadata and"
-    printf "\nperform acoustic analysis with Blissify by executing:"
+    printf "\nAfter the Beets Import is complete, update metadata and perform"
+    printf "\nacoustic analysis and extraction with Essentia by executing:"
     printf "\n\t${BOLD}mppinit metadata${NORM}\n"
-    printf "\nAlternatively, to use Essentia for acoustic metadata extraction:"
-    printf "\n\t${BOLD}mppinit -e metadata${NORM}\n"
+    printf "\nAlternatively, to use Blissify for acoustic metadata analysis:"
+    printf "\n\t${BOLD}mppinit -b metadata${NORM}\n"
     printf "\nor, to use AcousticBrainz for acoustic metadata retrieval:"
     printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
