@@ -22,6 +22,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Quickstart summary](#quickstart-summary)
     1. [Full Tilt Boogie](#full-tilt-boogie)
 1. [Installation](#installation)
+    1. [Supported platforms](#supported-platforms)
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
@@ -359,6 +360,17 @@ mpplus -X all
 
 MusicPlayerPlus v1.0.0 and later can be installed on Linux systems using
 either the Debian packaging format or the Red Hat Package Manager (RPM).
+
+### Supported platforms
+
+MusicPlayerPlus has been tested successfully on the following platforms:
+
+- **Ubuntu Linux 20.04**
+    - `MusicPlayerPlus_<version>-<release>.amd64.deb`
+- **Fedora Linux 35**
+    - `MusicPlayerPlus_<version>-<release>.x86_64.rpm`
+- **Raspbian Linux 11**
+    - `MusicPlayerPlus_<version>-<release>.armhf.deb`
 
 ### Debian package installation
 
