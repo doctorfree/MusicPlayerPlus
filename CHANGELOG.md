@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-2.0.1r1 (2022-08-06)
+# MusicPlayerPlus-2.0.1r1 (2022-08-08)
 
 * Added Beets media library management integration
 * Automated Beets xtractor plugin installation and configuration
@@ -37,6 +37,8 @@ All notable changes to this project will be documented in this file.
 * Add custom targets to xtractor config
 * Add Bandcamp and Soundcloud downloads to mppinit
 * Add import and metadata retrieval to mppinit
+* Add blissify MPD library analysis and smart playlist generator
+* Add bliss-analyze acoustic analysis tool
 
 # MusicPlayerPlus-1.0.3r1 (2022-07-09)
 

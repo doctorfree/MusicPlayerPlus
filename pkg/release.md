@@ -18,6 +18,7 @@ This major release of MusicPlayerPlus adds:
 * Custom targets to xtractor config
 * Bandcamp and Soundcloud downloads to mppinit
 * Import and metadata retrieval to `mppinit`
+* Add blissify MPD library analysis and smart playlist generator
 * Many more improvements and features (See [Changelog](#changelog) below)
 
 ## Installation
