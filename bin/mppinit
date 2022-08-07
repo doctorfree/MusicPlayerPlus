@@ -484,9 +484,12 @@ shift $(( OPTIND - 1 ))
     mpplus -F > /dev/null 2>&1
     printf "\n\tImporting music library into Beets media management system\n"
     mpplus -I
-    printf "\nAfter the Beets Import is complete, update metadata with:"
+    printf "\nAfter the Beets Import is complete, update metadata and"
+    printf "\nperform acoustic analysis with Blissify by executing:"
     printf "\n\t${BOLD}mppinit metadata${NORM}\n"
-    printf "\nor, to use AcousticBrainz rather than Essentia"
+    printf "\nAlternatively, to use Essentia for acoustic metadata extraction:"
+    printf "\n\t${BOLD}mppinit -e metadata${NORM}\n"
+    printf "\nor, to use AcousticBrainz for acoustic metadata retrieval:"
     printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
     printf "\n\t${BOLD}mppinit yams${NORM}\n"
@@ -507,7 +510,17 @@ shift $(( OPTIND - 1 ))
     printf "\n\t- Identify and delete duplicate tracks"
     printf "\n\t- Retrieve album genres"
     printf "\n\t- Download album cover art"
-    printf "\n\t- Analyze and retrieve acoustic information (optional)\n\n"
+    if [ "${essentia}" ]
+    then
+      printf "\n\t- Analyze and extract acoustic information with Essentia\n\n"
+    else
+      if [ "${acbrainz}" ]
+      then
+        printf "\n\t- Retrieve acoustic information with AcousticBrainz\n\n"
+      else
+        printf "\n\t- Analyze acoustic information with Blissify\n\n"
+      fi
+    fi
     [ "${proceed}" ] || {
       while true
       do
