@@ -1,5 +1,16 @@
 # MusicPlayerPlus To-Do List
 
+## MusicPlayerPlus improvements
+
+- Enhance `mpcplus` key bindings
+    - Example custom bindings: https://www.digitalneanderthal.com/post/ncmpcpp
+- Add music player controls to `mpplus` menus
+- Additional `mpplus` menus
+    - Add Blissify similarity playlist creation and play to `mpplus` menu
+    - Several Blissify, `mpc`, and Calliope commands could be on a menu
+    - Calliope menu?
+- MusicPlayerPlus Wiki How-To's
+
 ## Mopidy
 
 Explore [Mopidy](https://mopidy.com) with extensions and streaming:
