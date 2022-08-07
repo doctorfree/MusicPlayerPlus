@@ -47,9 +47,9 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 cd "${SRC}/${SRC_NAME}"
 
 # Build mpcplus
-if [ -x build-mpcplus.sh ]
+if [ -x scripts/build-mpcplus.sh ]
 then
-  ./build-mpcplus.sh -v
+  scripts/build-mpcplus.sh -v
 else
   cd mpcplus
   make clean
@@ -66,9 +66,9 @@ else
 fi
 
 # Build mppcava
-if [ -x build-mppcava.sh ]
+if [ -x scripts/build-mppcava.sh ]
 then
-  ./build-mppcava.sh
+  scripts/build-mppcava.sh
 else
   cd mppcava
   make clean
@@ -80,9 +80,9 @@ else
 fi
 
 # Build blissify
-if [ -x build-blissify.sh ]
+if [ -x scripts/build-blissify.sh ]
 then
-  ./build-blissify.sh
+  scripts/build-blissify.sh
 else
   PROJ=blissify
   [ -d ${PROJ} ] || git clone https://github.com/doctorfree/blissify
@@ -100,9 +100,9 @@ else
 fi
 
 # Build essentia
-if [ -x build-essentia.sh ]
+if [ -x scripts/build-essentia.sh ]
 then
-  ./build-essentia.sh
+  scripts/build-essentia.sh
 else
   cd essentia
   python3 waf configure --prefix=/usr --build-static --with-python --with-examples
@@ -177,9 +177,9 @@ ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
            ${OUT_DIR}/${DESTDIR}/bin
 # Install essentia
-# if [ -x build-essentia.sh ]
+# if [ -x scripts/build-essentia.sh ]
 # then
-#   ${SUDO} ./build-essentia.sh -i -d "${SRC}/${SRC_NAME}/${OUT_DIR}"
+#   ${SUDO} scripts/build-essentia.sh -i -d "${SRC}/${SRC_NAME}/${OUT_DIR}"
 # else
 #   cd essentia
 #   ${SUDO} python3 waf install --destdir="${SRC}/${SRC_NAME}/${OUT_DIR}"

@@ -25,86 +25,206 @@ blissify = Analyze and make smart playlists from an MPD music database.
 .SH DESCRIPTION
 .PP
 The \f[I]blissify\f[R] command can be used to create an MPD playlist of
-songs based on similarity metrics computed and stored in a database.
-.IP
-.nf
-\f[C]
-USAGE:
-    blissify [SUBCOMMAND]
-
-FLAGS:
-    -h, --help       Prints help information
-    -V, --version    Prints version information
-
-SUBCOMMANDS:
-    help                    Prints this message or the help of the given subcommand(s)
-    interactive-playlist    Make a playlist, prompting a set of close songs, and asking which one will be the most
-                            appropriate.
-    list-db                 Print songs that have been analyzed and are in blissify\[aq]s database.
-    playlist                Erase the current playlist and make playlist of PLAYLIST_LENGTH from the currently
-                            played song
-    rescan                  (Re)scan completely an MPD library
-    update                  Scan new songs that were added to the MPD library since last scan.
-blissify-playlist 
-Erase the current playlist and make playlist of PLAYLIST_LENGTH from the currently played song
-\f[R]
-.fi
-.IP
-.nf
-\f[C]
-USAGE:
-    blissify playlist [FLAGS] [OPTIONS] <PLAYLIST_LENGTH>
-
-FLAGS:
-        --album-playlist       Make a playlist of similar albums from the current album.
-        --deduplicate-songs    Deduplicate songs based both on the title / artist and theirsheer proximity.
-    -h, --help                 Prints help information
-        --seed-song            Instead of making a playlist of only the closest song to the current song,make a playlist
-                               that queues the closest song to the first song, then
-                                                   the closest to the second song, etc. Can take some time to build.
-    -V, --version              Prints version information
-
-OPTIONS:
-        --distance <distance metric>    Choose the distance metric used to make the playlist. Default is
-                                        \[aq]euclidean\[aq],other option is \[aq]cosine\[aq] [default: euclidean]
-
-ARGS:
-    <PLAYLIST_LENGTH>    Number of items to queue, including the first song.
-blissify-interactive-playlist 
-Make a playlist, prompting a set of close songs, and asking which one will be the most appropriate.
-\f[R]
-.fi
-.IP
-.nf
-\f[C]
-USAGE:
-    blissify interactive-playlist [FLAGS] [OPTIONS]
-
-FLAGS:
-        --continue    Take the current playlist\[aq]s last song as a starting point, instead of removing the current
-                      playlist and starting from the first song.
-    -h, --help        Prints help information
-    -V, --version     Prints version information
-
-OPTIONS:
-        --number-choices <choices>    Choose the number of proposed items you get each time. Defaults to 3, cannot be
-                                      more than 9. [default: 3]
-blissify-list-db 
+songs based on computed similarity metrics.
+Blissify is a program used to make playlists of songs that sound alike
+from your MPD (https://www.musicpd.org/) track library, \[`a] la Spotify
+radio.
+.PP
+Under the hood, it is an MPD (https://www.musicpd.org/) plugin for
+bliss (https://crates.io/crates/bliss-audio).
+.PP
+Blissify needs first to analyze your music library, i.e.
+compute and store a series of features from your songs, extracting the
+tempo, timbre, loudness, etc.
+.PP
+After that, it is ready to make playlists: play a song to start from,
+run \f[V]blissify playlist 30\f[R], and voil\[`a]!
+You have a playlist of 30 songs that sound like your first track.
+.PP
+Note: you \f[I]need\f[R] to have MPD installed to use blissify.
+.SH GLOBAL FLAGS
+.TP
+\f[B]-h, --help\f[R]
+Prints help information
+.TP
+\f[B]-V, --version\f[R]
+Prints version information
+.SH SUBCOMMANDS
+.TP
+\f[B]help\f[R]
+Prints this message or the help of the given subcommand(s)
+.TP
+\f[B]interactive-playlist\f[R]
+Make a playlist, prompting a set of close songs, and asking which one
+will be the most appropriate.
+.TP
+\f[B]list-db\f[R]
 Print songs that have been analyzed and are in blissify\[aq]s database.
-\f[R]
-.fi
-.IP
-.nf
-\f[C]
-USAGE:
-    blissify list-db [FLAGS]
-
-FLAGS:
-        --detailed    Display analyzed song paths, as well as the corresponding analysis.
-    -h, --help        Prints help information
-    -V, --version     Prints version information
-\f[R]
-.fi
+.TP
+\f[B]playlist\f[R]
+Erase the current playlist and make playlist of PLAYLIST_LENGTH from the
+currently played song
+.TP
+\f[B]rescan\f[R]
+(Re)scan completely an MPD library
+.TP
+\f[B]update\f[R]
+Scan new songs that were added to the MPD library since last scan.
+.TP
+\f[B]blissify-playlist\f[R]
+Erase the current playlist and make playlist of PLAYLIST_LENGTH from the
+currently played song
+.SH PLAYLIST USAGE
+.PP
+blissify playlist [PLAYLIST FLAGS] [PLAYLIST OPTIONS] <PLAYLIST_LENGTH>
+.SH PLAYLIST FLAGS
+.TP
+\f[B]--album-playlist\f[R]
+Make a playlist of similar albums from the current album.
+.TP
+\f[B]--deduplicate-songs\f[R]
+Deduplicate songs based both on the title / artist and theirsheer
+proximity.
+.TP
+\f[B]-h, --help\f[R]
+Prints help information
+.TP
+\f[B]--seed-song\f[R]
+Instead of making a playlist of only the closest song to the current
+song,make a playlist that queues the closest song to the first song,
+then the closest to the second song, etc.
+Can take some time to build.
+.TP
+\f[B]-V, --version\f[R]
+Prints version information
+.SH PLAYLIST OPTIONS
+.TP
+\f[B]--distance \f[R]
+Choose the distance metric used to make the playlist.
+Default is \[aq]euclidean\[aq],other option is \[aq]cosine\[aq]
+[default: euclidean]
+.SH PLAYLIST ARGS
+.TP
+\f[B]<PLAYLIST_LENGTH>\f[R]
+Number of items to queue, including the first song.
+.SH INTERACTIVE USAGE
+.PP
+Make a playlist, prompting a set of close songs, and asking which one
+will be the most appropriate.
+.PP
+blissify interactive-playlist [INTERACTIVE FLAGS] [INTERACTIVE OPTIONS]
+.SH INTERACTIVE FLAGS:
+.TP
+\f[B]--continue\f[R]
+Take the current playlist\[aq]s last song as a starting point, instead
+of removing the current playlist and starting from the first song.
+.TP
+\f[B]-h, --help\f[R]
+Prints help information
+.TP
+\f[B]-V, --version\f[R]
+Prints version information
+.SH INTERACTIVE OPTIONS
+.TP
+\f[B]--number-choices \f[R]
+Choose the number of proposed items you get each time.
+Defaults to 3, cannot be more than 9.
+[default: 3]
+.SH LIST USAGE
+.PP
+Print songs that have been analyzed and are in blissify\[aq]s database.
+.PP
+blissify list-db [LIST FLAGS]
+.SH LIST FLAGS
+.TP
+\f[B]--detailed\f[R]
+Display analyzed song paths, as well as the corresponding analysis.
+.TP
+\f[B]-h, --help\f[R]
+Prints help information
+.TP
+\f[B]-V, --version\f[R]
+Prints version information
+.SH EXAMPLES
+.PP
+All the commands below read the \f[V]MPD_HOST\f[R] and
+\f[V]MPD_PORT\f[R] environment variables and try to reach MPD using
+that.
+You might want to change it if MPD is listening to somewhere else than
+\f[V]127.0.0.1:6600\f[R] (the default).
+.SS Analyze a library
+.PP
+To analyze your MPD library, use:
+.PP
+\f[B]blissify update /path/to/mpd/music_directory\f[R]
+.PP
+Note that it may take several minutes (up to some hours, on very large
+libraries with more than for instance 20k songs) to complete.
+.PP
+If something goes wrong during the analysis, and the database enters an
+unstable state, you can use:
+.PP
+\f[B]blissify rescan /path/to/mpd/music_directory\f[R]
+.PP
+to remove the existing database and rescan all files.
+.PP
+If you want to see if the analysis has been successful, or simply want
+to see the current files in, you can use:
+.PP
+\f[B]blissify list-db\f[R]
+.SS Make a simple playlist
+.PP
+\f[B]blissify playlist 100\f[R]
+.PP
+This will add 100 songs similar to the song that is currently playing on
+MPD, starting with the closest possible.
+.SS Changing the distance metric
+.PP
+To make a playlist with a distance metric different than the default one
+(euclidean distance), which will yield different playlists, run:
+.PP
+\f[B]blissify playlist --distance <distance_name> 30\f[R]
+.PP
+\f[V]distance_name\f[R] is currently \f[V]euclidean\f[R] and
+\f[V]cosine\f[R].
+Don\[aq]t hesitate to experiment with this parameter if the generated
+playlists are not to your linking!
+.SS Make a \[dq]seeded\[dq] playlist
+.PP
+Instead of making a playlist with songs that are only similar to the
+first song, from the most similar to the least similar (the default),
+you can make a playlist that queues the closest song to the first song,
+then the closest song the second song, etc, effectively making
+\[dq]path\[dq] through the songs.
+.PP
+To try it out (it can take a bit more time to build the playlist):
+.PP
+\f[B]blissify playlist --seed-song 30\f[R]
+.SS Make an album playlist
+.PP
+You can also make a playlist of album that sound like the current album
+your listening to (more specifically, the album of the current song
+you\[aq]re playling, regardless of whether you queued the full album or
+not).
+.PP
+To try it out:
+.PP
+\f[B]blissify playlist --album-playlist 30\f[R]
+.SS Make an interactive playlist
+.PP
+Interactive playlists start from a song, and let you choose which song
+should be played next among the 3 closest songs (the number of songs
+displayed is can be set manually):
+.PP
+\f[B]blissify playlist --interactive-playlist --number-choices 5\f[R]
+.PP
+By default, it crops the current playlist to just keep the currently
+played song.
+If you want to just start from the last song and continue from there,
+use \f[V]--continue\f[R]:
+.PP
+\f[B]blissify playlist --interactive-playlist --number-choices 5
+--continue\f[R]
 .SH AUTHORS
 .PP
 Blissify written by \[at]Polochon_street

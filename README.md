@@ -1550,7 +1550,7 @@ sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
 It is necessary to build and install Gaia from source:
 
 ```
-./build-gaia.sh -i
+./scripts/build-gaia.sh -i
 ```
 
 ### Install packaging dependencies
@@ -1669,19 +1669,20 @@ Utilities and applications built from source in MusicPlayerPlus include:
 - mpcplus character based MPD client
 - mppcava character based spectrum visualizer
 
-The build scripts in the top-level directory of the MusicPlayerPlus repository
-can be used to compile essentia, gaia, mpcplus, and mppcava. These are:
+The build scripts in the `scripts/` directory of the MusicPlayerPlus repository
+can be used to compile blissify, essentia, gaia, mpcplus, and mppcava. These are:
 
-- build-essentia.sh
-- build-gaia.sh
-- build-mpcplus.sh
-- build-mppcava.sh
+- scripts/build-blissify.sh
+- scripts/build-essentia.sh
+- scripts/build-gaia.sh
+- scripts/build-mpcplus.sh
+- scripts/build-mppcava.sh
 
 Invoke the appropriate build script for the utility you wish to compile.
 For example, to compile the MPD client `mpcplus` from source, run the command:
 
 ```
-./build-mpcplus.sh
+./scripts/build-mpcplus.sh
 ```
 
 On Debian and RPM based systems the MusicPlayerPlus installation package can be
