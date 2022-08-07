@@ -36,9 +36,18 @@ shift $(( OPTIND - 1 ))
 
 have_cargo=`type -p cargo`
 [ "${have_cargo}" ] || {
-    echo "The cargo tool cannot be located."
-    echo "Cargo is required to build bliss-analyze. Exiting."
-    exit 1
+    [ -f ~/.cargo/env ] && source ~/.cargo/env
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        [ -f ~/.cargo/env ] && source ~/.cargo/env
+    }
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+        echo "The cargo tool cannot be located."
+        echo "Cargo is required to build bliss-analyze. Exiting."
+        exit 1
+    }
 }
 
 cd ${PROJ}
