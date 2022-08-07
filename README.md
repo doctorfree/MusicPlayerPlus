@@ -100,7 +100,6 @@ Integration is provided for:
 * [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
 * [beets](https://beets.io/), media library management system
 * [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.fm
-* [cantata](https://github.com/CDrummond/cantata), graphical MPD client
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
 * [fzf](https://github.com/junegunn/fzf), interactive fuzzy finder
@@ -951,14 +950,13 @@ Only one of bandcamp, soundcloud, import, metadata, or sync can be specified
 ```
 
 ```
-Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d music_directory]
+Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]
 		[-M alsaconf|enable|disable|restart|start|stop|status] [-N]
 		[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 		[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
-	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-g indicates do not use gradient colors for spectrum visualizer
@@ -1105,7 +1103,7 @@ tilix terminal emulator and displaying the visualizer using quarter-height:
 
 Open the cantata MPD graphical client and mppcava visualizer:
 
-`mpplus -c`
+`mpplus -C cantata`
 
 Open the mpcplus client in the cool-retro-term terminal and mppcava visualizer
 in gnome-terminal:

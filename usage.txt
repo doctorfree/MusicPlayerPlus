@@ -1,13 +1,12 @@
 =============================================================================
 
-Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d music_directory]
+Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]
 		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]
 		[-M alsaconf|enable|disable|restart|start|stop|status] [-N]
 		[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 		[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
-	-c indicates use cantata MPD client rather than mpcplus
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
 	-f indicates fullscreen display
 	-g indicates do not use gradient colors for spectrum visualizer

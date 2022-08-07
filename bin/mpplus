@@ -1,12 +1,7 @@
 #!/bin/bash
 #
 # mpplus - Run mpcplus and visualizer in separate terminal emulators,
-#          cantata and mppcava in separate windows, or a specified
-#          MPD client and visualizer in separate windows. Alternately,
-#          Run an ASCIImatics animation optionally accompanied
-#          by specified audio.
-#
-#          Can also download album cover art or kill tmux sessions.
+#          or a specified MPD client and visualizer in separate windows.
 #
 # Written by Ronald Joe Record <ronaldrecord@gmail.com>
 # March, 2022
@@ -37,9 +32,7 @@
 # to dynamically set the transparency of the terminal window only
 # work when using xfce4-terminal for mpcplus.
 #
-# Cantata can be used as the MPD client, replacing the invocation of a
-# terminal emulator running mpcplus with direct invocation of cantata.
-# In addition, an alternate MPD client can be specified on the command line.
+# An alternate MPD client can be specified on the command line.
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
@@ -59,14 +52,13 @@ SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d music_directory]"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]"
   printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]"
   printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-N]"
   printf "\n\t\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
   printf "\n\t\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
-  printf "\n\t-c indicates use cantata MPD client rather than mpcplus"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
@@ -1427,7 +1419,7 @@ show_main_menu() {
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
-    [ "${CONSOLE_MODE}" ] && options+=("Console Music Player Plus")
+    [ "${CONSOLE_MODE}" ] && options+=("Music Player Plus Visualizer")
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
@@ -1453,7 +1445,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Console Music Player Plus",*|*,"Console Music Player Plus")
+          "Music Player Plus",*|*,"Music Player Plus")
               MPCPLUS="mpcplus"
               break
               ;;
@@ -1697,7 +1689,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1721,19 +1713,6 @@ while getopts "AabBcC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     B)
       BLISSIFY=1
-      ;;
-    c)
-      CLIENT=1
-      [ "${have_cantata}" ] || {
-        echo "Option '-c' indicates use cantata MPD client."
-        echo "However, cantata is not installed or not in your path."
-        echo "You can install cantata using apt or dnf as follows:"
-        printf "\n\n\tsudo apt install cantata\nor"
-        printf "\n\tsudo dnf install cantata\n\n"
-        echo "Continuing, using mpcplus rather than cantata."
-        CLIENT=
-      }
-      [ "${CLIENT}" ] && MPCPLUS="cantata"
       ;;
     C)
       CLIENT="${OPTARG}"

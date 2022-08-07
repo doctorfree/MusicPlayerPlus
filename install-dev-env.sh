@@ -19,7 +19,7 @@ then
         libavfilter-dev libavdevice-dev libsqlite3-dev"
   if [ "$1" == "-r" ]
   then
-    sudo apt uninstall ${PKGS}
+    sudo apt remove ${PKGS}
   else
     sudo apt install ${PKGS}
   fi
@@ -31,7 +31,7 @@ else
         python3-devel python3-yaml python3-six sqlite-devel"
   if [ "$1" == "-r" ]
   then
-    sudo dnf uninstall ${PKGS}
+    sudo dnf remove ${PKGS}
   else
     sudo dnf install ${PKGS}
   fi

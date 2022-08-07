@@ -21,7 +21,7 @@
 mpplus - Launch an MPD music player client and spectrum visualizer
 .SH SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-c] [-C client] [-D] [-d
+\f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-C client] [-D] [-d
 music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n
 num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p]
 [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm]
@@ -33,9 +33,9 @@ mpcplus music player client and a spectrum visualizer in various
 terminal emulators and window placements.
 It can be used to display these utilities juxtaposed in separate windows
 or fullscreen overlayed with transparency.
-Alternately, mpplus can launch the cantata MPD client or any specified
-MPD client along with a specified spectrum visualizer (\f[V]mppcava\f[R]
-spectrum visualizer is used by default).
+Alternately, mpplus can launch any specified MPD client along with a
+specified spectrum visualizer (\f[V]mppcava\f[R] spectrum visualizer is
+used by default).
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
 .PP
@@ -78,9 +78,6 @@ and easily killed by executing the \f[V]mpplus -k\f[R] command.
 .TP
 \f[B]-A\f[R]
 indicates display album cover art (implies tmux session)
-.TP
-\f[B]-c\f[R]
-indicates use cantata MPD client rather than mpcplus
 .TP
 \f[B]-C \[aq]client\[aq]\f[R]
 indicates use \[aq]client\[aq] MPD client rather than mpcplus
@@ -232,7 +229,7 @@ Launches \f[V]mpcplus\f[R] music player client running in
 cool-retro-term terminal emulator with mppcava spectrum visualizer
 running in a gnome-terminal terminal emulator window.
 .TP
-\f[B]mpplus -c\f[R]
+\f[B]mpplus -C cantata\f[R]
 Launches \f[V]cantata\f[R] music player client running in a separate
 window with mppcava spectrum visualizer running in a gnome-terminal
 terminal emulator window.
