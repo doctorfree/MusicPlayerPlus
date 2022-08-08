@@ -72,7 +72,7 @@ mpd_music_dir = ~/Music
 ## visualizer.
 ##
 #
-visualizer_data_source = ~/.config/mpd/mpd.fifo
+#visualizer_data_source = ~/.config/mpd/mpd.fifo
 #
 ##
 ## Note: Below parameter is needed for mpcplus to determine which output
@@ -80,12 +80,12 @@ visualizer_data_source = ~/.config/mpd/mpd.fifo
 ## to synchronize with audio.
 ##
 #
-visualizer_output_name = Visualizer feed
+#visualizer_output_name = Visualizer feed
 #
 ##
 ## If you set format to 44100:16:2, make it 'yes'.
 ##
-visualizer_in_stereo = yes
+#visualizer_in_stereo = yes
 #
 ##
 ## Note: To enable spectrum frequency visualization you need to compile mpcplus
@@ -94,7 +94,7 @@ visualizer_in_stereo = yes
 #
 ## Available values: spectrum, wave, wave_filled, ellipse.
 ##
-visualizer_type = spectrum
+#visualizer_type = spectrum
 #
 #visualizer_fps = 60
 #
@@ -102,13 +102,13 @@ visualizer_type = spectrum
 #
 #visualizer_look = ●▮
 #visualizer_look = "||"
-visualizer_look = "+|"
+#visualizer_look = "+|"
 #
 #visualizer_color = blue, cyan, green, yellow, magenta, red
 #
 ## Alternative subset of 256 colors for terminals that support it.
 ##
-visualizer_color = 47, 83, 119, 155, 191, 227, 221, 215, 209, 203, 197, 161
+#visualizer_color = 47, 83, 119, 155, 191, 227, 221, 215, 209, 203, 197, 161
 #
 ##
 ## Note: The next few visualization options apply to the spectrum visualizer.
@@ -119,7 +119,7 @@ visualizer_color = 47, 83, 119, 155, 191, 227, 221, 215, 209, 203, 197, 161
 ## and visualizer_in_stereo set, artifacts may be visible on the bottom half of
 ## the visualization.
 #
-visualizer_spectrum_smooth_look = no
+#visualizer_spectrum_smooth_look = no
 #
 ## A value between 1 and 5 inclusive. Specifying a larger value makes the
 ## visualizer look at a larger slice of time, which results in less jumpy

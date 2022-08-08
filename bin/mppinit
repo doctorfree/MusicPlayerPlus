@@ -37,7 +37,7 @@ usage() {
   printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (default)"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
-  printf "\n\t'-U' indicates upgrade installed Python modules if needed"
+  printf "\n\t'-U' indicates do not upgrade installed Python modules"
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
@@ -323,9 +323,10 @@ acbrainz=
 essentia=1
 overwrite=
 proceed=
-upgrade=
+upgrade=1
 quiet=
 beetsdev=
+have_bliss=`type -p blissify`
 while getopts "abdeoqUyu" flag; do
     case $flag in
         a)
@@ -333,7 +334,6 @@ while getopts "abdeoqUyu" flag; do
             essentia=
             ;;
         b)
-            have_bliss=`type -p blissify`
             if [ "${have_bliss}" ]
             then
               essentia=
@@ -358,7 +358,7 @@ while getopts "abdeoqUyu" flag; do
             quiet=1
             ;;
         U)
-            upgrade=1
+            upgrade=
             ;;
         y)
             proceed=1
@@ -503,10 +503,12 @@ shift $(( OPTIND - 1 ))
     printf "\nAfter the Beets Import is complete, update metadata and perform"
     printf "\nacoustic analysis and extraction with Essentia by executing:"
     printf "\n\t${BOLD}mppinit metadata${NORM}\n"
-    printf "\nAlternatively, to use Blissify for acoustic metadata analysis:"
-    printf "\n\t${BOLD}mppinit -b metadata${NORM}\n"
-    printf "\nor, to use AcousticBrainz for acoustic metadata retrieval:"
+    printf "\nAlternatively, to use AcousticBrainz for metadata retrieval:"
     printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
+    [ "${have_bliss}" ] && {
+      printf "\nTo use Blissify for acoustic metadata analysis:"
+      printf "\n\t${BOLD}mppinit -b metadata${NORM}\n"
+    }
     printf "\nActivate the YAMS Last.fm scrobbler with the command:"
     printf "\n\t${BOLD}mppinit yams${NORM}\n"
     visit_wiki

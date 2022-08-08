@@ -551,6 +551,8 @@
 #
 ## MusicPlayerPlus custom mpcplus key bindings
 #
+def_key "alt-c"
+  run_external_command "/usr/bin/mppcover"
 def_key "alt-f"
   run_external_command "/usr/bin/mppfzmp"
 def_key "alt-r"

@@ -62,7 +62,7 @@ library location across all configuration files.
 : indicates quiet execution, no status messages
 
 **-U**
-: indicates upgrade installed Python modules if needed
+: indicates do not upgrade installed Python modules
 
 **-y**
 : indicates answer 'yes' to all and proceed

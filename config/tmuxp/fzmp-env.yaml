@@ -2,11 +2,11 @@ session_name: ${SESSION}
 windows:
   - window_name: Fuzzy Finder
     layout: main-horizontal
+    options:
+      main-pane-height: ${MAIN_PANE_HEIGHT}
     panes:
     - shell_command:
       - ${FZFCOMM}; exit
       focus: true
     - shell_command:
       - ${VIZCOMM}; exit
-    options:
-      main-pane-height: ${MAIN_PANE_HEIGHT}

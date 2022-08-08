@@ -12,6 +12,42 @@ date: March 24, 2022
 This man page describes the key bindings used to control
 the **mpcplus** music player client.
 
+# KEYS - CUSTOM
+
+MusicPlayerPlus provides the following custom *mpcplus* key bindings:
+
+-   `[ Alt-c ]` - Display album cover art for currently playing song
+-   `[ Alt-f ]` - Open the fuzzy finder to search/select media
+-   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
+-   `[ Ctrl-a ]` - Add item to playlist
+-   `[ Ctrl-b ]` - Page up
+-   `[ Ctrl-f ]` - Page down
+-   `[ Ctrl-e ]` - Move to end
+-   `[ Shift-up ]` - Move selected items up
+-   `[ Shift-down ]` - Move selected items down
+-   `[ j ]` - Scroll down
+-   `[ k ]` - Scroll up
+-   `[ down ]` - Scroll down
+-   `[ up ]` - Scroll up
+-   `[ d ]` - Page down
+-   `[ u ]` - Page up
+-   `[ n ]` - Next
+-   `[ P ]` - Previous
+-   `[ space ]` - Next
+-   `[ backspace ]` - Previous
+-   `[ h ]` - Jump to parent directory
+-   `[ h ]` - Previous column
+-   `[ l ]` - Enter directory
+-   `[ l ]` - Play item
+-   `[ l ]` - Next column
+-   `[ l ]` - Run action
+-   `[ J ]` - Select item
+-   `[ K ]` - Select item
+-   `[ t ]` - Move home
+-   `[ N ]` - Move sort order down
+-   `[ C ]` - Toggle playing song centering
+-   `[ * ]` - Toggle visualization type
+
 # KEYS - MOVEMENT
 
 -   `[ Up k ]` - Move cursor up

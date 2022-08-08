@@ -1257,18 +1257,37 @@ Custom key bindings are also defined for the `mpcplus` music player client comma
 Mpcplus custom key bindings are defined in `$HOME/.config/mpcplus/bindings`.
 MusicPlayerPlus custom key bindings for `mpcplus` include the following:
 
+-   `[ Alt-c ]` - Display album cover art for currently playing song
 -   `[ Alt-f ]` - Open the fuzzy finder to search/select media
 -   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
--   `[ Alt-1 ]` - Set xfce4-terminal window transparency to 90%
--   `[ Alt-2 ]` - Set xfce4-terminal window transparency to 80%
--   `[ Alt-3 ]` - Set xfce4-terminal window transparency to 70%
--   `[ Alt-4 ]` - Set xfce4-terminal window transparency to 60%
--   `[ Alt-5 ]` - Set xfce4-terminal window transparency to 50%
--   `[ Alt-6 ]` - Set xfce4-terminal window transparency to 40%
--   `[ Alt-7 ]` - Set xfce4-terminal window transparency to 30%
--   `[ Alt-8 ]` - Set xfce4-terminal window transparency to 20%
--   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
--   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
+-   `[ Ctrl-a ]` - Add item to playlist
+-   `[ Ctrl-b ]` - Page up
+-   `[ Ctrl-f ]` - Page down
+-   `[ Ctrl-e ]` - Move to end
+-   `[ Shift-up ]` - Move selected items up
+-   `[ Shift-down ]` - Move selected items down
+-   `[ j ]` - Scroll down
+-   `[ k ]` - Scroll up
+-   `[ down ]` - Scroll down
+-   `[ up ]` - Scroll up
+-   `[ d ]` - Page down
+-   `[ u ]` - Page up
+-   `[ n ]` - Next
+-   `[ P ]` - Previous
+-   `[ space ]` - Next
+-   `[ backspace ]` - Previous
+-   `[ h ]` - Jump to parent directory
+-   `[ h ]` - Previous column
+-   `[ l ]` - Enter directory
+-   `[ l ]` - Play item
+-   `[ l ]` - Next column
+-   `[ l ]` - Run action
+-   `[ J ]` - Select item
+-   `[ K ]` - Select item
+-   `[ t ]` - Move home
+-   `[ N ]` - Move sort order down
+-   `[ C ]` - Toggle playing song centering
+-   `[ * ]` - Toggle visualization type
 
 #### Tmux session exit issues
 
