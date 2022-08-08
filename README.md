@@ -944,8 +944,39 @@ e.g. `mpplus -u`.
 
 ### Usage
 
+The primary MusicPlayerPlus user interface is the `mpplus` command.
+The default action of the `mpplus` command is to open the `mpcplus`
+MPD client and the `mppcava` spectrum visualizer. The command
+`mpplus -i` displays a series of interactive menus from which most
+of the MusicPlayerPlus tasks can be launched.
+
+The `mpc` command provides a quick and easy command line interface
+to control the Music Player Daemon playback. The `mpc` command has
+many command line options, see `man mpc` for a full description.
+To get started with simple MPD playback control using `mpc`:
+
+**mpc toggle**
+: start playback if stopped or paused, and pause playback if playing
+
+**mpc stop**
+: stop playback
+
+**mpc next**
+: move to next song in playlist
+
+**mpc prev**
+: move to previous song in playlist
+
+**mpc volume +|- percent**
+: increase or decrease volume by 'percent'
+
+The `beet play [QUERY]` command can be used to specify a song or songs
+to play where 'QUERY' is a Beets query matching songs in the music library.
+
 The usage messages for `mppinit`, `mpplus`, `mpcplus`, and `mppcava`
-provide a brief summary of the command line options:
+provide a brief summary of the command line options.
+
+The `mppinit` performs one-time initializations:
 
 ```
 Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync|yams]
@@ -971,6 +1002,9 @@ Where:
 'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import
 Only one of bandcamp, soundcloud, import, metadata, or sync can be specified
 ```
+
+The `mpplus` command serves as a general user interface for all of the
+MusicPlayerPlus capabilities:
 
 ```
 Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]
@@ -1039,6 +1073,9 @@ General options:
 	-u displays this usage message and exits
 ```
 
+The `mpcplus` command is an MPD client and acts as the primary
+MusicPlayerPlus music player:
+
 ```
 Usage: mpcplus [options]...
 Options:
@@ -1067,6 +1104,9 @@ and much more via the keyboard. View the
 [**mpcpluskeys man page**](markdown/mpcpluskeys.1.md) with the command
 `man mpcpluskeys`.
 
+The `mppsplash` command can be used to display a variety of character
+based animations optionally accompanied by audio:
+
 ```
 Usage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] [-m] [-p] [-s song] [-u]
 Where:
@@ -1086,6 +1126,9 @@ Where:
 		$HOME/Music/
 	-u displays this usage message and exits
 ```
+
+The `mppcava` command is the MusicPlayerPlus custom character based
+audio spectrum visualizer:
 
 ```
 Usage : mppcava [options]
