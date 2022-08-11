@@ -36,7 +36,6 @@ plugins:
 #   - discogs
     - duplicates
     - edit
-#   - extrafiles
     - fetchart
     - fromfilename
     - hook
@@ -99,24 +98,6 @@ duplicates:
 #   keys: [mb_trackid, mb_albumid]
 #   tiebreak:
 #       items: [bitrate]
-
-#extrafiles:
-#   patterns:
-#       mpd: '.mpd*'
-#       log: '*.log'
-#       cue: '*.cue'
-#       jpg: '*.jpg'
-#       pdf: '*.pdf'
-#       png: '*.png'
-#       m3u: '*.m3u'
-#   paths:
-#       mpd: '$albumpath/$filename'
-#       log: '$albumpath/$filename'
-#       cue: '$albumpath/$filename'
-#       jpg: '$albumpath/$filename'
-#       pdf: '$albumpath/$filename'
-#       png: '$albumpath/$filename'
-#       m3u: '$albumpath/$filename'
 
 fetchart:
   # Enable automatic album art fetching during import.

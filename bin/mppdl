@@ -1,0 +1,245 @@
+#!/bin/bash
+#
+# mppdl - download audio of specified URL
+#
+# Written 10-Aug-2022 by Ronald Record <ronaldrecord@gmail.com>
+
+MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+FMT="m4a"
+LISTCOMM="yt-dlp -Uv -F -f 'ba' -x --list-formats"
+URL=
+LIST=
+ALBUM=
+ARTIST=
+IMPORT=
+TITLE=
+TRACK=
+
+usage() {
+  printf "\nUsage: mppdl [-a album] [-A artist] [-i] [-f fmt] [-l]"
+  printf "\n             [-t track] [-T title] bandcamp|soundcloud|URL"
+  printf "\nWhere:"
+  printf "\n\t-a 'album' saves the download in the subdirectory 'album'"
+  printf "\n\t-A 'artist' saves the download with filename"
+  printf "\n\t\t'artist'-'title'.${FMT}"
+  printf "\n\t-i indicates import audio into Beets after download completes"
+  printf "\n\t-f 'fmt' saves the download in 'fmt' format (default m4a)"
+  printf "\n\t-t 'track' saves the download with filename"
+  printf "\n\t\t'track'-'artist'-'title'.${FMT}"
+  printf "\n\t-T 'title' saves the download with filename"
+  printf "\n\t\t'artist'-'title'.${FMT}"
+  printf "\n\t-l indicates list available formats and info on URL"
+  printf "\n\t-u displays this usage message and exits\n"
+  printf "\nThe required argument 'bandcamp', 'soundcloud', or 'URL' indicates:"
+  printf "\n\tDownload Bandcamp collections"
+  printf "\n\tDownload Soundcloud favorites"
+  printf "\n\tDownload audio in URL\n\n"
+  exit 1
+}
+
+while getopts "a:A:f:t:T:ilu" flag; do
+    case $flag in
+        a)
+            ALBUM="$OPTARG"
+            ;;
+        A)
+            ARTIST="$OPTARG"
+            ;;
+        f)
+            FMT="$OPTARG"
+            ;;
+        i)
+            have_beet=`type -p beet`
+            if [ "${have_beet}" ]
+            then
+              IMPORT=1
+            else
+              echo "The beet command could not be found. Skipping Beets import."
+            fi
+            ;;
+        l)
+            LIST=1
+            ;;
+        t)
+            TRACK="$OPTARG"
+            ;;
+        T)
+            TITLE="$OPTARG"
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "$1" ] || {
+  echo "An argument of 'bandcamp', 'soundcloud' or a URL is required."
+  echo "Exiting."
+  usage
+}
+
+mpd_music=`grep ^music_directory ${MPD_CONF}`
+mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+[ "${mpd_music}" ] || mpd_music="${HOME}/Music"
+# Need to expand the tilda to $HOME
+mpd_music="${mpd_music/#\~/$HOME}"
+
+if [ "$1" == "bandcamp" ]
+then
+  mppinit bandcamp
+  [ "${IMPORT}" ] && {
+    [ -d "${mpd_music}/Bandcamp" ] && beet import -q "${mpd_music}/Bandcamp"
+    [ -d "${mpd_music}/Bandcamp" ] && beet import -q -s "${mpd_music}/Bandcamp"
+  }
+  exit 0
+else
+  if [ "$1" == "soundcloud" ]
+  then
+    mppinit soundcloud
+    [ "${IMPORT}" ] && {
+      [ -d "${mpd_music}/Soundcloud" ] && {
+        beet import -q "${mpd_music}/Soundcloud"
+      }
+      [ -d "${mpd_music}/Soundcloud" ] && {
+        beet import -q -s "${mpd_music}/Soundcloud"
+      }
+    }
+    exit 0
+  else
+    have_yt=`type -p yt-dlp`
+    [ "${have_yt}" ] || {
+      echo "The mppdl command requires yt-dlp for URL downloads"
+      echo "The yt-dlp command is not found in the execution PATH."
+      echo "Exiting."
+      exit 1
+    }
+  fi
+fi
+
+COMMAND="yt-dlp -x -f bestaudio[ext=${FMT}]/bestaudio --embed-metadata"
+URL="$1"
+DDIR="${mpd_music}/Downloads"
+
+[ -d "${DDIR}" ] || mkdir -p "${DDIR}"
+[ "${ALBUM}" ] && {
+  DDIR="${mpd_music}/Downloads/${ALBUM}"
+  [ -d "${DDIR}" ] || mkdir -p "${DDIR}"
+}
+
+if [ "${LIST}" ]
+then
+  ${LISTCOMM} ${URL}
+else
+  DEST=`${COMMAND} ${URL} \
+                   -o "${DDIR}/%(id)s.%(ext)s" 2>&1 | \
+                   grep Destination | tail -1`
+  if [ "${DEST}" ]
+  then
+    FN=`echo ${DEST} | awk -F '/' ' { print $NF } ' | sed -e "s/'//g"`
+    EXT=`echo ${FN} | awk -F '.' ' { print $NF } '`
+    if [ "${ARTIST}" ]
+    then
+      if [ "${TITLE}" ]
+      then
+        if [ "${TRACK}" ]
+        then
+          if [ -f "${DDIR}/${TRACK}-${ARTIST}-${TITLE}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${ARTIST}-${TITLE}-$$.${EXT}"
+            FN="${TRACK}-${ARTIST}-${TITLE}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${ARTIST}-${TITLE}.${EXT}"
+            FN="${TRACK}-${ARTIST}-${TITLE}.${EXT}"
+          fi
+        else
+          if [ -f "${DDIR}/${ARTIST}-${TITLE}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${ARTIST}-${TITLE}-$$.${EXT}"
+            FN="${ARTIST}-${TITLE}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${ARTIST}-${TITLE}.${EXT}"
+            FN="${ARTIST}-${TITLE}.${EXT}"
+          fi
+        fi
+      else
+        if [ "${TRACK}" ]
+        then
+          if [ -f "${DDIR}/${TRACK}-${ARTIST}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${ARTIST}-$$.${EXT}"
+            FN="${TRACK}-${ARTIST}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${ARTIST}.${EXT}"
+            FN="${TRACK}-${ARTIST}.${EXT}"
+          fi
+        else
+          if [ -f "${DDIR}/${TRACK}-${ARTIST}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${ARTIST}-$$.${EXT}"
+            FN="${ARTIST}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${ARTIST}.${EXT}"
+            FN="${ARTIST}.${EXT}"
+          fi
+        fi
+      fi
+    else
+      [ "${TITLE}" ] && {
+        if [ "${TRACK}" ]
+        then
+          if [ -f "${DDIR}/${TRACK}-${TITLE}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${TITLE}-$$.${EXT}"
+            FN="${TRACK}-${TITLE}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${TRACK}-${TITLE}.${EXT}"
+            FN="${TRACK}-${TITLE}.${EXT}"
+          fi
+        else
+          if [ -f "${DDIR}/${TITLE}.${EXT}" ]
+          then
+            mv "${DDIR}/${FN}" "${DDIR}/${TITLE}-$$.${EXT}"
+            FN="${TITLE}-$$.${EXT}"
+          else
+            mv "${DDIR}/${FN}" "${DDIR}/${TITLE}.${EXT}"
+            FN="${TITLE}.${EXT}"
+          fi
+        fi
+      }
+    fi
+    if [ "${EXT}" == "${FMT}" ]
+    then
+      echo "Download: ${DDIR}/${FN}"
+      [ "${IMPORT}" ] && {
+        if [ "${ALBUM}" ]
+        then
+          [ -d "${DDIR}" ] && beet import -q "${DDIR}"
+          [ -d "${DDIR}" ] && beet import -q -s "${DDIR}"
+        else
+          beet import -q -s "${DDIR}/${FN}"
+        fi
+      }
+    else
+      NAME=`echo ${FN} | awk 'BEGIN{FS=OFS="."}{NF--; print}'`
+      echo "Converting ${DDIR}/${FN} to ${NAME}.${FMT}"
+      ffmpeg -i "${DDIR}/${FN}" \
+             -vn "${DDIR}/${NAME}.${FMT}"
+      echo "Removing ${DDIR}/${FN}"
+      rm -f "${DDIR}/${FN}"
+      echo "Download: ${DDIR}/${NAME}.${FMT}"
+      [ "${IMPORT}" ] && {
+        if [ "${ALBUM}" ]
+        then
+          [ -d "${DDIR}" ] && beet import -q "${DDIR}"
+          [ -d "${DDIR}" ] && beet import -q -s "${DDIR}"
+        else
+          beet import -q -s "${DDIR}/${NAME}.${FMT}"
+        fi
+      }
+    fi
+  else
+    echo "Could not determine destination filename in ${DDIR}/"
+  fi
+fi
+

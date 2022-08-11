@@ -1129,7 +1129,7 @@ then
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
              pylast beets-describe beets-yearfixer beetcamp beets-extrafiles \
-             beets-xtractor python-mpd2 requests sacad tmuxp ueberzug \
+             beets-xtractor python-mpd2 requests sacad tmuxp ueberzug yt-dlp \
              calliope-music python3-discogs-client bandcamp-downloader scdl
   do
     if pip list | grep ${pkg} > /dev/null

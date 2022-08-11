@@ -129,6 +129,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **mpcplus** : Featureful NCurses MPD client, compiled with spectrum visualizer
 * **mppinit** : One-time initializaton of a user's mpcplus configuration
 * **mppcover** : Display album cover art for currently playing song
+* **mppdl** : Downloads audio tracks from Bandcamp, Soundcloud, or a URL
 * **mpcplus-tmux** : Runs mpcplus, a visualizer, and displays album art in a tmux session
 * **mppsplash-tmux** : Runs mppsplash, a visualizer, in a tmux session
 * **mppsplash** : Fun ascii art screens using ASCIImatics animations. Ascii art commands:
@@ -929,6 +930,8 @@ e.g. `mpplus -u`.
 - [**mpprocks**](markdown/mpprocks.1.md) : asciimatics animation of MusicPlayerPlus intro
 - [**mppplasma**](markdown/mppplasma.1.md) : asciimatics animation with Plasma effect
 - [**mppinit**](markdown/mppinit.1.md) : MusicPlayerPlus initialization
+- [**mppcover**](markdown/mppcover.1.md) : Displays album cover art for currently playing song
+- [**mppdl**](markdown/mppdl.1.md) : Downloads audio tracks from Bandcamp, Soundcloud, or a URL
 - [**mpcplus-tmux**](markdown/mpcplus-tmux.1.md) : MusicPlayerPlus in a tmux session
 - [**mpcplus**](markdown/mpcplus.1.md) : MusicPlayerPlus MPD client
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
