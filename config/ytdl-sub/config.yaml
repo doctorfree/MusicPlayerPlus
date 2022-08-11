@@ -1,0 +1,185 @@
+#
+# Example ytdl-sub configuration file
+#
+# This YAML config file consists of two sections, configuration and presets
+#
+
+configuration:
+  working_directory: '.ytdl-sub-downloads'
+  dl_aliases:
+    mv: "--preset yt_music_video"
+    v: "--youtube.video_url"
+
+presets:
+  # Downloads all videos from a youtube channel
+  doctorfree_channel_preset:
+    youtube:
+      # required
+      download_strategy: "channel"
+      channel_url: "c/doctorfree"
+      # optional
+      # channel_avatar_path: "poster.jpg"
+      # channel_banner_path: "fanart.jpg"
+      # before: "now"
+      # after: "today-2weeks"
+    output_options:
+      output_directory: "~/Videos/doctorfree"
+      file_name: "doctorfree.{title}.{ext}"
+    # Default ytdl_options for channel
+    # ytdl_options:
+      # ignore errors like hidden videos, age restriction, etc
+      # ignoreerrors: True
+      # stop downloads (newest to oldest) if a video is already downloaded
+      # break_on_existing: True
+      # stops downloads if the video's upload date is out of the specified
+      # 'before'/'after' range
+      # break_on_reject: True
+
+  # Downloads all videos from a youtube playlist
+  musicplayerplus_playlist_preset:
+    youtube:
+      # required
+      download_strategy: "playlist"
+    output_options:
+      output_directory: "~/Videos/musicplayerplus"
+      file_name: "musicplayerplus.{title}.{ext}"
+    # Default ytdl_options for playlist
+    # ytdl_options:
+      # ignore errors like hidden videos, age restriction, etc
+      # ignoreerrors: True
+      # stop downloads (newest to oldest) if a video is already downloaded
+      # break_on_existing: True
+
+  # Downloads a single youtube video. This download strategy is intended
+  # for CLI usage performing a one-time download of a video, not a subscription
+  #
+  #   ytdl-sub dl --preset "musicplayerplus_intro_preset" \
+  #               --youtube.video_url "youtube.com/watch?v=r7XLA9tO45Q"
+  #
+  musicplayerplus_intro_preset:
+    youtube:
+      # required
+      download_strategy: "video"
+      video_url: "youtube.com/watch?v=r7XLA9tO45Q"
+      # optional
+      # chapter_timestamps: path/to/timestamps.txt
+    output_options:
+      output_directory: "~/Videos/Downloads"
+      file_name: "{title}.{ext}"
+
+  # Download strategies for downloading music from Soundcloud
+  # Downloads a soundcloud user’s entire discography. Groups together
+  # album tracks and considers any track not in an album as a single.
+  # Also includes any collaboration tracks.
+  zhu_soundcloud_preset:
+    soundcloud:
+      # required
+      download_strategy: "albums_and_singles"
+      url: "soundcloud.com/zhu"
+      # optional
+      skip_premiere_tracks: True
+    output_options:
+      output_directory: "~/Music/Soundcloud"
+      file_name: "zhu.{title}.{ext}"
+    music_tags:
+      tags:
+        artist: "{artist}"
+        album: "{album}"
+        genre: "ytdl downloaded music"
+    # Default ytdl_options for albums_and_singles
+    # ytdl_options:
+      # ignore errors like hidden videos, age restriction, etc
+      # ignoreerrors: True
+      # download format the best possible mp3
+      # format: "bestaudio[ext=mp3]"
+
+  # This example shows how to download and format a Soundcloud artist's
+  # discography with tags and album ar. We will configure this to make
+  # the output directory formatted as:
+  #
+  #   /path/to/music
+  #       /The Be Sharps
+  #           /[2020] My first upload
+  #               01 - My first upload.mp3
+  #               folder.jpg
+  #           /[2021] My first album
+  #               01 - Track one.mp3
+  #               02 - Track two.mp3
+  #               folder.jpg
+  #       /Another artist
+  #           ...
+  #
+  sc_discography:
+    # A Soundcloud artist's albums and singles will be our source/download
+    # strategy. This will group together album tracks, and treat any track
+    # not part of an album as a single.
+    soundcloud:
+      download_strategy: "albums_and_singles"
+      skip_premiere_tracks: True
+
+    # For advanced YTDL users only; any YTDL parameter can be set here.
+    # You can set the type of format you prefer YTDL to download here.
+    # By default, soundcloud will download the best mp3.
+    # ytdl_options:
+    #   format: 'bestaudio[ext=mp3]'
+
+    # For each song downloaded, set the file and thumbnail name here.
+    # The output directory stores all artists in a shared {music_directory}.
+    # We store the audio file in its respective {album_directory_name} folder
+    # with the track number and title. The (thumbnail) album art is stored
+    # in the album folder.
+    #
+    # Another field worth mentioning is maintain_download_archive=True. This
+    # is generally a good thing to enable with artists because it will
+    # store previously downloaded song IDs to tell YTDL not to re-download
+    # them on a successive invocation.
+    output_options:
+      output_directory: "{music_directory}"
+      file_name: "{artist_sanitized}/{album_directory_name}/{track_number_padded} - {title_sanitized}.{ext}"
+      thumbnail_name: "{artist_sanitized}/{album_directory_name}/folder.jpg"
+      maintain_download_archive: True
+
+    # For each song downloaded, populate the audio file with music tags.
+    # Tagging should work with most audio file formats. See
+    # https://ytdl-sub.readthedocs.io/en/latest/config.html#music-tags
+    # for more details.
+    music_tags:
+      tags:
+        artist: "{artist}"
+        albumartist: "{artist}"
+        title: "{title}"
+        album: "{album}"
+        track: "{track_number}"
+        year: "{album_year}"
+        genre: "Unset"
+
+    # Overrides is a section where we define our own variables, and use them in
+    # any other section. We define music directory and album directory here,
+    # which gets reused above for the audio file name and album art path.
+    overrides:
+      album_directory_name: "[{album_year}] {album_sanitized}"
+      music_directory: "~/Music"
+
+  # Defines where to output files and thumbnails
+  # after all post-processing has completed
+  output_example_preset:
+    output_options:
+      # required
+      output_directory: "~/Music/Downloads"
+      file_name: "{title_sanitized}.{ext}"
+      # optional
+      thumbnail_name: "{title_sanitized}.{thumbnail_ext}"
+      maintain_download_archive: True
+      keep_files_before: now
+      keep_files_after: 19000101
+
+  # Adds tags to every download audio file using MediaFile, the same audio file
+  # tagging package used by beets. It supports basic tags like title, album,
+  # artist and albumartist. You can find a full list of tags for various file
+  # types in MediaFile’s source code.
+  tags_example_preset:
+    music_tags:
+      tags:
+        artist: "{artist}"
+        album: "{album}"
+        genre: "ytdl downloaded music"

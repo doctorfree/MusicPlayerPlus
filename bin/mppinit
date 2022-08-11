@@ -778,6 +778,30 @@ else
   cp -a ${MPPCDIR}/tmuxp ${CONF}/tmuxp
 fi
 
+# In development
+# if [ -d ${CONF}/ytdl-sub ]
+# then
+#   for ytdl in ${MPPCDIR}/ytdl-sub/*
+#   do
+#     ytdlbase=`basename "${ytdl}"`
+#     if [ -d "${ytdl}" ]
+#     then
+#       [ -d "${CONF}/ytdl-sub/${ytdlbase}" ] || {
+#         cp -a "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
+#       }
+#     else
+#       if [ -f "${CONF}/ytdl-sub/${ytdlbase}" ]
+#       then
+#         [ "${overwrite}" ] && cp "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
+#       else
+#         cp "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
+#       fi
+#     fi
+#   done
+# else
+#   cp -a ${MPPCDIR}/ytdl-sub ${CONF}/ytdl-sub
+# fi
+
 # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
 [ "${quiet}" ] || {
   printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
@@ -1043,10 +1067,9 @@ done
   fi
 }
 
+have_git=`type -p git`
 TPM="${HOME}/.tmux/plugins/tpm"
-
 [ -d ${TPM} ] || {
-  have_git=`type -p git`
   [ "${have_git}" ] && {
     git clone https://github.com/tmux-plugins/tpm ${TPM} > /dev/null 2>&1
   }
@@ -1191,6 +1214,24 @@ YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
     fi
   }
 }
+
+# In development
+# have_ytdl=`type -p ytdl-sub`
+# [ "${have_ytdl}" ] || {
+#   YTDL="${CONF}/ytdl-sub"
+#   YSRC="${YTDL}/src"
+#   [ -d ${YTDL} ] || mkdir -p ${YTDL}
+#   [ -d ${YSRC} ] || {
+#     [ "${have_git}" ] && {
+#       git clone \
+#         https://github.com/jmbannon/ytdl-sub.git ${YSRC} > /dev/null 2>&1
+#       cd ${YSRC}
+#       ${PYTHON} -m pip install .
+#       cd ..
+#       rm -rf src
+#     }
+#   }
+# }
 
 [ "${quiet}" ] || {
   printf "\n\tPatching Beets plugins ..."

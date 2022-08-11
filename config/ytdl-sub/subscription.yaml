@@ -1,0 +1,11 @@
+# The subscription.yaml file is where we use our presets in the config.yaml
+# to define a subscription: something we want to recurrently download
+# such as a specific channel or playlist.
+
+# Example subscription to the MusicPlayerPlus YouTube video playlist
+musicplayerplus_subscription:
+  preset: "musicplayerplus_playlist_preset"
+  youtube:
+    playlist_url: "https://www.youtube.com/playlist?list=PLh3A0cnoWYsyt8PXbpeKCYmUBa5u7B59c"
+  overrides:
+    playlist_name: "musicplayerplus-playlist"
