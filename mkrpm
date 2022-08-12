@@ -199,11 +199,12 @@ ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 
 ${SUDO} cp -a config/beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets"
 ${SUDO} cp -a beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets/plugins"
-${SUDO} cp -a config/calliope/calliope.conf "${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope"
+${SUDO} cp -a config/calliope "${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope"
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
 ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf
 ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp
+${SUDO} cp -a config/yt-dlp "${OUT_DIR}/${DESTDIR}/share/${PKG}/yt-dlp"
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/${PKG}/music"
 
 ${SUDO} cp -a man/man1 ${OUT_DIR}/${DESTDIR}/share/man/man1

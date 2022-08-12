@@ -20,6 +20,8 @@ BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
 CALIPCONFDIR="${CONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
+YTDLPCONFDIR="${CONF}/yt-dlp"
+YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
@@ -173,6 +175,16 @@ sync_music_dir() {
       fi
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
+    }
+    ytd_music=`grep ^-o ${YTDLPCONF} | grep /Downloads/`
+    ytd_music=`echo ${ytd_music} | \
+        awk ' { print $2 } ' | \
+        sed -e "s%/Downloads/.*$%%"`
+    [ "${mpd_music}" == "${ytd_music}" ] || {
+      cat ${YTDLPCONF} | \
+        sed -e "s%^-o .*/Downloads/%-o ${mpd_music}/Downloads/%" > /tmp/ytd$$
+      cp /tmp/ytd$$ ${YTDLPCONF}
+      rm -f /tmp/ytd$$
     }
 
     # Disable and stop any system-wide MPD service
@@ -925,6 +937,24 @@ else
     cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
   else
     cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
+  fi
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling yt-dlp configuration in ${YTDLPCONFDIR} ..."
+}
+# If there is no user yt-dlp config folder then
+# copy the MusicPlayerPlus yt-dlp config folder
+# into the user's home
+if [ -f ${YTDLPCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/yt-dlp/config ${YTDLPCONFDIR}
+else
+  if [ -d ${YTDLPCONFDIR} ]
+  then
+    cp ${MPPCDIR}/yt-dlp/config ${YTDLPCONFDIR}
+  else
+    cp -a ${MPPCDIR}/yt-dlp ${YTDLPCONFDIR}
   fi
 fi
 
