@@ -943,6 +943,7 @@ e.g. `mpplus -u`.
 - [**blissify**](markdown/blissify.1.md) : create MPD playlists using song similarity database
 - [**scdl**](markdown/scdl.1.md) : Download Soundcloud favorites
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
+- [**yt-dlp**](markdown/yt-dlp.1.md) : Download YouTube and other sites videos and audio
 - [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries
 
 ### Usage
