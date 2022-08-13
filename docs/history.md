@@ -1,6 +1,6 @@
 (history)=
 
-# Changelog
+# History
 
 ```{include} ../CHANGELOG.md
 ```
