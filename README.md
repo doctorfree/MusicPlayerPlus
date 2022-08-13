@@ -906,6 +906,8 @@ emulator and modify the desired profile in the Preferences dialog.
 
 ## Documentation
 
+**[NEW:]** MusicPlayerPlus documentation is now available on [Read the Docs](https://musicplayerplus.readthedocs.io/en/latest/index.html)
+
 All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
 to view the manual page for a command. The `mpplus` frontend is the primary
 user interface for MusicPlayerPlus and the manual page for `mpplus` can be
