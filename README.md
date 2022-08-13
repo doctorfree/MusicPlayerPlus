@@ -140,6 +140,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **set_term_trans** : Sets an xfce4-terminal window's transparency level
 * **fzmp** : Browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
 * **create_playlist** : Create a new playlist using a Beets query
+* **listyt** : List YouTube video titles and urls
 * **bliss-analyze** : Acoustic analysis of audio files
 * **blissify** : Create MPD playlists using song similarity
 * **essentia_streaming_extractor_music** : Analyze and extract acoustic characteristics
@@ -945,6 +946,7 @@ e.g. `mpplus -u`.
 - [**blissify**](markdown/blissify.1.md) : create MPD playlists using song similarity database
 - [**scdl**](markdown/scdl.1.md) : Download Soundcloud favorites
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
+- [**listyt**](markdown/listyt.1.md) : List YouTube video titles and urls
 - [**yt-dlp**](markdown/yt-dlp.1.md) : Download YouTube and other sites videos and audio
 - [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries
 

@@ -16,13 +16,13 @@
 .\}
 .TH "BLISSIFY" "1" "August 6, 2022" "blissify 0.2.7" "User Manual"
 .hy
-.SH NAME
+.SS NAME
 .PP
 blissify = Analyze and make smart playlists from an MPD music database.
-.SH SYNOPSIS
+.SS SYNOPSIS
 .PP
 \f[B]blissify\f[R] [SUBCOMMAND] [FLAGS]
-.SH DESCRIPTION
+.SS DESCRIPTION
 .PP
 The \f[I]blissify\f[R] command can be used to create an MPD playlist of
 songs based on computed similarity metrics.
@@ -42,14 +42,14 @@ run \f[V]blissify playlist 30\f[R], and voil\[`a]!
 You have a playlist of 30 songs that sound like your first track.
 .PP
 Note: you \f[I]need\f[R] to have MPD installed to use blissify.
-.SH GLOBAL FLAGS
+.SS GLOBAL FLAGS
 .TP
 \f[B]-h, --help\f[R]
 Prints help information
 .TP
 \f[B]-V, --version\f[R]
 Prints version information
-.SH SUBCOMMANDS
+.SS SUBCOMMANDS
 .TP
 \f[B]help\f[R]
 Prints this message or the help of the given subcommand(s)
@@ -74,10 +74,10 @@ Scan new songs that were added to the MPD library since last scan.
 \f[B]blissify-playlist\f[R]
 Erase the current playlist and make playlist of PLAYLIST_LENGTH from the
 currently played song
-.SH PLAYLIST USAGE
+.SS PLAYLIST USAGE
 .PP
 blissify playlist [PLAYLIST FLAGS] [PLAYLIST OPTIONS] <PLAYLIST_LENGTH>
-.SH PLAYLIST FLAGS
+.SS PLAYLIST FLAGS
 .TP
 \f[B]--album-playlist\f[R]
 Make a playlist of similar albums from the current album.
@@ -97,23 +97,23 @@ Can take some time to build.
 .TP
 \f[B]-V, --version\f[R]
 Prints version information
-.SH PLAYLIST OPTIONS
+.SS PLAYLIST OPTIONS
 .TP
 \f[B]--distance \f[R]
 Choose the distance metric used to make the playlist.
 Default is \[aq]euclidean\[aq],other option is \[aq]cosine\[aq]
 [default: euclidean]
-.SH PLAYLIST ARGS
+.SS PLAYLIST ARGS
 .TP
 \f[B]<PLAYLIST_LENGTH>\f[R]
 Number of items to queue, including the first song.
-.SH INTERACTIVE USAGE
+.SS INTERACTIVE USAGE
 .PP
 Make a playlist, prompting a set of close songs, and asking which one
 will be the most appropriate.
 .PP
 blissify interactive-playlist [INTERACTIVE FLAGS] [INTERACTIVE OPTIONS]
-.SH INTERACTIVE FLAGS:
+.SS INTERACTIVE FLAGS:
 .TP
 \f[B]--continue\f[R]
 Take the current playlist\[aq]s last song as a starting point, instead
@@ -124,18 +124,18 @@ Prints help information
 .TP
 \f[B]-V, --version\f[R]
 Prints version information
-.SH INTERACTIVE OPTIONS
+.SS INTERACTIVE OPTIONS
 .TP
 \f[B]--number-choices \f[R]
 Choose the number of proposed items you get each time.
 Defaults to 3, cannot be more than 9.
 [default: 3]
-.SH LIST USAGE
+.SS LIST USAGE
 .PP
 Print songs that have been analyzed and are in blissify\[aq]s database.
 .PP
 blissify list-db [LIST FLAGS]
-.SH LIST FLAGS
+.SS LIST FLAGS
 .TP
 \f[B]--detailed\f[R]
 Display analyzed song paths, as well as the corresponding analysis.
@@ -145,7 +145,7 @@ Prints help information
 .TP
 \f[B]-V, --version\f[R]
 Prints version information
-.SH EXAMPLES
+.SS EXAMPLES
 .PP
 All the commands below read the \f[V]MPD_HOST\f[R] and
 \f[V]MPD_PORT\f[R] environment variables and try to reach MPD using
@@ -225,24 +225,24 @@ use \f[V]--continue\f[R]:
 .PP
 \f[B]blissify playlist --interactive-playlist --number-choices 5
 --continue\f[R]
-.SH AUTHORS
+.SS AUTHORS
 .PP
 Blissify written by \[at]Polochon_street
 .PP
 MusicPlayerPlus integration of Blissify written by Ronald Record
 <github@ronrecord.com>
-.SH LICENSING
+.SS LICENSING
 .PP
 BLISSIFY is distributed under an Open Source license.
 See the file LICENSE in the BLISSIFY source distribution for information
 on terms & conditions for accessing and otherwise using BLISSIFY and for
 a DISCLAIMER OF ALL WARRANTIES.
-.SH BUGS
+.SS BUGS
 .PP
 Submit bug reports online at:
 .PP
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
-.SH SEE ALSO
+.SS SEE ALSO
 .PP
 \f[B]beet\f[R](1), \f[B]mpplus\f[R](1)
 .PP

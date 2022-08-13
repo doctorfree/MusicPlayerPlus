@@ -16,10 +16,10 @@
 .\}
 .TH "CREATE_PLAYLIST" "1" "July 24, 2022" "create_playlist 1.0.0" "User Manual"
 .hy
-.SH NAME
+.SS NAME
 .PP
 create_playlist - create a playlist of songs matching a Beets query
-.SH SYNOPSIS
+.SS SYNOPSIS
 .PP
 \f[B]create_playlist\f[R] [-n playlist-name] [-q beets-query] [-ou]
 .PP
@@ -32,7 +32,7 @@ Where:
 \f[I]-o\f[R] indicates overwrite any pre-existing playlist of same name
 .IP \[bu] 2
 \f[I]-u\f[R] displays this usage message and exits
-.SH DESCRIPTION
+.SS DESCRIPTION
 .PP
 The \f[I]create_playlist\f[R] command can be used to create an MPD
 playlist of songs matching a Beets query.
@@ -49,21 +49,21 @@ create_playlist -n LoveList -q love
 A new playlist named \[dq]LoveList\[dq] will be created containing all
 the songs in the music library that match the string \[dq]love\[dq]
 (case insensitive).
-.SH AUTHORS
+.SS AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>
-.SH LICENSING
+.SS LICENSING
 .PP
 CREATE_PLAYLIST is distributed under an Open Source license.
 See the file LICENSE in the CREATE_PLAYLIST source distribution for
 information on terms & conditions for accessing and otherwise using
 CREATE_PLAYLIST and for a DISCLAIMER OF ALL WARRANTIES.
-.SH BUGS
+.SS BUGS
 .PP
 Submit bug reports online at:
 .PP
 <https://github.com/doctorfree/MusicPlayerPlus/issues>
-.SH SEE ALSO
+.SS SEE ALSO
 .PP
 \f[B]beet\f[R](1), \f[B]mpplus\f[R](1)
 .PP

@@ -24,6 +24,7 @@ Beetsconfig <beetsconfig>
 Blissify <blissify>
 Create_playlist <create_playlist>
 Fzmp <fzmp>
+Listyt <listyt>
 Mpcplus-tmux <mpcplus-tmux>
 Mpcplus <mpcplus>
 Mpcpluskeys <mpcpluskeys>

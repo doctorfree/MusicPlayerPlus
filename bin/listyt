@@ -1,0 +1,90 @@
+#!/bin/bash
+#
+# listyt - list title(s) and url(s) of a YouTube URL
+#          if a playlist URL is provided then all videos in the playlist
+#          will be listed, title followed by url
+#          if an option followed by username is provided then that user's
+#          subscriptions, featured videos, uploads, or playlists are listed
+#
+# Written 13-Aug-2022 by Ronald Joe Record
+
+have_yt=`type -p yt-dlp`
+[ "${have_yt}" ] || {
+    echo "The 'yt-dlp' command is required but not found."
+    echo "Install yt-dlp with the command:"
+    echo "    python3 -m pip install yt-dlp"
+    echo "Exiting."
+    exit 1
+}
+
+list_urls() {
+    if [ "${debug}" ]
+    then
+        yt-dlp -j --flat-playlist "${youtube_url}" 2> /dev/null | jq .
+    else
+        yt-dlp -j --flat-playlist "${youtube_url}" 2> /dev/null | \
+            jq -r '.title, .url' | \
+            sed '1~2s/$/ :/' | \
+            sed '2~2s/^/    /'
+    fi
+}
+
+FYU="for YouTube user"
+usage() {
+    printf "\nUsage: listyt [-c|-f|-p|-v user] [url]"
+    printf "\nWhere:"
+    printf "\n\t-c 'user' list channel subscriptions ${FYU} 'user'"
+    printf "\n\t-f 'user' list featured video ${FYU} 'user'"
+    printf "\n\t-p 'user' list playlists ${FYU} 'user'"
+    printf "\n\t-v 'user' list video uploads ${FYU} 'user'"
+    printf "\n\t'url' list video title(s) and url(s) at YouTube URL"
+    printf "\n\t-u displays this usage message and exits\n"
+    printf "\nExamples:"
+    printf "\n  listyt -c doctorfree"
+    printf "\n  listyt -f doctorfree"
+    printf "\n  listyt -p doctorfree"
+    printf "\n  listyt -v doctorfree"
+    printf "\n  listyt https://youtube.com/playlist?list=PLh3A0cnoWYswaNiG_9WGX2q5L5GpxUZuF\n\n"
+    exit 1
+}
+
+channels=
+debug=
+featured=
+playlist=
+videos=
+while getopts "c:df:p:v:u" flag; do
+    case $flag in
+        c)
+            channels="$OPTARG"
+            youtube_url="https://www.youtube.com/c/${channels}/channels"
+            ;;
+        d)
+            debug=1
+            ;;
+        f)
+            featured="$OPTARG"
+            youtube_url="https://www.youtube.com/c/${featured}/featured"
+            ;;
+        p)
+            playlist="$OPTARG"
+            youtube_url="https://www.youtube.com/c/${playlist}/playlists"
+            ;;
+        v)
+            videos="$OPTARG"
+            youtube_url="https://www.youtube.com/c/${videos}/videos"
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "${channels}" ] || [ "${featured}" ] || \
+[ "${playlist}" ] || [ "${videos}" ] && list_urls
+
+[ "$1" ] && {
+    youtube_url="$1"
+    list_urls
+}

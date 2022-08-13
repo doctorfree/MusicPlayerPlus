@@ -35,9 +35,7 @@ music_directory variable. Defaults to *$HOME/Music*.
 
 ## AUTHORS
 
-Written by Mario Figueiredo <marfig@gmx.com>
-
-Adapted and integrated by Ronald Record github@ronrecord.com
+Written by Ronald Record github@ronrecord.com
 
 ## LICENSING
 
@@ -54,7 +52,7 @@ https://github.com/doctorfree/MusicPlayerPlus/issues
 
 ## SEE ALSO
 
-**beet**(1), **mpplus**(1)
+**listyt**(1), **mpplus**(1), **yt-dlp**(1)
 
 Full documentation and sources at:
 
