@@ -5,13 +5,13 @@ header: User Manual
 footer: mpplus 2.0.1
 date: December 05, 2021
 ---
-# NAME
+## NAME
 mpplus - Launch an MPD music player client and spectrum visualizer
 
-# SYNOPSIS
+## SYNOPSIS
 **mpplus** [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
-# DESCRIPTION
+## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
 
 The *mpplus* command can be used to control the *mpd* and *mpd.socket* system services when invoked with the `-M action` command line option. The Music Player Daemon (MPD) can be started, stopped, enabled, disabled, restarted, and status queried.
@@ -29,7 +29,7 @@ When invoked with the `-i` option, `mpplus` presents a selection menu and operat
 
 Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the `mpplus -k` command.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 
 *MPCplus/Visualizer options:*
 
@@ -154,7 +154,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-u**
 : displays this usage message and exits
 
-# EXAMPLES
+## EXAMPLES
 **mpplus**
 : Launches `mpcplus` music player client running in gnome terminal emulator with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
 
@@ -206,21 +206,21 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **mpplus -x all**
 : Retrieve audio information for the entire music library using AcousticBrainz
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 MPPLUS is distributed under an Open Source license.
 See the file LICENSE in the MPPLUS source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPLUS and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mppcava**(1), **mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:

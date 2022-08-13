@@ -5,14 +5,14 @@ header: User Manual
 footer: mpcpluskeys 0.10
 date: March 24, 2022
 ---
-# NAME
+## NAME
 **mpcpluskeys** - mpcplus key bindings and usage
 
-# DESCRIPTION
+## DESCRIPTION
 This man page describes the key bindings used to control
 the **mpcplus** music player client.
 
-# KEYS - CUSTOM
+## KEYS - CUSTOM
 
 MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 
@@ -48,7 +48,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ C ]` - Toggle playing song centering
 -   `[ * ]` - Toggle visualization type
 
-# KEYS - MOVEMENT
+## KEYS - MOVEMENT
 
 -   `[ Up k ]` - Move cursor up
 -   `[ Down j ]` - Move cursor down
@@ -74,7 +74,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ = ]` - Show clock
 -   `[ @ ]` - Show server info
 
-# KEYS - GLOBAL
+## KEYS - GLOBAL
 
 -   `[ s ]` - Stop
 -   `[ p ]` - Pause
@@ -127,7 +127,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ F ]` - Toggle fetching lyrics for playing songs in background
 -   `[ q ]` - Quit
 
-# KEYS - PLAYLIST
+## KEYS - PLAYLIST
 
 -   `[ Enter ]` - Play selected item
 -   `[ Delete ]` - Delete selected item(s) from playlist
@@ -145,7 +145,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ o ]` - Jump to current song
 -   `[ U ]` - Toggle playing song centering
 
-# KEYS - BROWSER
+## KEYS - BROWSER
 
 -   `[ Enter ]` - Enter directory/Add item to playlist and play it
 -   `[ Space ]` - Add item to playlist/select it
@@ -159,7 +159,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ Delete ]` - Delete selected items from disk
 -   `[ G ]` - Jump to playlist editor (playlists only)
 
-# KEYS - SEARCH ENGINE
+## KEYS - SEARCH ENGINE
 
 -   `[ Enter ]` - Add item to playlist and play it/change option
 -   `[ Space ]` - Add item to playlist
@@ -167,7 +167,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ y ]` - Start searching
 -   `[ 3 ]` - Reset search constraints and clear results
 
-# KEYS - MEDIA LIBRARY
+## KEYS - MEDIA LIBRARY
 
 -   `[ 4 ]` - Switch between two/three columns mode
 -   `[ Left h ]` - Previous column
@@ -179,7 +179,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   ``[ ` ]`` - Toggle type of tag used in left column
 -   `[ m ]` - Toggle sort mode
 
-# KEYS - PLAYLIST EDITOR
+## KEYS - PLAYLIST EDITOR
 
 -   `[ Left h ]` - Previous column
 -   `[ Right l ]` - Next column
@@ -205,13 +205,13 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ o ]` - Jump to current song
 -   `[ U ]` - Toggle playing song centering
 
-# KEYS - LYRICS
+## KEYS - LYRICS
 
 -   `[ Space ]` - Toggle reloading lyrics upon song change
 -   `[ e ]` - Open lyrics in external editor
 -   ``[ ` ]`` - Refetch lyrics
 
-# KEYS - TERMINAL WINDOWS
+## KEYS - TERMINAL WINDOWS
 
 -   `[ Alt-f ]` - Open the fuzzy finder to search/select media
 -   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
@@ -226,7 +226,7 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ Alt-9 ]` - Set xfce4-terminal window transparency to 10%
 -   `[ Alt-0 ]` - Set xfce4-terminal window 100% opaque
 
-# KEYS - TMUX SESSIONS
+## KEYS - TMUX SESSIONS
 
 -   `[ Alt-PgDn ]`     - Next window
 -   `[ Shift-Right ]`  - Next window
@@ -242,12 +242,12 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 When `mpcplus` is executed in a `tmux` session `Shift-Right Arrow` will switch
 to a tmux window running the fuzzy media finder `fzmp`.
 
-# KEYS - TINY TAG EDITOR
+## KEYS - TINY TAG EDITOR
 
 -   `[ Enter ]` - Edit tag
 -   `[ y ]` - Save
 
-# KEYS - TAG EDITOR
+## KEYS - TAG EDITOR
 
 -   `[ Enter ]` - Edit tag/filename of selected item (left column)
 -   `[ Enter ]` - Perform operation on all/selected items (middle
@@ -259,18 +259,18 @@ to a tmux window running the fuzzy media finder `fzmp`.
 -   `[ Ctrl-H Backspace ]` - Jump to parent directory (left column,
     directories view)
 
-# LICENSING
+## LICENSING
 MPCPLUSKEYS is distributed under an Open Source license.
 See the file COPYING in the MPCPLUSKEYS source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPCPLUSKEYS and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpcplus**(1), **mpplus**(1), **mpd**(1)
 
 Full documentation and sources at:

@@ -5,7 +5,7 @@ header: User Manual
 footer: beets 1.6.0
 date: July 12, 2022
 ---
-# NAME
+## NAME
 beet - command-line interface to beets
 
 ## SYNOPSIS
@@ -473,14 +473,14 @@ errors:
     _filedir() { :; }
     eval "$(beet completion)"
 
-# Queries
+## Queries
 
 Many of beets\' `commands <cli>` are built
 around **query strings:** searches that select tracks and albums from
 your library. This page explains the query string syntax, which is meant
 to vaguely resemble the syntax used by Web search engines.
 
-## Keyword
+### Keyword
 
 This command:
 
@@ -499,7 +499,7 @@ For example, this is what I might see when I run the command above:
     Bat for Lashes - Two Suns - Good Love
     ...
 
-## Combining Keywords
+### Combining Keywords
 
 Multiple keywords are implicitly joined with a Boolean \"and.\" That is,
 if a query has two keywords, it only matches tracks that contain *both*
@@ -522,7 +522,7 @@ well as \"Yesterday\" by The Beatles. Note that the comma has to be
 followed by a space (e.g., `foo,bar` will be treated as a single
 keyword, *not* as an OR-query).
 
-## Specific Fields
+### Specific Fields
 
 Sometimes, a broad keyword match isn\'t enough. Beets supports a syntax
 that lets you query a specific field\-\--only the artist, only the track
@@ -547,7 +547,7 @@ Recall that `-a` makes the `list` command show albums instead of
 individual tracks, so this command shows me all the releases I have from
 this year.
 
-## Phrases
+### Phrases
 
 You can query for strings with spaces in them by quoting or escaping
 them using your shell\'s argument syntax. For example, this command:
@@ -564,7 +564,7 @@ backslashes are not part of beets\' syntax; I\'m just using the escaping
 functionality of my shell (bash or zsh, for instance) to pass
 `the rebel` as a single argument instead of two.
 
-## Exact Matches
+### Exact Matches
 
 While ordinary queries perform *substring* matches, beets can also match
 whole strings by adding either `=` (case-sensitive) or `~` (ignore case)
@@ -594,7 +594,7 @@ expression with a single `=` or `~`:
     $ beet list ~crash
     $ beet list ="American Football"
 
-## Regular Expressions
+### Regular Expressions
 
 In addition to simple substring and exact matches, beets also supports
 regular expression matching for more advanced queries. To run a regex
@@ -622,7 +622,7 @@ regular expressions, such as `()[]|`. To type those characters, you\'ll
 need to escape them (e.g., with backslashes or quotation marks,
 depending on your shell).
 
-## Numeric Range Queries
+### Numeric Range Queries
 
 For numeric fields, such as year, bitrate, and track, you can query
 using one-or two-sided intervals. That is, you can find music that falls
@@ -647,7 +647,7 @@ length:
 
     $ beet list length:..4:30
 
-## Date and Date Range Queries
+### Date and Date Range Queries
 
 Date-valued fields, such as *added* and *mtime*, have a special query
 syntax that lets you specify years, months, and days as well as ranges
@@ -730,7 +730,7 @@ starting four weeks ago:
 
     $ beet ls 'added:-6w..-4w'
 
-## Query Term Negation
+### Query Term Negation
 
 Query terms can also be negated, acting like a Boolean \"not,\" by
 prefixing them with `-` or `^`. This has the effect of returning all the
@@ -758,7 +758,7 @@ the query:
 
     $ beet list -a -- artist:dylan -year:1980..1990 "-album::the(y)?"
 
-## Path Queries
+### Path Queries
 
 Sometimes it\'s useful to find all the items in your library that are
 (recursively) inside a certain directory. Use the `path:` field to do
@@ -779,7 +779,7 @@ directory\-\--just the ones you\'ve already added to your beets library.
 Path queries are case sensitive if the queried path is on a
 case-sensitive filesystem.
 
-## Sort Order
+### Sort Order
 
 Queries can specify a sort order. Use the name of the
 [field]{.title-ref} you want to sort on, followed by a `+` or `-` sign

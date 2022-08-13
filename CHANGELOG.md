@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-# MusicPlayerPlus-2.0.1r1 (2022-08-08)
+## MusicPlayerPlus-2.0.1r1 (2022-08-08)
 
 * Added Beets media library management integration
 * Automated Beets xtractor plugin installation and configuration
@@ -40,7 +40,7 @@ All notable changes to this project will be documented in this file.
 * Add blissify MPD library analysis and smart playlist generator
 * Add bliss-analyze acoustic analysis tool
 
-# MusicPlayerPlus-1.0.3r1 (2022-07-09)
+## MusicPlayerPlus-1.0.3r1 (2022-07-09)
 
 * Add support for Raspberry Pi
 * Include `mppcava` fork of Cava spectrum visualizer in MusicPlayerPlus package
@@ -65,12 +65,12 @@ All notable changes to this project will be documented in this file.
 * Rename asciimpplus to mpprocks to avoid conflict with Asciiville package
 * Added asciinema dependency
 
-# MusicPlayerPlus-1.0.2r1 (2022-04-14)
+## MusicPlayerPlus-1.0.2r1 (2022-04-14)
 
 * Add `alsa_conf` command to configure ALSA sound system
 * Add management of MPD services through `mpplus` command
 
-# MusicPlayerPlus-1.0.1r3 (2022-04-12)
+## MusicPlayerPlus-1.0.1r3 (2022-04-12)
 
 * Disable tmux recording when tmux is disabled
 * Improve interactive menu entries
@@ -81,7 +81,7 @@ All notable changes to this project will be documented in this file.
 * Add option to download_cover_art to specify alternate music directory
 * Add -d option to mpplus to download album cover art
 
-# MusicPlayerPlus-1.0.1r2 (2022-04-04)
+## MusicPlayerPlus-1.0.1r2 (2022-04-04)
 
 * Use MPlayer to play media during ASCIImatics animations
 * Use a signal handler in ASCIImatics animations to fade audio and cleanup
@@ -90,7 +90,7 @@ All notable changes to this project will be documented in this file.
 * Re-enable visualizer in `mpcplus` MPD client build
 * Cleanup tmux sessions, add ability to kill tmux sessions in `mpplus`
 
-# MusicPlayerPlus-1.0.1r1 (2022-03-31)
+## MusicPlayerPlus-1.0.1r1 (2022-03-31)
 
 * Add capability to play audio while displaying ASCIImatics scenes
 * Add several ASCIImatics scenes including one during initialization
@@ -109,20 +109,20 @@ All notable changes to this project will be documented in this file.
 * Added display of client, visualizer, and album cover art in tmux
 * Additional terminal support
 
-# MusicPlayerPlus-1.0.0r1 (2022-03-26)
+## MusicPlayerPlus-1.0.0r1 (2022-03-26)
 
 * Added Debian and RPM packaging (pkg/debian/ and pkg/rpm/)
 * Added configure and compile of mpcplus to packaging scripts
 * Moved mpcplus client source into subdirectory of repository
 
-# MusicPlayerPlus-1.0.0r1 (2022-03-25)
+## MusicPlayerPlus-1.0.0r1 (2022-03-25)
 
 * Changed name to MusicPlayerPlus
 
-# mpcplus-0.10 (2022-03-25)
+## mpcplus-0.10 (2022-03-25)
 
 * Merged in packaging, utilities, doc, and config from MusicPlayerPlus
 
-# mpcplus-0.10 (2022-03-24)
+## mpcplus-0.10 (2022-03-24)
 
 * See mpcplus/CHANGELOG.md for history of changes to mpcplus MPD client

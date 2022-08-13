@@ -5,13 +5,13 @@ header: User Manual
 footer: blissify 0.2.7
 date: August 6, 2022
 ---
-# NAME
+## NAME
 blissify = Analyze and make smart playlists from an MPD music database.
 
-# SYNOPSIS
+## SYNOPSIS
 **blissify** [SUBCOMMAND] [FLAGS]
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *blissify* command can be used to create an MPD playlist of songs
 based on computed similarity metrics. Blissify is a program used to make
@@ -30,7 +30,7 @@ sound like your first track.
 
 Note: you *need* to have MPD installed to use blissify.
 
-# GLOBAL FLAGS
+## GLOBAL FLAGS
 
 **-h, --help**
 : Prints help information
@@ -38,7 +38,7 @@ Note: you *need* to have MPD installed to use blissify.
 **-V, --version**
 : Prints version information
 
-# SUBCOMMANDS
+## SUBCOMMANDS
 
 **help**
 : Prints this message or the help of the given subcommand(s)
@@ -61,11 +61,11 @@ Note: you *need* to have MPD installed to use blissify.
 **blissify-playlist**
 : Erase the current playlist and make playlist of PLAYLIST_LENGTH from the currently played song
 
-# PLAYLIST USAGE
+## PLAYLIST USAGE
 
 blissify playlist [PLAYLIST FLAGS] [PLAYLIST OPTIONS] <PLAYLIST_LENGTH>
 
-# PLAYLIST FLAGS
+## PLAYLIST FLAGS
 
 **--album-playlist**
 : Make a playlist of similar albums from the current album.
@@ -82,23 +82,23 @@ blissify playlist [PLAYLIST FLAGS] [PLAYLIST OPTIONS] <PLAYLIST_LENGTH>
 **-V, --version**
 : Prints version information
 
-# PLAYLIST OPTIONS
+## PLAYLIST OPTIONS
 
 **--distance <distance metric>**
 : Choose the distance metric used to make the playlist. Default is 'euclidean',other option is 'cosine' [default: euclidean]
 
-# PLAYLIST ARGS
+## PLAYLIST ARGS
 
 **<PLAYLIST_LENGTH>**
 : Number of items to queue, including the first song.
 
-# INTERACTIVE USAGE
+## INTERACTIVE USAGE
 
 Make a playlist, prompting a set of close songs, and asking which one will be the most appropriate.
 
 blissify interactive-playlist [INTERACTIVE FLAGS] [INTERACTIVE OPTIONS]
 
-# INTERACTIVE FLAGS:
+## INTERACTIVE FLAGS:
 
 **--continue**
 : Take the current playlist's last song as a starting point, instead of removing the current playlist and starting from the first song.
@@ -109,18 +109,18 @@ blissify interactive-playlist [INTERACTIVE FLAGS] [INTERACTIVE OPTIONS]
 **-V, --version**
 : Prints version information
 
-# INTERACTIVE OPTIONS
+## INTERACTIVE OPTIONS
 
 **--number-choices <choices>**
 : Choose the number of proposed items you get each time. Defaults to 3, cannot be more than 9. [default: 3]
 
-# LIST USAGE
+## LIST USAGE
 
 Print songs that have been analyzed and are in blissify's database.
 
 blissify list-db [LIST FLAGS]
 
-# LIST FLAGS
+## LIST FLAGS
 
 **--detailed**
 : Display analyzed song paths, as well as the corresponding analysis.
@@ -131,13 +131,13 @@ blissify list-db [LIST FLAGS]
 **-V, --version**
 : Prints version information
 
-# EXAMPLES
+## EXAMPLES
 
 All the commands below read the `MPD_HOST` and `MPD_PORT` environment
 variables and try to reach MPD using that. You might want to change
 it if MPD is listening to somewhere else than `127.0.0.1:6600` (the default).
 
-## Analyze a library
+### Analyze a library
 
 To analyze your MPD library, use:
 
@@ -158,7 +158,7 @@ the current files in, you can use:
 
 **blissify list-db**
 
-## Make a simple playlist
+### Make a simple playlist
 
 
 **blissify playlist 100**
@@ -166,7 +166,7 @@ the current files in, you can use:
 This will add 100 songs similar to the song that is currently
 playing on MPD, starting with the closest possible.
 
-## Changing the distance metric
+### Changing the distance metric
 
 To make a playlist with a distance metric different than the default one
 (euclidean distance), which will yield different playlists, run:
@@ -177,7 +177,7 @@ To make a playlist with a distance metric different than the default one
 experiment with this parameter if the generated playlists are not to your
 linking!
 
-## Make a "seeded" playlist
+### Make a "seeded" playlist
 
 Instead of making a playlist with songs that are only similar to the first song,
 from the most similar to the least similar (the default), you can make a
@@ -188,7 +188,7 @@ To try it out (it can take a bit more time to build the playlist):
 
 **blissify playlist --seed-song 30**
 
-## Make an album playlist
+### Make an album playlist
 
 You can also make a playlist of album that sound like the current album
 your listening to (more specifically, the album of the current song you're
@@ -198,7 +198,7 @@ To try it out:
 
 **blissify playlist --album-playlist 30**
 
-## Make an interactive playlist
+### Make an interactive playlist
 
 Interactive playlists start from a song, and let you choose which song should
 be played next among the 3 closest songs (the number of songs displayed is
@@ -212,24 +212,24 @@ use `--continue`:
 
 **blissify playlist --interactive-playlist --number-choices 5 --continue**
 
-# AUTHORS
+## AUTHORS
 
 Blissify written by @Polochon_street
 
 MusicPlayerPlus integration of Blissify written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 BLISSIFY is distributed under an Open Source license.
 See the file LICENSE in the BLISSIFY source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using BLISSIFY and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **beet**(1), **mpplus**(1)
 
 Full documentation and sources at:

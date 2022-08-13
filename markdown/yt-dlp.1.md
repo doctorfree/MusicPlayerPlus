@@ -5,20 +5,20 @@ header: User Manual
 footer: yt-dlp 2022.08.08
 date: August 6, 2022
 ---
-# NAME
+## NAME
 yt-dlp - download videos and audio from a variety of sources
 
-# SYNOPSIS
+## SYNOPSIS
 **yt-dlp** [OPTIONS] URL [URL...]
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *yt-dlp* command can be used to download video or audio from YouTube
 and many other Internet sites.
 
-# OPTIONS
+## OPTIONS
 
-## General Options
+### General Options
 
 **-h, --help**
 : Print this help text and exit
@@ -146,7 +146,7 @@ and many other Internet sites.
                                     times. This option can be used multiple
                                     times
 
-## Network Options
+### Network Options
 
 **--proxy URL**
 : Use the specified HTTP/HTTPS/SOCKS proxy. To
@@ -167,7 +167,7 @@ and many other Internet sites.
 **-6, --force-ipv6**
 : Make all connections via IPv6
 
-## Geo-restriction
+### Geo-restriction
 
 **--geo-verification-proxy URL**
 : Use this proxy to verify the IP address for
@@ -194,7 +194,7 @@ and many other Internet sites.
                                     explicitly provided IP block in CIDR
                                     notation
 
-## Video Selection
+### Video Selection
 
 **-I, --playlist-items ITEM_SPEC**
 : Comma separated playlist_index of the videos
@@ -300,7 +300,7 @@ and many other Internet sites.
 : Number of allowed failures until the rest of
                                     the playlist is skipped
 
-## Download Options
+### Download Options
 
 **-N, --concurrent-fragments N**
 : Number of fragments of a dash/hlsnative
@@ -431,7 +431,7 @@ and many other Internet sites.
                                     arguments to different downloaders (Alias:
                                     --external-downloader-args)
 
-## Filesystem Options
+### Filesystem Options
 
 **-a, --batch-file FILE**
 : File containing URLs to download ("-" for
@@ -604,7 +604,7 @@ and many other Internet sites.
 **--rm-cache-dir**
 : Delete all filesystem cache files
 
-## Thumbnail Options
+### Thumbnail Options
 
 **--write-thumbnail**
 : Write thumbnail image to disk
@@ -620,7 +620,7 @@ and many other Internet sites.
 : List available thumbnails of each video.
                                     Simulate unless --no-simulate is used
 
-## Internet Shortcut Options
+### Internet Shortcut Options
 
 **--write-link**
 : Write an internet shortcut file, depending
@@ -637,7 +637,7 @@ and many other Internet sites.
 **--write-desktop-link**
 : Write a .desktop Linux internet shortcut
 
-## Verbosity and Simulation Options
+### Verbosity and Simulation Options
 
 **-q, --quiet**
 : Activate quiet mode. If used with --verbose,
@@ -742,7 +742,7 @@ and many other Internet sites.
 **--print-traffic**
 : Display sent and read HTTP traffic
 
-## Workarounds
+### Workarounds
 
 **--encoding ENCODING**
 : Force the specified encoding (experimental)
@@ -788,7 +788,7 @@ and many other Internet sites.
 : Number of seconds to sleep before each
                                     subtitle download
 
-## Video Format Options
+### Video Format Options
 
 **-f, --format FORMAT**
 : Video format code, see "FORMAT SELECTION"
@@ -855,7 +855,7 @@ and many other Internet sites.
                                     Ignored if no merge is required. (currently
                                     supported: avi, flv, mkv, mov, mp4, webm)
 
-## Subtitle Options
+### Subtitle Options
 
 **--write-subs**
 : Write subtitle file
@@ -888,7 +888,7 @@ and many other Internet sites.
                                     all,-live_chat) Use --list-subs for a list
                                     of available language tags
 
-## Authentication Options
+### Authentication Options
 
 **-u, --username USERNAME**
 : Login with this account ID
@@ -937,7 +937,7 @@ and many other Internet sites.
 **--client-certificate-password PASSWORD**
 : Password for client certificate private key, if encrypted. If not provided, and the key is encrypted, yt-dlp will ask interactively
 
-## Post-Processing Options
+### Post-Processing Options
 
 **-x, --extract-audio**
 : Convert video files to audio-only files
@@ -1168,7 +1168,7 @@ and many other Internet sites.
                                     multiple times to add different
                                     postprocessors
 
-## SponsorBlock Options
+### SponsorBlock Options
 
     Make chapter entries for, or remove various segments (sponsor,
     introductions, etc.) from downloaded YouTube videos using the
@@ -1210,7 +1210,7 @@ and many other Internet sites.
 **--sponsorblock-api URL**
 : SponsorBlock API location, defaults to https://sponsor.ajay.app
 
-## Extractor Options
+### Extractor Options
 
 **--extractor-retries RETRIES**
 : Number of retries for known extractor errors (default is 3), or "infinite"
@@ -1230,26 +1230,26 @@ and many other Internet sites.
 **--extractor-args KEY:ARGS**
 : Pass these arguments to the extractor. See "EXTRACTOR ARGUMENTS" for details. You can use this option multiple times to give arguments for different extractors
 
-# AUTHORS
+## AUTHORS
 
 Written by Mario Figueiredo <marfig@gmx.com>
 
 Adapted and integrated by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 
 YT-DLP is distributed under an Open Source license.
 See the file LICENSE in the YT-DLP source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using YT-DLP and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 
 **beet**(1), **mpplus**(1)
 

@@ -5,13 +5,13 @@ header: User Manual
 footer: mpcplus 0.10
 date: March 24, 2022
 ---
-# NAME
+## NAME
 **mpcplus** - An ncurses Music Player Daemon (MPD) client
 
-# SYNOPSIS
+## SYNOPSIS
 **mpcplus** [options]
 
-# DESCRIPTION
+## DESCRIPTION
 *mpcplus* is an NCurses client for MPD (Music Player Daemon), inspired by
 ncmpc and configured to integrate with `mppcava`, a customized fork of the
 Cava spectrum visualizer.
@@ -21,7 +21,7 @@ Read more about MPD at http://www.musicpd.org
 Read more about `mppcava` at
 https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 Mandatory arguments to long options are mandatory for short options as well.
 
 * **-h**, **--host**=_HOST_  
@@ -48,7 +48,7 @@ Mandatory arguments to long options are mandatory for short options as well.
   Display version information.
   
 
-# CONFIGURATION
+## CONFIGURATION
 
 When mpcplus starts, it tries to read settings from
 $XDG_CONFIG_HOME/mpcplus/config and $HOME/.mpcplus/config files. If no
@@ -333,7 +333,7 @@ Supported configuration options:
 * **active_window_border = COLOR**  
   Color of active window's border.
 
-# BINDINGS
+## BINDINGS
 
 When mpcplus starts, it tries to read bindings from
 $XDG_CONFIG_HOME/mpcplus/bindings and ~/.mpcplus/bindings files. If no bindings
@@ -358,7 +358,7 @@ to a tmux window running the fuzzy media finder `fzmp`.
 
 You can view current keybindings by pressing F1.
 
-# SONG FORMAT
+## SONG FORMAT
 
 For song format you can use:
 
@@ -404,26 +404,26 @@ Available values for colors:
 **Note**: colors can be nested, so if you write $2some$5text$9,
 it'll disable only usage of blue color and make red the current one.
 
-# LICENSING
+## LICENSING
 MPCPLUS is distributed under an Open Source license.
 See the file COPYING in the MPCPLUS source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPCPLUS and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# NOTE
+## NOTE
 
 Since MPD uses UTF-8, mpcplus needs to convert characters to the charset used by the local system. If you get character conversion errors while you are running mpcplus, you probably need to set up your locale. This is done by setting LANG and LC_ALL/LC_CTYPE environment variables (LC_CTYPE only affects character handling).
 
-# HOMEPAGE
+## HOMEPAGE
 
 -&gt; https://github.com/doctorfree/MusicPlayerPlus
 
-# SEE ALSO
+## SEE ALSO
 **mpcpluskeys**(1), **mpc**(1), **mpd**(1), **mpplus**(1)
 
 Full documentation and sources at:

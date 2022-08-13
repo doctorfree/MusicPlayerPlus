@@ -5,19 +5,19 @@ header: User Manual
 footer: mppplasma 1.0.0
 date: March 27, 2022
 ---
-# NAME
+## NAME
 mppplasma - Display an ASCIImatics animation featuring the Plasma effect
 
-# SYNOPSIS
+## SYNOPSIS
 **mppplasma** [-h] [-d] [-a AUDIO] [-c CYCLE] [-f FONT] [-t]
 
-# DESCRIPTION
+## DESCRIPTION
 The *mppplasma* command plays one of the ASCIImatics animations included in
 MusicPlayerPlus. Command line options can be used to tell *mppplasma* to play
 animations for a specified number of cycles, which FigletText font to use,
 which audio file to use as accompaniment, and which comments to use.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 **-h, --help**
 : show this help message and exit
 
@@ -36,7 +36,7 @@ which audio file to use as accompaniment, and which comments to use.
 **-t, --text**
 : Use alternate set of comments
 
-# EXAMPLES
+## EXAMPLES
 **mppplasma**
 : Without options mppplasma will display an ASCIImatics animation featuring the Plasma effect. These will continue until the 'q' key is pressed.
 
@@ -46,21 +46,21 @@ which audio file to use as accompaniment, and which comments to use.
 **mppplasma -a /usr/share/musicplayerplus/music/Epic_Dramatic-Yuriy_Bespalov.wav -c 5**
 : Plays the Plasma ASCIImatics animation 5 times accompanied by audio then exits 
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 MPPPLASMA is distributed under an Open Source license.
 See the file LICENSE in the MPPPLASMA source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPPLASMA and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:

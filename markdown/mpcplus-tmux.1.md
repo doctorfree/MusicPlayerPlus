@@ -5,15 +5,15 @@ header: User Manual
 footer: mpcplus-tmux 1.0.0
 date: March 26, 2022
 ---
-# NAME
+## NAME
 mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a tmux session
 
-# SYNOPSIS
+## SYNOPSIS
 **mpcplus-tmux** [-a] [-f] [-g] [-p script] [-r] [-u]
 
 **NOTE:** `mpcplus-tmux` can be run by invoking `mpplus [-a] [-g] [-p script] [-R]`
 
-# DESCRIPTION
+## DESCRIPTION
 The *mpcplus-tmux* command opens several panes in a terminal window,
 executing the mpcplus MPD client in one pane, a visualizer in another pane,
 and displaying album cover art in another pane. The album cover art
@@ -21,7 +21,7 @@ automatically updates when another album is selected in the MPD client pane.
 The visualizer pane displays, by default, the `mppcava` spectrum visualizer.
 Alternately, the visualizer pane can display a Python ASCIImatics visualization.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 
 Defaults: cover art disabled, ascii art disabled, recording disabled
 
@@ -46,7 +46,7 @@ Defaults: cover art disabled, ascii art disabled, recording disabled
 **Defaults:**
 : cover art disabled, python art disabled, recording disabled
 
-# EXAMPLES
+## EXAMPLES
 **mpcplus-tmux**
 : Without options, *mpcplus-tmux* displays the mpcplus MPD client and mppcava spectrum visualizer in a tmux session. 
 
@@ -59,26 +59,26 @@ Defaults: cover art disabled, ascii art disabled, recording disabled
 **mpcplus-tmux -r**
 : With the -r option, *mpcplus-tmux* displays the mpcplus MPD client and mppcava spectrum visualizer in a tmux session and records the session using asciinema. Recordings are stored in the user's `$HOME/Videos/` folder.
 
-# TMUX Cheat Sheet References
+## TMUX Cheat Sheet References
 
 * https://tmuxcheatsheet.com/
 * https://gist.github.com/MohamedAlaa/2961058
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 MPCPLUS-TMUX is distributed under an Open Source license.
 See the file LICENSE in the MPCPLUS-TMUX source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPCPLUS-TMUX and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpcplus**(1), **mpcpluskeys**(1), **mpplus**(1)
 
 Full documentation and sources at:

@@ -5,13 +5,13 @@ header: User Manual
 footer: mppdl 1.0.1
 date: August 11, 2022
 ---
-# NAME
+## NAME
 mppdl - download audio tracks from Bandcamp, Soundcloud, or a URL
 
-# SYNOPSIS
+## SYNOPSIS
 **mppdl** [-a album] [-A artist] [-i] [-f fmt] [-l] [-t track] [-T title] bandcamp|soundcloud|URL
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *mppdl* command can be used to download audio tracks in a Bandcamp
 collection, Soundcloud favorites, or a specified URL using `yt-dlp`.
@@ -29,7 +29,7 @@ import matching was properly performed. If an interactive Beets import
 is preferred then do not use the `-i` option to `mppdl` and perform
 the Beets import manually after the download completes.
 
-# OPTIONS
+## OPTIONS
 
 **-a 'album'**
 : saves the download in the subdirectory 'album'
@@ -61,24 +61,24 @@ The required argument *bandcamp*, *soundcloud*, or *URL* indicates:
 - Download Soundcloud favorites
 - Download audio in URL
 
-# AUTHORS
+## AUTHORS
 
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 
 MPPDL is distributed under an Open Source license.
 See the file LICENSE in the MPPDL source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPDL and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 
 **beet**(1), **mpplus**(1)
 

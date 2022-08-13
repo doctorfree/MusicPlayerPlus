@@ -5,10 +5,10 @@ header: User Manual
 footer: beets 1.6.0
 date: July 12, 2022
 ---
-# NAME
+## NAME
 beetsconfig - Beets media library management system configuration
 
-# DESCRIPTION
+## DESCRIPTION
 
 Beets has an extensive configuration system that lets you customize
 nearly every aspect of its operation. To configure beets, you create a

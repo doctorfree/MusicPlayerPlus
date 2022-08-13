@@ -5,13 +5,13 @@ header: User Manual
 footer: mppcover 1.0.1
 date: August 6, 2022
 ---
-# NAME
+## NAME
 mppcover - display the album cover for the currently playing song
 
-# SYNOPSIS
+## SYNOPSIS
 **mppcover** [OPTIONS] [DIR]
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *mppcover* command can be used to display the cover art of the
 current track being played by MPD (Music Player Daemon).
@@ -19,7 +19,7 @@ current track being played by MPD (Music Player Daemon).
 DIR is the path to the MPD music library root directory, as defined in its
 music_directory variable. Defaults to *$HOME/Music*.
 
-# OPTIONS
+## OPTIONS
 
 **-h**
 : Print usage information and exit
@@ -33,26 +33,26 @@ music_directory variable. Defaults to *$HOME/Music*.
 **-v**
 : Print version number and exit
 
-# AUTHORS
+## AUTHORS
 
 Written by Mario Figueiredo <marfig@gmx.com>
 
 Adapted and integrated by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 
 MPPCOVER is distributed under an Open Source license.
 See the file LICENSE in the MPPCOVER source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPCOVER and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 
 **beet**(1), **mpplus**(1)
 

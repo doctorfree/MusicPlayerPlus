@@ -5,17 +5,17 @@ header: User Manual
 footer: scdl 2.7.2
 date: July 24, 2022
 ---
-# NAME
+## NAME
 scdl - Download tracks and albums from a Soundcloud account favorites
 
-# SYNOPSIS
+## SYNOPSIS
 **scdl** (-l <track_url> | me) [-a | -f | -C | -t | -p | -r][-c | --force-metadata] [-n <maxtracks>][-o <offset>][--hidewarnings][--debug | --error][--path <path>] [--addtofile][--addtimestamp][--onlymp3][--hide-progress][--min-size <size>] [--max-size <size>][--remove][--no-album-tag][--no-playlist-folder] [--download-archive <file>][--sync <file>][--extract-artist][--flac][--original-art] [--original-name][--no-original][--only-original][--name-format <format>] [--strict-playlist][--playlist-name-format <format>][--client-id <id>] [--auth-token <token>][--overwrite][--no-playlist]
     
 **scdl** -h | --help
 
 **scdl** --version
 
-# OPTIONS
+## OPTIONS
 
 - **-h --help**                       Show this screen
 - **--version**                       Show version
@@ -60,11 +60,11 @@ scdl - Download tracks and albums from a Soundcloud account favorites
 - **--strict-playlist**               Abort playlist downloading if one track fails to download
 - **--no-playlist**                   Skip downloading playlists
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *scdl* command can be used to download favorite tracks and albums from a users's Soundcloud account. MusicPlayerPlus provides a convenience wrapper for *scdl*, the script `/usr/share/musicplayerplus/scripts/soundcloud-download`.
 
-# AUTHORS
+## AUTHORS
 
 *scdl* written by:
 
@@ -74,18 +74,18 @@ The *scdl* command can be used to download favorite tracks and albums from a use
 
 *soundcloud-download* written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 SCDL is distributed under an Open Source license.
 See the file LICENSE in the SCDL source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using SCDL and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **bandcamp-dl**(1), **beet**(1), **mpplus**(1)
 
 Full documentation and sources at:

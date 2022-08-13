@@ -5,16 +5,16 @@ header: User Manual
 footer: alsa_conf 2.7
 date: December 07, 2021
 ---
-# NAME
+## NAME
 **alsa_conf** - Set/get the ALSA sound configuration
 
-# SYNOPSIS
+## SYNOPSIS
 **alsa_conf** [-c] [-e] [-l] [-n] [-o outfile] [-q] [-r] [-t template] [-u]
 
-# DESCRIPTION
+## DESCRIPTION
 The *alsa_conf* command can be used to interactively set the ALSA sound configuration in */etc/asound.conf* at the command line.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 **-u**
 : Display usage message
 
@@ -48,7 +48,7 @@ Default asound.conf template can be found in:
 
 	*/usr/share/musicplayerplus/asound.conf.tmpl*
 
-# EXAMPLES
+## EXAMPLES
 **alsa_conf -c -q**
 : Quietly check the */etc/asound.conf* configuration and exit with status
 
@@ -56,19 +56,19 @@ Default asound.conf template can be found in:
 : Display an interactive menu to allow selection of audio input and output
 devices and update the */etc/asound.conf* configuration
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record &lt;github@ronrecord.com&gt;
 
-# LICENSING
+## LICENSING
 ALSA_CONF is distributed under an Open Source license.
 See the file LICENSE in the ALSA_CONF source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using ALSA_CONF and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at: &lt;https://github.com/doctorfree/MusicPlayerPlus/issues&gt;
 
-# SEE ALSO
+## SEE ALSO
 **mpplus**(1)
 
 Full documentation and sources at: &lt;https://github.com/doctorfree/MusicPlayerPlus&gt;

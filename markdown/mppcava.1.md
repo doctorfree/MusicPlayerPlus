@@ -5,15 +5,15 @@ header: User Manual
 footer: mppcava 0.8.2
 date: July 03, 2022
 ---
-# NAME
+## NAME
 mppcava - Console-based Audio Spectrum Visualizer for ALSA
 
-# SYNOPSIS
+## SYNOPSIS
 **mppcava** [-v] [-p config]
 
 Exit with `ctrl+c` or `q`.
 
-# DESCRIPTION
+## DESCRIPTION
 The *mppcava* command is a bar spectrum audio visualizer for the Linux
 terminal using ALSA, pulseaudio or fifo buffer for input.
 
@@ -23,7 +23,7 @@ responsive and aesthetic when used to visualize music.
 Read more about `mppcava` at
 https://github.com/doctorfree/MusicPlayerPlus/tree/master/mppcava#readme
 
-# CONTROLS
+## CONTROLS
 
 NOTE: only works in ncurses output mode.
 
@@ -39,7 +39,7 @@ NOTE: only works in ncurses output mode.
 If *mppcava* quits unexpectedly or is force killed,
 echo must be turned on manually with `stty -echo`.
 
-# CONFIGURATION
+## CONFIGURATION
 
 All options are done in the config file, no more command-line arguments!
 
@@ -63,22 +63,22 @@ audio processing does not need to reinitialize.
 $ pkill -USR2 mppcava
 ```
 
-# AUTHORS
+## AUTHORS
 Written by Karl Stavestrand karl@stavestrand.no
 Modified by by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 MPPCAVA is distributed under an Open Source license.
 See the file LICENSE in the MPPCAVA source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPCAVA and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpplus**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:

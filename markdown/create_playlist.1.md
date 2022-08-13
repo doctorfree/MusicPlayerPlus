@@ -5,10 +5,10 @@ header: User Manual
 footer: create_playlist 1.0.0
 date: July 24, 2022
 ---
-# NAME
+## NAME
 create_playlist - create a playlist of songs matching a Beets query
 
-# SYNOPSIS
+## SYNOPSIS
 **create_playlist** [-n playlist-name] [-q beets-query] [-ou]
 
 Where:
@@ -18,7 +18,7 @@ Where:
 - *-o* indicates overwrite any pre-existing playlist of same name
 - *-u* displays this usage message and exits
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *create_playlist* command can be used to create an MPD playlist
 of songs matching a Beets query. For example, to create a playlist
@@ -32,21 +32,21 @@ create_playlist -n LoveList -q love
 A new playlist named "LoveList" will be created containing all the
 songs in the music library that match the string "love" (case insensitive).
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 CREATE_PLAYLIST is distributed under an Open Source license.
 See the file LICENSE in the CREATE_PLAYLIST source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using CREATE_PLAYLIST and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **beet**(1), **mpplus**(1)
 
 Full documentation and sources at:

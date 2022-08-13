@@ -5,17 +5,17 @@ header: User Manual
 footer: bandcamp-dl 0.0.13
 date: July 24, 2022
 ---
-# NAME
+## NAME
 bandcamp-dl - Download tracks and albums in a Bandcamp collection
 
-# SYNOPSIS
+## SYNOPSIS
 **bandcamp-dl** [options] [URL ...]
 
-# ARGUMENTS
+## ARGUMENTS
 
 - **URL** Bandcamp album/track URL
 
-# OPTIONS
+## OPTIONS
 
 - **-h --help**               Show this screen.
 - **-v --version**            Show version.
@@ -38,11 +38,11 @@ bandcamp-dl - Download tracks and albums in a Bandcamp collection
 - **-k --keep-spaces**        Retain whitespace in filenames
 - **-u --keep-upper**         Retain uppercase letters in filenames
 
-# DESCRIPTION
+## DESCRIPTION
 
 The *bandcamp-dl* command can be used to download tracks and albums from a Bandcamp collections. MusicPlayerPlus provides a convenience wrapper for *bandcamp-dl*, `/usr/share/musicplayerplus/calliope/bandcamp-download`.
 
-# AUTHORS
+## AUTHORS
 
 *bandcamp-dl* is written and maintained by:
 
@@ -65,18 +65,18 @@ The *bandcamp-dl* command can be used to download tracks and albums from a Bandc
 
 *bandcamp-download* is written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 BANDCAMP-DL is distributed under an Open Source license.
 See the file LICENSE in the BANDCAMP-DL source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using BANDCAMP-DL and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **beet**(1), **mpplus**(1)
 
 Full documentation and sources at:

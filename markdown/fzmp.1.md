@@ -5,17 +5,17 @@ header: User Manual
 footer: fzmp 1.0.0
 date: March 24, 2022
 ---
-# NAME
+## NAME
 fzmp - performs one-time initialization of mpcplus configuration files
 
-# SYNOPSIS
+## SYNOPSIS
 **fzmp** [OPTIONS]
 
-# DESCRIPTION
+## DESCRIPTION
 The *fzmp* command lists and searches for songs in an MPD library by
 artist, album, or playlist using the `fzf` fuzzy finder.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 
 **-h --help**
 : print this help
@@ -52,7 +52,7 @@ Playlist view has the following keybinds:
 **Ctrl-p**
 : toggle play/pause
 
-# CONFIGURATION:
+## CONFIGURATION:
 A configuration file can be defined at $HOME/.config/mpcplus/fzmp.conf
 
 If a line begins with '#' it is treated as a comment and ignored
@@ -118,23 +118,23 @@ Individual sessions can override with the environment variable FZMP_FZF_OPTIONS
 
 `fzmp` will also inherit options from FZF_DEFAULT_OPTS
 
-# AUTHORS
+## AUTHORS
 Written by Daniel F Gray DanielFGray@gmail.com
 
 Modified and adapted by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 FZMP is distributed under an Open Source license.
 See the file LICENSE in the FZMP source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using FZMP and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:

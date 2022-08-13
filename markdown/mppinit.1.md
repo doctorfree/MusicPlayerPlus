@@ -5,13 +5,13 @@ header: User Manual
 footer: mppinit 1.0.0
 date: March 24, 2022
 ---
-# NAME
+## NAME
 mppinit - performs one-time MusicPlayerPlus initialization
 
-# SYNOPSIS
+## SYNOPSIS
 **mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync]
 
-# DESCRIPTION
+## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
 configuration files in `$HOME/.config/` and installs required Python
 modules if not already installed.
@@ -41,7 +41,7 @@ audio information rather than analyzing audio files with Essentia.
 Invoked with the `sync` argument, *mppinit sync* synchronizes the music
 library location across all configuration files.
 
-# COMMAND LINE OPTIONS
+## COMMAND LINE OPTIONS
 
 **-a**
 : indicates use AcousticBrainz to retrieve audio information rather than using Essentia to analyze audio files
@@ -83,21 +83,21 @@ library location across all configuration files.
 
 Only one of *bandcamp*, *soundcloud*, *import*, *metadata*, or *sync* can be specified
 
-# AUTHORS
+## AUTHORS
 Written by Ronald Record github@ronrecord.com
 
-# LICENSING
+## LICENSING
 MPPINIT is distributed under an Open Source license.
 See the file LICENSE in the MPPINIT source distribution
 for information on terms &amp; conditions for accessing and
 otherwise using MPPINIT and for a DISCLAIMER OF ALL WARRANTIES.
 
-# BUGS
+## BUGS
 Submit bug reports online at:
 
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
-# SEE ALSO
+## SEE ALSO
 **mpplus**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
