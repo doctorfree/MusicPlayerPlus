@@ -1,4 +1,4 @@
-# MusicPlayerPlus Configuration
+## MusicPlayerPlus Configuration
 
 MusicPlayerPlus includes customized configuration for the Music Player Daemon
 (MPD), the MPD client `mpcplus`, a spectrum visualizer `mppcava`, the `tmux`

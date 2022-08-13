@@ -2,7 +2,7 @@
 
 # Adding album cover art
 
-```{include} ../README.md
-:start-after: "### Adding Album Cover Art"
-:end-before: "### Custom key bindings"
+```{include} ../config/README.md
+:start-after: "## Adding album art to MusicPlayerPlus"
+:end-before: "You can take a look at"
 ```

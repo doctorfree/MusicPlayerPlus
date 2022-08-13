@@ -1,4 +1,4 @@
-# MusicPlayerPlus
+## MusicPlayerPlus
 
 MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Beets media library management with preconfigured plugins

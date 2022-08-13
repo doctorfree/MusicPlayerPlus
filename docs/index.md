@@ -35,6 +35,17 @@ GitHub <https://github.com/doctorfree/MusicPlayerPlus>
 ```
 
 ```{toctree}
+:caption: Wiki Articles
+:hidden:
+:titlesonly:
+
+Introduction <https://github.com/doctorfree/MusicPlayerPlus/wiki/Introduction>
+Beets Plugins <https://github.com/doctorfree/MusicPlayerPlus/wiki/BeetsPlugins>
+Streaming <https://github.com/doctorfree/MusicPlayerPlus/wiki/Streaming>
+Asciimatics <https://github.com/doctorfree/MusicPlayerPlus/wiki/Asciimatics-Anatomy>
+```
+
+```{toctree}
 :caption: Companion Projects
 :hidden:
 :titlesonly:

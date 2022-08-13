@@ -1,4 +1,4 @@
-# MusicPlayerPlus
+## MusicPlayerPlus
 
 This major release of MusicPlayerPlus adds:
 
