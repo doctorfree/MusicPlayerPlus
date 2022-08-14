@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-2.0.1r2 (2022-08-20)
+
+* Add mpplus menu to manage downloads
+* Add new command 'listyt' to list YouTube video titles and urls
+* Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
+* Add mppdl command and yt-dlp module for downloading audio from various sites
+* Add mppcover command to display album cover art of currently playing song
+* Only install Bliss utils if they compile successfully
+* Install Cargo if it is not previously installed
+* Additional python module dependencies installed during mppinit
+* Messages in mppinit tailored to which acoustic analysis is performed
+
 ## MusicPlayerPlus-2.0.1r1 (2022-08-08)
 
 * Added Beets media library management integration

@@ -28,18 +28,18 @@ Download the [latest Debian or RPM package format release](https://github.com/do
 Install the package on Debian based systems by executing the command
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-1.amd64.deb
+sudo apt install ./MusicPlayerPlus_2.0.1-2.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-1.armhf.deb
+sudo apt install ./MusicPlayerPlus_2.0.1-2.armhf.deb
 ```
 
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-2.0.1-1.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus-2.0.1-2.x86_64.rpm
 ```
 
 ## Configuration
@@ -74,6 +74,18 @@ sudo yum remove MusicPlayerPlus
 ```
 
 ## Changelog
+
+Changes in version 2.0.1 release 2 include:
+
+* Add mpplus menu to manage downloads
+* Add new command 'listyt' to list YouTube video titles and urls
+* Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
+* Add mppdl command and yt-dlp module for downloading audio from various sites
+* Add mppcover command to display album cover art of currently playing song
+* Only install Bliss utils if they compile successfully
+* Install Cargo if it is not previously installed
+* Additional python module dependencies installed during mppinit
+* Messages in mppinit tailored to which acoustic analysis is performed
 
 Changes in version 2.0.1 release 1 include:
 
