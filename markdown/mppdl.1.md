@@ -9,7 +9,7 @@ date: August 11, 2022
 mppdl - download audio tracks from Bandcamp, Soundcloud, or a URL
 
 ## SYNOPSIS
-**mppdl** [-a album] [-A artist] [-i] [-f fmt] [-l] [-t track] [-T title] bandcamp|soundcloud|URL
+**mppdl** [-a album] [-A artist] [-i] [-I] [-f fmt] [-l] [-t track] [-T title] bandcamp|soundcloud|downloads|URL
 
 ## DESCRIPTION
 
@@ -29,6 +29,12 @@ import matching was properly performed. If an interactive Beets import
 is preferred then do not use the `-i` option to `mppdl` and perform
 the Beets import manually after the download completes.
 
+Import already downloaded songs into Beets with the `-I` option. Restrict
+the import to Bandcamp downloads with `mppdl -I bandcamp`, Soundcloud downloads
+with `mppdl -I soundcloud`, URL downloaded songs with `mppdl -I downloads`, and
+import all previously downloaded songs from Bandcamp, Soundcloud, or
+a URL with `mppdl -I`.
+
 ## OPTIONS
 
 **-a 'album'**
@@ -39,6 +45,9 @@ the Beets import manually after the download completes.
 
 **-i**
 : indicates import audio into Beets after download completes
+
+**-I**
+: indicates import previously downloaded audio into Beets
 
 **-f 'fmt'**
 : saves the download in 'fmt' format (default m4a)
@@ -55,7 +64,7 @@ the Beets import manually after the download completes.
 **-u**
 : displays this usage message and exits
 
-The required argument *bandcamp*, *soundcloud*, or *URL* indicates:
+The argument *bandcamp*, *soundcloud*, or *URL* indicates:
 
 - Download Bandcamp collections
 - Download Soundcloud favorites

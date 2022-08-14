@@ -44,7 +44,7 @@ CONSOLE_MODE=
 DO_NOT_EXIT=
 FIG_FONTS="/usr/share/figlet-fonts"
 FIG_TEXT="MusicPlayerPlus"
-USE_FONT="Standard"
+USE_FONT="standard"
 USE_GRAD=1
 MPP_DIR="/usr/share/musicplayerplus"
 DOC_DIR="/usr/share/doc/musicplayerplus"
@@ -52,11 +52,12 @@ SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]"
-  printf "\n\t\t[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]"
-  printf "\n\t\t[-M alsaconf|enable|disable|restart|start|stop|status] [-N]"
-  printf "\n\t\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
-  printf "\n\t\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-g] [-F] [-f]"
+  printf "\n\t[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]"
+  printf "\n\t[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
+  printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status]"
+  printf "\n\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
+  printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
@@ -84,7 +85,9 @@ usage() {
   printf "\n\t-S indicates display ASCIImatics splash animation"
   printf "\nGeneral options:"
   printf "\n\t-B indicates analyze MPD music dir with Blissify and exit"
-  printf "\n\t-D indicates download album cover art and exit"
+  printf "\n\t-D 'art' indicates download album cover art and exit"
+  printf "\n\t-D 'bandcamp' indicates download Bandcamp songs and exit"
+  printf "\n\t-D 'soundcloud' indicates download Soundcloud songs and exit"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
@@ -120,6 +123,29 @@ usage() {
   printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client"
   printf "\nType 'man mppsplash' for detailed usage info on the mppsplash command\n"
   exit 1
+}
+
+prompt_for_url() {
+  local url
+  if [ "$1" == "youtube" ]
+  then
+    printf "\nEnter a YouTube URL you wish to list."
+  else
+    printf "\nEnter a URL that contains audio you wish to extract and download."
+    printf "\nThis can be a YouTube video URL, a YouTube playlist URL,"
+    printf "\nor any URL from many supported sites."
+  fi
+  printf "\n\nTo cancel and return to menus, enter nothing and press 'Enter'\n\n"
+  read -r -e -p 'Enter URL: ' url
+  DL_URL="${url}"
+}
+
+prompt_for_user() {
+  local user
+  printf "\nEnter a YouTube user name."
+  printf "\n\nTo cancel and return to menus, enter nothing and press 'Enter'\n\n"
+  read -r -e -p 'Enter YouTube Username: ' user
+  YT_USER="${user}"
 }
 
 kill_tmux_sessions() {
@@ -161,6 +187,7 @@ make_it_so() {
       echo "Manual media file conversion may be required"
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${DOWNLOAD_ART}" ] && {
@@ -183,6 +210,47 @@ make_it_so() {
     beet fetchart > /dev/null 2>&1
     printf " done\n\n"
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${DOWNLOAD_BANDCAMP}" ] && {
+    mppinit bandcamp
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${DOWNLOAD_SOUNDCLOUD}" ] && {
+    mppinit soundcloud
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${DOWNLOAD_YOUTUBE}" ] && {
+    [ "${DL_URL}" ] || prompt_for_url
+    [ "${DL_URL}" ] && mppdl "${DL_URL}"
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${LIST_YT_PLAYLISTS}" ] && {
+    [ "${YT_USER}" ] || prompt_for_user
+    [ "${YT_USER}" ] && listyt -p "${YT_USER}" | less
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${LIST_YT_UPLOADS}" ] && {
+    [ "${YT_USER}" ] || prompt_for_user
+    [ "${YT_USER}" ] && listyt -v "${YT_USER}" | less
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${LIST_YT_URL}" ] && {
+    [ "${DL_URL}" ] || prompt_for_url youtube
+    [ "${DL_URL}" ] && listyt "${DL_URL}" | less
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${ACT_YAMS}" ] && {
@@ -243,6 +311,7 @@ make_it_so() {
         echo ""
       fi
       [ "${DO_NOT_EXIT}" ] || exit 0
+      return
     else
       echo "A YAMS service has been detected."
       echo "This may indicate YAMS has already been activated."
@@ -251,6 +320,7 @@ make_it_so() {
       echo "    systemctl --user stop yams.service"
       echo "and re-run the command 'mpplus -Y'"
       [ "${DO_NOT_EXIT}" ] || exit 0
+      return
     fi
   }
 
@@ -320,6 +390,7 @@ make_it_so() {
       echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${ACBRAINZ}" ] && {
@@ -383,6 +454,7 @@ make_it_so() {
       echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${BLISSIFY}" ] && {
@@ -453,6 +525,7 @@ make_it_so() {
       echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${XTRACTOR}" ] && {
@@ -505,6 +578,7 @@ make_it_so() {
       echo "Re-run this command."
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   [ "${BEETS_IMPORT}" ] && {
@@ -555,6 +629,7 @@ make_it_so() {
       printf "\n-w indicates write metadata, -W indicates do not write metadata\n"
     fi
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
   }
 
   # Begin visualizer startup section
@@ -714,7 +789,7 @@ select_font() {
   # Seed random generator
   RANDOM=$$$(date +%s)
 
-  if [ "$2" == "small" ]
+  if [ "$1" == "small" ]
   then
     USE_FONT=${smallfonts[ $RANDOM % ${#smallfonts[@]} ]}
   else
@@ -728,75 +803,7 @@ select_font() {
       done
     }
   }
-  [ -r "${FIG_FONTS}/${USE_FONT}.flf" ] || USE_FONT="Standard"
-
-  goBig=
-  for font in "${smallfonts[@]}"
-  do
-    [[ "${USE_FONT}" == "$font" ]] && {
-      goBig=1
-      break
-    }
-  done
-
-  case "$1" in
-    Asciimatics)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="Asciimatics"
-      else
-        FIG_TEXT="Animation"
-      fi
-      ;;
-    MusicPlayer)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayerPlus"
-      else
-        FIG_TEXT="MusicPlayer"
-      fi
-      ;;
-    MusicPlayerPlus)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayerPlus"
-      else
-        FIG_TEXT="MusicPlayer"
-      fi
-      ;;
-    Fzmp)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayer Fuzzy Search"
-      else
-        FIG_TEXT="Fuzzy Search"
-      fi
-      ;;
-    Help)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayer Help"
-      else
-        FIG_TEXT="Help"
-      fi
-      ;;
-    Service)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayer Services"
-      else
-        FIG_TEXT="Services"
-      fi
-      ;;
-    *)
-      if [ "${goBig}" ]
-      then
-        FIG_TEXT="MusicPlayerPlus"
-      else
-        FIG_TEXT="MusicPlayer"
-      fi
-      ;;
-  esac
+  [ -r "${FIG_FONTS}/${USE_FONT}.flf" ] || USE_FONT="standard"
 }
 
 mpp_service() {
@@ -823,6 +830,7 @@ mpp_service() {
 
 show_menu_title() {
   columns="$(tput cols)"
+  menu_title="$1"
   if [ "${have_lolcat}" ]
   then
     printf "%*s\n" $(( (${#menu_title} + columns) / 2)) "${menu_title}" | lolcat
@@ -854,13 +862,13 @@ show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
+    FIG_TEXT="Help Menu"
     if [ "${use_figlet}" ]
     then
-      select_font Help small
+      select_font small
       show_figlet
     else
-      menu_title="MusicPlayerPlus Help Menu"
-      show_menu_title
+      show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
     options=()
@@ -1049,16 +1057,95 @@ show_help_menu() {
   printf "\n"
 }
 
+show_downloads_menu() {
+  while true
+  do
+    FIG_TEXT="Downloads"
+    if [ "${use_figlet}" ]
+    then
+      select_font small
+      show_figlet
+    else
+      show_menu_title "${FIG_TEXT}"
+    fi
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
+    options=("Download Album Cover Art" "Download Bandcamp Songs")
+    options+=("Download Soundcloud Songs" "Download YouTube Songs")
+    options+=("Download Audio in URL")
+    options+=("List YouTube Playlists")
+    options+=("List YouTube Uploads")
+    options+=("List YouTube URL")
+    options+=("Main menu" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              break
+              ;;
+          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+              printf "Returning\n\n"
+              init_vars
+              break 2
+              ;;
+          "Download Album"*,*|*,"Download Album"*)
+              DOWNLOAD_ART=1
+              break
+              ;;
+          "Download Bandcamp"*,*|*,"Download Bandcamp"*)
+              DOWNLOAD_BANDCAMP=1
+              break
+              ;;
+          "Download Soundcloud"*,*|*,"Download Soundcloud"*)
+              DOWNLOAD_SOUNDCLOUD=1
+              break
+              ;;
+          "Download YouTube"*,*|*,"Download YouTube"*)
+              DOWNLOAD_YOUTUBE=1
+              break
+              ;;
+          "Download Audio"*,*|*,"Download Audio"*)
+              DOWNLOAD_YOUTUBE=1
+              break
+              ;;
+          "List YouTube Playlists"*,*|*,"List YouTube Playlists"*)
+              LIST_YT_PLAYLISTS=1
+              break
+              ;;
+          "List YouTube Uploads"*,*|*,"List YouTube Uploads"*)
+              LIST_YT_UPLOADS=1
+              break
+              ;;
+          "List YouTube URL"*,*|*,"List YouTube URL"*)
+              LIST_YT_URL=1
+              break
+              ;;
+          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+              printf "\nExiting\n"
+              exit 0
+              ;;
+      esac
+      REPLY=
+    done
+    [ "${skip_it_so}" ] || {
+      make_it_so
+      init_vars
+    }
+  done
+}
+
 show_services_menu() {
   while true
   do
+    FIG_TEXT="Services Menu"
     if [ "${use_figlet}" ]
     then
-      select_font Service small
+      select_font small
       show_figlet
     else
-      menu_title="MusicPlayerPlus Services Menu"
-      show_menu_title
+      show_menu_title "${FIG_TEXT}"
     fi
     systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
@@ -1071,9 +1158,49 @@ show_services_menu() {
     printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
     printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Configure ALSA Sound System" "Enable Music Player Daemon" "Disable Music Player Daemon" "Start Music Player Daemon" "Stop Music Player Daemon" "Restart Music Player Daemon" "Status of Music Player Daemon")
-    options+=("Enable Music Player Stats" "Disable Music Player Stats" "Start Music Player Stats" "Stop Music Player Stats" "Restart Music Player Stats" "Status of Music Player Stats")
-    options+=("Enable Music Player Scrobbler" "Disable Music Player Scrobbler" "Start Music Player Scrobbler" "Stop Music Player Scrobbler" "Restart Music Player Scrobbler" "Status of Music Player Scrobbler")
+    options=("Configure ALSA Sound System")
+    if [ "${m_enabled}" == "enabled" ]
+    then
+      options+=("Disable Music Player Daemon")
+    else
+      options+=("Enable Music Player Daemon")
+    fi
+    if [ "${m_active}" == "active" ]
+    then
+      options+=("Stop Music Player Daemon")
+      options+=("Restart Music Player Daemon")
+    else
+      options+=("Start Music Player Daemon")
+    fi
+    options+=("Status of Music Player Daemon")
+    if [ "${s_enabled}" == "enabled" ]
+    then
+      options+=("Disable Music Player Stats")
+    else
+      options+=("Enable Music Player Stats")
+    fi
+    if [ "${s_active}" == "active" ]
+    then
+      options+=("Stop Music Player Stats")
+      options+=("Restart Music Player Stats")
+    else
+      options+=("Start Music Player Stats")
+    fi
+    options+=("Status of Music Player Stats")
+    if [ "${y_enabled}" == "enabled" ]
+    then
+      options+=("Disable Music Player Scrobbler")
+    else
+      options+=("Enable Music Player Scrobbler")
+    fi
+    if [ "${y_active}" == "active" ]
+    then
+      options+=("Stop Music Player Scrobbler")
+      options+=("Restart Music Player Scrobbler")
+    else
+      options+=("Start Music Player Scrobbler")
+    fi
+    options+=("Status of Music Player Scrobbler")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -1179,13 +1306,13 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
+    FIG_TEXT="Fuzzy Search"
     if [ "${use_figlet}" ]
     then
-      select_font Fzmp small
+      select_font small
       show_figlet
     else
-      menu_title="MusicPlayerPlus Fuzzy Search Menu"
-      show_menu_title
+      show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Search artist filtered by album")
@@ -1240,13 +1367,13 @@ show_fzmp_menu() {
 show_ascii_menu() {
   while true
   do
+    FIG_TEXT="Asciimatics"
     if [ "${use_figlet}" ]
     then
-      select_font Asciimatics small
+      select_font small
       show_figlet
     else
-      menu_title="MusicPlayerPlus Asciimatics Menu"
-      show_menu_title
+      show_menu_title "${FIG_TEXT}"
     fi
     SPLASH=1
     if [ "${COVER_ART}" ]
@@ -1410,13 +1537,13 @@ show_main_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
+    FIG_TEXT="Main Menu"
     if [ "${use_figlet}" ]
     then
-      select_font MusicPlayerPlus small
+      select_font small
       show_figlet
     else
-      menu_title="MusicPlayerPlus Interactive Menu System"
-      show_menu_title
+      show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
@@ -1427,11 +1554,12 @@ show_main_menu() {
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler Service")
     options+=("ASCIImatics Animations" "Convert WAV files to MP3")
-    options+=("Download Album Cover Art" "Fetch Lyrics" "Import Music to Beets")
-    options+=("Blissify Audio Info Extraction")
+    options+=("Import Music to Beets")
+    options+=("Fetch Lyrics" "Blissify Audio Info Extraction")
     options+=("Essentia Audio Info Extraction")
-    options+=("AcousticBrainz Audio Info Retrieval")
-    options+=("Manage MusicPlayerPlus Services")
+    options+=("AcousticBrainz Info Retrieval")
+    options+=("Manage Music Downloads")
+    options+=("Manage Music Services")
     [ "${have_fzf}" ] && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
@@ -1473,7 +1601,12 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Manage"*,*|*,"Manage"*)
+          "Manage Music Downloads"*,*|*,"Manage Music Downloads"*)
+              show_downloads_menu
+              skip_it_so=1
+              break
+              ;;
+          "Manage Music Services"*,*|*,"Manage Music Services"*)
               show_services_menu
               skip_it_so=1
               break
@@ -1485,42 +1618,30 @@ show_main_menu() {
               ;;
           "Convert"*,*|*,"Convert"*)
               CONVERT_WAV=1
-              DO_NOT_EXIT=1
               break
               ;;
           "Activate"*,*|*,"Activate"*)
               ACT_YAMS=1
-              DO_NOT_EXIT=1
-              break
-              ;;
-          "Download"*,*|*,"Download"*)
-              DOWNLOAD_ART=1
-              DO_NOT_EXIT=1
               break
               ;;
           "Blissify"*,*|*,"Blissify"*)
               BLISSIFY=1
-              DO_NOT_EXIT=1
               break
               ;;
           "Essentia"*,*|*,"Essentia"*)
               XTRACTOR="all"
-              DO_NOT_EXIT=1
               break
               ;;
           "AcousticBrainz"*,*|*,"AcousticBrainz"*)
               ACBRAINZ="all"
-              DO_NOT_EXIT=1
               break
               ;;
           "Fetch"*,*|*,"Fetch"*)
               FETCH_LYRICS=1
-              DO_NOT_EXIT=1
               break
               ;;
           "Import"*,*|*,"Import"*)
               BEETS_IMPORT=1
-              DO_NOT_EXIT=1
               break
               ;;
           "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
@@ -1591,6 +1712,14 @@ init_vars() {
   COVER_ART=
   CONVERT_WAV=
   DOWNLOAD_ART=
+  DOWNLOAD_BANDCAMP=
+  DOWNLOAD_SOUNDCLOUD=
+  DOWNLOAD_YOUTUBE=
+  LIST_YT_PLAYLISTS=
+  LIST_YT_UPLOADS=
+  LIST_YT_URL=
+  DL_URL=
+  YT_USER=
   ACT_YAMS=
   DIS_YAMS=
   FETCH_LYRICS=
@@ -1690,7 +1819,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBC:D:d:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -1735,7 +1864,21 @@ while getopts "AabBC:Dd:FfghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       [ "${CLIENT}" ] && MPCPLUS="${CLIENT}"
       ;;
     D)
-      DOWNLOAD_ART=1
+      case "${OPTARG}" in
+        Art|art|Album|album|Albumart|albumart)
+          DOWNLOAD_ART=1
+          ;;
+        Bandcamp|bandcamp)
+          DOWNLOAD_BANDCAMP=1
+          ;;
+        Soundcloud|soundcloud)
+          DOWNLOAD_SOUNDCLOUD=1
+          ;;
+        *)
+          DOWNLOAD_YOUTUBE=1
+          DL_URL="${OPTARG}"
+          ;;
+      esac
       ;;
     d)
       MUSIC_DIRECTORY="${OPTARG}"
@@ -1954,6 +2097,7 @@ impflags="${tagflag} ${writeflag}"
 
 if [ "${INTERACTIVE}" ]
 then
+  DO_NOT_EXIT=1
   show_main_menu
 else
   if [ "${FZMPOPT}" ]

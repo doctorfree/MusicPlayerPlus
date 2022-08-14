@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A] [-a] [-b] [-B] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -20,7 +20,9 @@ The *mpplus* command can also act as a front-end to the *mppsplash* and *mppspla
 
 The *mpplus* command can be used in conjunction with the Beets music library management system:
 
-- When invoked as `mpplus -D` it will downlad album cover art for all albums in the music library
+- When invoked as `mpplus -D art` it will downlad album cover art for all albums in the music library
+- When invoked as `mpplus -D bandcamp` it will downlad songs from Bandcamp
+- When invoked as `mpplus -D soundcloud` it will downlad songs from Soundcloud
 - When invoked as `mpplus -F` it will convert all WAV format files in the music library to MP3 format files
 - When invoked as `mpplus -I` it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
 - When invoked as `mpplus -L` it will downlad lyrics for all songs in the music library that do not already have lyrics
@@ -100,8 +102,14 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-B**
 : uses Blissify to create audio-based information in a song similarity database for all music library media.
 
-**-D**
+**-D art**
 : indicates download album cover art and exit
+
+**-D bandcamp**
+: indicates download songs from Bandcamp and exit
+
+**-D soundcloud**
+: indicates download songs from Soundcloud and exit
 
 **-d 'music_directory'**
 : specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
@@ -188,8 +196,11 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **mpplus -S -j -a**
 : Launch `mppsplash` displaying the Julia Set asciimatics animation with audio
 
-**mpplus -D**
+**mpplus -D art**
 : Download album cover art for any albums in the music library that do not already have cover art 
+
+**mpplus -D soundcloud**
+: Download favorited songs from Soundcloud
 
 **mpplus -I**
 : Import the music library into the Beets library management system

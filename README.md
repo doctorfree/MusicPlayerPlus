@@ -297,7 +297,11 @@ be imported into the Beets media library management system.
 If you wish to manage your music library with Beets, import the music library
 with the command `mpplus -I`.
 
-Album cover art can be downloaded with the command `mpplus -D`.
+Album cover art can be downloaded with the command `mpplus -D art`.
+
+Bandcamp collections can be downloaded with the command `mpplus -D bandcamp`.
+
+Soundcloud favorites can be downloaded with the command `mpplus -D soundcloud`.
 
 Download additional lyrics with the command `mpplus -L`.
 
@@ -333,7 +337,7 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Perform these steps with the command `mppinit metadata`
         * Remove duplicate tracks with the command `beet duplicates -d`
         * Rename tracks left after duplicate removal with `beet move`
-        * Download album cover art with the command `mpplus -D`
+        * Download album cover art with the command `mpplus -D art`
         * Analyze and retrieve audio-based information with a command like:
 		    * `mpplus -B` creates a "song similarity" database with Blissify
             * `mpplus -X all` analyze the entire Beets library with Essentia
@@ -1015,11 +1019,12 @@ The `mpplus` command serves as a general user interface for all of the
 MusicPlayerPlus capabilities:
 
 ```
-Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-D] [-d music_directory]
-		[-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num]
-		[-M alsaconf|enable|disable|restart|start|stop|status] [-N]
-		[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
-		[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-g] [-F] [-f]
+	[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]
+	[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
+	[-M alsaconf|enable|disable|restart|start|stop|status]
+	[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
@@ -1047,7 +1052,9 @@ ASCIImatics animation options:
 	-S indicates display ASCIImatics splash animation
 General options:
 	-B indicates analyze MPD music dir with Blissify and exit
-	-D indicates download album cover art and exit
+	-D 'art' indicates download album cover art and exit
+	-D 'bandcamp' indicates download Bandcamp songs and exit
+	-D 'soundcloud' indicates download Soundcloud songs and exit
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
@@ -1224,7 +1231,7 @@ An album cover art downloader is included in MusicPlayerPlus. To download
 cover art for all of the albums in your MPD music directory, run the command:
 
 ```
-mpplus -D
+mpplus -D art
 ```
 
 Cover art for each album is saved as the file `cover.jpg` in the album folder.

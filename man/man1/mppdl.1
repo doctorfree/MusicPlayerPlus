@@ -21,8 +21,8 @@
 mppdl - download audio tracks from Bandcamp, Soundcloud, or a URL
 .SS SYNOPSIS
 .PP
-\f[B]mppdl\f[R] [-a album] [-A artist] [-i] [-f fmt] [-l] [-t track] [-T
-title] bandcamp|soundcloud|URL
+\f[B]mppdl\f[R] [-a album] [-A artist] [-i] [-I] [-f fmt] [-l] [-t
+track] [-T title] bandcamp|soundcloud|downloads|URL
 .SS DESCRIPTION
 .PP
 The \f[I]mppdl\f[R] command can be used to download audio tracks in a
@@ -45,6 +45,13 @@ import matching was properly performed.
 If an interactive Beets import is preferred then do not use the
 \f[V]-i\f[R] option to \f[V]mppdl\f[R] and perform the Beets import
 manually after the download completes.
+.PP
+Import already downloaded songs into Beets with the \f[V]-I\f[R] option.
+Restrict the import to Bandcamp downloads with
+\f[V]mppdl -I bandcamp\f[R], Soundcloud downloads with
+\f[V]mppdl -I soundcloud\f[R], URL downloaded songs with
+\f[V]mppdl -I downloads\f[R], and import all previously downloaded songs
+from Bandcamp, Soundcloud, or a URL with \f[V]mppdl -I\f[R].
 .SS OPTIONS
 .TP
 \f[B]-a \[aq]album\[aq]\f[R]
@@ -55,6 +62,9 @@ saves the download with filename \[aq]artist\[aq]-\[aq]title\[aq].m4a
 .TP
 \f[B]-i\f[R]
 indicates import audio into Beets after download completes
+.TP
+\f[B]-I\f[R]
+indicates import previously downloaded audio into Beets
 .TP
 \f[B]-f \[aq]fmt\[aq]\f[R]
 saves the download in \[aq]fmt\[aq] format (default m4a)
@@ -72,8 +82,8 @@ indicates list available formats and info on URL
 \f[B]-u\f[R]
 displays this usage message and exits
 .PP
-The required argument \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], or
-\f[I]URL\f[R] indicates:
+The argument \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], or \f[I]URL\f[R]
+indicates:
 .IP \[bu] 2
 Download Bandcamp collections
 .IP \[bu] 2

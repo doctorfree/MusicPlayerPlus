@@ -12,11 +12,12 @@ LIST=
 ALBUM=
 ARTIST=
 IMPORT=
+IMPORT_ONLY=
 TITLE=
 TRACK=
 
 usage() {
-  printf "\nUsage: mppdl [-a album] [-A artist] [-i] [-f fmt] [-l]"
+  printf "\nUsage: mppdl [-a album] [-A artist] [-i] [-I] [-f fmt] [-l]"
   printf "\n             [-p playlist] [-t track] [-T title]"
   printf "\n             bandcamp|soundcloud|URL"
   printf "\nWhere:"
@@ -24,6 +25,7 @@ usage() {
   printf "\n\t-A 'artist' saves the download with filename"
   printf "\n\t\t'artist'-'title'.${FMT}"
   printf "\n\t-i indicates import audio into Beets after download completes"
+  printf "\n\t-I indicates import already downloaded audio into Beets"
   printf "\n\t-f 'fmt' saves the download in 'fmt' format (default m4a)"
   printf "\n\t-p 'playlist' saves the downloads in the subdirectory 'playlist'"
   printf "\n\t-t 'track' saves the download with filename"
@@ -32,14 +34,18 @@ usage() {
   printf "\n\t\t'artist'-'title'.${FMT}"
   printf "\n\t-l indicates list available formats and info on URL"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nThe required argument 'bandcamp', 'soundcloud', or 'URL' indicates:"
+  printf "\nThe argument 'bandcamp', 'soundcloud', or 'URL' indicates:"
   printf "\n\tDownload Bandcamp collections"
   printf "\n\tDownload Soundcloud favorites"
-  printf "\n\tDownload audio in URL\n\n"
+  printf "\n\tDownload audio in URL\n"
+  printf "\nWhen importing existing downloads with the '-I' option,"
+  printf "\nrestrict the import of already downloaded songs with:"
+  printf "\n\t'-I bandcamp' or '-I soundcloud' or '-I downloads'"
+  printf "\n-I with no arguments imports all downloaded songs\n"
   exit 1
 }
 
-while getopts "a:A:f:p:t:T:ilu" flag; do
+while getopts "a:A:f:p:t:T:iIlu" flag; do
     case $flag in
         a)
             ALBUM="$OPTARG"
@@ -55,6 +61,16 @@ while getopts "a:A:f:p:t:T:ilu" flag; do
             if [ "${have_beet}" ]
             then
               IMPORT=1
+            else
+              echo "The beet command could not be found. Skipping Beets import."
+            fi
+            ;;
+        I)
+            have_beet=`type -p beet`
+            if [ "${have_beet}" ]
+            then
+              IMPORT=1
+              IMPORT_ONLY=1
             else
               echo "The beet command could not be found. Skipping Beets import."
             fi
@@ -79,9 +95,11 @@ done
 shift $(( OPTIND - 1 ))
 
 [ "$1" ] || {
-  echo "An argument of 'bandcamp', 'soundcloud' or a URL is required."
-  echo "Exiting."
-  usage
+  [ "${IMPORT_ONLY}" ] || {
+    echo "An argument of 'bandcamp', 'soundcloud' or a URL is required."
+    echo "Exiting."
+    usage
+  }
 }
 
 mpd_music=`grep ^music_directory ${MPD_CONF}`
@@ -92,7 +110,7 @@ mpd_music="${mpd_music/#\~/$HOME}"
 
 if [ "$1" == "bandcamp" ]
 then
-  mppinit bandcamp
+  [ "${IMPORT_ONLY}" ] || mppinit bandcamp
   [ "${IMPORT}" ] && {
     [ -d "${mpd_music}/Bandcamp" ] && beet import -q "${mpd_music}/Bandcamp"
     [ -d "${mpd_music}/Bandcamp" ] && beet import -q -s "${mpd_music}/Bandcamp"
@@ -101,7 +119,7 @@ then
 else
   if [ "$1" == "soundcloud" ]
   then
-    mppinit soundcloud
+    [ "${IMPORT_ONLY}" ] || mppinit soundcloud
     [ "${IMPORT}" ] && {
       [ -d "${mpd_music}/Soundcloud" ] && {
         beet import -q "${mpd_music}/Soundcloud"
@@ -136,6 +154,26 @@ if [ "${LIST}" ]
 then
   ${LISTCOMM} ${URL}
 else
+  [ "${IMPORT_ONLY}" ] && {
+    [ -d "${DDIR}" ] && {
+      beet import -q "${DDIR}"
+      beet import -q -s "${DDIR}"
+      echo "Beets import of ${DDIR} complete"
+    }
+    [ "${URL}" == "downloads" ] || {
+      [ -d "${mpd_music}/Bandcamp" ] && {
+        beet import -q "${mpd_music}/Bandcamp"
+        beet import -q -s "${mpd_music}/Bandcamp"
+        echo "Beets import of ${mpd_music}/Bandcamp complete"
+      }
+      [ -d "${mpd_music}/Soundcloud" ] && {
+        beet import -q "${mpd_music}/Soundcloud"
+        beet import -q -s "${mpd_music}/Soundcloud"
+        echo "Beets import of ${mpd_music}/Soundcloud complete"
+      }
+    }
+    exit 0
+  }
   surl=`echo "${URL}" | sed -e "s%https://%%" -e "s%http://%%"`
   printf "\nDownloading:\n  ${surl}\n"
   printf "\nStoring download(s) in:\n  ${DDIR}\n\n"

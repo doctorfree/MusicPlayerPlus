@@ -2,7 +2,7 @@ Name: MusicPlayerPlus
 Version:    %{_version}
 Release:    %{_release}
 BuildArch:  x86_64
-Requires: boost, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tilix, cool-retro-term, gnome-terminal, tmux, ffmpeg, inotify-tools, fzf, mpc, python3-devel, python3-pip, mplayer, asciinema, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice
+Requires: boost, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tilix, cool-retro-term, gnome-terminal, tmux, ffmpeg, inotify-tools, figlet, fzf, mpc, python3-devel, python3-pip, mplayer, asciinema, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice
 URL:        https://github.com/doctorfree/MusicPlayerPlus
 Vendor:     Doctorwhen's Bodacious Laboratory
 Packager:   ronaldrecord@gmail.com
