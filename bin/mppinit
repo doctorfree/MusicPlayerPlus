@@ -564,7 +564,7 @@ shift $(( OPTIND - 1 ))
             printf "\n\tbeet duplicates -d"
             printf "\n\tbeet move"
             printf "\n\tbeet lastgenre"
-            printf "\n\tmpplus -D"
+            printf "\n\tmpplus -D art"
             if [ "${essentia}" ]
             then
               printf "\n\tmpplus -X all"
@@ -625,7 +625,7 @@ shift $(( OPTIND - 1 ))
     printf "\n# Genre retrieval ${ELAPSED}\n" >> "${GEN_LOG}"
 
     printf "\n\tDownloading album cover art\n\n"
-    mpplus -D > /dev/null 2>&1
+    mpplus -D art > /dev/null 2>&1
     [ "${proceed}" ] || {
       while true
       do
