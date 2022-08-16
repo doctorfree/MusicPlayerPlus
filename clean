@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo rm -rf dist releases blissify bliss-analyze
+sudo rm -rf dist releases blissify bliss-analyze gaia
 
 cd essentia
 python3 waf distclean
