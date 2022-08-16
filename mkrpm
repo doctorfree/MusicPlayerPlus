@@ -148,8 +148,8 @@ ${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp bliss-analyze/target/release/bliss-analyze ${OUT_DIR}/${DESTDIR}/bin
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
-           ${OUT_DIR}/${DESTDIR}/bin
+#${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
+#           ${OUT_DIR}/${DESTDIR}/bin
 # Install essentia
 # if [ -x scripts/build-essentia.sh ]
 # then

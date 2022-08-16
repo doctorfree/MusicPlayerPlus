@@ -200,8 +200,8 @@ ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 }
 ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
-           ${OUT_DIR}/${DESTDIR}/bin
+#${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
+#           ${OUT_DIR}/${DESTDIR}/bin
 # Install essentia
 # if [ -x scripts/build-essentia.sh ]
 # then

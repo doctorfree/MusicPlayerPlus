@@ -186,8 +186,8 @@ cd "${SRC}/${SRC_NAME}"
   }
   ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
            ${OUT_DIR}/${DESTDIR}/bin
-  ${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
-           ${OUT_DIR}/${DESTDIR}/bin
+  #${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
+  #         ${OUT_DIR}/${DESTDIR}/bin
 
   ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
   ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}

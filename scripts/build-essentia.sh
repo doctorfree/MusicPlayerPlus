@@ -121,11 +121,16 @@ tensor=
 }
 
 PKGPATH=`pkg-config --variable pc_path pkg-config`
+[ -d usr/lib/ffmpeg4.4/pkgconfig ] && {
+  PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+}
 export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
 
 cd ${PROJ}
-python3 waf configure ${prefix} --build-static --with-python ${tensor} \
-                                --with-gaia --with-examples
+python3 waf configure ${prefix} --build-static \
+                                --with-python ${tensor} \
+                                --with-gaia \
+                                --with-example=streaming_extractor_music
 
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
