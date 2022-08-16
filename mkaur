@@ -144,6 +144,7 @@ cd "${SRC}/${SRC_NAME}"
     python3 waf
     cd ..
   fi
+}
 
 [ "${package}" ] && {
   ${SUDO} rm -rf dist
