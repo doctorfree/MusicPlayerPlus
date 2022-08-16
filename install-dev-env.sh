@@ -33,7 +33,7 @@ else
           ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
     if [ "$1" == "-r" ]
     then
-      sudo pacman -R ${PKGS}
+      sudo pacman -Rs ${PKGS}
     else
       sudo pacman -S --needed ${PKGS}
     fi
