@@ -121,7 +121,7 @@ tensor=
 }
 
 PKGPATH=`pkg-config --variable pc_path pkg-config`
-[ -d usr/lib/ffmpeg4.4/pkgconfig ] && {
+[ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
   PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
 }
 export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
