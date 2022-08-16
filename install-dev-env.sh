@@ -3,8 +3,10 @@
 # install-dev-env.sh - install or remove the build dependencies
 
 debian=
+arch=
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
+[ "${ID}" == "arch" ] && arch=1
 [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 
 if [ "${debian}" ]
@@ -24,15 +26,28 @@ then
     sudo apt install ${PKGS}
   fi
 else
-  PKGS="alsa-lib-devel ncurses-devel fftw3-devel \
+  if [ "${arch}" ]
+  then
+    PKGS="base-devel eigen fftw clang ffmpeg libsamplerate taglib chromaprint \
+          libmpdclient boost-libs iniparser libyaml swig python alsa-lib \
+          ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
+    if [ "$1" == "-r" ]
+    then
+      sudo pacman -R ${PKGS}
+    else
+      sudo pacman -S --needed ${PKGS}
+    fi
+  else
+    PKGS="alsa-lib-devel ncurses-devel fftw3-devel \
         pulseaudio-libs-devel libtool automake iniparser-devel \
         SDL2-devel eigen3-devel libyaml-devel clang-devel \
         ffmpeg-devel libchromaprint-devel python-devel \
         python3-devel python3-yaml python3-six sqlite-devel"
-  if [ "$1" == "-r" ]
-  then
-    sudo dnf remove ${PKGS}
-  else
-    sudo dnf install ${PKGS}
+    if [ "$1" == "-r" ]
+    then
+      sudo dnf remove ${PKGS}
+    else
+      sudo dnf install ${PKGS}
+    fi
   fi
 fi
