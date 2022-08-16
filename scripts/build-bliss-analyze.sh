@@ -52,12 +52,26 @@ have_cargo=`type -p cargo`
 
 cd ${PROJ}
 
-arch=
+PKGPATH=`pkg-config --variable pc_path pkg-config`
+[ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+  PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+}
+export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+
+platform=
+[ -f /etc/os-release ] && . /etc/os-release
+[ "${ID_LIKE}" == "debian" ] && platform=debian
+[ "${ID}" == "arch" ] && platform=arch
 have_dpkg=`type -p dpkg`
 [ "${have_dpkg}" ] && arch=`dpkg --print-architecture`
 if [ "${arch}" == "armhf" ]
 then
   cargo build --release --features=ffmpeg-next/rpi
 else
-  cargo build --release
+  if [ "${platform}" == "debian" ]
+  then
+    cargo build --release
+  else
+    cargo build --release
+  fi
 fi

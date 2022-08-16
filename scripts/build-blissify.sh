@@ -54,6 +54,12 @@ have_cargo=`type -p cargo`
 
 cd ${PROJ}
 
+PKGPATH=`pkg-config --variable pc_path pkg-config`
+[ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+  PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+}
+export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+
 arch=
 have_dpkg=`type -p dpkg`
 [ "${have_dpkg}" ] && arch=`dpkg --print-architecture`
