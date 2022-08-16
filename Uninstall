@@ -6,16 +6,19 @@ then
     ./macUninstall
 else
   debian=
+  arch=
   have_apt=`type -p apt`
   have_dpkg=`type -p dpkg`
   have_rpm=`type -p rpm`
   have_yum=`type -p yum`
+  have_pac=`type -p pacman`
   [ -f /etc/os-release ] && . /etc/os-release
   [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "arch" ] && arch=1
   [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 
   PKG=musicplayerplus
-  [ "${debian}" ] || PKG=MusicPlayerPlus
+  [ "${debian}" ] || [ "${arch}" ] || PKG=MusicPlayerPlus
 
   if [ "${debian}" ]
   then
@@ -31,15 +34,25 @@ else
       fi
     fi
   else
-    if [ "${have_yum}" ]
+    if [ "${arch}" ]
     then
-      sudo yum remove "${PKG}"
-    else
-      if [ "${have_rpm}" ]
+      if [ "${have_pac}" ]
       then
-        sudo rpm -e "${PKG}"
+        sudo pacman -R "${PKG}"
       else
-        echo "Cannot locate either yum or rpm to remove. Skipping."
+        echo "Cannot locate pacman to remove. Skipping."
+      fi
+    else
+      if [ "${have_yum}" ]
+      then
+        sudo yum remove "${PKG}"
+      else
+        if [ "${have_rpm}" ]
+        then
+          sudo rpm -e "${PKG}"
+        else
+          echo "Cannot locate either yum or rpm to remove. Skipping."
+        fi
       fi
     fi
   fi
