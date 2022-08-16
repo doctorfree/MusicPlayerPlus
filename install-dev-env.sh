@@ -28,7 +28,7 @@ then
 else
   if [ "${arch}" ]
   then
-    PKGS="base-devel eigen fftw clang ffmpeg-full libsamplerate taglib \
+    PKGS="base-devel eigen fftw clang ffmpeg4.4 libsamplerate taglib \
           chromaprint libmpdclient boost-libs iniparser libyaml swig python \
           alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
           qt5-tools python-numpy python-six"
