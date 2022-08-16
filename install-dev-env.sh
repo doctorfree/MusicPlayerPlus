@@ -29,8 +29,8 @@ else
   if [ "${arch}" ]
   then
     PKGS="base-devel eigen fftw clang ffmpeg libsamplerate taglib chromaprint \
-          libmpdclient boost-libs iniparser libyaml swig python alsa-lib \
-          ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
+        libmpdclient boost-libs iniparser libyaml swig python alsa-lib rustup \
+        ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
     if [ "$1" == "-r" ]
     then
       sudo pacman -R ${PKGS}
