@@ -29,8 +29,8 @@ else
   if [ "${arch}" ]
   then
     PKGS="base-devel eigen fftw clang ffmpeg libsamplerate taglib chromaprint \
-        libmpdclient boost-libs iniparser libyaml swig python alsa-lib rustup \
-        ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
+          libmpdclient boost-libs iniparser libyaml swig python alsa-lib \
+          ncurses readline libpulse libcurl-compat sqlite qt5-base qt5-tools"
     if [ "$1" == "-r" ]
     then
       sudo pacman -R ${PKGS}
@@ -50,4 +50,25 @@ else
       sudo dnf install ${PKGS}
     fi
   fi
+fi
+
+have_cargo=`type -p cargo`
+if [ "$1" == "-r" ]
+then
+  [ "${have_cargo}" ] && rustup self uninstall
+else
+  [ "${have_cargo}" ] || {
+    [ -f ~/.cargo/env ] && source ~/.cargo/env
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        [ -f ~/.cargo/env ] && source ~/.cargo/env
+    }
+    have_cargo=`type -p cargo`
+    [ "${have_cargo}" ] || {
+        echo "The cargo tool cannot be located."
+        echo "Cargo is required to build blissify. Exiting."
+        exit 1
+    }
+  }
 fi
