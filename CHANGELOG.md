@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 
 ## MusicPlayerPlus-2.0.1r2 (2022-08-20)
 
+* Add Arch Linux build and packaging support
 * Add mpplus menu to manage downloads
 * Add new command 'listyt' to list YouTube video titles and urls
 * Add Sphinx docs for Read the Docs MusicPlayerPlus documentation

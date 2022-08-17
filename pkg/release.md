@@ -2,6 +2,7 @@
 
 This major release of MusicPlayerPlus adds:
 
+* Arch Linux build and packaging support
 * Integration of the Beets media library management system
 * Automated Beets xtractor plugin installation and configuration
     * Beets xtractor plugin performs acoustic analysis and metadata updates
