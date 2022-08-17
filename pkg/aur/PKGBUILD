@@ -48,4 +48,5 @@ check() {
 
 package() {
     echo "Package function"
+    mv "${PKG_NAME}_${PKG_VER}" pkg
 }

@@ -43,7 +43,7 @@ arch_arch=`uname -m`
 # SUDO=
 }
 
-export SRC SRC_NAME
+export SRC SRC_NAME PKG_NAME PKG_VER
 . "${SRC}/${SRC_NAME}/VERSION"
 PKG_VER=${VERSION}
 PKG_REL=${RELEASE}
@@ -260,7 +260,7 @@ cd "${SRC}/${SRC_NAME}"
   echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
   cd dist
 # cd "${SRC}/${SRC_NAME}/pkg/aur"
-  mv "${PKG_NAME}_${PKG_VER}" pkg
+# mv "${PKG_NAME}_${PKG_VER}" pkg
   export PKGDEST="${SRC}/${SRC_NAME}/dist"
   makepkg --repackage
   echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
