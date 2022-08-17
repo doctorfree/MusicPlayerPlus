@@ -273,6 +273,6 @@ cd "${SRC}/${SRC_NAME}"
   [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
-    ${SUDO} cp *.tgz *.zip ../releases/${PKG_VER}
+    ${SUDO} cp *.zst *.tgz *.zip ../releases/${PKG_VER}
   }
 }
