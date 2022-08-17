@@ -48,5 +48,5 @@ check() {
 
 package() {
     cd "${src}/dist"
-    sudo mv "${PKG_NAME}_${PKG_VER}/usr" "${pkgdir}"
+    cp -a "${PKG_NAME}_${PKG_VER}/usr" "${pkgdir}/usr"
 }
