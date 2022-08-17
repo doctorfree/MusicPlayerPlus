@@ -39,7 +39,8 @@ prepare() {
 }
 
 build() {
-	./mkaur build
+	cd ${src}
+	scripts/mkaur build
 }
 
 check() {
@@ -47,5 +48,6 @@ check() {
 }
 
 package() {
-	./mkaur package
+	cd ${src}
+	scripts/mkaur package
 }

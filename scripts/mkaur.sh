@@ -259,7 +259,7 @@ cd "${SRC}/${SRC_NAME}"
 
   echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
   cd ${OUT_DIR}
-  makepkg
+  makepkg --repackage
   echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
   tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
 
