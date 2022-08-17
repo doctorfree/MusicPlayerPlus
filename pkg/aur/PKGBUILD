@@ -10,7 +10,7 @@ fi
 pkgname=musicplayerplus
 pkgver=$VERSION
 pkgrel=$RELEASE
-epoch=
+# epoch=
 pkgdesc="MPD client plus visualizer plus Beets library management plus more"
 arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/MusicPlayerPlus"
@@ -24,7 +24,7 @@ provides=()
 conflicts=()
 replaces=()
 backup=()
-options=()
+# options=()
 install=
 changelog=
 # source=("$pkgname"::"git+file://${src}")
