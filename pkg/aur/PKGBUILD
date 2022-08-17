@@ -198,6 +198,103 @@ build() {
 }
 
 package() {
-    cd "${srcdir}/${SRC_NAME}/dist"
-    cp -a "${SRC_NAME}_${VERSION}/usr" "${pkgdir}/usr"
+  cd "${srcdir}/${SRC_NAME}"
+  destdir=usr
+  for dir in "${destdir}" "${destdir}/share" "${destdir}/share/man" \
+      "${destdir}/share/applications" "${destdir}/share/doc" \
+      "${destdir}/share/doc/${PKG}" "${destdir}/share/doc/${PKG}/mpcplus" \
+      "${destdir}/share/consolefonts" "${destdir}/share/${PKG}" \
+      "${destdir}/share/licenses" \
+      "${destdir}/share/licenses/${PKG}" \
+      "${destdir}/share/${PKG}/mpcplus" \
+      "${destdir}/share/doc/${PKG}/blissify" \
+      "${destdir}/share/doc/${PKG}/bliss-analyze"
+  do
+    [ -d ${pkgdir}/${dir} ] || mkdir ${pkgdir}/${dir}
+  done
+
+  for dir in bin
+  do
+    [ -d ${pkgdir}/${destdir}/${dir} ] && rm -rf ${pkgdir}/${destdir}/${dir}
+  done
+
+  cp -a bin ${pkgdir}/${destdir}/bin
+  cp mpcplus/src/mpcplus ${pkgdir}/${destdir}/bin/mpcplus
+  cp mppcava/mppcava ${pkgdir}/${destdir}/bin/mppcava
+  cp mppcava/mppcava.psf ${pkgdir}/${destdir}/share/consolefonts
+  [ -f blissify/target/release/blissify ] && {
+    cp blissify/target/release/blissify ${pkgdir}/${destdir}/bin
+  }
+  [ -f bliss-analyze/target/release/bliss-analyze ] && {
+    cp bliss-analyze/target/release/bliss-analyze ${pkgdir}/${destdir}/bin
+  }
+  cp essentia/build/src/examples/essentia_streaming_extractor_music \
+           ${pkgdir}/${destdir}/bin
+
+  cp *.desktop "${pkgdir}/${destdir}/share/applications"
+  cp copyright ${pkgdir}/${destdir}/share/doc/${PKG}
+  cp LICENSE ${pkgdir}/${destdir}/share/doc/${PKG}
+  cp LICENSE ${pkgdir}/${destdir}/share/licenses/${PKG}
+  cp NOTICE ${pkgdir}/${destdir}/share/doc/${PKG}
+  cp CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${PKG}
+  cp README.md ${pkgdir}/${destdir}/share/doc/${PKG}
+  pandoc -f gfm README.md | tee ${pkgdir}/${destdir}/share/doc/${PKG}/README.html > /dev/null
+  gzip -9 ${pkgdir}/${destdir}/share/doc/${PKG}/CHANGELOG.md
+
+  cp mpcplus/AUTHORS ${pkgdir}/${destdir}/share/doc/${PKG}/mpcplus
+  cp mpcplus/COPYING ${pkgdir}/${destdir}/share/doc/${PKG}/mpcplus
+  cp mpcplus/CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${PKG}/mpcplus
+  cp mpcplus/README.md ${pkgdir}/${destdir}/share/doc/${PKG}/mpcplus
+
+  cp blissify/CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${PKG}/blissify
+  cp blissify/README.md ${pkgdir}/${destdir}/share/doc/${PKG}/blissify
+
+  cp bliss-analyze/ChangeLog ${pkgdir}/${destdir}/share/doc/${PKG}/bliss-analyze
+  cp bliss-analyze/LICENSE ${pkgdir}/${destdir}/share/doc/${PKG}/bliss-analyze
+  cp bliss-analyze/README.md ${pkgdir}/${destdir}/share/doc/${PKG}/bliss-analyze
+
+  cp asound.conf.tmpl ${pkgdir}/${destdir}/share/${PKG}
+  cp mpcplus/doc/config ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp mpcplus/doc/bindings ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp config/config-art.conf ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp config/default_cover.png ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp config/fzmp.conf ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp share/mpcplus-cheat-sheet.txt ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+  cp share/mpcplus-cheat-sheet.md ${pkgdir}/${destdir}/share/${PKG}/mpcplus
+
+  cp -a share/scripts ${pkgdir}/${destdir}/share/${PKG}/scripts
+  cp -a share/svm_models ${pkgdir}/${destdir}/share/${PKG}/svm_models
+  cp -a share/calliope ${pkgdir}/${destdir}/share/${PKG}/calliope
+
+  cp config/xterm-24bit.src ${pkgdir}/${destdir}/share/${PKG}
+  cp config/tmux.conf ${pkgdir}/${destdir}/share/${PKG}
+
+  cp -a config/beets "${pkgdir}/${destdir}/share/${PKG}/beets"
+  cp -a beets "${pkgdir}/${destdir}/share/${PKG}/beets/plugins"
+  cp config/calliope/* "${pkgdir}/${destdir}/share/${PKG}/calliope"
+  cp -a config/mpd "${pkgdir}/${destdir}/share/${PKG}/mpd"
+  cp -a config/mppcava "${pkgdir}/${destdir}/share/${PKG}/mppcava"
+  cp mppcava/example_files/config ${pkgdir}/${destdir}/share/${PKG}/mppcava/template.conf
+  cp -a config/tmuxp ${pkgdir}/${destdir}/share/${PKG}/tmuxp
+  cp -a config/yt-dlp "${pkgdir}/${destdir}/share/${PKG}/yt-dlp"
+  cp -a music "${pkgdir}/${destdir}/share/${PKG}/music"
+
+  cp -a man/man1 ${pkgdir}/${destdir}/share/man/man1
+  cp -a man/man5 ${pkgdir}/${destdir}/share/man/man5
+  cp -a share/menu "${pkgdir}/${destdir}/share/menu"
+
+  [ -f .gitignore ] && {
+    while read ignore
+    do
+        rm -f ${pkgdir}/${destdir}/${ignore}
+    done < .gitignore
+  }
+
+  chmod 644 ${pkgdir}/${destdir}/share/man/*/*
+  chmod 644 ${pkgdir}/${destdir}/share/menu/*
+  chmod 755 ${pkgdir}/${destdir}/bin/* \
+            ${pkgdir}/${destdir}/bin \
+            ${pkgdir}/${destdir}/share/man \
+            ${pkgdir}/${destdir}/share/man/* \
+            ${pkgdir}/${destdir}/share/${PKG}/scripts/*
 }
