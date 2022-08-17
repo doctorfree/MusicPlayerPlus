@@ -32,11 +32,13 @@ else
           chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
           alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
           qt5-tools python python-numpy python-six pandoc zip"
+    RUN_PKGS="mpd inotify-tools figlet gnome-terminal tilix cool-retro-term \
+          fzf mpc python-pip mplayer asciinema dconf"
     if [ "$1" == "-r" ]
     then
-      sudo pacman -Rs ${PKGS}
+      sudo pacman -Rs ${RUN_PKGS} ${PKGS}
     else
-      sudo pacman -S --needed ${PKGS}
+      sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
     fi
   else
     PKGS="alsa-lib-devel ncurses-devel fftw3-devel \
