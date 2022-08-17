@@ -10,12 +10,12 @@ arch=
 
 if [ "${debian}" ]
 then
-  scripts/mkdeb.sh
+  scripts/mkdeb.sh $*
 else
   if [ "${arch}" ]
   then
-    scripts/mkaur.sh
+    scripts/mkaur.sh $*
   else
-    scripts/mkrpm.sh
+    scripts/mkrpm.sh $*
   fi
 fi
