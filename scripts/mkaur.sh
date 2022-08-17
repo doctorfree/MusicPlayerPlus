@@ -270,6 +270,15 @@ cd "${SRC}/${SRC_NAME}"
   export PKGDEST="${SRC}/${SRC_NAME}/dist"
   makepkg --repackage
 
+  # Rename package if necessary
+  for zstfile in *.zst
+  do
+    [ "${zstfile}" == "*.zst" ] && continue
+    newnam=`echo ${zstfile} | sed -e "s/${PKG}-${PKG_VER}-${PKG_REL}/${PKG_NAME}_${PKG_VER}-${PKG_REL}/"`
+    [ "${zstfile}" == "${newnam}" ] && continue
+    mv ${zstfile} ${newnam}
+  done
+
   [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
