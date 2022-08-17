@@ -154,6 +154,8 @@ cd "${SRC}/${SRC_NAME}"
   mkdir ${OUT_DIR}
   chmod 755 ${OUT_DIR}
   cp pkg/aur/PKGBUILD dist/PKGBUILD
+  cp pkg/aur/musicplayerplus.install dist/musicplayerplus.install
+  cp VERSION dist/VERSION
 
   for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \

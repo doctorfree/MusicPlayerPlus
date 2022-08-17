@@ -54,54 +54,47 @@
 # Contributor: Oscar Mayor <oscar.mayor@upf.edu>
 # Contributor: Sankalp Gulati <sankalp.gulati@upf.edu>
 
+SRC_NAME=MusicPlayerPlus
 if [ -f ${SRC}/${SRC_NAME}/VERSION ]
 then
   . ${SRC}/${SRC_NAME}/VERSION
-  src="${SRC}/${SRC_NAME}"
 else
-  . ./VERSION
-  src="."
+  if [ -f VERSION ]
+  then
+    . ./VERSION
+  else
+    if [ -f ../../VERSION ]
+    then
+      . ../../VERSION
+    else
+      VERSION=2.0.1
+      RELEASE=2
+    fi
+  fi
 fi
 pkgname=musicplayerplus
 pkgver=$VERSION
 pkgrel=$RELEASE
-# epoch=
-pkgdesc="MPD client plus visualizer plus Beets library management plus more"
+pkgdesc="Character based MPD client, spectrum visualizer, Beets library management, plus more"
 arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/MusicPlayerPlus"
 license=('MIT')
-groups=()
-depends=(util-linux boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet gnome-terminal tilix cool-retro-term tmux fzf mpc python python-pip python-numpy python-six mplayer asciinema dconf eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sqlite qt5-base qt5-tools)
-makedepends=()
-checkdepends=()
-optdepends=()
-provides=()
-conflicts=()
-replaces=()
-backup=()
-# options=()
-install=
-changelog=
-# source=("$pkgname"::"git+file://${src}")
+depends=(util-linux boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet gnome-terminal tmux fzf mpc python python-pip python-numpy python-six mplayer dconf eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sqlite qt5-base)
+makedepends=(boost pandoc qt5-tools zip)
+optdepends=('asciinema: record and share terminal sessions'
+            'cool-retro-term: cool retro terminal emulator'
+            'tilix: tiling terminal emulator')
+install=musicplayerplus.install
 source=("git+https://github.com/doctorfree/MusicPlayerPlus.git")
+options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 sha256sums=('SKIP')
-noextract=()
-md5sums=()
-validpgpkeys=()
-
-prepare() {
-    echo "Prepare function"
-}
 
 build() {
-    echo "Build function"
-}
-
-check() {
-    echo "Check function"
+  cd "${srcdir}/${SRC_NAME}"
+  ./mkpkg build
 }
 
 package() {
-    cd "${src}/dist"
-    cp -a "${PKG_NAME}_${PKG_VER}/usr" "${pkgdir}/usr"
+    cd "${srcdir}/${SRC_NAME}/dist"
+    cp -a "${SRC_NAME}_${VERSION}/usr" "${pkgdir}/usr"
 }
