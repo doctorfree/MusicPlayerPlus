@@ -91,7 +91,110 @@ sha256sums=('SKIP')
 
 build() {
   cd "${srcdir}/${SRC_NAME}"
-  ./mkpkg build
+  # Build mpcplus
+  if [ -x scripts/build-mpcplus.sh ]
+  then
+    scripts/build-mpcplus.sh -v
+  else
+    cd mpcplus
+    make clean
+    make distclean
+    [ -x ./configure ] || ./autogen.sh > /dev/null
+    ./configure --prefix=/usr \
+                --enable-outputs \
+                --enable-clock \
+                --enable-visualizer \
+                --with-fftw \
+                --with-taglib > configure$$.out
+    make > make$$.out
+    cd ..
+  fi
+
+  # Build mppcava
+  if [ -x scripts/build-mppcava.sh ]
+  then
+    scripts/build-mppcava.sh
+  else
+    cd mppcava
+    make clean
+    make distclean
+    [ -x ./configure ] || ./autogen.sh > /dev/null
+    ./configure --prefix=/usr > configure$$.out
+    make > make$$.out
+    cd ..
+  fi
+
+  # Build bliss-analyze
+  if [ -x scripts/build-bliss-analyze.sh ]
+  then
+    scripts/build-bliss-analyze.sh
+  else
+    PROJ=bliss-analyze
+    [ -d ${PROJ} ] || git clone https://github.com/doctorfree/bliss-analyze
+    [ -x ${PROJ}/target/release/bliss-analyze ] || {
+      have_cargo=`type -p cargo`
+      if [ "${have_cargo}" ]
+      then
+        cd ${PROJ}
+        PKGPATH=`pkg-config --variable pc_path pkg-config`
+        [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+          PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+        }
+        export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+        cargo build -r
+        cd ..
+      else
+        echo "The cargo tool cannot be located."
+        echo "Cargo is required to build bliss-analyze."
+      fi
+    }
+  fi
+
+  # Build blissify
+  if [ -x scripts/build-blissify.sh ]
+  then
+    scripts/build-blissify.sh
+  else
+    PROJ=blissify
+    [ -d ${PROJ} ] || git clone https://github.com/doctorfree/blissify
+    [ -x ${PROJ}/target/release/blissify ] || {
+      have_cargo=`type -p cargo`
+      if [ "${have_cargo}" ]
+      then
+        cd ${PROJ}
+        PKGPATH=`pkg-config --variable pc_path pkg-config`
+        [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+          PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+        }
+        export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+        cargo build -r
+        cd ..
+      else
+        echo "The cargo tool cannot be located."
+        echo "Cargo is required to build blissify."
+      fi
+    }
+  fi
+
+  # Build essentia
+  if [ -x scripts/build-essentia.sh ]
+  then
+    scripts/build-essentia.sh
+  else
+    cd essentia
+    PKGPATH=`pkg-config --variable pc_path pkg-config`
+    [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+      PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+    }
+    export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+    python3 waf configure --prefix=/usr \
+                          --build-static \
+                          --with-python \
+                          --with-gaia \
+                          --with-example=streaming_extractor_music
+    python3 waf
+    cd ..
+  fi
 }
 
 package() {

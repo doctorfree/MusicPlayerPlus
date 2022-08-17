@@ -60,7 +60,8 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 
 cd "${SRC}/${SRC_NAME}"
 
-[ "${build}" ] && {
+if [ "${build}" ]
+then
   # Build mpcplus
   if [ -x scripts/build-mpcplus.sh ]
   then
@@ -103,14 +104,20 @@ cd "${SRC}/${SRC_NAME}"
     [ -d ${PROJ} ] || git clone https://github.com/doctorfree/bliss-analyze
     [ -x ${PROJ}/target/release/bliss-analyze ] || {
       have_cargo=`type -p cargo`
-      [ "${have_cargo}" ] || {
+      if [ "${have_cargo}" ]
+      then
+        cd ${PROJ}
+        PKGPATH=`pkg-config --variable pc_path pkg-config`
+        [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+          PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+        }
+        export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+        cargo build -r
+        cd ..
+      else
         echo "The cargo tool cannot be located."
-        echo "Cargo is required to build bliss-analyze. Exiting."
-        exit 1
-      }
-      cd ${PROJ}
-      cargo build -r
-      cd ..
+        echo "Cargo is required to build bliss-analyze."
+      fi
     }
   fi
 
@@ -123,14 +130,20 @@ cd "${SRC}/${SRC_NAME}"
     [ -d ${PROJ} ] || git clone https://github.com/doctorfree/blissify
     [ -x ${PROJ}/target/release/blissify ] || {
       have_cargo=`type -p cargo`
-      [ "${have_cargo}" ] || {
+      if [ "${have_cargo}" ]
+      then
+        cd ${PROJ}
+        PKGPATH=`pkg-config --variable pc_path pkg-config`
+        [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+          PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+        }
+        export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+        cargo build -r
+        cd ..
+      else
         echo "The cargo tool cannot be located."
-        echo "Cargo is required to build blissify. Exiting."
-        exit 1
-      }
-      cd ${PROJ}
-      cargo build -r
-      cd ..
+        echo "Cargo is required to build blissify."
+      fi
     }
   fi
 
@@ -140,13 +153,25 @@ cd "${SRC}/${SRC_NAME}"
     scripts/build-essentia.sh
   else
     cd essentia
-    python3 waf configure --prefix=/usr --build-static --with-python --with-examples
+    PKGPATH=`pkg-config --variable pc_path pkg-config`
+    [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
+      PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
+    }
+    export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
+    python3 waf configure --prefix=/usr \
+                          --build-static \
+                          --with-python \
+                          --with-gaia \
+                          --with-example=streaming_extractor_music
     python3 waf
     cd ..
   fi
-}
+else
+  echo "Skipping build"
+fi
 
-[ "${package}" ] && {
+if [ "${package}" ]
+then
   ${SUDO} rm -rf dist
   mkdir dist
 
@@ -286,4 +311,6 @@ cd "${SRC}/${SRC_NAME}"
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
     ${SUDO} cp *.zst *.tgz *.zip ../releases/${PKG_VER}
   }
-}
+else
+  echo "Skipping packaging"
+fi
