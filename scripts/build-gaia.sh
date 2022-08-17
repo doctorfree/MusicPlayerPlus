@@ -79,5 +79,8 @@ arch=`uname -m`
 
 ./waf
 
-[ "${INSTALL}" ] && sudo ./waf install
+if [ "${INSTALL}" ]
+then
+    sudo ./waf install
+fi
 

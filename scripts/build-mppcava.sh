@@ -76,4 +76,7 @@ prefix="--prefix=/usr"
 
 make
 
-[ "${INSTALL}" ] && sudo make install
+if [ "${INSTALL}" ]
+then
+    sudo make install
+fi

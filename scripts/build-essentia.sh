@@ -136,5 +136,8 @@ python3 waf configure ${prefix} --build-static \
 
 python3 waf
 
-[ "${INSTALL}" ] && python3 waf install ${destdir}
+if [ "${INSTALL}" ]
+then
+    python3 waf install ${destdir}
+fi
 
