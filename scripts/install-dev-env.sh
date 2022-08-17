@@ -36,7 +36,7 @@ else
           fzf mpc python-pip mplayer asciinema dconf"
     if [ "$1" == "-r" ]
     then
-      sudo pacman -Rs ${RUN_PKGS} ${PKGS}
+      sudo pacman -Rs ${RUN_PKGS}
     else
       sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
     fi
