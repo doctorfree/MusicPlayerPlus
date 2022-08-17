@@ -1,0 +1,21 @@
+#!/bin/bash
+
+debian=
+arch=
+
+[ -f /etc/os-release ] && . /etc/os-release
+[ "${ID_LIKE}" == "debian" ] && debian=1
+[ "${ID}" == "arch" ] && arch=1
+[ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
+
+if [ "${debian}" ]
+then
+  scripts/mkdeb.sh
+else
+  if [ "${arch}" ]
+  then
+    scripts/mkaur.sh
+  else
+    scripts/mkrpm.sh
+  fi
+fi

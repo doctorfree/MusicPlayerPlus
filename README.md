@@ -1609,10 +1609,10 @@ MusicPlayerPlus components have build dependencies on the following:
 * [Chromaprint](https://github.com/acoustid/chromaprint)
 * [TensorFlow](https://tensorflow.org/)
 
-On Debian based systems like Ubuntu Linux, install build dependencies via:
+Install build dependencies via:
 
 ```
-./install-dev-env.sh
+scripts/install-dev-env.sh
 ```
 
 or manually with:
@@ -1629,13 +1629,7 @@ sudo apt-get install \
     libavfilter-dev libavdevice-dev libsqlite3-dev
 ```
 
-On RPM based systems like Fedora Linux, install build dependencies via:
-
-```
-./install-dev-env.sh
-```
-
-or manually with:
+On RPM based systems like Fedora Linux, manually install build dependencies via:
 
 ```
 sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
@@ -1645,10 +1639,22 @@ sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
      python3-devel python3-yaml python3-six sqlite-devel
 ```
 
+On Arch Linux or other PKGBUILD based Linux systems, manually install build
+dependencies via:
+
+```
+sudo pacman -S --needed base-devel eigen fftw clang ffmpeg4.4 libsamplerate \
+     taglib chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
+     alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
+     qt5-tools python python-numpy python-six pandoc zip
+```
+
+#### Install Gaia
+
 It is necessary to build and install Gaia from source:
 
 ```
-./scripts/build-gaia.sh -i
+./build -i gaia
 ```
 
 ### Install packaging dependencies
@@ -1669,22 +1675,25 @@ sudo dnf install rpm-build rpm-devel rpmlint rpmdevtools
 
 ### Build and package MusicPlayerPlus
 
-On Debian based systems like Ubuntu Linux, build and package MusicPlayerPlus via:
+To build and package MusicPlayerPlus, execute the command:
 
 ```
-./mkdeb
+./mkpkg
 ```
 
-On RPM based systems like Fedora Linux, build and package MusicPlayerPlus via:
+On Debian based systems like Ubuntu Linux, the `mkpkg` scripts executes
+`scripts/mkdeb.sh`.
 
-```
-./mkrpm
-```
+On RPM based systems like Fedora Linux, the `mkpkg` scripts executes
+`scripts/mkrpm.sh`.
+
+On PKGBUILD based systems like Arch Linux, the `mkpkg` scripts executes
+`scripts/mkaur.sh`.
 
 ### Install MusicPlayerPlus from source build
 
 After successfully building and packaging MusicPlayerPlus with either
-`./mkdeb` or `./mkrpm`, install the MusicPlayerPlus package with the command:
+`./mkpkg`, install the MusicPlayerPlus package with the command:
 
 ```
 ./Install
@@ -1791,11 +1800,14 @@ For example, to compile the MPD client `mpcplus` from source, run the command:
 ./scripts/build-mpcplus.sh
 ```
 
-On Debian and RPM based systems the MusicPlayerPlus installation package can be
-created with the `mkdeb` and `mkrpm` scripts. These scripts invoke the build
-scripts for each of the projects included with MusicPlayerPlus, populate a
-distribution tree, and call the respective packaging utilities. Packages are
-saved in the `./releases/<version>/` folder. Once a package has been created
+On Debian (e.g. Ubuntu), PKGBUILD (e.g. Arch) and RPM (e.g. Fedora) based
+systems the MusicPlayerPlus installation package can be created with the
+`mkpkg` scripts. The `mkpkg` script determines which platform it is on
+and executes the appropriate build and packaging script in the `scripts/`
+directory. These scripts invoke the build scripts for each of the projects
+included with MusicPlayerPlus, populate a distribution tree, and call the
+respective packaging utilities. Packages are saved in the
+`./releases/<version>/` folder. Once a package has been created
 it can be installed with the `Install` script.
 
 It's not necessary to have C/C++ expertise to contribute to MusicPlayerPlus

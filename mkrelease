@@ -38,12 +38,12 @@ done
 shift $(( OPTIND - 1 ))
 
 [ "$CLEAN" ] && ./clean
-[ "$PACKAGE" ] && ./mkdeb
+[ "$PACKAGE" ] && scripts/mkdeb.sh
 
 ANNO="MusicPlayerPlus Version ${VERSION} Release ${RELEASE}"
 gittag v${VERSION}r${RELEASE} ${ANNO}
 
-echo "Copy RPM to releases/${VERSION}"
+echo "Copy RPI Debian, Arch Linux package, and RPM to releases/${VERSION}"
 
 read -p "Press Enter to continue" answer
 
