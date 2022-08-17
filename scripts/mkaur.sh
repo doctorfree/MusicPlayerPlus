@@ -153,7 +153,7 @@ cd "${SRC}/${SRC_NAME}"
   [ -d ${OUT_DIR} ] && rm -rf ${OUT_DIR}
   mkdir ${OUT_DIR}
   chmod 755 ${OUT_DIR}
-  cp pkg/aur/PKGBUILD ${OUT_DIR}/PKGBUILD
+# cp pkg/aur/PKGBUILD ${OUT_DIR}/PKGBUILD
 
   for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
@@ -258,9 +258,12 @@ cd "${SRC}/${SRC_NAME}"
   ${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
 
   echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
-  cd ${OUT_DIR}
+# cd ${OUT_DIR}
+  cd "${SRC}/${SRC_NAME}/pkg/aur"
+  export PKGDEST="${OUT_DIR}"
   makepkg --repackage
   echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
+  cd ${OUT_DIR}
   tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
 
   have_zip=`type -p zip`
@@ -272,6 +275,6 @@ cd "${SRC}/${SRC_NAME}"
   [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
-    ${SUDO} cp *.zst *.tgz *.zip ../releases/${PKG_VER}
+    ${SUDO} cp *.tgz *.zip ../releases/${PKG_VER}
   }
 }

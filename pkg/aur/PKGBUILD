@@ -35,12 +35,11 @@ md5sums=()
 validpgpkeys=()
 
 prepare() {
-	cd ${src}
+    echo "Prepare function"
 }
 
 build() {
-	cd ${src}
-	scripts/mkaur build
+    echo "Build function"
 }
 
 check() {
@@ -48,6 +47,5 @@ check() {
 }
 
 package() {
-	cd ${src}
-	scripts/mkaur package
+    echo "Package function"
 }
