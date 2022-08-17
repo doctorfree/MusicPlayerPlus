@@ -257,22 +257,19 @@ cd "${SRC}/${SRC_NAME}"
                   ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts/*
   ${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
 
-  echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
-  cd dist
-# cd "${SRC}/${SRC_NAME}/pkg/aur"
-# mv "${PKG_NAME}_${PKG_VER}" pkg
-  export PKGDEST="${SRC}/${SRC_NAME}/dist"
-  makepkg --repackage
   echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
-  cd pkg
+  cd ${OUT_DIR}
   tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz
-
   have_zip=`type -p zip`
   [ "${have_zip}" ] || ${SUDO} pacman -S zip
   echo "Creating zip archive of ${PKG_NAME} ${PKG_VER} distribution"
   zip -q -r ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.zip usr
 
-  cd ..
+  echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
+  cd "${SRC}/${SRC_NAME}/dist"
+  export PKGDEST="${SRC}/${SRC_NAME}/dist"
+  makepkg --repackage
+
   [ "${GCI}" ] || {
     [ -d ../releases ] || mkdir ../releases
     [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
