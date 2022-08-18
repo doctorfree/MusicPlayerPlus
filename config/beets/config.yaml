@@ -51,6 +51,7 @@ plugins:
     - smartplaylist
     - mpdupdate
     - unimported
+    - web
     - xtractor
     - yearfixer
 
@@ -405,6 +406,11 @@ threaded: yes
 unimported:
     ignore_extensions: jpg png
     ignore_subdirectories: data tmp
+
+web:
+    host: 0.0.0.0
+    port: 8337
+    readonly: true
 
 xtractor:
     # auto not implemented yet, run xtractor manually after import

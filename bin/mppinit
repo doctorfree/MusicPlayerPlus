@@ -20,6 +20,8 @@ BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
 CALIPCONFDIR="${CONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
+MOPIDCONFDIR="${CONF}/mopidy"
+MOPIDCONF="${CALIPCONFDIR}/mopidy.conf"
 YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
@@ -30,7 +32,7 @@ mpd_music="~/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] "
-  printf "[bandcamp|import|metadata|soundcloud|sync|yams]"
+  printf "[bandcamp|import|metadata|mopidy|mpd|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -45,6 +47,9 @@ usage() {
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'metadata' performs a library metadata update"
+  printf "\n\t'mopidy' installs and configures Mopidy extensible music server"
+  printf "\n\t\tNote: activating Mopidy deactivates MPD"
+  printf "\n\t'mpd' activates the MPD music server and deactivates Mopidy"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
@@ -125,6 +130,92 @@ create_new_profile() {
   dconf write $profile_path/font "'Monospace ${profont}'" 2> /dev/null
 }
 
+disable_services() {
+  systemctl --user disable mpd.service
+  systemctl --user stop mpd.service
+  systemctl --user disable mpdstats.service
+  systemctl --user stop mpdstats.service
+  systemctl --user disable yams.service
+  systemctl --user stop yams.service
+}
+
+init_mopidy() {
+  debian=
+  arch=
+  [ -f /etc/os-release ] && . /etc/os-release
+  [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "arch" ] && arch=1
+  if [ "${debian}" ]
+  then
+    have_apt=`type -p apt`
+    if [ "${have_apt}" ]
+    then
+      APT=apt
+    else
+      have_aptget=`type -p apt-get`
+      if [ "${have_aptget}" ]
+      then
+        APT=apt-get
+      else
+        echo "Could not locate apt or apt-get. Exiting."
+        exit 1
+      fi
+    fi
+    sudo ${APT} install mopidy mopidy-doc
+  else
+    if [ "${arch}" ]
+    then
+      sudo pacman -S --needed --noconfirm mopidy
+    else
+      have_dnf=`type -p dnf`
+      if [ "${have_dnf}" ]
+      then
+        DNF=dnf
+      else
+        have_yum=`type -p yum`
+        if [ "${have_yum}" ]
+        then
+          DNF=yum
+        else
+          echo "Could not locate dnf or yum. Exiting."
+          exit 1
+        fi
+      fi
+      sudo ${DNF} install mopidy
+    fi
+  fi
+
+  EXTENSIONS="Mopidy-Beets Mopidy-RadioNet Mopidy-Local Mopidy-Podcast \
+              Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-Mpd Mopidy-Scrobbler"
+
+  for ext in "${EXTENSIONS}"
+  do
+    if pip list | grep ${ext} > /dev/null
+    then
+      if [ "${upgrade}" ]
+      then
+        [ "${quiet}" ] || {
+          printf " upgrade ${ext},"
+        }
+        ${PYTHON} -m pip install --user --upgrade ${ext} > /dev/null 2>&1
+      else
+        [ "${quiet}" ] || {
+          printf " ${ext} installed,"
+        }
+      fi
+    else
+      [ "${quiet}" ] || {
+        printf " install ${ext},"
+      }
+      ${PYTHON} -m pip install --user ${ext} > /dev/null 2>&1
+    fi
+  done
+
+  disable_services
+  systemctl --user start mopidy
+  systemctl --user enable mopidy
+}
+
 sync_music_dir() {
   mpd_music=`grep ^music_directory ${MPDCONF}`
   [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
@@ -175,6 +266,17 @@ sync_music_dir() {
       fi
       cp /tmp/bts$$ ${BEETSCONF}
       rm -f /tmp/bts$$
+    }
+    # Sync music dir in mopidy.conf
+    mop_music=`grep ^base_dir ${MOPIDCONF}`
+    mop_music=`echo ${mop_music} | awk ' { print $3 } '`
+    [ "${mpd_music}" == "${mop_music}" ] || {
+      cat ${MOPIDCONF} | \
+        sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
+            -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
+            -e "s%^media_dir = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
+      cp /tmp/mop$$ ${MOPIDCONF}
+      rm -f /tmp/mop$$
     }
     ytd_music=`grep ^-o ${YTDLPCONF} | grep /Downloads/`
     ytd_music=`echo ${ytd_music} | \
@@ -680,6 +782,91 @@ shift $(( OPTIND - 1 ))
   exit 0
 }
 
+[ "$1" == "mopidy" ] && {
+  if [ "${initialized}" ]
+  then
+    printf "\nInstalling, configuring, and activating Mopidy music server."
+    printf "\nThis will deactivate MPD. However, configured Mopidy extensions"
+    printf "\nwill continue to support MusicPlayerPlus MPD clients, Beets,"
+    printf "\nand local music library search, organization, and playback.\n\n"
+    while true
+    do
+      read -p "Do you wish to continue with Mopidy activation ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nMopidy activation aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    init_mopidy
+  else
+    init_warn mopidy
+  fi
+  exit 0
+}
+
+[ "$1" == "mpd" ] && {
+  if [ "${initialized}" ]
+  then
+    printf "\nActivating the Music Player Daemon (MPD) music server."
+    printf "\nThis will deactivate Mopidy and configured Mopidy extensions."
+    while true
+    do
+      read -p "Do you wish to continue with MPD activation ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nMPD activation aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    systemctl is-enabled mopidy.service >/dev/null 2>&1 && {
+      sudo systemctl disable mopidy.service
+    }
+    systemctl is-active mopidy.service >/dev/null 2>&1 && {
+      sudo systemctl stop mopidy.service
+    }
+    systemctl --user is-active mpd.service >/dev/null 2>&1 || {
+      systemctl --user start mpd.service
+    }
+    systemctl --user is-enabled mpd.service >/dev/null 2>&1 || {
+      systemctl --user enable mpd.service
+    }
+    [ -f ${HOME}/.config/systemd/user/mpdstats.service ] && {
+      systemctl --user is-active mpdstats.service >/dev/null 2>&1 || {
+        systemctl --user start mpdstats.service
+      }
+      systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 || {
+        systemctl --user enable mpdstats.service
+      }
+    }
+    [ -f ${HOME}/.config/systemd/user/yams.service ] && {
+      systemctl --user is-active yams.service >/dev/null 2>&1 || {
+        systemctl --user start yams.service
+      }
+      systemctl --user is-enabled yams.service >/dev/null 2>&1 || {
+        systemctl --user enable yams.service
+      }
+    }
+  else
+    init_warn mpd
+  fi
+  exit 0
+}
+
 [ "$1" == "yams" ] && {
   if [ "${initialized}" ]
   then
@@ -941,6 +1128,26 @@ else
 fi
 
 [ "${quiet}" ] || {
+  printf "\n\tInstalling Mopidy configuration in ${MOPIDCONFDIR} ..."
+}
+# If there is no user Mopidy config folder then
+# copy the MusicPlayerPlus Mopidy config folder
+# into the user's home
+if [ -f ${MOPIDCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
+else
+  if [ -d ${MOPIDCONFDIR} ]
+  then
+    cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
+  else
+    cp -a ${MPPCDIR}/mopidy ${MOPIDCONFDIR}
+  fi
+fi
+[ -d ${MOPIDCONFDIR}/cache ] || mkdir -p ${MOPIDCONFDIR}/cache
+[ -d ${MOPIDCONFDIR}/data ] || mkdir -p ${MOPIDCONFDIR}/data
+
+[ "${quiet}" ] || {
   printf "\n\tInstalling yt-dlp configuration in ${YTDLPCONFDIR} ..."
 }
 # If there is no user yt-dlp config folder then
@@ -960,6 +1167,7 @@ fi
 
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
+MOPSTATSD="${SYSTEMDIR}/mopidy.service"
 YAMSTATSD="${SYSTEMDIR}/yams.service"
 [ "${quiet}" ] || {
   printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
@@ -970,6 +1178,13 @@ then
 else
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+fi
+if [ -f ${MOPSTATSD} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.service ${MOPSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/mopidy/mopidy.service ${MOPSTATSD}
 fi
 if [ -f ${YAMSTATSD} ]
 then
@@ -1180,7 +1395,7 @@ then
     ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
   fi
   [ "${quiet}" ] || printf "\n\tModules:"
-  for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
+  for pkg in flask unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
              pylast beets-describe beets-yearfixer beetcamp beets-extrafiles \
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug yt-dlp \
              calliope-music python3-discogs-client bandcamp-downloader scdl

@@ -39,6 +39,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Start MPD](#start-mpd)
     1. [System verification checks](#system-verification-checks)
     1. [Initialize Music Database](#initialize-music-database)
+    1. [Installing Mopidy](#installing-mopidy)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [Documentation](#documentation)
     1. [README for MusicPlayerPlus configuration](#readme-for-musicplayerplus-configuration)
@@ -888,6 +889,48 @@ the command `mpc update`.
 If your music library is very large this process can take several minutes
 to complete. Once the music database has been updated you should see the
 songs, albums, and playlists in your music library appear in the client view.
+
+### Installing Mopidy
+
+The default music server in MusicPlayerPlus is the Music Player Daemon (MPD).
+An alternate music server, Mopidy, is supported and can perform the same
+functions as MPD, is compatible with MPD clients, and can be extended to
+offer many more features. To install, configure, and activate Mopidy 
+issue the command `mppinit mopidy`.
+
+Activating Mopidy will first deactivate MPD. The MusicPlayerPlus Mopidy
+activation runs as a user level system service. Configuration for Mopidy
+and Mopidy extensions resides in `$HOME/.config/mopidy/`. The MusicPlayerPlus
+activation of Mopidy auto-configures Mopidy and the installed extensions.
+
+The `mppinit mopidy` command installs the following Mopidy extensions:
+
+- **Mopidy-Beets**
+    - Mopidy extension for playing music from Beets' web plugin
+- **Mopidy-Mobile**
+    - Fully control a Mopidy music server from your mobile device
+- **Mopidy-Mpd**
+    - Mopidy extension for controlling Mopidy from MPD clients
+- **Mopidy-Local**
+    - Mopidy extension for playing music from your local music archive
+- **Mopidy-Podcast**
+    - Mopidy extension for searching and browsing podcasts
+- **Mopidy-Podcast-iTunes**
+    - Mopidy extension for searching and browsing iTunes podcasts
+- **Mopidy-RadioNet**
+    - A backend for playing radio channels from the radio.net
+- **Mopidy-Scrobbler**
+    - Mopidy extension for scrobbling music to Last.fm
+
+**[NOTE:]** The Mopidy MPD extension provides compatibility with MPD
+clients but does not implement all MPD features. MPD is much more powerful
+and flexible in terms of its configurable inputs and outputs. After
+activating Mopidy some features may not work the same as they did with MPD.
+For example, spectrum visualization may fail or player stats may not be
+available. However, Mopidy offers many features unavailable with MPD.
+It's a tradeoff.
+
+To re-activate MPD and disable Mopidy, issue the command `mppinit mpd`.
 
 ### Terminal Emulator Profiles
 

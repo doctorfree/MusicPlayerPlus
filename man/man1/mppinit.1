@@ -22,7 +22,7 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
 \f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u]
-[bandcamp|import|metadata|soundcloud|sync]
+[bandcamp|import|metadata|mopidy|mpd|soundcloud|sync]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -56,6 +56,15 @@ information.
 If accompanied by the \f[V]-a\f[R] argument, AcousticBrainz is used to
 retrieve audio information rather than analyzing audio files with
 Essentia.
+.PP
+Invoked with the \f[V]mopidy\f[R] argument, \f[I]mppinit mopidy\f[R]
+installs the Mopidy music server and several Mopidy extensions.
+The user MPD service is deactivated and the Mopidy system service is
+activated.
+.PP
+Invoked with the \f[V]mpd\f[R] argument, \f[I]mppinit mpd\f[R] activates
+the Music Player Daemon (MPD) and deactivates the Mopidy music server
+and Mopidy extensions.
 .PP
 Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
 synchronizes the music library location across all configuration files.
@@ -96,6 +105,13 @@ performs a Beets music library import
 .TP
 \f[B]metadata\f[R]
 performs a Beets library metadata update
+.TP
+\f[B]mopidy\f[R]
+Installs Mopidy and several extensions, deactivates MPD, activates
+Mopidy
+.TP
+\f[B]mpd\f[R]
+Activates MPD, deactivates Mopidy
 .TP
 \f[B]sync\f[R]
 synchronizes the music library location across configs

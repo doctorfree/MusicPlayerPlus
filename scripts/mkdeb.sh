@@ -252,6 +252,7 @@ ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp -a config/beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets"
 ${SUDO} cp -a beets "${OUT_DIR}/${DESTDIR}/share/${PKG}/beets/plugins"
 ${SUDO} cp config/calliope/* "${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope"
+${SUDO} cp -a config/mopidy "${OUT_DIR}/${DESTDIR}/share/${PKG}/mopidy"
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
 ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf

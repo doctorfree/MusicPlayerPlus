@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync]
+**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|soundcloud|sync]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -37,6 +37,13 @@ creation. If accompanied by the `-e` argument, Essentia is used to
 analyze, extract, and update the Beets library with acoustic information.
 If accompanied by the `-a` argument, AcousticBrainz is used to retrieve
 audio information rather than analyzing audio files with Essentia.
+
+Invoked with the `mopidy` argument, *mppinit mopidy* installs the Mopidy
+music server and several Mopidy extensions. The user MPD service is
+deactivated and the Mopidy system service is activated.
+
+Invoked with the `mpd` argument, *mppinit mpd* activates the Music Player
+Daemon (MPD) and deactivates the Mopidy music server and Mopidy extensions.
 
 Invoked with the `sync` argument, *mppinit sync* synchronizes the music
 library location across all configuration files.
@@ -75,6 +82,12 @@ library location across all configuration files.
 
 **metadata**
 : performs a Beets library metadata update
+
+**mopidy**
+: Installs Mopidy and several extensions, deactivates MPD, activates Mopidy
+
+**mpd**
+: Activates MPD, deactivates Mopidy
 
 **sync**
 : synchronizes the music library location across configs
