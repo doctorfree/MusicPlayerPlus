@@ -821,7 +821,43 @@ mpp_service() {
       echo "Executing: sudo alsa_conf -e -m"
       sudo alsa_conf -e -m
       ;;
-    start|stop|disable|enable|restart)
+    start)
+      systemctl --user is-active ${SERVICE} >/dev/null 2>&1 || {
+        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
+        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      }
+      ;;
+    stop)
+      systemctl --user is-active ${SERVICE} >/dev/null 2>&1 && {
+        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
+        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      }
+      [ "${SERVICE}" == mpd.service" ] && {
+        systemctl --user is-active mpd.socket >/dev/null 2>&1 && {
+          echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
+          systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
+        }
+      }
+      ;;
+    disable)
+      systemctl --user is-enabled ${SERVICE} >/dev/null 2>&1 && {
+        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
+        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      }
+      [ "${SERVICE}" == mpd.service" ] && {
+        systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
+          echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
+          systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
+        }
+      }
+      ;;
+    enable)
+      systemctl --user is-enabled ${SERVICE} >/dev/null 2>&1 || {
+        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
+        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      }
+      ;;
+    restart)
       echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
       systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
       ;;
@@ -1160,12 +1196,40 @@ show_services_menu() {
     systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
     systemctl --user is-active yams.service >/dev/null 2>&1 && y_active="active" || y_active="inactive"
     systemctl --user is-enabled yams.service >/dev/null 2>&1 && y_enabled="enabled" || y_enabled="disabled"
+    systemctl --user is-active mopidy.service >/dev/null 2>&1 && z_active="active" || z_active="inactive"
+    systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && z_enabled="enabled" || z_enabled="disabled"
+    if [ "${have_mopidy}" ]
+    then
+      z_inst="installed"
+    else
+      z_inst="not installed"
+    fi
     printf "\nCurrent status of MusicPlayerPlus Services:"
     printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
     printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
-    printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n\n"
+    printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n"
+    printf "\n\tMopidy Music Server is ${z_inst}, ${z_enabled} and ${z_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound System")
+    if [ "${have_mopidy}" ]
+    then
+      if [ "${z_enabled}" == "enabled" ]
+      then
+        options+=("Disable Mopidy Music Server")
+      else
+        options+=("Enable Mopidy Music Server")
+      fi
+      if [ "${z_active}" == "active" ]
+      then
+        options+=("Stop Mopidy Music Server")
+        options+=("Restart Mopidy Music Server")
+      else
+        options+=("Start Mopidy Music Server")
+      fi
+      options+=("Status of Mopidy Music Server")
+    else
+      options+=("Install Mopidy Music Server")
+    fi
     if [ "${m_enabled}" == "enabled" ]
     then
       options+=("Disable Music Player Daemon")
@@ -1227,7 +1291,58 @@ show_services_menu() {
               mpp_service alsaconf
               break
               ;;
+          "Install Mopidy Music Server",*|*,"Install Mopidy Music Server")
+              mppinit mopidy
+              have_mopidy=`type -p mopidy`
+              break
+              ;;
+          "Enable Mopidy Music Server",*|*,"Enable Mopidy Music Server")
+              mpp_service disable mpdstats
+              mpp_service stop mpdstats
+              mpp_service disable yams
+              mpp_service stop yams
+              mpp_service disable mpd
+              mpp_service stop mpd
+              mpp_service enable mopidy
+              break
+              ;;
+          "Disable Mopidy Music Server",*|*,"Disable Mopidy Music Server")
+              mpp_service disable mopidy
+              break
+              ;;
+          "Start Mopidy Music Server",*|*,"Start Mopidy Music Server")
+              mpp_service disable mpdstats
+              mpp_service stop mpdstats
+              mpp_service disable yams
+              mpp_service stop yams
+              mpp_service disable mpd
+              mpp_service stop mpd
+              mpp_service start mopidy
+              break
+              ;;
+          "Stop Mopidy Music Server",*|*,"Stop Mopidy Music Server")
+              mpp_service stop mopidy
+              break
+              ;;
+          "Restart Mopidy Music Server",*|*,"Restart Mopidy Music Server")
+              mpp_service disable mpdstats
+              mpp_service stop mpdstats
+              mpp_service disable yams
+              mpp_service stop yams
+              mpp_service disable mpd
+              mpp_service stop mpd
+              mpp_service restart mopidy
+              break
+              ;;
+          "Status of Mopidy Music Server",*|*,"Status of Mopidy Music Server")
+              mpp_service status mopidy
+              break
+              ;;
           "Enable Music Player Daemon",*|*,"Enable Music Player Daemon")
+              [ "${have_mopidy}" ] && {
+                mpp_service disable mopidy
+                mpp_service stop mopidy
+              }
               mpp_service enable mpd
               break
               ;;
@@ -1236,6 +1351,10 @@ show_services_menu() {
               break
               ;;
           "Start Music Player Daemon",*|*,"Start Music Player Daemon")
+              [ "${have_mopidy}" ] && {
+                mpp_service disable mopidy
+                mpp_service stop mopidy
+              }
               mpp_service start mpd
               break
               ;;
@@ -1244,6 +1363,10 @@ show_services_menu() {
               break
               ;;
           "Restart Music Player Daemon",*|*,"Restart Music Player Daemon")
+              [ "${have_mopidy}" ] && {
+                mpp_service disable mopidy
+                mpp_service stop mopidy
+              }
               mpp_service restart mpd
               break
               ;;
@@ -1252,6 +1375,14 @@ show_services_menu() {
               break
               ;;
           "Enable Music Player Stats",*|*,"Enable Music Player Stats")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Stats not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Stats"
+                  break
+                }
+              }
               mpp_service enable mpdstats
               break
               ;;
@@ -1260,6 +1391,14 @@ show_services_menu() {
               break
               ;;
           "Start Music Player Stats",*|*,"Start Music Player Stats")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Stats not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Stats"
+                  break
+                }
+              }
               mpp_service start mpdstats
               break
               ;;
@@ -1268,6 +1407,14 @@ show_services_menu() {
               break
               ;;
           "Restart Music Player Stats",*|*,"Restart Music Player Stats")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Stats not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Stats"
+                  break
+                }
+              }
               mpp_service restart mpdstats
               break
               ;;
@@ -1276,6 +1423,14 @@ show_services_menu() {
               break
               ;;
           "Enable Music Player Scrobbler",*|*,"Enable Music Player Scrobbler")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Scrobbler not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Scrobbler"
+                  break
+                }
+              }
               mpp_service enable yams
               break
               ;;
@@ -1284,6 +1439,14 @@ show_services_menu() {
               break
               ;;
           "Start Music Player Scrobbler",*|*,"Start Music Player Scrobbler")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Scrobbler not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Scrobbler"
+                  break
+                }
+              }
               mpp_service start yams
               break
               ;;
@@ -1292,6 +1455,14 @@ show_services_menu() {
               break
               ;;
           "Restart Music Player Scrobbler",*|*,"Restart Music Player Scrobbler")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Scrobbler not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Scrobbler"
+                  break
+                }
+              }
               mpp_service restart yams
               break
               ;;
@@ -1802,6 +1973,7 @@ else
 fi
 have_uebz=`type -p ueberzug`
 have_fzf=`type -p fzf`
+have_mopidy=`type -p mopidy`
 have_nema=`type -p asciinema`
 have_figlet=`type -p figlet`
 have_lolcat=`type -p lolcat`

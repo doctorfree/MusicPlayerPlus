@@ -922,6 +922,10 @@ The `mppinit mopidy` command installs the following Mopidy extensions:
 - **Mopidy-Scrobbler**
     - Mopidy extension for scrobbling music to Last.fm
 
+Additional Mopidy extensions can be installed and configured. For example,
+to stream Spotify with Mopidy, install and configure the Mopidy-Spotify
+extension. Learn more at https://mopidy.com/ext/
+
 **[NOTE:]** The Mopidy MPD extension provides compatibility with MPD
 clients but does not implement all MPD features. MPD is much more powerful
 and flexible in terms of its configurable inputs and outputs. After
@@ -931,6 +935,13 @@ available. However, Mopidy offers many features unavailable with MPD.
 It's a tradeoff.
 
 To re-activate MPD and disable Mopidy, issue the command `mppinit mpd`.
+Easily switch back and forth between MPD and Mopidy with `mppinit mpd`
+and `mppinit mopidy`. Note that MusicPlayerPlus continues to use the
+MPD configured `music_directory` as the master music library location.
+To change the location of the music library, edit `~/.config/mpd/mpd.conf`,
+set `music_directory` to the new location, and run `mppinit sync` to
+synchronize the music library location across Beets, MPD, Mopidy, and
+downloaders.
 
 ### Terminal Emulator Profiles
 

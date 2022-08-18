@@ -130,90 +130,119 @@ create_new_profile() {
   dconf write $profile_path/font "'Monospace ${profont}'" 2> /dev/null
 }
 
-disable_services() {
-  systemctl --user disable mpd.service
-  systemctl --user stop mpd.service
-  systemctl --user disable mpdstats.service
-  systemctl --user stop mpdstats.service
-  systemctl --user disable yams.service
-  systemctl --user stop yams.service
+pip_install() {
+  mod="$1"
+  if pip list | grep ${mod} > /dev/null
+  then
+    if [ "${upgrade}" ]
+    then
+      [ "${quiet}" ] || {
+        printf " upgrade ${mod},"
+      }
+      ${PYTHON} -m pip install --user --upgrade ${mod} > /dev/null 2>&1
+    else
+      [ "${quiet}" ] || {
+        printf " ${mod} installed,"
+      }
+    fi
+  else
+    [ "${quiet}" ] || {
+      printf " install ${mod},"
+    }
+    ${PYTHON} -m pip install --user ${mod} > /dev/null 2>&1
+  fi
 }
 
 init_mopidy() {
-  debian=
-  arch=
-  [ -f /etc/os-release ] && . /etc/os-release
-  [ "${ID_LIKE}" == "debian" ] && debian=1
-  [ "${ID}" == "arch" ] && arch=1
-  if [ "${debian}" ]
-  then
-    have_apt=`type -p apt`
-    if [ "${have_apt}" ]
+  have_mopidy=`type -p mopidy`
+  [ "${have_mopidy}" ] || {
+    debian=
+    arch=
+    [ -f /etc/os-release ] && . /etc/os-release
+    [ "${ID_LIKE}" == "debian" ] && debian=1
+    [ "${ID}" == "arch" ] && arch=1
+    if [ "${debian}" ]
     then
-      APT=apt
-    else
-      have_aptget=`type -p apt-get`
-      if [ "${have_aptget}" ]
+      have_apt=`type -p apt`
+      if [ "${have_apt}" ]
       then
-        APT=apt-get
+        APT=apt
       else
-        echo "Could not locate apt or apt-get. Exiting."
-        exit 1
-      fi
-    fi
-    sudo ${APT} install mopidy mopidy-doc
-  else
-    if [ "${arch}" ]
-    then
-      sudo pacman -S --needed --noconfirm mopidy
-    else
-      have_dnf=`type -p dnf`
-      if [ "${have_dnf}" ]
-      then
-        DNF=dnf
-      else
-        have_yum=`type -p yum`
-        if [ "${have_yum}" ]
+        have_aptget=`type -p apt-get`
+        if [ "${have_aptget}" ]
         then
-          DNF=yum
+          APT=apt-get
         else
-          echo "Could not locate dnf or yum. Exiting."
+          echo "Could not locate apt or apt-get. Exiting."
           exit 1
         fi
       fi
-      sudo ${DNF} install mopidy
+      sudo ${APT} install mopidy mopidy-doc
+    else
+      if [ "${arch}" ]
+      then
+        sudo pacman -S --needed --noconfirm mopidy
+      else
+        have_dnf=`type -p dnf`
+        if [ "${have_dnf}" ]
+        then
+          DNF=dnf
+        else
+          have_yum=`type -p yum`
+          if [ "${have_yum}" ]
+          then
+            DNF=yum
+          else
+            echo "Could not locate dnf or yum. Exiting."
+            exit 1
+          fi
+        fi
+        sudo ${DNF} install mopidy
+      fi
     fi
-  fi
+  }
 
   EXTENSIONS="Mopidy-Beets Mopidy-RadioNet Mopidy-Local Mopidy-Podcast \
               Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-Mpd Mopidy-Scrobbler"
 
   for ext in "${EXTENSIONS}"
   do
-    if pip list | grep ${ext} > /dev/null
-    then
-      if [ "${upgrade}" ]
-      then
-        [ "${quiet}" ] || {
-          printf " upgrade ${ext},"
-        }
-        ${PYTHON} -m pip install --user --upgrade ${ext} > /dev/null 2>&1
-      else
-        [ "${quiet}" ] || {
-          printf " ${ext} installed,"
-        }
-      fi
-    else
-      [ "${quiet}" ] || {
-        printf " install ${ext},"
-      }
-      ${PYTHON} -m pip install --user ${ext} > /dev/null 2>&1
-    fi
+    pip_install "${ext}"
   done
 
-  disable_services
-  systemctl --user start mopidy
-  systemctl --user enable mopidy
+  # Disable MPD services
+  systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && {
+    systemctl --user disable mpdstats.service
+  }
+  systemctl --user is-active mpdstats.service >/dev/null 2>&1 && {
+    systemctl --user stop mpdstats.service
+  }
+  systemctl --user is-enabled yams.service >/dev/null 2>&1 && {
+    systemctl --user disable yams.service
+  }
+  systemctl --user is-active yams.service >/dev/null 2>&1 && {
+    systemctl --user stop yams.service
+  }
+  systemctl --user is-enabled mpd.service >/dev/null 2>&1 && {
+    systemctl --user disable mpd.service
+  }
+  systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
+    systemctl --user disable mpd.socket
+  }
+  systemctl --user is-active mpd.service >/dev/null 2>&1 && {
+    systemctl --user stop mpd.service
+  }
+  systemctl --user is-active mpd.socket >/dev/null 2>&1 && {
+    systemctl --user stop mpd.socket
+  }
+
+  # Enable Mopidy services
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 || {
+    systemctl --user start mopidy
+  }
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 || {
+    systemctl --user enable mopidy
+  }
 }
 
 sync_music_dir() {
@@ -809,18 +838,24 @@ shift $(( OPTIND - 1 ))
   else
     init_warn mopidy
   fi
+  echo "MPD deactivated, Mopidy services enabled and activated"
   exit 0
 }
 
 [ "$1" == "mpd" ] && {
   if [ "${initialized}" ]
   then
+    m_enabled=
+    m_active=
+    systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && m_enabled=1
+    systemctl --user is-active mopidy.service >/dev/null 2>&1 && m_active=1
     printf "\nActivating the Music Player Daemon (MPD) music server."
-    printf "\nThis will deactivate Mopidy and configured Mopidy extensions."
-    while true
-    do
-      read -p "Do you wish to continue with MPD activation ? (y/n) " yn
-      case $yn in
+    [ "${m_enabled}" ] || [ "${m_active}" ] && {
+      printf "\nThis will deactivate Mopidy and configured Mopidy extensions."
+      while true
+      do
+        read -p "Do you wish to continue with MPD activation ? (y/n) " yn
+        case $yn in
           [Yy]* )
                 break
                 ;;
@@ -831,13 +866,14 @@ shift $(( OPTIND - 1 ))
                 ;;
               * ) echo "Please answer yes or no."
                 ;;
-      esac
-    done
-    systemctl is-enabled mopidy.service >/dev/null 2>&1 && {
-      sudo systemctl disable mopidy.service
+        esac
+      done
     }
-    systemctl is-active mopidy.service >/dev/null 2>&1 && {
-      sudo systemctl stop mopidy.service
+    [ "${m_enabled}" ] && {
+      systemctl --user disable mopidy.service
+    }
+    [ "${m_active}" ] && {
+      systemctl --user stop mopidy.service
     }
     systemctl --user is-active mpd.service >/dev/null 2>&1 || {
       systemctl --user start mpd.service
@@ -863,6 +899,12 @@ shift $(( OPTIND - 1 ))
     }
   else
     init_warn mpd
+  fi
+  if [ "${m_enabled}" ] || [ "${m_active}" ]
+  then
+    echo "Mopidy deactivated, MPD services enabled and activated"
+  else
+    echo "MPD services enabled and activated"
   fi
   exit 0
 }
@@ -1400,25 +1442,7 @@ then
              beets-xtractor python-mpd2 requests sacad tmuxp ueberzug yt-dlp \
              calliope-music python3-discogs-client bandcamp-downloader scdl
   do
-    if pip list | grep ${pkg} > /dev/null
-    then
-      if [ "${upgrade}" ]
-      then
-        [ "${quiet}" ] || {
-          printf " upgrade ${pkg},"
-        }
-        ${PYTHON} -m pip install --user --upgrade ${pkg} > /dev/null 2>&1
-      else
-        [ "${quiet}" ] || {
-          printf " ${pkg} installed,"
-        }
-      fi
-    else
-      [ "${quiet}" ] || {
-        printf " install ${pkg},"
-      }
-      ${PYTHON} -m pip install --user ${pkg} > /dev/null 2>&1
-    fi
+    pip_install "${pkg}"
   done
   [ "${quiet}" ] || printf " done!\n"
 else
