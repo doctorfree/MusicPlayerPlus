@@ -21,7 +21,7 @@ BEETSGENR="${BEETSCONFDIR}/genres"
 CALIPCONFDIR="${CONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
 MOPIDCONFDIR="${CONF}/mopidy"
-MOPIDCONF="${CALIPCONFDIR}/mopidy.conf"
+MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
 YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
@@ -154,58 +154,74 @@ pip_install() {
 }
 
 init_mopidy() {
-  have_mopidy=`type -p mopidy`
-  [ "${have_mopidy}" ] || {
-    debian=
-    arch=
-    [ -f /etc/os-release ] && . /etc/os-release
-    [ "${ID_LIKE}" == "debian" ] && debian=1
-    [ "${ID}" == "arch" ] && arch=1
-    if [ "${debian}" ]
+  # Mopidy requires GStreamer >= 1.14.0 with Python bindings.
+  debian=
+  arch=
+  [ -f /etc/os-release ] && . /etc/os-release
+  [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "arch" ] && arch=1
+  if [ "${debian}" ]
+  then
+    APT=
+    have_apt=`type -p apt`
+    if [ "${have_apt}" ]
     then
-      have_apt=`type -p apt`
-      if [ "${have_apt}" ]
-      then
-        APT=apt
-      else
-        have_aptget=`type -p apt-get`
-        if [ "${have_aptget}" ]
-        then
-          APT=apt-get
-        else
-          echo "Could not locate apt or apt-get. Exiting."
-          exit 1
-        fi
-      fi
-      sudo ${APT} install mopidy mopidy-doc
+      APT=apt
     else
-      if [ "${arch}" ]
+      have_aptget=`type -p apt-get`
+      if [ "${have_aptget}" ]
       then
-        sudo pacman -S --needed --noconfirm mopidy
+        APT=apt-get
       else
-        have_dnf=`type -p dnf`
-        if [ "${have_dnf}" ]
-        then
-          DNF=dnf
-        else
-          have_yum=`type -p yum`
-          if [ "${have_yum}" ]
-          then
-            DNF=yum
-          else
-            echo "Could not locate dnf or yum. Exiting."
-            exit 1
-          fi
-        fi
-        sudo ${DNF} install mopidy
+        echo "Could not locate apt or apt-get."
+        echo "Skipping GStreamer installation."
       fi
     fi
-  }
+    [ "${APT}" ] && {
+      sudo ${APT} install python3-gst-1.0 \
+                          gir1.2-gstreamer-1.0 \
+                          gir1.2-gst-plugins-base-1.0 \
+                          gstreamer1.0-plugins-good \
+                          gstreamer1.0-plugins-ugly \
+                          gstreamer1.0-tools -y
+    }
+  else
+    if [ "${arch}" ]
+    then
+      sudo pacman -S --needed --noconfirm gst-python \
+                                          gst-plugins-good \
+                                          gst-plugins-ugly
+    else
+      DNF=
+      have_dnf=`type -p dnf`
+      if [ "${have_dnf}" ]
+      then
+        DNF=dnf
+      else
+        have_yum=`type -p yum`
+        if [ "${have_yum}" ]
+        then
+          DNF=yum
+        else
+          echo "Could not locate dnf or yum."
+          echo "Skipping GStreamer installation."
+        fi
+      fi
+      [ "${DNF}" ] && {
+        sudo ${DNF} install -y python3-gstreamer1 \
+                               gstreamer1-plugins-good \
+                               gstreamer1-plugins-ugly-free
+      }
+    fi
+  fi
+
+  # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
+  sudo ${PYTHON} -m pip install --upgrade mopidy > /dev/null 2>&1
 
   EXTENSIONS="Mopidy-Beets Mopidy-RadioNet Mopidy-Local Mopidy-Podcast \
-              Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-Mpd Mopidy-Scrobbler"
+              Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
-  for ext in "${EXTENSIONS}"
+  for ext in ${EXTENSIONS}
   do
     pip_install "${ext}"
   done
@@ -225,9 +241,11 @@ init_mopidy() {
   }
   systemctl --user is-enabled mpd.service >/dev/null 2>&1 && {
     systemctl --user disable mpd.service
+    sudo systemctl --user --global disable mpd.service
   }
   systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
     systemctl --user disable mpd.socket
+    sudo systemctl --user --global disable mpd.socket
   }
   systemctl --user is-active mpd.service >/dev/null 2>&1 && {
     systemctl --user stop mpd.service
@@ -238,10 +256,16 @@ init_mopidy() {
 
   # Enable Mopidy services
   systemctl --user is-active mopidy.service >/dev/null 2>&1 || {
-    systemctl --user start mopidy
+    systemctl --user start mopidy.service
   }
   systemctl --user is-enabled mopidy.service >/dev/null 2>&1 || {
-    systemctl --user enable mopidy
+    systemctl --user enable mopidy.service
+  }
+  systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
+    systemctl --user start webplugin.service
+  }
+  systemctl --user is-enabled webplugin.service >/dev/null 2>&1 || {
+    systemctl --user enable webplugin.service
   }
 }
 
@@ -320,9 +344,15 @@ sync_music_dir() {
 
     # Disable and stop any system-wide MPD service
     systemctl is-enabled --quiet mpd.service
-    [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.service
+    [ $? -eq 0 ] && {
+      sudo systemctl disable --quiet mpd.service
+      sudo systemctl --user --global disable mpd.service
+    }
     systemctl is-enabled --quiet mpd.socket
-    [ $? -eq 0 ] && sudo systemctl disable --quiet mpd.socket
+    [ $? -eq 0 ] && {
+      sudo systemctl disable --quiet mpd.socket
+      sudo systemctl --user --global disable mpd.socket
+    }
     systemctl is-active --quiet mpd.service
     [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
     systemctl is-active --quiet mpd.socket
@@ -331,13 +361,7 @@ sync_music_dir() {
     systemctl --user daemon-reload --quiet
     # Enable and activate the MPD user service
     systemctl --user is-active --quiet mpd.service
-    if [ $? -eq 0 ]
-    then
-      # User service is active, restart to pickup any config changes
-      systemctl --user restart --quiet mpd.service
-    else
-      systemctl --user start --quiet mpd.service
-    fi
+    [ $? -eq 0 ] || systemctl --user start --quiet mpd.service
     systemctl --user is-enabled --quiet mpd.service
     [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
     have_mpc=`type -p mpc`
@@ -345,15 +369,15 @@ sync_music_dir() {
 
     # Enable and activate the MPDstats user service
     systemctl --user is-active --quiet mpdstats.service
-    if [ $? -eq 0 ]
-    then
-      # User service is active, restart to pickup any config changes
-      systemctl --user restart --quiet mpdstats.service
-    else
-      systemctl --user start --quiet mpdstats.service
-    fi
+    [ $? -eq 0 ] || systemctl --user start --quiet mpdstats.service
     systemctl --user is-enabled --quiet mpdstats.service
     [ $? -eq 0 ] || systemctl --user enable --quiet mpdstats.service
+
+    # Enable and activate the Beets web plugin user service
+    systemctl --user is-active --quiet webplugin.service
+    [ $? -eq 0 ] || systemctl --user start --quiet webplugin.service
+    systemctl --user is-enabled --quiet webplugin.service
+    [ $? -eq 0 ] || systemctl --user enable --quiet webplugin.service
   else
     echo "WARNING:"
     echo "Could not detect any music_directory setting in ${MPDCONF}"
@@ -838,7 +862,7 @@ shift $(( OPTIND - 1 ))
   else
     init_warn mopidy
   fi
-  echo "MPD deactivated, Mopidy services enabled and activated"
+  printf "\n\n${BOLD}MPD services deactivated, Mopidy services enabled and activated${NORM}\n"
   exit 0
 }
 
@@ -851,7 +875,7 @@ shift $(( OPTIND - 1 ))
     systemctl --user is-active mopidy.service >/dev/null 2>&1 && m_active=1
     printf "\nActivating the Music Player Daemon (MPD) music server."
     [ "${m_enabled}" ] || [ "${m_active}" ] && {
-      printf "\nThis will deactivate Mopidy and configured Mopidy extensions."
+      printf "\nThis will deactivate Mopidy and Mopidy extensions.\n\n"
       while true
       do
         read -p "Do you wish to continue with MPD activation ? (y/n) " yn
@@ -902,9 +926,9 @@ shift $(( OPTIND - 1 ))
   fi
   if [ "${m_enabled}" ] || [ "${m_active}" ]
   then
-    echo "Mopidy deactivated, MPD services enabled and activated"
+    printf "\n\n${BOLD}Mopidy deactivated, MPD services enabled and activated${NORM}\n"
   else
-    echo "MPD services enabled and activated"
+    printf "\n\n${BOLD}MPD services enabled and activated${NORM}\n"
   fi
   exit 0
 }
@@ -1179,12 +1203,8 @@ if [ -f ${MOPIDCONF} ]
 then
   [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
 else
-  if [ -d ${MOPIDCONFDIR} ]
-  then
-    cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
-  else
-    cp -a ${MPPCDIR}/mopidy ${MOPIDCONFDIR}
-  fi
+  [ -d ${MOPIDCONFDIR} ] || mkdir -p ${MOPIDCONFDIR}
+  cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
 fi
 [ -d ${MOPIDCONFDIR}/cache ] || mkdir -p ${MOPIDCONFDIR}/cache
 [ -d ${MOPIDCONFDIR}/data ] || mkdir -p ${MOPIDCONFDIR}/data
@@ -1210,6 +1230,7 @@ fi
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 MOPSTATSD="${SYSTEMDIR}/mopidy.service"
+WEBPLUGSD="${SYSTEMDIR}/webplugin.service"
 YAMSTATSD="${SYSTEMDIR}/yams.service"
 [ "${quiet}" ] || {
   printf "\n\tSetting up user system services in ${SYSTEMDIR} ..."
@@ -1220,6 +1241,13 @@ then
 else
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/beets/mpdstats.service ${MPDSTATSD}
+fi
+if [ -f ${WEBPLUGSD} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/beets/webplugin.service ${WEBPLUGSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/beets/webplugin.service ${WEBPLUGSD}
 fi
 if [ -f ${MOPSTATSD} ]
 then

@@ -78,6 +78,7 @@ then
                 --with-fftw \
                 --with-taglib > configure$$.out
     make > make$$.out
+    make -C extras >> make$$.out
     cd ..
   fi
 
@@ -203,6 +204,8 @@ then
 
   ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
   ${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
+  ${SUDO} cp mpcplus/extras/artist_to_albumartist \
+             ${OUT_DIR}/${DESTDIR}/bin/artist_to_albumartist
   ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
   ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
   [ -f blissify/target/release/blissify ] && {

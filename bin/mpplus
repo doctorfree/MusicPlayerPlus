@@ -832,7 +832,7 @@ mpp_service() {
         echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
         systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
       }
-      [ "${SERVICE}" == mpd.service" ] && {
+      [ "${SERVICE}" == "mpd.service" ] && {
         systemctl --user is-active mpd.socket >/dev/null 2>&1 && {
           echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
           systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
@@ -844,11 +844,12 @@ mpp_service() {
         echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
         systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
       }
-      [ "${SERVICE}" == mpd.service" ] && {
+      [ "${SERVICE}" == "mpd.service" ] && {
         systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
           echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
           systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
         }
+        sudo systemctl --user --global disable mpd.socket
       }
       ;;
     enable)
@@ -1194,6 +1195,8 @@ show_services_menu() {
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
     systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
     systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
+    systemctl --user is-active webplugin.service >/dev/null 2>&1 && w_active="active" || w_active="inactive"
+    systemctl --user is-enabled webplugin.service >/dev/null 2>&1 && w_enabled="enabled" || w_enabled="disabled"
     systemctl --user is-active yams.service >/dev/null 2>&1 && y_active="active" || y_active="inactive"
     systemctl --user is-enabled yams.service >/dev/null 2>&1 && y_enabled="enabled" || y_enabled="disabled"
     systemctl --user is-active mopidy.service >/dev/null 2>&1 && z_active="active" || z_active="inactive"
@@ -1206,8 +1209,9 @@ show_services_menu() {
     fi
     printf "\nCurrent status of MusicPlayerPlus Services:"
     printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
-    printf "\n\tMusic Player Stats service is ${s_enabled} and ${s_active}"
-    printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}\n"
+    printf "\n\tMusic Player Last.fm Scrobbler service is ${y_enabled} and ${y_active}"
+    printf "\n\tBeets MPD Stats service is ${s_enabled} and ${s_active}"
+    printf "\n\tBeets Web service is ${w_enabled} and ${w_active}"
     printf "\n\tMopidy Music Server is ${z_inst}, ${z_enabled} and ${z_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound System")
@@ -1246,18 +1250,32 @@ show_services_menu() {
     options+=("Status of Music Player Daemon")
     if [ "${s_enabled}" == "enabled" ]
     then
-      options+=("Disable Music Player Stats")
+      options+=("Disable Beets MPD Stats")
     else
-      options+=("Enable Music Player Stats")
+      options+=("Enable Beets MPD Stats")
     fi
     if [ "${s_active}" == "active" ]
     then
-      options+=("Stop Music Player Stats")
-      options+=("Restart Music Player Stats")
+      options+=("Stop Beets MPD Stats")
+      options+=("Restart Beets MPD Stats")
     else
-      options+=("Start Music Player Stats")
+      options+=("Start Beets MPD Stats")
     fi
-    options+=("Status of Music Player Stats")
+    options+=("Status of Beets MPD Stats")
+    if [ "${w_enabled}" == "enabled" ]
+    then
+      options+=("Disable Beets Web Service")
+    else
+      options+=("Enable Beets Web Service")
+    fi
+    if [ "${w_active}" == "active" ]
+    then
+      options+=("Stop Beets Web Service")
+      options+=("Restart Beets Web Service")
+    else
+      options+=("Start Beets Web Service")
+    fi
+    options+=("Status of Beets Web Service")
     if [ "${y_enabled}" == "enabled" ]
     then
       options+=("Disable Music Player Scrobbler")
@@ -1374,7 +1392,7 @@ show_services_menu() {
               mpp_service status mpd
               break
               ;;
-          "Enable Music Player Stats",*|*,"Enable Music Player Stats")
+          "Enable Beets MPD Stats",*|*,"Enable Beets MPD Stats")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -1386,11 +1404,11 @@ show_services_menu() {
               mpp_service enable mpdstats
               break
               ;;
-          "Disable Music Player Stats",*|*,"Disable Music Player Stats")
+          "Disable Beets MPD Stats",*|*,"Disable Beets MPD Stats")
               mpp_service disable mpdstats
               break
               ;;
-          "Start Music Player Stats",*|*,"Start Music Player Stats")
+          "Start Beets MPD Stats",*|*,"Start Beets MPD Stats")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -1402,11 +1420,11 @@ show_services_menu() {
               mpp_service start mpdstats
               break
               ;;
-          "Stop Music Player Stats",*|*,"Stop Music Player Stats")
+          "Stop Beets MPD Stats",*|*,"Stop Beets MPD Stats")
               mpp_service stop mpdstats
               break
               ;;
-          "Restart Music Player Stats",*|*,"Restart Music Player Stats")
+          "Restart Beets MPD Stats",*|*,"Restart Beets MPD Stats")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -1418,8 +1436,50 @@ show_services_menu() {
               mpp_service restart mpdstats
               break
               ;;
-          "Status of Music Player Stats",*|*,"Status of Music Player Stats")
+          "Status of Beets MPD Stats",*|*,"Status of Beets MPD Stats")
               mpp_service status mpdstats
+              break
+              ;;
+          "Enable Beets Web Service",*|*,"Enable Beets Web Service")
+              mpp_service enable webplugin
+              break
+              ;;
+          "Disable Beets Web Service",*|*,"Disable Beets Web Service")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "Mopidy Beets extension requires the Beets Web Service."
+                  echo "Disable the Mopidy Beets extension before disabling"
+                  echo "the Beets Web Service."
+                  break
+                }
+              }
+              mpp_service disable webplugin
+              break
+              ;;
+          "Start Beets Web Service",*|*,"Start Beets Web Service")
+              mpp_service start webplugin
+              break
+              ;;
+          "Stop Beets Web Service",*|*,"Stop Beets Web Service")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "Mopidy Beets extension requires the Beets Web Service."
+                  echo "Disable the Mopidy Beets extension before stopping"
+                  echo "the Beets Web Service."
+                  break
+                }
+              }
+              mpp_service stop webplugin
+              break
+              ;;
+          "Restart Beets Web Service",*|*,"Restart Beets Web Service")
+              mpp_service restart webplugin
+              break
+              ;;
+          "Status of Beets Web Service",*|*,"Status of Beets Web Service")
+              mpp_service status webplugin
               break
               ;;
           "Enable Music Player Scrobbler",*|*,"Enable Music Player Scrobbler")

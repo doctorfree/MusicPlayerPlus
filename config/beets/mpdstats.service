@@ -8,12 +8,12 @@ OnFailure=notify-xmpp@%i.service
 [Service]
 Type=simple
 UMask=007
-ExecStart=/bin/bash -c 'PATH=/home/USERNAME/.local/bin:$PATH exec beet mpdstats'
+ExecStart=/bin/bash -c 'exec beet mpdstats'
 Restart=on-failure
 #RestartSec=5s
 # Time to wait before forcefully stopped.
 TimeoutStopSec=300
-StandardOutput=file:/home/USERNAME/.config/beets/logs/mpdstats.log
+StandardOutput=file:%h/.config/beets/logs/mpdstats.log
 StandardError=inherit
 
 [Install]

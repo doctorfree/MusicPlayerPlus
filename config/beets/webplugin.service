@@ -1,0 +1,18 @@
+[Unit]
+Description=Beets Web Plugin
+Documentation=https://beets.readthedocs.io/en/stable/plugins/web.html
+After=mopidy.service
+OnFailure=notify-xmpp@%i.service
+
+[Service]
+Type=simple
+UMask=007
+ExecStart=/bin/bash -c 'exec beet web'
+Restart=on-failure
+# Time to wait before forcefully stopped.
+TimeoutStopSec=300
+StandardOutput=file:%h/.config/beets/logs/web.log
+StandardError=inherit
+
+[Install]
+WantedBy=default.target

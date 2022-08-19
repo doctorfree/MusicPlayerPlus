@@ -140,6 +140,7 @@ MusicPlayerPlus adds the following commands to your system:
 * **raise_cava** : Raises the mppcava spectrum visualizer window
 * **set_term_trans** : Sets an xfce4-terminal window's transparency level
 * **fzmp** : Browse, search, and manage MPD library using `fzf` fuzzy finder and `mpc` MPD client
+* **artist_to_albumartist** : Copies the Artist tag to the AlbumArtist tag
 * **create_playlist** : Create a new playlist using a Beets query
 * **listyt** : List YouTube video titles and urls
 * **bliss-analyze** : Acoustic analysis of audio files
@@ -903,12 +904,16 @@ activation runs as a user level system service. Configuration for Mopidy
 and Mopidy extensions resides in `$HOME/.config/mopidy/`. The MusicPlayerPlus
 activation of Mopidy auto-configures Mopidy and the installed extensions.
 
-The `mppinit mopidy` command installs the following Mopidy extensions:
+In addition to the
+[bundled Mopidy extensions](https://docs.mopidy.com/en/latest/),
+the `mppinit mopidy` command installs the following Mopidy extensions:
 
 - **Mopidy-Beets**
     - Mopidy extension for playing music from Beets' web plugin
 - **Mopidy-Mobile**
     - Fully control a Mopidy music server from your mobile device
+    - Android App available on [Google Play](https://play.google.com/store/apps/details?id=at.co.kemmer.mopidy_mobile)
+    - Other devices open `http://IP_Address/mopidy/ws` in a browser
 - **Mopidy-Mpd**
     - Mopidy extension for controlling Mopidy from MPD clients
 - **Mopidy-Local**
@@ -921,10 +926,15 @@ The `mppinit mopidy` command installs the following Mopidy extensions:
     - A backend for playing radio channels from the radio.net
 - **Mopidy-Scrobbler**
     - Mopidy extension for scrobbling music to Last.fm
+    - Requires Last.fm username/password added to `~/.config/mopidy/mopidy.conf`
 
 Additional Mopidy extensions can be installed and configured. For example,
 to stream Spotify with Mopidy, install and configure the Mopidy-Spotify
 extension. Learn more at https://mopidy.com/ext/
+
+To view the effective Mopidy configuration run the command `mopidyctl config`.
+This will display the full Mopidy configuration with passwords masked out
+so that you can safely share the output with others for debugging.
 
 **[NOTE:]** The Mopidy MPD extension provides compatibility with MPD
 clients but does not implement all MPD features. MPD is much more powerful
@@ -1004,6 +1014,7 @@ e.g. `mpplus -u`.
 - [**blissify**](markdown/blissify.1.md) : create MPD playlists using song similarity database
 - [**scdl**](markdown/scdl.1.md) : Download Soundcloud favorites
 - [**fzmp**](markdown/fzmp.1.md) : List and search MPD media using fuzzy find
+- [**artist_to_albumartist**](markdown/artist_to_albumartist.1.md) : Copies the Artist tag to the AlbumArtist tag
 - [**listyt**](markdown/listyt.1.md) : List YouTube video titles and urls
 - [**yt-dlp**](markdown/yt-dlp.1.md) : Download YouTube and other sites videos and audio
 - [**create_playlist**](markdown/create_playlist.1.md) : Create playlists using Beets queries

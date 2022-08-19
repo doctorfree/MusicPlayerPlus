@@ -95,6 +95,7 @@ prefix="--prefix=/usr"
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
 make
+make -C extras
 
 if [ "${INSTALL}" ]
 then

@@ -1,5 +1,6 @@
 [Unit]
-Description=Mopidy music server
+Description=Mopidy Music Server
+Documentation=https://docs.mopidy.com/en/latest
 After=avahi-daemon.service
 After=dbus.service
 After=network.target
@@ -10,7 +11,9 @@ After=sound.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/mopidy
+ExecStart=mopidy
+StandardOutput=file:%h/.config/mopidy/mopidy.log
+StandardError=inherit
 
 [Install]
 WantedBy=multi-user.target
