@@ -23,7 +23,7 @@ The *mpplus* command can be used in conjunction with the Beets music library man
 - When invoked as `mpplus -D art` it will downlad album cover art for all albums in the music library
 - When invoked as `mpplus -D bandcamp` it will downlad songs from Bandcamp
 - When invoked as `mpplus -D soundcloud` it will downlad songs from Soundcloud
-- When invoked as `mpplus -F` it will convert all WAV format files in the music library to MP3 format files
+- When invoked as `mpplus -F` it will convert WAV/M4A format files in the music library to MP3 format files
 - When invoked as `mpplus -I` it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
 - When invoked as `mpplus -L` it will downlad lyrics for all songs in the music library that do not already have lyrics
 
@@ -115,7 +115,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
 
 **-F**
-: indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
+: indicates convert all WAV/M4A format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
 
 **-I**
 : indicates import albums and songs from 'music_directory' to Beets and exit

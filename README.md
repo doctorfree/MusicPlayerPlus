@@ -4,6 +4,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Beets media library management with preconfigured plugins
 - ***plus*** Character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
+- ***plus*** Mopidy Music Server with preconfigured extensions
 - ***plus*** Bliss acoustic analysis and song similarity database
 - ***plus*** Essentia acoustic analysis and metadata extraction
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
@@ -88,7 +89,7 @@ The `mpplus` command can be used to invoke:
 * A tmux session using the tmux session manager `tmuxp`
 * A spectrum visualizer
 * A download of album cover art for every album in a music library
-* Conversion of all WAV format media in a music library to MP3 format media
+* Conversion of all WAV/M4A format media in a music library to MP3 format media
 * An import of a music library to the Beets media library manager
 * A download of lyrics for all songs in the music library without lyrics
 * Analysis and retrieval of audio-based information for media matching a query
@@ -102,6 +103,7 @@ Integration is provided for:
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
 * [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
 * [beets](https://beets.io/), media library management system
+* [mopidy](https://mopidy.com/), music server with cool extensions
 * [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.fm
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
@@ -188,7 +190,7 @@ Some common additional setup steps that can be performed include:
 - Configuring the music library location
 - Download albums in your Bandcamp collections
 - Download favorites in your Soundcloud account
-- Converting WAV format media files to MP3 format
+- Converting WAV/M4A format media files to MP3 format
 - Importing a music library into the Beets library management system
 - Downloading album cover art
 - Downloading additional lyrics
@@ -215,7 +217,7 @@ as described below or they can be performed in two steps using `mppinit`.
 mppinit import
 ```
 
-The `mppinit import` command converts any WAV format media to MP3 format
+The `mppinit import` command converts any WAV and M4A format media to MP3 format
 and imports the music library into the Beets media library management system.
 
 **[NOTE:]** A Beets import can take hours for a large music library.
@@ -292,9 +294,11 @@ Download albums in your Bandcamp collections with `mppinit bandcamp`.
 
 Download favorites in your Soundcloud account with `mppinit soundcloud`.
 
-Convert WAV format media files in your library to MP3 format files with
+Convert WAV/M4A format media files in your library to MP3 format files with
 the command `mpplus -F`. Conversion from WAV to MP3 allows these files to
-be imported into the Beets media library management system.
+be imported into the Beets media library management system. Conversion from
+M4A (Apple ALAC) to MP3 allows these files to be streamed and played in all
+browsers supporting HTML5 audio.
 
 If you wish to manage your music library with Beets, import the music library
 with the command `mpplus -I`.
@@ -334,7 +338,7 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Download albums in your Bandcamp collections with `mppinit bandcamp`
     * Download favorites in your Soundcloud account with `mppinit soundcloud`
     * Perform these steps with the command `mppinit import`
-        * Convert WAV format files to MP3 format with the command `mpplus -F`
+        * Convert WAV/M4A format files to MP3 format with the command `mpplus -F`
         * Import your music library into Beets with the command `mpplus -I`
     * Perform these steps with the command `mppinit metadata`
         * Remove duplicate tracks with the command `beet duplicates -d`
@@ -537,7 +541,7 @@ database. To import your music library into Beets, issue the following command:
 mppinit import
 ```
 
-or to skip WAV format media conversion and just perform the Beets import:
+or to skip WAV/M4A format media conversion and just perform the Beets import:
 
 ```
 mpplus -I
@@ -913,7 +917,7 @@ the `mppinit mopidy` command installs the following Mopidy extensions:
 - **Mopidy-Mobile**
     - Fully control a Mopidy music server from your mobile device
     - Android App available on [Google Play](https://play.google.com/store/apps/details?id=at.co.kemmer.mopidy_mobile)
-    - Other devices open `http://IP_Address/mopidy/ws` in a browser
+    - Other devices open `http://IP_Address:6680` in a browser
 - **Mopidy-Mpd**
     - Mopidy extension for controlling Mopidy from MPD clients
 - **Mopidy-Local**
@@ -922,8 +926,8 @@ the `mppinit mopidy` command installs the following Mopidy extensions:
     - Mopidy extension for searching and browsing podcasts
 - **Mopidy-Podcast-iTunes**
     - Mopidy extension for searching and browsing iTunes podcasts
-- **Mopidy-RadioNet**
-    - A backend for playing radio channels from the radio.net
+- **Mopidy-TuneIn**
+    - A backend for playing music from the TuneIn online radio service
 - **Mopidy-Scrobbler**
     - Mopidy extension for scrobbling music to Last.fm
     - Requires Last.fm username/password added to `~/.config/mopidy/mopidy.conf`
@@ -1123,7 +1127,7 @@ General options:
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
-	-F indicates convert all WAV format files in the music library
+	-F indicates convert WAV/M4A format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.
 	-I indicates import albums and songs from 'music_directory' to beets and exit

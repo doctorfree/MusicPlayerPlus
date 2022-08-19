@@ -20,7 +20,6 @@ Explore [Mopidy](https://mopidy.com) with extensions and streaming:
     - [Mopidy-Beets Github Repo](https://github.com/mopidy/mopidy-beets)
 - [Mopidy Local extension](https://mopidy.com/ext/local)
 - [Mopidy MPD extension](https://mopidy.com/ext/mpd)
-- [Mopidy RadioNet extension](https://mopidy.com/ext/radionet)
 - [Mopidy SoundCloud extension](https://mopidy.com/ext/soundcloud)
 - [Mopidy Spotify extension](https://mopidy.com/ext/spotify)
 

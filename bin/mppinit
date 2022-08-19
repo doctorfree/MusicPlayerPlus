@@ -29,6 +29,7 @@ SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
 mpd_music="~/Music"
+exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] "
@@ -218,7 +219,7 @@ init_mopidy() {
   # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
   sudo ${PYTHON} -m pip install --upgrade mopidy > /dev/null 2>&1
 
-  EXTENSIONS="Mopidy-Beets Mopidy-RadioNet Mopidy-Local Mopidy-Podcast \
+  EXTENSIONS="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
               Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
   for ext in ${EXTENSIONS}
@@ -269,12 +270,16 @@ init_mopidy() {
   }
 }
 
-sync_music_dir() {
+set_music_dir() {
   mpd_music=`grep ^music_directory ${MPDCONF}`
   [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
   mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
   # Need to expand the tilda to $HOME
   exp_music="${mpd_music/#\~/$HOME}"
+}
+
+sync_music_dir() {
+  set_music_dir
   if [ "${mpd_music}" ]
   then
     # Create mpd_music directory if it does not exist
@@ -638,11 +643,22 @@ shift $(( OPTIND - 1 ))
 [ "$1" == "import" ] && {
   if [ "${initialized}" ]
   then
-    printf "\nPerforming Beets Media Library Management Import"
-    printf "\n\nThis process may take hours depending on the library size."
-    printf "\nThe actions performed include:"
-    printf "\n\t- WAV to MP3 file format conversion"
-    printf "\n\t- Beets media library import\n\n"
+    set_music_dir
+    num_wav=`find "${exp_music}" -type f -name \*\.wav | wc -l`
+    num_m4a=`find "${exp_music}" -type f -name \*\.m4a | wc -l`
+    num_all=`find "${exp_music}" -type f | wc -l`
+    [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
+      printf "\nConverting WAV and M4A format media to MP3 format\n\tand"
+    }
+    printf "\nPerforming Beets media library management import"
+    printf "\n\nThis process may take hours depending on the library size.\n"
+    [ ${num_wav} -gt 0 ] && {
+      printf "\n\t- Identified ${num_wav} WAV format files in library"
+    }
+    [ ${num_m4a} -gt 0 ] && {
+      printf "\n\t- Identified ${num_m4a} M4A format files in library"
+    }
+    printf "\n\t- Identified ${num_all} total files in library\n\n"
     [ "${proceed}" ] || {
       while true
       do
@@ -653,8 +669,8 @@ shift $(( OPTIND - 1 ))
             ;;
           [Nn]* )
             printf "\nImport initialization steps can be performed individually:"
-            printf "\n\tmpplus -F"
-            printf "\n\tmpplus -I"
+            printf "\n\n\tmpplus -F    # Convert WAV/M4A format media to MP3"
+            printf "\n\tmpplus -I    # Import media library into Beets"
             printf "\n\nExiting.\n\n"
             exit 0
             ;;
@@ -663,8 +679,10 @@ shift $(( OPTIND - 1 ))
         esac
       done
     }
-    printf "\n\tConverting WAV format media to MP3 format media\n"
-    mpplus -F > /dev/null 2>&1
+    [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
+      printf "\n\tConverting WAV and M4A format media to MP3 format media\n"
+      mpplus -F > /dev/null 2>&1
+    }
     printf "\n\tImporting music library into Beets media management system\n"
     mpplus -I
     printf "\nAfter the Beets Import is complete, update metadata and perform"
@@ -803,7 +821,7 @@ shift $(( OPTIND - 1 ))
                 printf "\n\tmpplus -B"
               fi
             fi
-            printf "\nMusicPlayerPlus Metadata Retrieval Complete.\n"
+            printf "\n\nMusicPlayerPlus Metadata Retrieval Complete.\n"
             exit 0
             ;;
           * ) echo "Please answer yes or no."
@@ -1267,7 +1285,7 @@ fi
 [ "${quiet}" ] || {
   printf "\n\tSetting HOME in configuration files ..."
 }
-FIFS="mppcava/config-tmux mppcava/config systemd/user/mpdstats.service"
+FIFS="mppcava/config-tmux mppcava/config"
 for cnf in ${FIFS}
 do
   [ -f ${CONF}/${cnf} ] && {
@@ -1465,10 +1483,10 @@ then
     ${PYTHON} -m pip install --user ${SCRB}==0.7.3 > /dev/null 2>&1
   fi
   [ "${quiet}" ] || printf "\n\tModules:"
-  for pkg in flask unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
-             pylast beets-describe beets-yearfixer beetcamp beets-extrafiles \
-             beets-xtractor python-mpd2 requests sacad tmuxp ueberzug yt-dlp \
-             calliope-music python3-discogs-client bandcamp-downloader scdl
+  for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
+             pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
+             python-mpd2 requests sacad tmuxp ueberzug yt-dlp calliope-music \
+             bandcamp-downloader scdl flask-cors
   do
     pip_install "${pkg}"
   done
@@ -1533,24 +1551,30 @@ YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
 [ "${quiet}" ] || {
   printf "\n\tPatching Beets plugins ..."
 }
-# Patch beets-extrafiles plugin
-have_extra=
+
+# Patch beets-web plugin
+have_web=
 SITE=`${PYTHON} -m site --user-site`
-EXTR="${SITE}/beetsplug/extrafiles.py"
-if [ -f "${EXTR}" ]
+WEBP="${SITE}/beetsplug/web/__init__.py"
+if [ -f "${WEBP}" ]
 then
-  have_extra="${EXTR}"
+  have_web="${WEBP}"
 else
-  SITE=`${PYTHON} -m pip show beets-extrafiles | grep Location: | awk ' { print $2 } '`
-  EXTR="${SITE}/beetsplug/extrafiles.py"
-  [ -f "${EXTR}" ] && have_extra="${EXTR}"
+  SITE=`${PYTHON} -m pip show beets | grep Location: | awk ' { print $2 } '`
+  WEBP="${SITE}/beetsplug/beetsplug/web/__init__.py"
+  [ -f "${WEBP}" ] && have_web="${WEBP}"
 fi
 
-[ "${have_extra}" ] && {
-  grep beets.mediafile "${have_extra}" > /dev/null && {
-    cat "${have_extra}" | sed -e "s/beets.mediafile/mediafile/" -e "s/TYPES/TYPES.keys()/" > /tmp/ext$$
-    cp /tmp/ext$$ "${have_extra}"
-    rm -f /tmp/ext$$
+[ "${have_web}" ] && {
+  grep attachment_filename "${have_web}" > /dev/null && {
+    cat "${have_web}" | sed -e "s/attachment_filename/download_name/" > /tmp/web$$
+    cp /tmp/web$$ "${have_web}"
+    rm -f /tmp/web$$
+  }
+  grep "','.join(\[v" "${have_web}" > /dev/null && {
+    cat "${have_web}" | sed -e "s%','.join(\[v%'/'.join(\[v%" > /tmp/web$$
+    cp /tmp/web$$ "${have_web}"
+    rm -f /tmp/web$$
   }
 }
 

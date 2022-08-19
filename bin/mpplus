@@ -91,7 +91,7 @@ usage() {
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art (without this option -D will use"
   printf "\n\t\tthe 'music_directory' setting in '~/.config/mpd/mpd.conf'"
-  printf "\n\t-F indicates convert all WAV format files in the music library"
+  printf "\n\t-F indicates convert WAV/M4A format files in the music library"
   printf "\n\t\tto MP3 format files and exit. A subsequent 'mpplus -I' import"
   printf "\n\t\twill be necessary to import these newly converted music files."
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
@@ -182,6 +182,21 @@ make_it_so() {
       fi
     else
       echo "${SCRIPTS}/wav2mp3.sh not found or not executable"
+      echo "Check your MusicPlayerPlus installation"
+      echo ""
+      echo "Manual media file conversion may be required"
+    fi
+    if [ -x ${SCRIPTS}/m4a2mp3.sh ]
+    then
+      printf "\nConverting M4A files\n"
+      if [ "${MUSIC_DIRECTORY}" ]
+      then
+        ${SCRIPTS}/m4a2mp3.sh -d "${MUSIC_DIRECTORY}"
+      else
+        ${SCRIPTS}/m4a2mp3.sh
+      fi
+    else
+      echo "${SCRIPTS}/m4a2mp3.sh not found or not executable"
       echo "Check your MusicPlayerPlus installation"
       echo ""
       echo "Manual media file conversion may be required"
@@ -1791,7 +1806,7 @@ show_main_menu() {
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler Service")
-    options+=("ASCIImatics Animations" "Convert WAV files to MP3")
+    options+=("ASCIImatics Animations" "Convert WAV/M4A files to MP3")
     options+=("Import Music to Beets")
     options+=("Fetch Lyrics" "Blissify Audio Info Extraction")
     options+=("Essentia Audio Info Extraction")
