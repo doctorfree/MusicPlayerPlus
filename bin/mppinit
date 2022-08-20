@@ -22,6 +22,8 @@ CALIPCONFDIR="${CONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
 MOPIDCONFDIR="${CONF}/mopidy"
 MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
+NAVIDCONFDIR="${CONF}/navidrome"
+NAVIDCONF="${MOPIDCONFDIR}/navidrome.toml"
 YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
@@ -336,6 +338,16 @@ sync_music_dir() {
       cp /tmp/mop$$ ${MOPIDCONF}
       rm -f /tmp/mop$$
     }
+    # Sync music dir in navidrome.toml
+    nav_music=`grep ^MusicFolder ${NAVIDCONF}`
+    nav_music=`echo ${nav_music} | awk ' { print $3 } '`
+    [ "${mpd_music}" == "${nav_music}" ] || {
+      cat ${NAVIDCONF} | \
+        sed -e "s%^MusicFolder = .*%MusicFolder = ${mpd_music}%" > /tmp/nav$$
+      cp /tmp/nav$$ ${NAVIDCONF}
+      rm -f /tmp/nav$$
+    }
+    # Sync music dir in yt-dlp.conf
     ytd_music=`grep ^-o ${YTDLPCONF} | grep /Downloads/`
     ytd_music=`echo ${ytd_music} | \
         awk ' { print $2 } ' | \
@@ -853,6 +865,102 @@ shift $(( OPTIND - 1 ))
   exit 0
 }
 
+init_navidrome() {
+  user=`id -u`
+  group=`id -g`
+  navivar="/var/lib/navidrome"
+  arch=`uname -m`
+
+  sudo install -d -o ${user} -g ${group} /opt/navidrome
+  sudo install -d -o ${user} -g ${group} ${navivar}
+
+  if [ -f ${navivar}/Navidrome.tar.gz ]
+  then
+    echo "Found an existing ${navivar}/Navidrome.tar.gz"
+    echo "Using the existing Navidrome release download."
+    echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
+    echo "and re-run the 'mppinit navidrome' command."
+  else
+    wget https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${arch}.tar.gz -O ${navivar}/Navidrome.tar.gz
+  fi
+
+  if [ -f ${navivar}/Navidrome.tar.gz ]
+  then
+    sudo tar -xvzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
+    rm -f ${navivar}/Navidrome.tar.gz
+    sudo chown -R ${user} /opt/navidrome
+  else
+    echo "Navidrome download failed."
+    echo "Could not locate ${navivar}/Navidrome.tar.gz"
+    echo ""
+    echo "Visit https://github.com/navidrome/navidrome/releases/download/"
+    echo "and locate the latest Navidrome release for this platform (${arch})."
+    echo ""
+    echo "Download the Navidrome release 'tar.gz' and move it to:"
+    echo "    ${navivar}/Navidrome.tar.gz"
+    echo "Then re-run the 'mppinit navidrome' command."
+    echo ""
+    echo "Exiting without installing or configuring Navidrome."
+    exit 1
+  fi
+
+  NAVICONF="${navivar}/navidrome.toml"
+  [ -f "${NAVICONF}" ] || {
+    set_music_dir
+    if [ "${mpd_music}" ]
+    then
+      echo "MusicFolder = \"${mpd_music}\"" > "${NAVICONF}"
+    else
+      echo "MusicFolder = \"${HOME}/Music\"" > "${NAVICONF}"
+    fi
+    [ -f "${MPPCDIR}/navidrome/navidrome.toml" ] && {
+      cat "${MPPCDIR}/navidrome/navidrome.toml" >> ${NAVICONF}"
+    }
+  }
+
+  # Enable Navidrome service
+  systemctl --user is-active navidrome.service >/dev/null 2>&1 || {
+    systemctl --user start navidrome.service
+  }
+  systemctl --user is-enabled navidrome.service >/dev/null 2>&1 || {
+    systemctl --user enable navidrome.service
+  }
+}
+
+[ "$1" == "navidrome" ] && {
+  if [ "${initialized}" ]
+  then
+    if [ "$2" ]
+    then
+      navi_version="$2"
+    else
+      navi_version="0.47.5"
+    fi
+    printf "\nInstalling and configuring Navidrome version ${navi_version}.\n\n"
+    while true
+    do
+      read -p "Do you wish to continue with Navidrome activation ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nNavidrome activation aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    init_navidrome
+  else
+    init_warn navidrome
+  fi
+  printf "\n\n${BOLD}Navidrome service enabled and activated${NORM}\n"
+  exit 0
+}
+
 [ "$1" == "mopidy" ] && {
   if [ "${initialized}" ]
   then
@@ -1196,9 +1304,8 @@ fi
 [ "${quiet}" ] || {
   printf "\n\tInstalling Calliope configuration in ${CALIPCONFDIR} ..."
 }
-# If there is no user calliope config folder then
-# copy the MusicPlayerPlus calliope config folder
-# into the user's home
+# If there is no user calliope config folder then copy the
+# MusicPlayerPlus calliope config folder into the user's home
 if [ -f ${CALIPCONF} ]
 then
   [ "${overwrite}" ] && cp ${MPPCDIR}/calliope/calliope.conf ${CALIPCONFDIR}
@@ -1214,9 +1321,8 @@ fi
 [ "${quiet}" ] || {
   printf "\n\tInstalling Mopidy configuration in ${MOPIDCONFDIR} ..."
 }
-# If there is no user Mopidy config folder then
-# copy the MusicPlayerPlus Mopidy config folder
-# into the user's home
+# If there is no user Mopidy config folder then copy the
+# MusicPlayerPlus Mopidy config folder into the user's home
 if [ -f ${MOPIDCONF} ]
 then
   [ "${overwrite}" ] && cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
@@ -1228,11 +1334,23 @@ fi
 [ -d ${MOPIDCONFDIR}/data ] || mkdir -p ${MOPIDCONFDIR}/data
 
 [ "${quiet}" ] || {
+  printf "\n\tInstalling Navidrome configuration in ${NAVIDCONFDIR} ..."
+}
+# If there is no user Navidrome config folder then copy the
+# MusicPlayerPlus Navidrome config folder into the user's home
+if [ -f ${NAVIDCONF} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/navidrome/navidrome.toml ${NAVIDCONFDIR}
+else
+  [ -d ${NAVIDCONFDIR} ] || mkdir -p ${NAVIDCONFDIR}
+  cp ${MPPCDIR}/navidrome/navidrome.toml ${NAVIDCONFDIR}
+fi
+
+[ "${quiet}" ] || {
   printf "\n\tInstalling yt-dlp configuration in ${YTDLPCONFDIR} ..."
 }
-# If there is no user yt-dlp config folder then
-# copy the MusicPlayerPlus yt-dlp config folder
-# into the user's home
+# If there is no user yt-dlp config folder then copy the
+# MusicPlayerPlus yt-dlp config folder into the user's home
 if [ -f ${YTDLPCONF} ]
 then
   [ "${overwrite}" ] && cp ${MPPCDIR}/yt-dlp/config ${YTDLPCONFDIR}
@@ -1248,6 +1366,7 @@ fi
 SYSTEMDIR="${CONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 MOPSTATSD="${SYSTEMDIR}/mopidy.service"
+NAVSTATSD="${SYSTEMDIR}/navidrome.service"
 WEBPLUGSD="${SYSTEMDIR}/webplugin.service"
 YAMSTATSD="${SYSTEMDIR}/yams.service"
 [ "${quiet}" ] || {
@@ -1273,6 +1392,13 @@ then
 else
   [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
   cp ${MPPCDIR}/mopidy/mopidy.service ${MOPSTATSD}
+fi
+if [ -f ${NAVSTATSD} ]
+then
+  [ "${overwrite}" ] && cp ${MPPCDIR}/navidrome/navidrome.service ${NAVSTATSD}
+else
+  [ -d ${SYSTEMDIR} ] || mkdir -p ${SYSTEMDIR}
+  cp ${MPPCDIR}/navidrome/navidrome.service ${NAVSTATSD}
 fi
 if [ -f ${YAMSTATSD} ]
 then
@@ -1529,24 +1655,6 @@ YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
     fi
   }
 }
-
-# In development
-# have_ytdl=`type -p ytdl-sub`
-# [ "${have_ytdl}" ] || {
-#   YTDL="${CONF}/ytdl-sub"
-#   YSRC="${YTDL}/src"
-#   [ -d ${YTDL} ] || mkdir -p ${YTDL}
-#   [ -d ${YSRC} ] || {
-#     [ "${have_git}" ] && {
-#       git clone \
-#         https://github.com/jmbannon/ytdl-sub.git ${YSRC} > /dev/null 2>&1
-#       cd ${YSRC}
-#       ${PYTHON} -m pip install .
-#       cd ..
-#       rm -rf src
-#     }
-#   }
-# }
 
 [ "${quiet}" ] || {
   printf "\n\tPatching Beets plugins ..."
