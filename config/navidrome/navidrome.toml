@@ -1,3 +1,4 @@
+MusicFolder	= "__HOME__/Music"
 DataFolder = "/var/lib/navidrome"
 # Where to search for and import playlists from
 # A list of folders/globs separated by : Paths are relative to MusicFolder

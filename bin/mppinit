@@ -23,7 +23,7 @@ CALIPCONF="${CALIPCONFDIR}/calliope.conf"
 MOPIDCONFDIR="${CONF}/mopidy"
 MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
 NAVIDCONFDIR="${CONF}/navidrome"
-NAVIDCONF="${MOPIDCONFDIR}/navidrome.toml"
+NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
 YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
@@ -342,13 +342,16 @@ sync_music_dir() {
       rm -f /tmp/mop$$
     }
     # Sync music dir in navidrome.toml
-    nav_music=`grep ^MusicFolder ${NAVIDCONF}`
-    nav_music=`echo ${nav_music} | awk ' { print $3 } '`
-    [ "${mpd_music}" == "${nav_music}" ] || {
-      cat ${NAVIDCONF} | \
-        sed -e "s%^MusicFolder = .*%MusicFolder = ${mpd_music}%" > /tmp/nav$$
-      cp /tmp/nav$$ ${NAVIDCONF}
-      rm -f /tmp/nav$$
+    [ -f "${NAVIDCONF}" ] && {
+      nav_music=`grep ^MusicFolder ${NAVIDCONF}`
+      nav_music=`echo ${nav_music} | awk ' { print $3 } '`
+      nav_music=`echo ${nav_music} | awk ' { print $3 } ' | sed -e "s/\"//g"`
+      [ "${exp_music}" == "${nav_music}" ] || {
+        cat ${NAVIDCONF} | \
+          sed -e "s%^MusicFolder = .*%MusicFolder = \"${exp_music}\"%" > /tmp/nav$$
+        cp /tmp/nav$$ ${NAVIDCONF}
+        rm -f /tmp/nav$$
+      }
     }
     # Sync music dir in yt-dlp.conf
     ytd_music=`grep ^-o ${YTDLPCONF} | grep /Downloads/`
@@ -871,7 +874,7 @@ init_navidrome() {
   sudo install -d -o ${user} -g ${group} /opt/navidrome
   sudo install -d -o ${user} -g ${group} ${navivar}
 
-  if [ -f ${navivar}/Navidrome.tar.gz ]
+  if [ -f "${navivar}/Navidrome.tar.gz" ]
   then
     echo "Found an existing ${navivar}/Navidrome.tar.gz"
     echo "Using the existing Navidrome release download."
@@ -881,10 +884,10 @@ init_navidrome() {
     wget https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${arch}.tar.gz -O ${navivar}/Navidrome.tar.gz
   fi
 
-  if [ -f ${navivar}/Navidrome.tar.gz ]
+  if [ -f "${navivar}/Navidrome.tar.gz" ]
   then
     sudo tar -xvzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
-    rm -f ${navivar}/Navidrome.tar.gz
+    rm -f "${navivar}/Navidrome.tar.gz"
     sudo chown -R ${user} /opt/navidrome
   else
     echo "Navidrome download failed."
@@ -901,17 +904,10 @@ init_navidrome() {
     exit 1
   fi
 
-  NAVICONF="${navivar}/navidrome.toml"
-  [ -f "${NAVICONF}" ] || {
-    set_music_dir
-    if [ "${mpd_music}" ]
-    then
-      echo "MusicFolder = \"${mpd_music}\"" > "${NAVICONF}"
-    else
-      echo "MusicFolder = \"${HOME}/Music\"" > "${NAVICONF}"
-    fi
+  [ -f "${NAVIDCONF}" ] || {
     [ -f "${MPPCDIR}/navidrome/navidrome.toml" ] && {
-      cat "${MPPCDIR}/navidrome/navidrome.toml" >> ${NAVICONF}"
+      cat "${MPPCDIR}/navidrome/navidrome.toml" | \
+          sed -e "s%__HOME__%${HOME}%" > "${NAVIDCONF}"
     }
   }
 
@@ -1335,12 +1331,16 @@ fi
 }
 # If there is no user Navidrome config folder then copy the
 # MusicPlayerPlus Navidrome config folder into the user's home
-if [ -f ${NAVIDCONF} ]
+if [ -f "${NAVIDCONF}" ]
 then
-  [ "${overwrite}" ] && cp ${MPPCDIR}/navidrome/navidrome.toml ${NAVIDCONFDIR}
+  [ "${overwrite}" ] && {
+    cat "${MPPCDIR}/navidrome/navidrome.toml" | \
+        sed -e "s%__HOME__%${HOME}%" > "${NAVIDCONF}"
+  }
 else
   [ -d ${NAVIDCONFDIR} ] || mkdir -p ${NAVIDCONFDIR}
-  cp ${MPPCDIR}/navidrome/navidrome.toml ${NAVIDCONFDIR}
+  cat "${MPPCDIR}/navidrome/navidrome.toml" | \
+      sed -e "s%__HOME__%${HOME}%" > "${NAVIDCONF}"
 fi
 
 [ "${quiet}" ] || {

@@ -987,6 +987,14 @@ listen to all your music.
 **[Note:]** It usually take a couple of minutes for your music to start
 appearing in Navidrome’s UI. Check the logs to see what is the scan progress.
 
+The Navidrome self-hosted music service can stream your music to many devices.
+
+For a list of Airsonic compatible applications, see
+https://airsonic.github.io/docs/apps/
+
+For a list of Subsonic compatible clients, see
+https://www.navidrome.org/docs/overview/#apps
+
 ### Terminal Emulator Profiles
 
 The `mppcava` spectrum visualizer looks better when the font used by the

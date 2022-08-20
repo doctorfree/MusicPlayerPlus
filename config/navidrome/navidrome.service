@@ -7,10 +7,8 @@ AssertPathExists=/var/lib/navidrome
 WantedBy=multi-user.target
 
 [Service]
-User=%u
-Group=%g
 Type=simple
-ExecStart=/opt/navidrome/navidrome --configfile "/var/lib/navidrome/navidrome.toml"
+ExecStart=/opt/navidrome/navidrome --configfile %h/.config/navidrome/navidrome.toml
 WorkingDirectory=/var/lib/navidrome
 TimeoutStopSec=20
 KillMode=process
