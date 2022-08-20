@@ -988,6 +988,14 @@ listen to all your music.
 **[Note:]** It usually take a couple of minutes for your music to start
 appearing in Navidrome’s UI. Check the logs to see what is the scan progress.
 
+**[Security Note:]** Navidrome comes with an embedded, full-featured HTTP
+server but in order to provide additional security (e.g. SSL) Navidrome
+should be run behind a reverse proxy like Nginx or Apache. MusicPlayerPlus
+does not configure a reverse proxy for Navidrome. See the Navidrome network
+configuration documentation at https://www.navidrome.org/docs/usage/security/
+to get started securing Navidrome. To use the MusicPlayerPlus default
+configuration of Navidrome, use `http://...` rather than `https://...`.
+
 The Navidrome self-hosted music service can stream your music to many devices.
 
 For a list of Airsonic compatible applications, see
@@ -995,6 +1003,9 @@ https://airsonic.github.io/docs/apps/
 
 For a list of Subsonic compatible clients, see
 https://www.navidrome.org/docs/overview/#apps
+
+Any device with a browser can act as a web client by opening the Navidrome
+server URL `http://ip-address:4533`.
 
 ### Terminal Emulator Profiles
 
