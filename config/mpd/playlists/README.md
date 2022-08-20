@@ -2,6 +2,6 @@
 
 The MPD playlist directory stores MPD created playlists.
 
-The default configuration sets this to `~/.config/mpd/playlists`.
+The default configuration sets this to `~/Music/Playlists`.
 
 Edit `~/.config/mpd/mpd.conf` to customize this location.

@@ -17,7 +17,7 @@ music_directory		"~/Music"
 # playlist files not created by the server but only if they are in the MPD
 # format. This setting defaults to playlist saving being disabled.
 #
-playlist_directory		"~/.config/mpd/playlists"
+playlist_directory		"~/Music/Playlists"
 #
 # This setting sets the location of the MPD database. This file is used to
 # load the database at server start up and store the database while the

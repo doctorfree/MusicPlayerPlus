@@ -256,13 +256,13 @@ play:
 
 playlist:
   auto: yes
-  playlist_dir: ~/.config/mpd/playlists
+  playlist_dir: ~/Music/Playlists
   relative_to: ~/Music
 
 smartplaylist:
   auto: no
   relative_to: ~/Music
-  playlist_dir: ~/.config/mpd/playlists
+  playlist_dir: ~/Music/Playlists
   forward_slash: no
   playlists:
     - name: 'rating.m3u'

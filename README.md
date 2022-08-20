@@ -971,9 +971,10 @@ mppinit navidrome
 ```
 
 The MusicPlayerPlus Navidrome activation runs as a user level system service.
-Configuration for Navidrome resides in `/var/lib/navidrome/navidrome.toml`.
+Configuration for Navidrome resides in `$HOME/.config/navidrome/navidrome.toml`.
 The MusicPlayerPlus activation of Navidrome auto-configures, starts, and
-enables the Navidrome service.
+enables the Navidrome service. The Navidrome log file can be found at
+`$HOME/.config/navidrome/navidrome.log`.
 
 After installing Navidrome, you need to create your first user. This will be
 your admin user, a super user that can manage all aspects of Navidrome,

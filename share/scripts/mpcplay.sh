@@ -20,7 +20,7 @@ shuffle=
 # Get the MPD playlist directory
 # playlist_dir=`grep ^playlist_directory ${MPD_CONF}`
 # playlist_dir=`echo ${playlist_dir} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-# [ "${playlist_dir}" ] || playlist_dir="${HOME}/.config/mpd/playlists"
+# [ "${playlist_dir}" ] || playlist_dir="${HOME}/Music/Playlists"
 # Need to expand the tilda to $HOME
 # playlist_dir="${playlist_dir/#\~/$HOME}"
 

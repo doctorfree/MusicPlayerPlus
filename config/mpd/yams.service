@@ -11,6 +11,8 @@ Environment="NON_INTERACTIVE=1"
 # Note: Please update this to your installed yams binary's path, if necessary
 # ExecStart=/usr/bin/python3 -m yams -N
 ExecStart=/usr/share/musicplayerplus/scripts/python3.sh -m yams -N
+StandardOutput=file:%h/.config/yams/yams.log
+StandardError=inherit
 
 [Install]
 WantedBy=default.target

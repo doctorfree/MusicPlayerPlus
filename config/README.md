@@ -12,8 +12,8 @@ The installed MusicPlayer MPD configuration files are located in
 The default `~/.config/mpd/mpd.conf` indludes the following:
 
 ```
-music_directory		"~/.config/mpd/music"
-playlist_directory		"~/.config/mpd/playlists"
+music_directory		"~/Music"
+playlist_directory		"~/Music/Playlists"
 db_file			"~/.config/mpd/tag_cache"
 log_file			"~/.config/mpd/log"
 pid_file			"~/.config/mpd/pid"

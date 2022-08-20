@@ -289,6 +289,16 @@ sync_music_dir() {
   then
     # Create mpd_music directory if it does not exist
     [ -d "${exp_music}" ] || mkdir -p ${exp_music}
+    # Create playlists directory if it does not exist
+    [ -d "${exp_music}/Playlists" ] || mkdir -p "${exp_music}/Playlists"
+    # Sync playlist_directory in mpd.conf
+    mpd_play=`grep ^playlist_directory ${MPDCONF}`
+    mpd_play=`echo ${mpd_play} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+    [ "${mpd_music}/Playlists" == "${mpd_play}" ] || {
+      cat ${MPDCONF} | sed -e "s%^playlist_directory .*%playlist_directory \"${mpd_music}/Playlists\"%" \ > /tmp/mpd$$
+      cp /tmp/mpd$$ ${MPDCONF}
+      rm -f /tmp/mpd$$
+    }
     mpc_custom=1
     mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
     [ "${mpc_music}" ] || {
@@ -321,10 +331,12 @@ sync_music_dir() {
       then
         cat ${BEETSCONF} | \
           sed -e "s%^directory:.*%directory: ${mpd_music}%" \
+              -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
               -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
       else
         cat ${BEETSCONF} | \
           sed -e "s%#directory:.*%directory: ${mpd_music}%" \
+              -e "s%playlist_dir:.*%playlist_dir: ${mpd_music}/Playlists%" \
               -e "s%relative_to:.*%relative_to: ${mpd_music}%" > /tmp/bts$$
       fi
       cp /tmp/bts$$ ${BEETSCONF}
@@ -337,6 +349,7 @@ sync_music_dir() {
       cat ${MOPIDCONF} | \
         sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
             -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
+            -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
             -e "s%^media_dir = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
       cp /tmp/mop$$ ${MOPIDCONF}
       rm -f /tmp/mop$$

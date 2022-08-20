@@ -13,6 +13,8 @@ WorkingDirectory=/var/lib/navidrome
 TimeoutStopSec=20
 KillMode=process
 Restart=on-failure
+StandardOutput=file:%h/.config/navidrome/navidrome.log
+StandardError=inherit
 
 # See https://www.freedesktop.org/software/systemd/man/systemd.exec.html
 DevicePolicy=closed

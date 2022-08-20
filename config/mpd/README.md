@@ -6,5 +6,5 @@ MPD can be configured per-user. Running it as a normal user has the benefits of:
 - Avoiding unforeseen directory and file permission errors.
 
 The MPD music and playlist directories are configured here in the file
-`~/.config/mpd/mpd.conf`. These are initially set to `~/.config/mpd/music`
-and `~/.config/mpd/playlists`. Edit `mpd.conf` to customize these locations.
+`~/.config/mpd/mpd.conf`. These are initially set to `~/Music`
+and `~/Music/Playlists`. Edit `mpd.conf` to customize these locations.
