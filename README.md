@@ -17,8 +17,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
 
 ## Table of contents
 
-<!-- overflow:auto; to fix collapsed display, because the toggle link has float:right; -->
-<div class="toccolours mw-collapsible" style="width:400px; overflow:auto;">
 1. [Overview](#overview)
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
@@ -68,7 +66,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Sponsor MusicPlayerPlus](#sponsor-musicplayerplus)
     1. [TODO List](#todo-list)
     1. [Contribute to Development](#contribute-to-development)
-</div>
 
 ## Overview
 
