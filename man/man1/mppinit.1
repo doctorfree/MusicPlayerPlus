@@ -22,7 +22,7 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
 \f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u]
-[bandcamp|import|metadata|mopidy|mpd|soundcloud|sync]
+[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -65,6 +65,12 @@ activated.
 Invoked with the \f[V]mpd\f[R] argument, \f[I]mppinit mpd\f[R] activates
 the Music Player Daemon (MPD) and deactivates the Mopidy music server
 and Mopidy extensions.
+.PP
+Invoked with the \f[V]navidrome\f[R] argument, \f[I]mppinit
+navidrome\f[R] installs the Navidrome music server and streamer.
+The Navidrome user system service is activated.
+To install a specified version of Navidrome, use the command
+\f[V]mppinit navidrome <version>\f[R].
 .PP
 Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
 synchronizes the music library location across all configuration files.
@@ -113,15 +119,16 @@ Mopidy
 \f[B]mpd\f[R]
 Activates MPD, deactivates Mopidy
 .TP
+\f[B]navidrome [version]\f[R]
+Installs, configures, and activates Navidrome music server/streamer
+.TP
 \f[B]sync\f[R]
 synchronizes the music library location across configs
 .PP
 \f[I]mppinit\f[R] must be performed before a \f[I]sync\f[R],
-\f[I]metadata\f[R], \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], or
+\f[I]metadata\f[R], \f[I]mopidy\f[R], \f[I]mpd\f[R],
+\f[I]navidrome\f[R], \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], or
 \f[I]import\f[R]
-.PP
-Only one of \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], \f[I]import\f[R],
-\f[I]metadata\f[R], or \f[I]sync\f[R] can be specified
 .SS AUTHORS
 .PP
 Written by Ronald Record <github@ronrecord.com>

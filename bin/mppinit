@@ -35,7 +35,7 @@ exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] "
-  printf "[bandcamp|import|metadata|mopidy|mpd|soundcloud|sync|yams]"
+  printf "[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -53,11 +53,14 @@ usage() {
   printf "\n\t'mopidy' installs and configures Mopidy extensible music server"
   printf "\n\t\tNote: activating Mopidy deactivates MPD"
   printf "\n\t'mpd' activates the MPD music server and deactivates Mopidy"
+  printf "\n\t'navidrome' installs and configures Navidrome music server"
+  printf "\n\t\tNote: 'mppinit navidrome <version>' can be used to specify"
+  printf "\n\t\tan alternate version of Navidrome to download and install"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
-  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import"
-  printf "\nOnly one of bandcamp, soundcloud, import, metadata, or sync can be specified\n\n"
+  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp,"
+  printf "\nmopidy, navidrome, soundcloud, or import\n\n"
   exit 1
 }
 
@@ -556,12 +559,6 @@ shift $(( OPTIND - 1 ))
 
 [ "${essentia}" ] && [ "${acbrainz}" ] && {
   printf "\nOnly one of '-a' and '-e' can be specified."
-  printf "\nExiting."
-  usage
-}
-
-[ "$2" ] && {
-  printf "\nUnknown or extaneous arguments $*"
   printf "\nExiting."
   usage
 }

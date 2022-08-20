@@ -5,6 +5,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Character-based spectrum visualizer `mppcava`
 - ***plus*** Music Player Daemon and ALSA configuration management
 - ***plus*** Mopidy Music Server with preconfigured extensions
+- ***plus*** Navidrome Music Server/Streamer automated install/config/service
 - ***plus*** Bliss acoustic analysis and song similarity database
 - ***plus*** Essentia acoustic analysis and metadata extraction
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
@@ -16,6 +17,8 @@ MusicPlayerPlus is a character-based console and terminal window music player
 
 ## Table of contents
 
+<!-- overflow:auto; to fix collapsed display, because the toggle link has float:right; -->
+<div class="toccolours mw-collapsible" style="width:400px; overflow:auto;">
 1. [Overview](#overview)
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
@@ -41,6 +44,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [System verification checks](#system-verification-checks)
     1. [Initialize Music Database](#initialize-music-database)
     1. [Installing Mopidy](#installing-mopidy)
+    1. [Installing Navidrome](#installing-navidrome)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [Documentation](#documentation)
     1. [README for MusicPlayerPlus configuration](#readme-for-musicplayerplus-configuration)
@@ -64,6 +68,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Sponsor MusicPlayerPlus](#sponsor-musicplayerplus)
     1. [TODO List](#todo-list)
     1. [Contribute to Development](#contribute-to-development)
+</div>
 
 ## Overview
 
@@ -104,6 +109,7 @@ Integration is provided for:
 * [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
 * [beets](https://beets.io/), media library management system
 * [mopidy](https://mopidy.com/), music server with cool extensions
+* [navidrome](https://www.navidrome.org/), self-hosted music server and streamer
 * [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.fm
 * [cava](https://github.com/karlstav/cava), an audio spectrum visualizer
 * [mplayer](http://mplayerhq.hu/design7/info.html), a media player
@@ -957,6 +963,33 @@ set `music_directory` to the new location, and run `mppinit sync` to
 synchronize the music library location across Beets, MPD, Mopidy, and
 downloaders.
 
+### Installing Navidrome
+
+The default music server in MusicPlayerPlus is the Music Player Daemon (MPD).
+An alternate music server and streamer, Navidrome, is also supported.
+To install, configure, and activate Navidrome issue the command:
+
+```
+mppinit navidrome
+```
+
+The MusicPlayerPlus Navidrome activation runs as a user level system service.
+Configuration for Navidrome resides in `/var/lib/navidrome/navidrome.toml`.
+The MusicPlayerPlus activation of Navidrome auto-configures, starts, and
+enables the Navidrome service.
+
+After installing Navidrome, you need to create your first user. This will be
+your admin user, a super user that can manage all aspects of Navidrome,
+including the ability to manage other users. Browse to Navidrome’s homepage
+at http://localhost:4533
+
+Fill out the username and password you want to use, confirm the password and
+click on the “Create Admin” button. You should now be able to browse and
+listen to all your music.
+
+**[Note:]** It usually take a couple of minutes for your music to start
+appearing in Navidrome’s UI. Check the logs to see what is the scan progress.
+
 ### Terminal Emulator Profiles
 
 The `mppcava` spectrum visualizer looks better when the font used by the
@@ -1060,28 +1093,36 @@ provide a brief summary of the command line options.
 The `mppinit` performs one-time initializations:
 
 ```
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
-	'-b' use Blissify for MPD acoustic audio analysis (default)
+	'-b' use Blissify for MPD acoustic audio analysis
 	'-d' install latest Beets development branch rather than
 		the latest stable release (for testing purposes)
-	'-e' use Essentia for Beets acoustic audio analysis (long)
+	'-e' use Essentia for Beets acoustic audio analysis (default)
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
-	'-U' indicates upgrade installed Python modules if needed
+	'-U' indicates do not upgrade installed Python modules
 	'-y' indicates answer 'yes' to all and proceed
 	'-u' displays this usage message and exits
 
 	'bandcamp' downloads all albums in your Bandcamp collections
 	'import' performs a Beets music library import
 	'metadata' performs a library metadata update
+	'mopidy' installs and configures Mopidy extensible music server
+		Note: activating Mopidy deactivates MPD
+	'mpd' activates the MPD music server and deactivates Mopidy
+	'navidrome' installs and configures Navidrome music server
+		Note: 'mppinit navidrome <version>' can be used to specify
+		an alternate version of Navidrome to download and install
 	'soundcloud' downloads all favorites in your Soundcloud account
 	'sync' synchronizes the music library location across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
-'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import
-Only one of bandcamp, soundcloud, import, metadata, or sync can be specified
+
+'mppinit' must be run prior to sync, metadata, bandcamp,
+mopidy, navidrome, soundcloud, or import
+
 ```
 
 The `mpplus` command serves as a general user interface for all of the

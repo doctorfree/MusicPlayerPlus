@@ -70,29 +70,36 @@ General options:
 
 =============================================================================
 
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
-	'-b' use Blissify for MPD acoustic audio analysis (default)
+	'-b' use Blissify for MPD acoustic audio analysis
 	'-d' install latest Beets development branch rather than
 		the latest stable release (for testing purposes)
-	'-e' use Essentia for Beets acoustic audio analysis (long)
+	'-e' use Essentia for Beets acoustic audio analysis (default)
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
-	'-U' indicates upgrade installed Python modules if needed
+	'-U' indicates do not upgrade installed Python modules
 	'-y' indicates answer 'yes' to all and proceed
 	'-u' displays this usage message and exits
 
 	'bandcamp' downloads all albums in your Bandcamp collections
 	'import' performs a Beets music library import
 	'metadata' performs a library metadata update
+	'mopidy' installs and configures Mopidy extensible music server
+		Note: activating Mopidy deactivates MPD
+	'mpd' activates the MPD music server and deactivates Mopidy
+	'navidrome' installs and configures Navidrome music server
+		Note: 'mppinit navidrome <version>' can be used to specify
+		an alternate version of Navidrome to download and install
 	'soundcloud' downloads all favorites in your Soundcloud account
 	'sync' synchronizes the music library location across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
 
-'mppinit' must be run prior to sync, metadata, bandcamp, soundcloud, or import
-Only one of bandcamp, soundcloud, import, metadata, or sync can be specified
+'mppinit' must be run prior to sync, metadata, bandcamp,
+mopidy, navidrome, soundcloud, or import
+
 
 =============================================================================
 

@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|soundcloud|sync]
+**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -44,6 +44,11 @@ deactivated and the Mopidy system service is activated.
 
 Invoked with the `mpd` argument, *mppinit mpd* activates the Music Player
 Daemon (MPD) and deactivates the Mopidy music server and Mopidy extensions.
+
+Invoked with the `navidrome` argument, *mppinit navidrome* installs the
+Navidrome music server and streamer. The Navidrome user system service
+is activated. To install a specified version of Navidrome, use the command
+`mppinit navidrome <version>`.
 
 Invoked with the `sync` argument, *mppinit sync* synchronizes the music
 library location across all configuration files.
@@ -89,12 +94,13 @@ library location across all configuration files.
 **mpd**
 : Activates MPD, deactivates Mopidy
 
+**navidrome [version]**
+: Installs, configures, and activates Navidrome music server/streamer
+
 **sync**
 : synchronizes the music library location across configs
 
-*mppinit* must be performed before a *sync*, *metadata*, *bandcamp*, *soundcloud*, or *import*
-
-Only one of *bandcamp*, *soundcloud*, *import*, *metadata*, or *sync* can be specified
+*mppinit* must be performed before a *sync*, *metadata*, *mopidy*, *mpd*, *navidrome*, *bandcamp*, *soundcloud*, or *import*
 
 ## AUTHORS
 Written by Ronald Record github@ronrecord.com
