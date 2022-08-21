@@ -54,22 +54,17 @@
 # Contributor: Oscar Mayor <oscar.mayor@upf.edu>
 # Contributor: Sankalp Gulati <sankalp.gulati@upf.edu>
 
-SRC_NAME=MusicPlayerPlus
-if [ -f ${SRC}/${SRC_NAME}/VERSION ]
+if [ -f VERSION ]
 then
-  . ${SRC}/${SRC_NAME}/VERSION
+  . ./VERSION
 else
-  if [ -f VERSION ]
+  [ "${SRC}" ] || SRC="${HOME}/src/MusicPlayerPlus"
+  if [ -f ${SRC}/VERSION ]
   then
-    . ./VERSION
+    . ${SRC}/VERSION
   else
-    if [ -f ../../VERSION ]
-    then
-      . ../../VERSION
-    else
-      VERSION=2.0.1
-      RELEASE=2
-    fi
+    VERSION=2.0.1
+    RELEASE=2
   fi
 fi
 pkgname=musicplayerplus
@@ -85,7 +80,7 @@ optdepends=('asciinema: record and share terminal sessions'
             'cool-retro-term: cool retro terminal emulator'
             'tilix: tiling terminal emulator')
 install=musicplayerplus.install
-source=("${pkgname}::git://github.com/doctorfree/MusicPlayerPlus.git")
+source=("${pkgname}::git+https://github.com/doctorfree/MusicPlayerPlus.git")
 sha256sums=('SKIP')
 options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 

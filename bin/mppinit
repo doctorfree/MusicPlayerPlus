@@ -938,6 +938,19 @@ init_navidrome() {
       exit 1
     fi
   fi
+  [ -x /opt/navidrome/navidrome ] && {
+    if [ -d "${HOME}/.local/bin" ]
+    then
+      BINDIR="${HOME}/.local/bin"
+      SUDO=
+    else
+      BINDIR="/usr/bin"
+      SUDO=sudo
+    fi
+    [ -x "${BINDIR}/navidrome" ] || {
+      ${SUDO} ln -s /opt/navidrome/navidrome "${BINDIR}/navidrome"
+    }
+  }
 
   [ -f "${NAVIDCONF}" ] || {
     [ -f "${MPPCDIR}/navidrome/navidrome.toml" ] && {

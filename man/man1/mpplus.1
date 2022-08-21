@@ -22,8 +22,8 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SS SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-C client] [-D
-art|bandcamp|soundcloud] [-d music_directory] [-g] [-F] [-f] [-h] [-I]
-[-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
+art|bandcamp|soundcloud] [-d music_directory] [-F] [-f] [-G] [-g] [-h]
+[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
 [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x
 query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -62,8 +62,11 @@ Bandcamp
 When invoked as \f[V]mpplus -D soundcloud\f[R] it will downlad songs
 from Soundcloud
 .IP \[bu] 2
-When invoked as \f[V]mpplus -F\f[R] it will convert WAV/M4A format files
-in the music library to MP3 format files
+When invoked as \f[V]mpplus -F\f[R] it will convert WAV format files in
+the music library to MP3 format files
+.IP \[bu] 2
+When invoked as \f[V]mpplus -G\f[R] it will convert M4A format files in
+the music library to MP3 format files
 .IP \[bu] 2
 When invoked as \f[V]mpplus -I\f[R] it will perform a Beets library
 import of all songs and albums in the music library.
@@ -166,7 +169,13 @@ specifies the music directory to use for downloaded album cover art
 in \f[V]\[ti]/.config/mpd/mpd.conf\f[R]
 .TP
 \f[B]-F\f[R]
-indicates convert all WAV/M4A format files in the music library to MP3
+indicates convert all WAV format files in the music library to MP3
+format files and exit.
+A subsequent \[aq]mpplus -I\[aq] import will be necessary to import
+these newly converted music files.
+.TP
+\f[B]-G\f[R]
+indicates convert all M4A format files in the music library to MP3
 format files and exit.
 A subsequent \[aq]mpplus -I\[aq] import will be necessary to import
 these newly converted music files.

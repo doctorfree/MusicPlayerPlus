@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-B] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-g] [-F] [-f] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A] [-a] [-b] [-B] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -23,7 +23,8 @@ The *mpplus* command can be used in conjunction with the Beets music library man
 - When invoked as `mpplus -D art` it will downlad album cover art for all albums in the music library
 - When invoked as `mpplus -D bandcamp` it will downlad songs from Bandcamp
 - When invoked as `mpplus -D soundcloud` it will downlad songs from Soundcloud
-- When invoked as `mpplus -F` it will convert WAV/M4A format files in the music library to MP3 format files
+- When invoked as `mpplus -F` it will convert WAV format files in the music library to MP3 format files
+- When invoked as `mpplus -G` it will convert M4A format files in the music library to MP3 format files
 - When invoked as `mpplus -I` it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
 - When invoked as `mpplus -L` it will downlad lyrics for all songs in the music library that do not already have lyrics
 
@@ -115,7 +116,10 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
 
 **-F**
-: indicates convert all WAV/M4A format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
+: indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
+
+**-G**
+: indicates convert all M4A format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
 
 **-I**
 : indicates import albums and songs from 'music_directory' to Beets and exit

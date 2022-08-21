@@ -45,6 +45,9 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Installing Navidrome](#installing-navidrome)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
+    1. [Services](#services)
+    1. [Which services should be installed and activated](#which-services-should-be-installed-and-activated)
+    1. [Clients](#clients)
 1. [Documentation](#documentation)
     1. [README for MusicPlayerPlus configuration](#readme-for-musicplayerplus-configuration)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
@@ -221,7 +224,7 @@ as described below or they can be performed in two steps using `mppinit`.
 mppinit import
 ```
 
-The `mppinit import` command converts any WAV and M4A format media to MP3 format
+The `mppinit import` command converts any WAV format media to MP3 format
 and imports the music library into the Beets media library management system.
 
 **[NOTE:]** A Beets import can take hours for a large music library.
@@ -298,11 +301,11 @@ Download albums in your Bandcamp collections with `mppinit bandcamp`.
 
 Download favorites in your Soundcloud account with `mppinit soundcloud`.
 
-Convert WAV/M4A format media files in your library to MP3 format files with
-the command `mpplus -F`. Conversion from WAV to MP3 allows these files to
-be imported into the Beets media library management system. Conversion from
-M4A (Apple ALAC) to MP3 allows these files to be streamed and played in all
-browsers supporting HTML5 audio.
+Convert WAV or M4A format media files in your library to MP3 format files with
+the command `mpplus -F` or `mpplus -G`. Conversion from WAV to MP3 allows these
+files to be imported into the Beets media library management system. Conversion
+from M4A (Apple ALAC) to MP3 allows these files to be streamed and played in all
+browsers supporting HTML5 audio (not necessary with Navidrome streaming).
 
 If you wish to manage your music library with Beets, import the music library
 with the command `mpplus -I`.
@@ -342,7 +345,7 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
     * Download albums in your Bandcamp collections with `mppinit bandcamp`
     * Download favorites in your Soundcloud account with `mppinit soundcloud`
     * Perform these steps with the command `mppinit import`
-        * Convert WAV/M4A format files to MP3 format with the command `mpplus -F`
+        * Convert WAV format files to MP3 format with the command `mpplus -F`
         * Import your music library into Beets with the command `mpplus -I`
     * Perform these steps with the command `mppinit metadata`
         * Remove duplicate tracks with the command `beet duplicates -d`
@@ -545,7 +548,7 @@ database. To import your music library into Beets, issue the following command:
 mppinit import
 ```
 
-or to skip WAV/M4A format media conversion and just perform the Beets import:
+or to skip WAV format media conversion and just perform the Beets import:
 
 ```
 mpplus -I
@@ -1104,6 +1107,43 @@ music library while MPD or Mopidy is serving up the same library locally.
 Navidrome can optionally scrobble to Last.FM so if that option is enabled
 then deactivate the YAMS service.
 
+**[Summary]** MusicPlayerPlus provides several different selections of
+services appropriate for a variety of use cases. All service configurations
+require a prior MusicPlayerPlus initialization with `mppinit`. Some common
+MusicPlayerPlus service configurations include:
+
+- **Basic Music Player Daemon**
+    - Configured automatically with `mppinit`
+    - MPD enabled and active, all other services disabled
+    - Use `mpplus`, `mpcplus`, `mpc`, etc to play music on local system
+- **Music Player Daemon plus Beets**
+    - Configured with `mppinit import`
+    - MPD and Beets enabled and active, all other services disabled
+    - Use `beet ...`, `mpplus`, `mpcplus`, `mpc`, to search, filter, play, ...
+    - Enables the Beets web plugin at `http://<ip address>:8337`
+- **Mopidy Music Server plus Beets**
+    - Configured with `mppinit import`, and `mppinit mopidy`
+    - Mopidy and Beets enabled and active, other services disabled
+    - Use `beet ...`, `mpplus`, `mpcplus`, `mpc`, to search, filter, play, ...
+    - Enables the Beets web plugin at `http://<ip address>:8337`
+    - Enables the Mopidy web client at `http://<ip address>:6680`
+- **Navidrome Streaming plus Mopidy Music Server plus Beets**
+    - Configure with `mppinit import`, `mppinit mopidy`, `mppinit navidrome`
+    - Navidrome, Mopidy and Beets enabled and active, other services disabled
+    - Use `beet ...`, `mpplus`, `mpcplus`, `mpc`, to search, filter, play, ...
+    - Enables the Beets web plugin at `http://<ip address>:8337`
+    - Enables the Mopidy web client at `http://<ip address>:6680`
+    - Enables the Navidrome web client at `http://<ip address>:4533`
+    - Supports many clients available for all desktops, tablets, and phones
+- **Navidrome Music Streaming Server without MPD/Mopidy/Beets**
+    - Configure with `mppinit navidrome`
+    - Use `mpplus -i` menu system to stop and disable all other services
+        - Select "Manage Music Services" from the Main Menu
+        - If active, Stop and Disable MPD, Mopidy, and Beets
+    - Navidrome enabled and active, other services disabled
+    - Enables the Navidrome web client at `http://<ip address>:4533`
+    - Supports many clients available for all desktops, tablets, and phones
+
 ### Clients
 
 The following clients are included with MusicPlayerPlus:
@@ -1250,7 +1290,7 @@ The `mpplus` command serves as a general user interface for all of the
 MusicPlayerPlus capabilities:
 
 ```
-Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-g] [-F] [-f]
+Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-F] [-f] [-G] [-g]
 	[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]
 	[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status]
@@ -1289,7 +1329,10 @@ General options:
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
-	-F indicates convert WAV/M4A format files in the music library
+	-F indicates convert WAV format files in the music library
+		to MP3 format files and exit. A subsequent 'mpplus -I' import
+		will be necessary to import these newly converted music files.
+	-G indicates convert M4A format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.
 	-I indicates import albums and songs from 'music_directory' to beets and exit

@@ -1,6 +1,6 @@
 =============================================================================
 
-Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-g] [-F] [-f]
+Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-F] [-f] [-G] [-g]
 	[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]
 	[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status]
@@ -39,7 +39,10 @@ General options:
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art (without this option -D will use
 		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
-	-F indicates convert all WAV format files in the music library
+	-F indicates convert WAV format files in the music library
+		to MP3 format files and exit. A subsequent 'mpplus -I' import
+		will be necessary to import these newly converted music files.
+	-G indicates convert M4A format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.
 	-I indicates import albums and songs from 'music_directory' to beets and exit

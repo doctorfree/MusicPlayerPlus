@@ -3,6 +3,8 @@
 debian=
 arch=
 
+export __MPP_SRC__=`pwd`
+
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
 [ "${ID}" == "arch" ] && arch=1
