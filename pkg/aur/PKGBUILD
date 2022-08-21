@@ -84,6 +84,34 @@ source=("${pkgname}::git+https://github.com/doctorfree/MusicPlayerPlus.git")
 sha256sums=('SKIP')
 options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 
+prepare() {
+  cd "${srcdir}/${pkgname}"
+  [ -f /usr/include/gaia2/gaia.h ] && [ -f /usr/lib/libgaia2.a ] || {
+    # Need to install Gaia, an Essentia build dependency
+    PROJ=gaia
+    prefix="--prefix=/usr"
+
+    [ -d ${PROJ} ] && rm -rf ${PROJ}
+    git clone https://github.com/MTG/gaia.git
+
+    cd ${PROJ}
+    git switch qt5
+
+    # Prior to configure, determine architecture and set CXXFLAGS
+    arch=`uname -m`
+    [ "${arch}" == "armv7l" ] && {
+      # Remove -msse2 from CXXFLAGS
+      cat wscript | sed -e "s/'-O2', '-msse2'/'-O2'/" > /tmp/wsc$$
+      cp /tmp/wsc$$ wscript
+      rm -f /tmp/wsc$$
+    }
+
+    ./waf configure ${prefix} --with-python-bindings --with-asserts
+    ./waf
+    sudo ./waf install
+  }
+}
+
 build() {
   cd "${srcdir}/${pkgname}"
   # Build mpcplus
