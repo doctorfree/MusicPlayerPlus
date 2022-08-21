@@ -70,7 +70,7 @@ mv ${PKG_NAME}-pkgbuild-${PKG_VER}-${PKG_REL}.tgz ${PKG}
 
 echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
 cd "${SRC}/${PKG}"
-makepkg --force --log --cleanbuild --noconfirm --config makepkg.conf
+makepkg --force --log --cleanbuild --noconfirm
 
 # Rename package if necessary
 for zstfile in *.zst
