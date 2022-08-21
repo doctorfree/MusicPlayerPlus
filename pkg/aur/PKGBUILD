@@ -75,7 +75,7 @@ fi
 pkgname=musicplayerplus
 pkgver=$VERSION
 pkgrel=$RELEASE
-pkgdesc="Character based MPD client, spectrum visualizer, Beets library management, plus more"
+pkgdesc="Character based MPD client, spectrum visualizer, Beets library management, Mopidy and Navidrome servers, plus more"
 arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/MusicPlayerPlus"
 license=('MIT')
@@ -85,12 +85,12 @@ optdepends=('asciinema: record and share terminal sessions'
             'cool-retro-term: cool retro terminal emulator'
             'tilix: tiling terminal emulator')
 install=musicplayerplus.install
-source=("git+https://github.com/doctorfree/MusicPlayerPlus.git")
-options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
+source=("${pkgname}::git://github.com/doctorfree/MusicPlayerPlus.git")
 sha256sums=('SKIP')
+options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 
 build() {
-  cd "${srcdir}/${SRC_NAME}"
+  cd "${srcdir}/${pkgname}"
   # Build mpcplus
   if [ -x scripts/build-mpcplus.sh ]
   then
@@ -198,7 +198,7 @@ build() {
 }
 
 package() {
-  cd "${srcdir}/${SRC_NAME}"
+  cd "${srcdir}/${pkgname}"
   destdir=usr
   for dir in "${destdir}" "${destdir}/share" "${destdir}/share/man" \
       "${destdir}/share/applications" "${destdir}/share/doc" \

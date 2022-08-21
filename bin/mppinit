@@ -30,6 +30,7 @@ CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
+IP="<ip address>"
 mpd_music="~/Music"
 exp_music="${HOME}/Music"
 
@@ -62,6 +63,22 @@ usage() {
   printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp,"
   printf "\nmopidy, navidrome, soundcloud, or import\n\n"
   exit 1
+}
+
+get_ip() {
+  have_hostname=`type -p hostname`
+  if [ "${have_hostname}" ]
+  then
+    IP=`hostname -I | awk '{print $1}'`
+  else
+    have_ip=`type -p ip`
+    if [ "${have_ip}" ]
+    then
+      IP=`ip route get 1.2.3.4 | head -1 | awk '{print $7}'`
+    else
+      IP="<ip address>"
+    fi
+  fi
 }
 
 create_new_profile() {
@@ -884,37 +901,42 @@ init_navidrome() {
   navivar="/var/lib/navidrome"
   arch=`uname -m`
 
-  sudo install -d -o ${user} -g ${group} /opt/navidrome
-  sudo install -d -o ${user} -g ${group} ${navivar}
-
-  if [ -f "${navivar}/Navidrome.tar.gz" ]
+  if [ -x /opt/navidrome/navidrome ]
   then
-    echo "Found an existing ${navivar}/Navidrome.tar.gz"
-    echo "Using the existing Navidrome release download."
-    echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
-    echo "and re-run the 'mppinit navidrome' command."
+    echo "Existing Navidrome installation detected. Skipping Navidrome install."
   else
-    wget https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${arch}.tar.gz -O ${navivar}/Navidrome.tar.gz
-  fi
+    sudo install -d -o ${user} -g ${group} /opt/navidrome
+    sudo install -d -o ${user} -g ${group} ${navivar}
 
-  if [ -f "${navivar}/Navidrome.tar.gz" ]
-  then
-    sudo tar -xvzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
-    rm -f "${navivar}/Navidrome.tar.gz"
-    sudo chown -R ${user} /opt/navidrome
-  else
-    echo "Navidrome download failed."
-    echo "Could not locate ${navivar}/Navidrome.tar.gz"
-    echo ""
-    echo "Visit https://github.com/navidrome/navidrome/releases/download/"
-    echo "and locate the latest Navidrome release for this platform (${arch})."
-    echo ""
-    echo "Download the Navidrome release 'tar.gz' and move it to:"
-    echo "    ${navivar}/Navidrome.tar.gz"
-    echo "Then re-run the 'mppinit navidrome' command."
-    echo ""
-    echo "Exiting without installing or configuring Navidrome."
-    exit 1
+    if [ -f "${navivar}/Navidrome.tar.gz" ]
+    then
+      echo "Found an existing ${navivar}/Navidrome.tar.gz"
+      echo "Using the existing Navidrome release download."
+      echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
+      echo "and re-run the 'mppinit navidrome' command."
+    else
+      wget -q https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${arch}.tar.gz -O ${navivar}/Navidrome.tar.gz
+    fi
+
+    if [ -f "${navivar}/Navidrome.tar.gz" ]
+    then
+      sudo tar -xvzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
+      rm -f "${navivar}/Navidrome.tar.gz"
+      sudo chown -R ${user} /opt/navidrome
+    else
+      echo "Navidrome download failed."
+      echo "Could not locate ${navivar}/Navidrome.tar.gz"
+      echo ""
+      echo "Visit https://github.com/navidrome/navidrome/releases/download/"
+      echo "and locate the latest Navidrome release for this platform (${arch})."
+      echo ""
+      echo "Download the Navidrome release 'tar.gz' and move it to:"
+      echo "    ${navivar}/Navidrome.tar.gz"
+      echo "Then re-run the 'mppinit navidrome' command."
+      echo ""
+      echo "Exiting without installing or configuring Navidrome."
+      exit 1
+    fi
   fi
 
   [ -f "${NAVIDCONF}" ] || {
@@ -963,7 +985,8 @@ init_navidrome() {
   else
     init_warn navidrome
   fi
-  printf "\n\n${BOLD}Navidrome service enabled and activated${NORM}\n"
+  printf "\n\n${BOLD}Navidrome service enabled and activated${NORM}"
+  printf "\n${BOLD}Visit http://localhost:4533 to get started${NORM}\n"
   exit 0
 }
 
@@ -994,7 +1017,10 @@ init_navidrome() {
   else
     init_warn mopidy
   fi
-  printf "\n\n${BOLD}MPD services deactivated, Mopidy services enabled and activated${NORM}\n"
+  get_ip
+  printf "\n\n${BOLD}Mopidy services enabled and activated${NORM}"
+  printf "\n${BOLD}MPD services deactivated${NORM}"
+  printf "\n${BOLD}Visit http://${IP}:6680 to get started${NORM}\n"
   exit 0
 }
 

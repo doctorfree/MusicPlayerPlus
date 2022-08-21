@@ -618,7 +618,6 @@ make_it_so() {
       else
         nohup ${SCRIPTS}/beet_import.sh ${impflags} > /dev/null 2>&1 &
       fi
-      # beetpid=`ps -ef | grep beet_import.sh | grep -v grep | awk ' { print $2 } '`
       beetpid=$!
       if [ "${CONSOLE_MODE}" ]
       then
@@ -632,6 +631,22 @@ make_it_so() {
         gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
                        -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
       fi
+      have_hostname=`type -p hostname`
+      if [ "${have_hostname}" ]
+      then
+        IP=`hostname -I | awk '{print $1}'`
+      else
+        have_ip=`type -p ip`
+        if [ "${have_ip}" ]
+        then
+          IP=`ip route get 1.2.3.4 | head -1 | awk '{print $7}'`
+        else
+          IP="<ip address>"
+        fi
+      fi
+      printf "\n\nWhen the import has completed, "
+      printf "visit the Beets web interface at:"
+      printf "\n\thttp://${IP}:8337\n" 
       echo "===================================================================="
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"

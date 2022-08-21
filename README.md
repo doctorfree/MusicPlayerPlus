@@ -44,6 +44,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Installing Mopidy](#installing-mopidy)
     1. [Installing Navidrome](#installing-navidrome)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
+1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
 1. [Documentation](#documentation)
     1. [README for MusicPlayerPlus configuration](#readme-for-musicplayerplus-configuration)
     1. [README for mpcplus MPD client](#readme-for-mpcplus-mpd-client)
@@ -996,6 +997,8 @@ configuration documentation at https://www.navidrome.org/docs/usage/security/
 to get started securing Navidrome. To use the MusicPlayerPlus default
 configuration of Navidrome, use `http://...` rather than `https://...`.
 
+#### Navidrome clients
+
 The Navidrome self-hosted music service can stream your music to many devices.
 
 For a list of Airsonic compatible applications, see
@@ -1006,6 +1009,19 @@ https://www.navidrome.org/docs/overview/#apps
 
 Any device with a browser can act as a web client by opening the Navidrome
 server URL `http://ip-address:4533`.
+
+[Sonixd](https://github.com/jeffvli/sonixd) is a cross-platform desktop
+Subsonic client compatible with Navidrome. On Apple MacOS, install sonixd
+with Homebrew:
+
+```
+brew install --cask sonixd
+```
+
+[Sublime](https://sublime-music.gitlab.io/sublime-music/index.html) is a
+native Subsonic client compatible with Navidrome for the Linux Desktop.
+See https://sublime-music.gitlab.io/sublime-music/index.html to install
+Sublime on a variety of Linux distributions.
 
 ### Terminal Emulator Profiles
 
@@ -1026,6 +1042,94 @@ MusicPlayerPlus control window and the spectrum visualizer.
 
 To modify these terminal emulator profiles, launch the desired terminal
 emulator and modify the desired profile in the Preferences dialog.
+
+## MusicPlayerPlus Services and Clients
+
+MusicPlayerPlus includes several services, some installed by default and
+others optionally installed with the `mppinit` command post-installation.
+Clients that can be used to access these services are also provided.
+
+### Services
+
+The following services are included with MusicPlayerPlus:
+
+- **Music Player Daemon (MPD)**
+    - Installed, configured, and activated by default
+- **MPD Stats Service**
+    - Installed, configured, and activated by default
+- **Beets Web Plugin Service**
+    - Installed, configured, and activated by default
+- **Mopidy Music Server**
+    - Installed, configured, and activated with `mppinit mopidy`
+    - When activated, deactivates MPD, MPD Stats, and YAMS services
+- **Navidrome Music Streaming Server**
+    - Installed, configured, and activated with `mppinit navidrome`
+- **YAMS Last.FM Scrobbler**
+    - Installed, configured, and activated with `mppinit yams`
+
+All of the MusicPlayerPlus services are user-level systemd services and can
+be controlled by the MusicPlayerPlus user without the need for `root` privilege.
+The `mpplus -i` interactive menu system includes menu entries for controlling
+each of these services as well as a status report on them by selecting the
+"Manage Music Services" from the Main Menu. Alternately, each service can
+be controlled from the command line using `systemctl --user ...`. For example,
+to stop the MPD Stats Service, run the command `systemctl --user stop mpdstats`.
+
+### Which services should be installed and activated
+
+Depending upon the use case and personal preference, a variety of combinations
+of MusicPlayerPlus services can be activated. Mopidy with the Mopidy-MPD
+extension conflicts with the MPD service. YAMS and MPD Stats only work with
+MPD. Therefore, if Mopidy is activated the MPD, YAMS, and MPD Stats services
+are automatically deactivated. Similarly, if the MPD service is reactivated,
+the YAMS and MPD Stats services are reactivated and Mopidy deactivated.
+
+Choose which service you prefer, MPD or Mopidy, and activate it with either
+`mppinit mopidy` or `mppinit mpd` (after activating Mopidy then deciding to
+reactivate MPD). Using these two commands, `mppinit mopidy` and `mppinit mpd`,
+it is easy to switch between the two conflicting services.
+
+The advantage of MPD is its stability, maturity, flexibility, power, and
+extensive configuration options. However, it is difficult to enable streaming
+with MPD. The advantage of Mopidy is its streaming capability and the variety
+of useful extensions, many of which are installed by default with
+`mppinit mopidy`.
+
+An even better streaming solution is provided by Navidrome. Activating
+Navidrome enables access to the music library from any desktop, phone,
+tablet, or remote device with a browser. There are numerous Navidrome clients
+available for all devices and platforms. Activating Navidrome does not conflict
+with any of the other MusicPlayerPlus services so it can be streaming the
+music library while MPD or Mopidy is serving up the same library locally.
+Navidrome can optionally scrobble to Last.FM so if that option is enabled
+then deactivate the YAMS service.
+
+### Clients
+
+The following clients are included with MusicPlayerPlus:
+
+- **mpplus MusicPlayerPlus front-end**
+    - Installed by default, see `man mpplus`
+    - Front-ends `mpcplus` MPD client and `mppcava` spectrum visualizer
+    - Example: `mpplus`
+- **mpcplus character-based feature-full MPD client**
+    - Installed by default, see `man mpcplus`
+    - Example: `mpcplus`
+- **mpc command-line MPD client**
+    - Installed by default, see `man mpc`
+    - Examples: `mpc stop`, `mpc current`, `mpc play`
+- **beet command-line interface to Beets**
+    - Installed by default, see `man beet`
+    - Examples: `beet play jethro tull`, `beet info -l aqualung`
+- **Beets web client**
+    - Installed by default
+    - Open `http://<ip address>:8337`
+- **Mopidy web client**
+    - Installed, configured, and activated with `mppinit mopidy`
+    - Open `http://<ip address>:6680`
+- **Navidrome web client**
+    - Installed, configured, and activated with `mppinit navidrome`
+    - Open `http://<ip address>:4533`
 
 ## Documentation
 
