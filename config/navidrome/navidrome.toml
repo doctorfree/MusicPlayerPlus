@@ -6,6 +6,7 @@ DataFolder = "/var/lib/navidrome"
 # MusicPlayerPlus playlists are in the MusicFolder 'Playlists' subdirectory
 PlaylistsPath = "Playlists:.:**/**"
 UIWelcomeMessage = "MusicPlayerPlus Navidrome Music Server and Streamer"
+DefaultTheme = "Spotify-ish"
 # ======================================================================
 # Navidrome uses a default shared apikey and secret for Last.FM
 # Set these to use your own Last.FM apikey and secret (optional)
