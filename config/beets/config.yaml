@@ -257,11 +257,13 @@ play:
 playlist:
   auto: yes
   playlist_dir: ~/Music/Playlists
-  relative_to: ~/Music
+# relative_to: ~/Music
+  relative_to: /
 
 smartplaylist:
   auto: no
-  relative_to: ~/Music
+# Default is absolute paths in playlists
+# relative_to: ~/Music
   playlist_dir: ~/Music/Playlists
   forward_slash: no
   playlists:
