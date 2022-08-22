@@ -483,7 +483,7 @@ fi
 
 # User needs to be in group adm for some systemctl actions
 # This is performed in this way to avoid password prompts and subshells
-if id -nG | grep -qw adm || {
+id -nG | grep -qw adm || {
   sudo usermod -aG adm `id -un`
   exec sg adm newgrp `id -gn`
 }
@@ -1738,7 +1738,8 @@ fi
 
 [ "${have_web}" ] && {
   grep attachment_filename "${have_web}" > /dev/null && {
-    cat "${have_web}" | sed -e "s/attachment_filename/download_name/" > /tmp/web$$
+    cat "${have_web}" | \
+      sed -e "s/attachment_filename/download_name/" > /tmp/web$$
     cp /tmp/web$$ "${have_web}"
     rm -f /tmp/web$$
   }
