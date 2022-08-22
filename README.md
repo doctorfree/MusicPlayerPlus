@@ -1034,6 +1034,12 @@ terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
 an enhanced visual presentation.
 
+**[Note:]** Use of the Tilix terminal emulator is an optional additional
+feature supported by MusicPlayerPlus. Tilix is not installed by MusicPlayerPlus.
+In order to use the Tilix terminal emulator it must be installed manually.
+If you wish to use the Tilix terminal emulator, then use your system's
+package manager to install it.
+
 There are four terminal profiles in two terminal emulators used by
 MusicPlayerPlus. The `gnome-terminal` emulator and the `tilix` terminal
 emulator each have two custom profiles created during `mppinit` initialization.

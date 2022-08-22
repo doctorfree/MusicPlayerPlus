@@ -13,9 +13,11 @@ If the music library is not located at `$HOME/Music`:
 Optionally:
   - Download albums in your Bandcamp collections with 'mppinit bandcamp'
   - Download favorites in your Soundcloud account with 'mppinit soundcloud'
-  - Convert WAV format files to MP3 format with 'mpplus -F'
+  - Convert WAV/M4A format files to MP3 format with 'mpplus -F' and `mpplus -G`
   - Import your music library into Beets with 'mpplus -I'
   - Remove duplicate tracks and analyze audio with 'mppinit metadata'
+  - Install and activate Mopidy music server with 'mppinit mopidy'
+  - Install and activate Navidrome music server with 'mppinit navidrome'
   - Activate the YAMS scrobbler for Last.fm with 'mpplus -Y'
   - Download additional lyrics with 'mpplus -L'
 

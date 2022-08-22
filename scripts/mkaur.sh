@@ -65,8 +65,8 @@ cp pkg/aur/makepkg.conf ${PKG}/makepkg.conf
 
 echo "Creating ${PKG_NAME} PKGBUILD distribution archive"
 tar cf - ${PKG} | \
-    gzip -9 > ${PKG_NAME}-pkgbuild-${PKG_VER}-${PKG_REL}.tgz
-mv ${PKG_NAME}-pkgbuild-${PKG_VER}-${PKG_REL}.tgz ${PKG}
+    gzip -9 > ${PKG_NAME}-pkgbuild-${PKG_VER}-${PKG_REL}.tar.gz
+mv ${PKG_NAME}-pkgbuild-${PKG_VER}-${PKG_REL}.tar.gz ${PKG}
 
 echo "Building ${PKG_NAME}_${PKG_VER} AUR package"
 cd "${SRC}/${PKG}"
@@ -84,5 +84,5 @@ done
 [ "${GCI}" ] || {
   [ -d ../releases ] || mkdir ../releases
   [ -d ../releases/${PKG_VER} ] || mkdir ../releases/${PKG_VER}
-  ${SUDO} cp *.zst *.tgz ../releases/${PKG_VER}
+  ${SUDO} cp *.zst *.tar.gz ../releases/${PKG_VER}
 }

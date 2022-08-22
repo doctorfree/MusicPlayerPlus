@@ -1243,57 +1243,63 @@ fi
   printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
 }
 declare -a profiles
-dconfdir=/org/gnome/terminal/legacy/profiles:
-profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
+have_gnome=`type -p gnome-terminal`
+[ "${have_gnome}" ] && {
+  dconfdir=/org/gnome/terminal/legacy/profiles:
+  profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
 
-for profile_name in MusicPlayer Visualizer
-do
-  profile_exists=
-  fontsize=8
-  [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
-  if [ "$profiles" = "" ]
-  then
-    create_new_profile gnome ${profile_name} ${fontsize}
-  else
-    for i in ${!profiles[*]}
-    do
-      visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
-      [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
-      [ "$profile_exists" ] && break
-    done
-  fi
+  for profile_name in MusicPlayer Visualizer
+  do
+    profile_exists=
+    fontsize=8
+    [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+    if [ "$profiles" = "" ]
+    then
+      create_new_profile gnome ${profile_name} ${fontsize}
+    else
+      for i in ${!profiles[*]}
+      do
+        visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
+        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+        [ "$profile_exists" ] && break
+      done
+    fi
 
-  [ "$profile_exists" ] || {
-    create_new_profile gnome ${profile_name} ${fontsize}
-  }
-done
+    [ "$profile_exists" ] || {
+      create_new_profile gnome ${profile_name} ${fontsize}
+    }
+  done
+}
 
-# Create Tilix profiles, similar to Gnome-terminal's
-dconfdir=/com/gexperts/Tilix/profiles
-profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
+have_tilix=`type -p tilix`
+[ "${have_tilix}" ] && {
+  # Create Tilix profiles, similar to Gnome-terminal's
+  dconfdir=/com/gexperts/Tilix/profiles
+  profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
 
-for profile_name in MusicPlayer Visualizer
-do
-  profile_exists=
-  fontsize=8
-  [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+  for profile_name in MusicPlayer Visualizer
+  do
+    profile_exists=
+    fontsize=8
+    [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
 
-  if [ "$profiles" = "" ]
-  then
-    create_new_profile tilix ${profile_name} ${fontsize}
-  else
-    for i in ${!profiles[*]}
-    do
-      visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
-      [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
-      [ "$profile_exists" ] && break
-    done
-  fi
+    if [ "$profiles" = "" ]
+    then
+      create_new_profile tilix ${profile_name} ${fontsize}
+    else
+      for i in ${!profiles[*]}
+      do
+        visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
+        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+        [ "$profile_exists" ] && break
+      done
+    fi
 
-  [ "$profile_exists" ] || {
-    create_new_profile tilix ${profile_name} ${fontsize}
-  }
-done
+    [ "$profile_exists" ] || {
+      create_new_profile tilix ${profile_name} ${fontsize}
+    }
+  done
+}
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling MPD configuration in ${MPDCONFDIR} ..."

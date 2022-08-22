@@ -81,9 +81,7 @@ url="https://github.com/doctorfree/MusicPlayerPlus"
 license=('MIT')
 depends=(util-linux boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet gnome-terminal tmux fzf mpc python python-pip python-numpy python-six mplayer dconf eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sndio sqlite qt5-base)
 makedepends=(boost cargo git pandoc qt5-tools zip)
-optdepends=('asciinema: record and share terminal sessions'
-            'cool-retro-term: cool retro terminal emulator'
-            'tilix: tiling terminal emulator')
+optdepends=('cool-retro-term: cool retro terminal emulator')
 install=musicplayerplus.install
 source=("${pkgname}::git+https://github.com/doctorfree/MusicPlayerPlus.git")
 sha256sums=('SKIP')
@@ -310,9 +308,11 @@ package() {
   cp -a config/beets "${pkgdir}/${destdir}/share/${pkgname}/beets"
   cp -a beets "${pkgdir}/${destdir}/share/${pkgname}/beets/plugins"
   cp config/calliope/* "${pkgdir}/${destdir}/share/${pkgname}/calliope"
+  cp -a config/mopidy "${pkgdir}/${destdir}/share/${pkgname}/mopidy"
   cp -a config/mpd "${pkgdir}/${destdir}/share/${pkgname}/mpd"
   cp -a config/mppcava "${pkgdir}/${destdir}/share/${pkgname}/mppcava"
   cp mppcava/example_files/config ${pkgdir}/${destdir}/share/${pkgname}/mppcava/template.conf
+  cp -a config/navidrome "${pkgdir}/${destdir}/share/${pkgname}/navidrome"
   cp -a config/tmuxp ${pkgdir}/${destdir}/share/${pkgname}/tmuxp
   cp -a config/yt-dlp "${pkgdir}/${destdir}/share/${pkgname}/yt-dlp"
   cp -a music "${pkgdir}/${destdir}/share/${pkgname}/music"
