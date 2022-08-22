@@ -481,6 +481,14 @@ then
 	exit
 fi
 
+# User needs to be in group adm for some systemctl actions
+# This is performed in this way to avoid password prompts and subshells
+if id -nG | grep -qw adm || {
+  sudo usermod -aG adm `id -un`
+  exec sg adm newgrp `id -gn`
+}
+
+# User should not be root. Prompt to proceed if root user
 iamroot=
 if [ "${EUID}" ]
 then
