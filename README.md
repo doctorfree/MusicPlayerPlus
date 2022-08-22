@@ -1350,6 +1350,9 @@ General options:
 	    or configure the ALSA sound system
 		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
 	-R indicates record tmux session with asciinema
+		Asciinema is not installed by MusicPlayerPlus
+		To record tmux sessions with asciinema, use your system's
+		package manager to install it (e.g. apt install asciinema)
 	-T indicates use a tmux session for either ASCIImatics or mpcplus
 	-w indicates write metadata during beets import
 	-W indicates do not write metadata during beets import

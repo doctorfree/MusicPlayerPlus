@@ -87,154 +87,158 @@ and easily killed by executing the \f[V]mpplus -k\f[R] command.
 \f[I]MPCplus/Visualizer options:\f[R]
 .TP
 \f[B]-A\f[R]
-indicates display album cover art (implies tmux session)
+Indicates display album cover art (implies tmux session)
 .TP
 \f[B]-C \[aq]client\[aq]\f[R]
-indicates use \[aq]client\[aq] MPD client rather than mpcplus
+Indicates use \[aq]client\[aq] MPD client rather than mpcplus
 .TP
 \f[B]-f\f[R]
-indicates fullscreen display
+Indicates fullscreen display
 .TP
 \f[B]-g\f[R]
-indicates do not use gradient colors for spectrum visualizer
+Indicates do not use gradient colors for spectrum visualizer
 .TP
 \f[B]-h\f[R]
-indicates half-height for mppcava window (with -f only)
+Indicates half-height for mppcava window (with -f only)
 .TP
 \f[B]-P script\f[R]
-specifies the ASCIImatics script to run in visualizer pane
+Specifies the ASCIImatics script to run in visualizer pane
 .TP
 \f[B]-q\f[R]
-indicates quarter-height for mppcava window (with -f only)
+Indicates quarter-height for mppcava window (with -f only)
 .TP
 \f[B]-r\f[R]
-indicates use retro terminal emulator
+Indicates use retro terminal emulator
 .TP
 \f[B]-t\f[R]
-indicates use tilix terminal emulator
+Indicates use tilix terminal emulator
 .TP
 \f[B]-v \[aq]viz_comm\[aq]\f[R]
-indicates use visualizer \[aq]viz_comm\[aq] rather than mppcava
+Indicates use visualizer \[aq]viz_comm\[aq] rather than mppcava
 .PP
 \f[I]ASCIImatics animation options:\f[R]
 .TP
 \f[B]-a\f[R]
-indicates play audio during ASCIImatics display
+Indicates play audio during ASCIImatics display
 .TP
 \f[B]-b\f[R]
-indicates use backup audio during ASCIImatics display
+Indicates use backup audio during ASCIImatics display
 .TP
 \f[B]-j\f[R]
-indicates use Julia Set scenes in ASCIImatics display
+Indicates use Julia Set scenes in ASCIImatics display
 .TP
 \f[B]-J\f[R]
-indicates Julia Set with several runs using different parameters
+Indicates Julia Set with several runs using different parameters
 .TP
 \f[B]-m\f[R]
-indicates use MusicPlayerPlus scenes in ASCIImatics display
+Indicates use MusicPlayerPlus scenes in ASCIImatics display
 .TP
 \f[B]-n num\f[R]
-specifies the number of times to cycle ASCIImatics scenes
+Specifies the number of times to cycle ASCIImatics scenes
 .TP
 \f[B]-N\f[R]
-indicates use alternate comments in Plasma ASCIImatics scenes
+Indicates use alternate comments in Plasma ASCIImatics scenes
 .TP
 \f[B]-p\f[R]
-indicates use Plasma scenes in ASCIImatics display
+Indicates use Plasma scenes in ASCIImatics display
 .TP
 \f[B]-s song\f[R]
-specifies a song to accompany an ASCIImatics animation
+Specifies a song to accompany an ASCIImatics animation
 .TP
 \f[B]-S\f[R]
-indicates display ASCIImatics splash animation
+Indicates display ASCIImatics splash animation
 .PP
 \f[I]General options:\f[R]
 .TP
 \f[B]-B\f[R]
-uses Blissify to create audio-based information in a song similarity
+Uses Blissify to create audio-based information in a song similarity
 database for all music library media.
 .TP
 \f[B]-D art\f[R]
-indicates download album cover art and exit
+Indicates download album cover art and exit
 .TP
 \f[B]-D bandcamp\f[R]
-indicates download songs from Bandcamp and exit
+Indicates download songs from Bandcamp and exit
 .TP
 \f[B]-D soundcloud\f[R]
-indicates download songs from Soundcloud and exit
+Indicates download songs from Soundcloud and exit
 .TP
 \f[B]-d \[aq]music_directory\[aq]\f[R]
-specifies the music directory to use for downloaded album cover art
+Specifies the music directory to use for downloaded album cover art
 (without this option -D will use the \f[V]music_directory\f[R] setting
 in \f[V]\[ti]/.config/mpd/mpd.conf\f[R]
 .TP
 \f[B]-F\f[R]
-indicates convert all WAV format files in the music library to MP3
+Indicates convert all WAV format files in the music library to MP3
 format files and exit.
 A subsequent \[aq]mpplus -I\[aq] import will be necessary to import
 these newly converted music files.
 .TP
 \f[B]-G\f[R]
-indicates convert all M4A format files in the music library to MP3
+Indicates convert all M4A format files in the music library to MP3
 format files and exit.
 A subsequent \[aq]mpplus -I\[aq] import will be necessary to import
 these newly converted music files.
 .TP
 \f[B]-I\f[R]
-indicates import albums and songs from \[aq]music_directory\[aq] to
+Indicates import albums and songs from \[aq]music_directory\[aq] to
 Beets and exit
 .TP
 \f[B]-i\f[R]
-indicates interactive mode with selection menus
+Indicates interactive mode with selection menus
 .TP
 \f[B]-k\f[R]
-indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 .TP
 \f[B]-L\f[R]
-indicates download lyrics to the Beets library and exit
+Indicates download lyrics to the Beets library and exit
 .TP
 \f[B]-M \[aq]enable|disable|start|stop|restart|status\[aq]\f[R]
 Enable, disable, start, stop, restart, or get the status of the MPD and
 MPD socket system services
 .TP
 \f[B]-R\f[R]
-indicates record tmux session with asciinema
+Indicates record tmux session with asciinema.
+Asciinema is not installed by MusicPlayerPlus.
+To record tmux sessions with asciinema, use your system\[aq]s package
+manager to install it (e.g.
+apt install asciinema)
 .TP
 \f[B]-T\f[R]
-indicates use a tmux session for either ASCIImatics or mpcplus
+Indicates use a tmux session for either ASCIImatics or mpcplus
 .TP
 \f[B]-w\f[R]
-indicates write metadata during Beets import
+Indicates write metadata during Beets import
 .TP
 \f[B]-W\f[R]
-indicates do not write metadata during Beets import
+Indicates do not write metadata during Beets import
 .TP
 \f[B]-x \[aq]query\[aq]\f[R]
-uses AcousticBrainz to retrieve audio-based information for all music
+Uses AcousticBrainz to retrieve audio-based information for all music
 library media matching \[aq]query\[aq].
 A query of \[aq]all\[aq] performs the retrieval on the entire music
 library.
 .TP
 \f[B]-X \[aq]query\[aq]\f[R]
-performs an analysis and retrieval, using Essentia, of audio-based
+Performs an analysis and retrieval, using Essentia, of audio-based
 information for all music library media matching \[aq]query\[aq].
 A query of \[aq]all\[aq] performs the analysis and retrieval on the
 entire music library.
 .TP
 \f[B]-Y\f[R]
-initializes the YAMS last.fm scrobbler service
+Initializes the YAMS last.fm scrobbler service
 .TP
 \f[B]-y\f[R]
-disables the YAMS last.fm scrobbler service
+Disables the YAMS last.fm scrobbler service
 .TP
 \f[B]-z opt\f[R]
-specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
+Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
 list/search/select MPD media.
 Valid values for \f[V]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
 \[aq]g\[aq], \[aq]p\[aq], or \[aq]P\[aq]
 .TP
 \f[B]-u\f[R]
-displays this usage message and exits
+Displays this usage message and exits
 .SS EXAMPLES
 .TP
 \f[B]mpplus\f[R]

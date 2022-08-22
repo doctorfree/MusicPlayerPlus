@@ -37,134 +37,134 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 *MPCplus/Visualizer options:*
 
 **-A**
-: indicates display album cover art (implies tmux session)
+: Indicates display album cover art (implies tmux session)
 
 **-C 'client'**
-: indicates use 'client' MPD client rather than mpcplus
+: Indicates use 'client' MPD client rather than mpcplus
 
 **-f**
-: indicates fullscreen display
+: Indicates fullscreen display
 
 **-g**
-: indicates do not use gradient colors for spectrum visualizer
+: Indicates do not use gradient colors for spectrum visualizer
 
 **-h**
-: indicates half-height for mppcava window (with -f only)
+: Indicates half-height for mppcava window (with -f only)
 
 **-P script**
-: specifies the ASCIImatics script to run in visualizer pane
+: Specifies the ASCIImatics script to run in visualizer pane
 
 **-q**
-: indicates quarter-height for mppcava window (with -f only)
+: Indicates quarter-height for mppcava window (with -f only)
 
 **-r**
-: indicates use retro terminal emulator
+: Indicates use retro terminal emulator
 
 **-t**
-: indicates use tilix terminal emulator
+: Indicates use tilix terminal emulator
 
 **-v 'viz_comm'**
-: indicates use visualizer 'viz_comm' rather than mppcava
+: Indicates use visualizer 'viz_comm' rather than mppcava
 
 *ASCIImatics animation options:*
 
 **-a**
-: indicates play audio during ASCIImatics display
+: Indicates play audio during ASCIImatics display
 
 **-b**
-: indicates use backup audio during ASCIImatics display
+: Indicates use backup audio during ASCIImatics display
 
 **-j**
-: indicates use Julia Set scenes in ASCIImatics display
+: Indicates use Julia Set scenes in ASCIImatics display
 
 **-J**
-: indicates Julia Set with several runs using different parameters
+: Indicates Julia Set with several runs using different parameters
 
 **-m**
-: indicates use MusicPlayerPlus scenes in ASCIImatics display
+: Indicates use MusicPlayerPlus scenes in ASCIImatics display
 
 **-n num**
-: specifies the number of times to cycle ASCIImatics scenes
+: Specifies the number of times to cycle ASCIImatics scenes
 
 **-N**
-: indicates use alternate comments in Plasma ASCIImatics scenes
+: Indicates use alternate comments in Plasma ASCIImatics scenes
 
 **-p**
-: indicates use Plasma scenes in ASCIImatics display
+: Indicates use Plasma scenes in ASCIImatics display
 
 **-s song**
-: specifies a song to accompany an ASCIImatics animation
+: Specifies a song to accompany an ASCIImatics animation
 
 **-S**
-: indicates display ASCIImatics splash animation
+: Indicates display ASCIImatics splash animation
 
 *General options:*
 
 **-B**
-: uses Blissify to create audio-based information in a song similarity database for all music library media.
+: Uses Blissify to create audio-based information in a song similarity database for all music library media.
 
 **-D art**
-: indicates download album cover art and exit
+: Indicates download album cover art and exit
 
 **-D bandcamp**
-: indicates download songs from Bandcamp and exit
+: Indicates download songs from Bandcamp and exit
 
 **-D soundcloud**
-: indicates download songs from Soundcloud and exit
+: Indicates download songs from Soundcloud and exit
 
 **-d 'music_directory'**
-: specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
+: Specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
 
 **-F**
-: indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
+: Indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
 
 **-G**
-: indicates convert all M4A format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
+: Indicates convert all M4A format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
 
 **-I**
-: indicates import albums and songs from 'music_directory' to Beets and exit
+: Indicates import albums and songs from 'music_directory' to Beets and exit
 
 **-i**
-: indicates interactive mode with selection menus
+: Indicates interactive mode with selection menus
 
 **-k**
-: indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+: Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 
 **-L**
-: indicates download lyrics to the Beets library and exit
+: Indicates download lyrics to the Beets library and exit
 
 **-M 'enable|disable|start|stop|restart|status'**
 : Enable, disable, start, stop, restart, or get the status of the MPD and MPD socket system services 
 
 **-R**
-: indicates record tmux session with asciinema
+: Indicates record tmux session with asciinema. Asciinema is not installed by MusicPlayerPlus. To record tmux sessions with asciinema, use your system's package manager to install it (e.g. apt install asciinema)
 
 **-T**
-: indicates use a tmux session for either ASCIImatics or mpcplus
+: Indicates use a tmux session for either ASCIImatics or mpcplus
 
 **-w**
-: indicates write metadata during Beets import
+: Indicates write metadata during Beets import
 
 **-W**
-: indicates do not write metadata during Beets import
+: Indicates do not write metadata during Beets import
 
 **-x 'query'**
-: uses AcousticBrainz to retrieve audio-based information for all music library media matching 'query'. A query of 'all' performs the retrieval on the entire music library.
+: Uses AcousticBrainz to retrieve audio-based information for all music library media matching 'query'. A query of 'all' performs the retrieval on the entire music library.
 
 **-X 'query'**
-: performs an analysis and retrieval, using Essentia, of audio-based information for all music library media matching 'query'. A query of 'all' performs the analysis and retrieval on the entire music library.
+: Performs an analysis and retrieval, using Essentia, of audio-based information for all music library media matching 'query'. A query of 'all' performs the analysis and retrieval on the entire music library.
 
 **-Y**
-: initializes the YAMS last.fm scrobbler service
+: Initializes the YAMS last.fm scrobbler service
 
 **-y**
-: disables the YAMS last.fm scrobbler service
+: Disables the YAMS last.fm scrobbler service
 
 **-z opt**
-: specifies an `fzmp` option and invokes `fzmp` to list/search/select MPD media. Valid values for `opt` are 'a', 'A', 'g', 'p', or 'P'
+: Specifies an `fzmp` option and invokes `fzmp` to list/search/select MPD media. Valid values for `opt` are 'a', 'A', 'g', 'p', or 'P'
 
 **-u**
-: displays this usage message and exits
+: Displays this usage message and exits
 
 ## EXAMPLES
 **mpplus**
