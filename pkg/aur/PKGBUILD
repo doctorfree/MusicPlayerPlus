@@ -94,7 +94,13 @@ export CARGO_TARGET_DIR=target
 
 prepare() {
   cd "${srcdir}/${pkgname}"
-  cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
+  for rustproj in bliss-analyze blissify
+  do
+    git clone https://github.com/doctorfree/${rustproj}
+    cd ${rustproj}
+    cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
+    cd ..
+  done
   [ -f /usr/include/gaia2/gaia.h ] && [ -f /usr/lib/libgaia2.a ] || {
     # Need to install Gaia, an Essentia build dependency
     PROJ=gaia
