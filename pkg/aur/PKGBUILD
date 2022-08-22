@@ -54,6 +54,10 @@
 # Contributor: Oscar Mayor <oscar.mayor@upf.edu>
 # Contributor: Sankalp Gulati <sankalp.gulati@upf.edu>
 
+# Get the version and release from the VERSION file
+# Move to use of pkgver() function with something like this:
+#   git describe --long | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g'
+#
 if [ -f VERSION ]
 then
   . ./VERSION
@@ -67,6 +71,7 @@ else
     RELEASE=2
   fi
 fi
+
 pkgname=musicplayerplus
 pkgver=$VERSION
 pkgrel=$RELEASE
@@ -75,7 +80,7 @@ arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/MusicPlayerPlus"
 license=('MIT')
 depends=(util-linux boost-libs libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet gnome-terminal tmux fzf mpc python python-pip python-numpy python-six mplayer dconf eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sndio sqlite qt5-base)
-makedepends=(boost pandoc qt5-tools zip)
+makedepends=(boost cargo git pandoc qt5-tools zip)
 optdepends=('asciinema: record and share terminal sessions'
             'cool-retro-term: cool retro terminal emulator'
             'tilix: tiling terminal emulator')
@@ -84,8 +89,12 @@ source=("${pkgname}::git+https://github.com/doctorfree/MusicPlayerPlus.git")
 sha256sums=('SKIP')
 options=(strip docs !libtool !staticlibs emptydirs zipman purge !debug !lto)
 
+export RUSTUP_TOOLCHAIN=stable
+export CARGO_TARGET_DIR=target
+
 prepare() {
   cd "${srcdir}/${pkgname}"
+  cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
   [ -f /usr/include/gaia2/gaia.h ] && [ -f /usr/lib/libgaia2.a ] || {
     # Need to install Gaia, an Essentia build dependency
     PROJ=gaia
@@ -164,7 +173,7 @@ build() {
           PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
         }
         export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
-        cargo build -r
+        cargo build --frozen --release --all-features
         cd ..
       else
         echo "The cargo tool cannot be located."
@@ -190,7 +199,7 @@ build() {
           PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
         }
         export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
-        cargo build -r
+        cargo build --frozen --release --all-features
         cd ..
       else
         echo "The cargo tool cannot be located."
