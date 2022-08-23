@@ -209,4 +209,7 @@ done
 # Then remove empty folders
 find "${mpd_music}" -depth -type d -empty -delete
 
+# Recreate Playlists folder if it got removed
+[ -d "${mpd_music}/Playlists" ] || mkdir -p "${mpd_music}/Playlists"
+
 exit 0

@@ -21,8 +21,8 @@
 mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
-\f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u]
-[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync]
+\f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u]
+[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -96,6 +96,10 @@ indicates overwrite any pre-existing configuration
 .TP
 \f[B]-q\f[R]
 indicates quiet execution, no status messages
+.TP
+\f[B]-r\f[R]
+indicates remove service rather than initialize service.
+supported service removals: mopidy navidrome
 .TP
 \f[B]-U\f[R]
 indicates do not upgrade installed Python modules

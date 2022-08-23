@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync]
+**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -73,6 +73,9 @@ library location across all configuration files.
 **-q**
 : indicates quiet execution, no status messages
 
+**-r**
+: indicates remove service rather than initialize service. supported service removals: mopidy navidrome
+
 **-U**
 : indicates do not upgrade installed Python modules
 
@@ -122,4 +125,3 @@ https://github.com/doctorfree/MusicPlayerPlus/issues
 Full documentation and sources at:
 
 https://github.com/doctorfree/MusicPlayerPlus
-

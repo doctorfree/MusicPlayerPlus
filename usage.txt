@@ -76,7 +76,7 @@ General options:
 
 =============================================================================
 
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
@@ -85,6 +85,8 @@ Where:
 	'-e' use Essentia for Beets acoustic audio analysis (default)
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
+	'-r' indicates remove service
+		supported service removals: mopidy navidrome
 	'-U' indicates do not upgrade installed Python modules
 	'-y' indicates answer 'yes' to all and proceed
 	'-u' displays this usage message and exits
@@ -102,10 +104,7 @@ Where:
 	'sync' synchronizes the music library location across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
-
-'mppinit' must be run prior to sync, metadata, bandcamp,
-mopidy, navidrome, soundcloud, or import
-
+'mppinit' must be run prior to sync, metadata, bandcamp, mopidy, navidrome, soundcloud, or import
 
 =============================================================================
 

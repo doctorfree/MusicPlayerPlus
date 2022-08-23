@@ -28,6 +28,9 @@ YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
+EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
+            Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
+
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
 IP="<ip address>"
@@ -35,7 +38,7 @@ mpd_music="~/Music"
 exp_music="${HOME}/Music"
 
 usage() {
-  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] "
+  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] "
   printf "[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
@@ -45,6 +48,8 @@ usage() {
   printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (default)"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
+  printf "\n\t'-r' indicates remove service"
+  printf "\n\t\tsupported service removals: mopidy navidrome"
   printf "\n\t'-U' indicates do not upgrade installed Python modules"
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
@@ -241,12 +246,9 @@ init_mopidy() {
   # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
   sudo ${PYTHON} -m pip install --upgrade mopidy > /dev/null 2>&1
 
-  EXTENSIONS="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
-              Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
-
-  for ext in ${EXTENSIONS}
+  for extension in ${EXT_MOPIDY}
   do
-    pip_install "${ext}"
+    pip_install "${extension}"
   done
 
   # Disable MPD services
@@ -290,6 +292,23 @@ init_mopidy() {
   systemctl --user is-enabled webplugin.service >/dev/null 2>&1 || {
     systemctl --user enable webplugin.service
   }
+}
+
+remove_mopidy() {
+  # Stop and Disable Navidrome service
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 && {
+    systemctl --user stop mopidy.service
+  }
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && {
+    systemctl --user disable mopidy.service
+  }
+
+  for extension in ${EXT_MOPIDY}
+  do
+    ${PYTHON} -m pip uninstall -y ${extension}
+  done
+
+  sudo ${PYTHHON} -m pip uninstall -y Mopidy
 }
 
 set_music_dir() {
@@ -551,11 +570,12 @@ acbrainz=
 essentia=1
 overwrite=
 proceed=
+remove=
 upgrade=1
 quiet=
 beetsdev=
 have_bliss=`type -p blissify`
-while getopts "abdeoqUyu" flag; do
+while getopts "abdeoqrUyu" flag; do
     case $flag in
         a)
             acbrainz=1
@@ -584,6 +604,9 @@ while getopts "abdeoqUyu" flag; do
             ;;
         q)
             quiet=1
+            ;;
+        r)
+            remove=1
             ;;
         U)
             upgrade=
@@ -698,7 +721,7 @@ shift $(( OPTIND - 1 ))
     num_m4a=`find "${exp_music}" -type f -name \*\.m4a | wc -l`
     num_all=`find "${exp_music}" -type f | wc -l`
     [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
-      printf "\nConverting WAV and M4A format media to MP3 format\n\tand"
+      printf "\nConverting WAV format media to MP3 format\n\tand"
     }
     printf "\nPerforming Beets media library management import"
     printf "\n\nThis process may take hours depending on the library size.\n"
@@ -719,7 +742,8 @@ shift $(( OPTIND - 1 ))
             ;;
           [Nn]* )
             printf "\nImport initialization steps can be performed individually:"
-            printf "\n\n\tmpplus -F    # Convert WAV/M4A format media to MP3"
+            printf "\n\tmpplus -F    # Convert WAV format media to MP3"
+            printf "\n\tmpplus -G    # Convert M4A format media to MP3"
             printf "\n\tmpplus -I    # Import media library into Beets"
             printf "\n\nExiting.\n\n"
             exit 0
@@ -730,7 +754,7 @@ shift $(( OPTIND - 1 ))
       done
     }
     [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
-      printf "\n\tConverting WAV and M4A format media to MP3 format media\n"
+      printf "\n\tConverting WAV format media to MP3 format media\n"
       mpplus -F > /dev/null 2>&1
     }
     printf "\n\tImporting music library into Beets media management system\n"
@@ -928,7 +952,7 @@ init_navidrome() {
 
     if [ -f "${navivar}/Navidrome.tar.gz" ]
     then
-      sudo tar -xvzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
+      sudo tar -xzf ${navivar}/Navidrome.tar.gz -C /opt/navidrome/
       rm -f "${navivar}/Navidrome.tar.gz"
       sudo chown -R ${user} /opt/navidrome
     else
@@ -976,7 +1000,74 @@ init_navidrome() {
   }
 }
 
+remove_navidrome() {
+  mppuser=`id -un`
+  varuser=$(stat -c '%U' /var/lib/navidrome)
+  optuser=$(stat -c '%U' /opt/navidrome)
+
+  [ "${mppuser}" == "${varuser}" ] || {
+    echo "The mppinit user: ${mppuser} does now own /var/lib/navidrome"
+    echo "Navidrome removal can only be performed by user: ${varuser}"
+    echo "Re-run 'mppinit -r navidrome' as user ${varuser}"
+    echo "Exiting without removal"
+    exit 1
+  }
+  [ "${mppuser}" == "${optuser}" ] || {
+    echo "The mppinit user: ${mppuser} does now own /opt/navidrome"
+    echo "Navidrome removal can only be performed by user: ${optuser}"
+    echo "However, /var/lib/navidrome and /opt/navidrome are owned by"
+    echo "different users indicating Navidrome installation was performed"
+    echo "by something other than MusicPlayerPlus. Manually remove"
+    echo "Navidrome, removal with mppinit is not supported."
+    echo "Exiting without removal"
+    exit 1
+  }
+  # Stop and Disable Navidrome service
+  systemctl --user is-active navidrome.service >/dev/null 2>&1 && {
+    systemctl --user stop navidrome.service
+  }
+  systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && {
+    systemctl --user disable navidrome.service
+  }
+
+  sudo rm -rf /opt/navidrome
+  sudo rm -rf /var/lib/navidrome
+
+  if [ -L "${HOME}/.local/bin/navidrome" ]
+  then
+    BINDIR="${HOME}/.local/bin"
+    SUDO=
+  else
+    BINDIR="/usr/bin"
+    SUDO=sudo
+  fi
+  ${SUDO} rm -f "${BINDIR}/navidrome"
+}
+
 [ "$1" == "navidrome" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Navidrome service.\n\n"
+    while true
+    do
+      read -p "Do you wish to continue with Navidrome removal ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nNavidrome removal aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    remove_navidrome
+    printf "\n${BOLD}Navidrome service removed${NORM}"
+    printf "\nTo re-install Navidrome run ${BOLD}'mppinit navidrome'${NORM}\n\n"
+    exit 0
+  }
   if [ "${initialized}" ]
   then
     if [ "$2" ]
@@ -1012,6 +1103,29 @@ init_navidrome() {
 }
 
 [ "$1" == "mopidy" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Mopidy service.\n\n"
+    while true
+    do
+      read -p "Do you wish to continue with Mopidy removal ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nMopidy removal aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    remove_mopidy
+    printf "\n${BOLD}Mopidy service removed${NORM}"
+    printf "\nTo re-install Mopidy run ${BOLD}'mppinit mopidy'${NORM}\n\n"
+    exit 0
+  }
   if [ "${initialized}" ]
   then
     printf "\nInstalling, configuring, and activating Mopidy music server."
@@ -1649,6 +1763,15 @@ then
     BEETS=beets
   fi
 
+  # If yt-dlp is already installed then do not install it with Pip
+  have_ytdlp=`type -p yt-dlp`
+  if [ "${have_ytdlp}" ]
+  then
+    YT_DLP=
+  else
+    YT_DLP="yt-dlp"
+  fi
+
   # YAMScrobbler must be installed prior to beetcamp plus
   # PyPi is confused about the latest release version
   YMIN="0.7"
@@ -1674,8 +1797,8 @@ then
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
              pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
-             python-mpd2 requests sacad tmuxp ueberzug yt-dlp calliope-music \
-             bandcamp-downloader scdl flask-cors
+             python-mpd2 requests sacad tmuxp ueberzug ${YT_DLP} \
+             calliope-music bandcamp-downloader scdl flask-cors
   do
     pip_install "${pkg}"
   done

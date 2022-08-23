@@ -1141,14 +1141,17 @@ MusicPlayerPlus service configurations include:
     - Enables the Mopidy web client at `http://<ip address>:6680`
     - Enables the Navidrome web client at `http://<ip address>:4533`
     - Supports many clients available for all desktops, tablets, and phones
+    - Run `mppinit import` after new `mppinit bandcamp|soundcloud` downloads
 - **Navidrome Music Streaming Server without MPD/Mopidy/Beets**
     - Configure with `mppinit navidrome`
+    - No need for `mppinit import|metadata|mopidy|yams`
     - Use `mpplus -i` menu system to stop and disable all other services
         - Select "Manage Music Services" from the Main Menu
         - If active, Stop and Disable MPD, Mopidy, and Beets
     - Navidrome enabled and active, other services disabled
     - Enables the Navidrome web client at `http://<ip address>:4533`
     - Supports many clients available for all desktops, tablets, and phones
+    - No need for `mppinit import` after `mppinit bandcamp|soundcloud` downloads
 
 ### Clients
 
@@ -1260,7 +1263,7 @@ provide a brief summary of the command line options.
 The `mppinit` performs one-time initializations:
 
 ```
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
@@ -1269,6 +1272,8 @@ Where:
 	'-e' use Essentia for Beets acoustic audio analysis (default)
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
+	'-r' indicates remove service
+		supported service removals: mopidy navidrome
 	'-U' indicates do not upgrade installed Python modules
 	'-y' indicates answer 'yes' to all and proceed
 	'-u' displays this usage message and exits
@@ -1286,10 +1291,7 @@ Where:
 	'sync' synchronizes the music library location across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
-
-'mppinit' must be run prior to sync, metadata, bandcamp,
-mopidy, navidrome, soundcloud, or import
-
+'mppinit' must be run prior to sync, metadata, bandcamp, mopidy, navidrome, soundcloud, or import
 ```
 
 The `mpplus` command serves as a general user interface for all of the
@@ -1518,7 +1520,12 @@ mpplus -D art
 ```
 
 Cover art for each album is saved as the file `cover.jpg` in the album folder.
-Existing cover art is preserved.
+Existing cover art is preserved. If an album has incorrect album cover art and
+Beets library management has been activated with `mppinit import`, update the
+album cover art for that album with the command `beet fetchart -f <query>`
+where `<query>` is a Beets query that identifies that album. For example,
+to update the album cover art for the album "Eldorado" by Electric Light
+Orchestra, issue the command `beet fetchart -f electric eldorado`.
 
 ### Custom key bindings
 
