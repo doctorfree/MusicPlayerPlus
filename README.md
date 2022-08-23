@@ -1004,6 +1004,20 @@ configuration of Navidrome, use `http://...` rather than `https://...`.
 
 The Navidrome self-hosted music service can stream your music to many devices.
 
+MusicPlayerPlus tested and recommended free open source Navidrome clients:
+
+- **iPhone/iPad**
+    - [iSub](http://www.subsonic.org/pages/apps.jsp#isub)
+- **Android**
+    - [Dsub](http://www.subsonic.org/pages/apps.jsp#dsub)
+- **Linux/MacOS/Windows**
+    - [Sonixd](https://github.com/jeffvli/sonixd)
+
+Navidrome clients are not installed by MusicPlayerPlus. Install Navidrome
+clients using your device's app store or following the instructions for
+Sonixd installation on a desktop. If you do not have or wish to use a
+Navidrome client, then most modern browsers are supported Navidrome clients.
+
 For a list of Airsonic compatible applications, see
 https://airsonic.github.io/docs/apps/
 
