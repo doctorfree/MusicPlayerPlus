@@ -231,9 +231,9 @@ make_it_so() {
       echo "Check your MusicPlayerPlus installation"
       echo ""
     fi
-    printf "\n\tDownloading album cover art for missed albums ..."
-    beet fetchart > /dev/null 2>&1
-    printf " done\n\n"
+    # printf "\n\tDownloading album cover art for missed albums ..."
+    # beet fetchart > /dev/null 2>&1
+    # printf " done\n\n"
     [ "${DO_NOT_EXIT}" ] || exit 0
     return
   }
