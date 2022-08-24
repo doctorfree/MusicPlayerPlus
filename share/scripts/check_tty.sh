@@ -9,10 +9,14 @@ then
   status=$?
 else
   have_gnome=`type -p gnome-terminal`
-  [ "${have_gnome}" ] && {
+  if [ "${have_gnome}" ]
+  then
     gnome-terminal --quiet -- echo "" > /dev/null 2>&1
     status=$?
-  }
+  else
+    kitty echo "" > /dev/null 2>&1
+    status=$?
+  fi
 fi
 
 [ ${status} -eq 0 ] || exit ${status}

@@ -52,8 +52,8 @@ SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-F] [-f] [-G] [-g]"
-  printf "\n\t[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-E] [-F] [-f] [-G]"
+  printf "\n\t[-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]"
   printf "\n\t[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
@@ -61,11 +61,12 @@ usage() {
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
+  printf "\n\t-E indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-f indicates fullscreen display"
-  printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-h indicates half-height for visualizer window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
+  printf "\n\t-g indicates use gnome terminal emulator"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
   printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava"
@@ -173,6 +174,53 @@ kill_tmux_sessions() {
       done 
     }
   done
+}
+
+center_window() {
+  position="$1"
+  kit_win="$2"
+  winid=`echo ${kit_win} | awk ' { print $1 } '`
+  grav=`echo ${kit_win} | awk ' { print $2 } '`
+  width=`echo ${kit_win} | awk ' { print $5 } '`
+  height=`echo ${kit_win} | awk ' { print $6 } '`
+  [ "${winid}" ] && {
+    s_wid=
+    s_hit=
+    if [ "${have_xdpyinfo}" ]
+    then
+      rez=`xdpyinfo | awk '/dimensions/ {print $2}'`
+      echo ${rez} | grep x > /dev/null && {
+        s_wid=`echo ${rez} | awk -F 'x' ' { print $1 } '`
+        s_hit=`echo ${rez} | awk -F 'x' ' { print $2 } '`
+      }
+      if ! [[ "${s_wid}" =~ ^[0-9]+$ ]]
+      then
+        s_wid=`xrandr | grep current | \
+          awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
+      fi
+      if ! [[ "${s_hit}" =~ ^[0-9]+$ ]]
+      then
+        s_hit=`xrandr | grep current | \
+          awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
+      fi
+    else
+      s_wid=`xrandr | grep current | \
+        awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
+      s_hit=`xrandr | grep current | \
+        awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
+    fi
+    xoff=$((s_wid - width))
+    xoff=$((xoff / 2))
+    if [ "${position}" == "bottom" ]
+    then
+      yoff=$((s_hit - height))
+    else
+      yoff=0
+    fi
+    mvarg="${grav},${xoff},${yoff},${width},${height}"
+    wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
+    wmctrl -i -r "${winid}" -e "${mvarg}"
+  }
 }
 
 make_it_so() {
@@ -403,8 +451,9 @@ make_it_so() {
       else
         echo "A terminal window will be opened to monitor the progress."
         echo ""
-        gnome-terminal --title="Beets Lyrics Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${beetpid} -f ${LLOG} &
+        # gnome-terminal --title="Beets Lyrics Log" --geometry=90x25+50+25 \
+        #                -- tail --pid=${beetpid} -f ${LLOG} &
+        kitty --title="Beets Lyrics Log" tail --pid=${beetpid} -f ${LLOG} &
       fi
       echo "===================================================================="
       echo ""
@@ -464,8 +513,9 @@ make_it_so() {
       else
         echo "A terminal window will be opened to monitor the progress"
         echo "of the acoustic metadata retrieval."
-        gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${beetpid} -f ${XLOG} &
+        # gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
+        #                -- tail --pid=${beetpid} -f ${XLOG} &
+        kitty --title="AcousticBrainz Log" tail --pid=${beetpid} -f ${XLOG} &
       fi
       echo ""
       echo "The AcousticBrainz service is depracated and no longer updated."
@@ -538,8 +588,11 @@ make_it_so() {
         echo "tail -f ${XLOG}"
       else
         echo "A terminal window will be opened to monitor the progress of the extraction."
-        gnome-terminal --title="Blissify Extraction Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${blisspid} -f ${XLOG} &
+        # gnome-terminal --title="Blissify Extraction Log" \
+        #                --geometry=90x25+50+25 \
+        #                -- tail --pid=${blisspid} -f ${XLOG} &
+        kitty --title="Blissify Extraction Log" \
+                       tail --pid=${blisspid} -f ${XLOG} &
       fi
       echo "==========================================================================="
     else
@@ -592,8 +645,9 @@ make_it_so() {
         echo "tail -f ${XLOG}"
       else
         echo "A terminal window will be opened to monitor the progress of the extraction."
-        gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${beetpid} -f ${XLOG} &
+        # gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
+        #                -- tail --pid=${beetpid} -f ${XLOG} &
+        kitty --title="Beets Extraction Log" tail --pid=${beetpid} -f ${XLOG} &
       fi
       echo "==========================================================================="
     else
@@ -638,8 +692,10 @@ make_it_so() {
         echo "A terminal window will be opened to monitor the progress of the import."
         echo ""
         echo "Beets log files can be found in $BEETSLOGDIR"
-        gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
-                       -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
+        # gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
+        #        -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
+        kitty --title="Beets Import Log" \
+              tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
       fi
       have_hostname=`type -p hostname`
       if [ "${have_hostname}" ]
@@ -674,41 +730,69 @@ make_it_so() {
 
   # Begin visualizer startup section
   #
-  # Do not start visualizer here if we are going to start a tmux session
-  # or if we are displaying an asciimatics animation
-  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
+  # Do not start visualizer here if we are going to start a tmux session,
+  # if we are displaying an asciimatics animation, or using cool-retro-term
+  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || [ "${RETRO}" ] || {
     if [ "${FULLSCREEN}" ]
     then
-      if [ "${TILIX}" ]
+      if [ "${KITTY}" ]
       then
-        tilix --title="${VTITLE}" \
-              --full-screen \
-              --window-style=borderless \
-              --profile=Visualizer \
-              --command="${VISUALIZER}" 2> /dev/null &
+        QRTRHEIGHT=1
+        kitty --title "${VTITLE}" \
+              --start-as fullscreen \
+              --override font_size=12 \
+              --override background_opacity=1.0 \
+              --override hide_window_decorations=yes \
+              ${VISUALIZER} 2> /dev/null &
       else
-        gnome-terminal --title="${VTITLE}" \
-              --profile=Visualizer \
-              --hide-menubar \
-              --full-screen \
-              -- ${VISUALIZER} &
-      fi
-      [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
-        sleep 1
         if [ "${TILIX}" ]
         then
-          viz_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+          tilix --title="${VTITLE}" \
+                --full-screen \
+                --window-style=borderless \
+                --profile=Visualizer \
+                --command="${VISUALIZER}" 2> /dev/null &
         else
-          viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+          gnome-terminal --title="${VTITLE}" \
+                --profile=Visualizer \
+                --hide-menubar \
+                --full-screen \
+                -- ${VISUALIZER} &
         fi
-        [ "${viz_win}" ] || {
+      fi
+      [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
+        sleep 0.5
+        if [ "${KITTY}" ]
+        then
+          viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
+            grep "${VTITLE}"`
+        else
           if [ "${TILIX}" ]
           then
-            viz_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+            viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+              grep "${VTITLE}"`
+          else
+            viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+              grep "${VTITLE}"`
+          fi
+        fi
+        [ "${viz_win}" ] || {
+          if [ "${KITTY}" ]
+          then
+            viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
+              grep "${VISUALIZER}"`
             [ "${viz_win}" ] || echo "Could not find visualizer window"
           else
-            viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VISUALIZER}"`
-            [ "${viz_win}" ] || echo "Could not find visualizer window"
+            if [ "${TILIX}" ]
+            then
+              viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+                grep "${VISUALIZER}"`
+              [ "${viz_win}" ] || echo "Could not find visualizer window"
+            else
+              viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                grep "${VISUALIZER}"`
+              [ "${viz_win}" ] || echo "Could not find visualizer window"
+            fi
           fi
         }
         [ "${viz_win}" ] && {
@@ -726,6 +810,8 @@ make_it_so() {
               height=$((height / 4))
               # Fudge this to compensate for differing window decoration size
               [ "${TILIX}" ] || height=$((height - 30))
+              [ "${KITTY}" ] && height=$((height - 75))
+              [ ${height} -lt 70 ] && height=70
             fi
             mvarg="${grav},${xoff},${yoff},${width},${height}"
             wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
@@ -734,19 +820,37 @@ make_it_so() {
         }
       }
     else
-      if [ "${TILIX}" ]
+      if [ "${KITTY}" ]
       then
-        tilix --title="${VTITLE}" \
-              --window-style=borderless \
-              --geometry=390x16+150-0 \
-              --profile=Visualizer \
-              --command="${VISUALIZER}" 2> /dev/null &
+        kitty --title="${VTITLE}" \
+              --start-as normal \
+              --override font_size=12 \
+              --override initial_window_width=240c \
+              --override initial_window_height=12c \
+              --single-instance \
+              --instance-group musicplayerplus \
+              ${VISUALIZER} 2> /dev/null &
+        sleep 0.5
+        kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
+        [ "${kit_win}" ] || {
+          kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
+        }
+        [ "${kit_win}" ] && center_window bottom "${kit_win}" 
       else
-        gnome-terminal --title="${VTITLE}" \
-              --profile=Visualizer \
-              --hide-menubar \
-              --geometry 390x16+150-0 \
-              -- ${VISUALIZER} &
+        if [ "${TILIX}" ]
+        then
+          tilix --title="${VTITLE}" \
+                --window-style=borderless \
+                --geometry=390x16+150-0 \
+                --profile=Visualizer \
+                --command="${VISUALIZER}" 2> /dev/null &
+        else
+          gnome-terminal --title="${VTITLE}" \
+                --profile=Visualizer \
+                --hide-menubar \
+                --geometry 390x16+150-0 \
+                -- ${VISUALIZER} &
+        fi
       fi
     fi
     sleep 1
@@ -779,41 +883,69 @@ make_it_so() {
     then
       if [ "${FULLSCREEN}" ]
       then
-        cool-retro-term --fullscreen -e "${MPCOMM}" 2> /dev/null
+        cool-retro-term --fullscreen -e "${MPCOMM}" > /dev/null 2>&1 &
       else
-        cool-retro-term -e "${MPCOMM}" 2> /dev/null
+        cool-retro-term -e "${MPCOMM}" > /dev/null 2>&1 &
       fi
     else
       if [ "${FULLSCREEN}" ]
       then
-        if [ "${TILIX}" ]
+        if [ "${KITTY}" ]
         then
-          tilix --title="${MTITLE}" \
-                --full-screen \
-                --window-style=borderless \
-                --profile=MusicPlayer \
-                --command="${MPCOMM}" 2> /dev/null
+          kitty --title="${MTITLE}" \
+                --start-as fullscreen \
+                --override font_size=24 \
+                --override background_opacity=0.7 \
+                ${MPCOMM} 2> /dev/null &
         else
-          gnome-terminal --title="${MTITLE}" \
-                --profile=MusicPlayer \
-                --hide-menubar \
-                --full-screen \
-                -- ${MPCOMM}
+          if [ "${TILIX}" ]
+          then
+            tilix --title="${MTITLE}" \
+                  --full-screen \
+                  --window-style=borderless \
+                  --profile=MusicPlayer \
+                  --command="${MPCOMM}" 2> /dev/null &
+          else
+            gnome-terminal --title="${MTITLE}" \
+                  --profile=MusicPlayer \
+                  --hide-menubar \
+                  --full-screen \
+                  -- ${MPCOMM} &
+          fi
         fi
       else
-        if [ "${TILIX}" ]
+        if [ "${KITTY}" ]
         then
-          tilix --title="${MTITLE}" \
-                --window-style=borderless \
-                --geometry=90x20+150+25 \
-                --profile=MusicPlayer \
-                --command="${MPCOMM}" 2> /dev/null
+          kitty --title="${MTITLE}" \
+                --start-as normal \
+                --override font_size=24 \
+                --override initial_window_width=120c \
+                --override initial_window_height=28c \
+                --instance-group musicplayerplus \
+                ${MPCOMM} 2> /dev/null &
+          sleep 1
+          mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+            grep -v "${VTITLE}" | grep "${MTITLE}"`
+          [ "${mpc_win}" ] || {
+            mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+              grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+          }
+          [ "${mpc_win}" ] && center_window top "${mpc_win}" 
         else
-          gnome-terminal --title="${MTITLE}" \
-                --profile=MusicPlayer \
-                --hide-menubar \
-                --geometry=90x20+150+25 \
-                -- ${MPCOMM}
+          if [ "${TILIX}" ]
+          then
+            tilix --title="${MTITLE}" \
+                  --window-style=borderless \
+                  --geometry=90x20+150+25 \
+                  --profile=MusicPlayer \
+                  --command="${MPCOMM}" 2> /dev/null &
+          else
+            gnome-terminal --title="${MTITLE}" \
+                  --profile=MusicPlayer \
+                  --hide-menubar \
+                  --geometry=90x20+150+25 \
+                  -- ${MPCOMM} &
+          fi
         fi
       fi
     fi
@@ -987,6 +1119,7 @@ show_help_menu() {
     [ "${have_w3m}" ] && options+=("W3m Web Browser Man Page")
     [ "${have_retro}" ] && options+=("Retro Terminal Man Page")
     [ "${have_gnome}" ] && options+=("Gnome Terminal Man Page")
+    [ "${have_kitty}" ] && options+=("Kitty Terminal Man Page")
     [ "${have_tilix}" ] && options+=("Tilix Terminal Man Page")
     options+=("Done / Back" "Quit")
     select opt in "${options[@]}"
@@ -1119,6 +1252,10 @@ show_help_menu() {
           ;;
         "Gnome"*,*|*,"Gnome"*)
           man gnome-terminal
+          break
+          ;;
+        "Kitty"*,*|*,"Kitty"*)
+          man kitty
           break
           ;;
         "Tilix"*,*|*,"Tilix"*)
@@ -1888,6 +2025,7 @@ show_main_menu() {
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${CONSOLE_MODE}" ] && options+=("Music Player Plus Visualizer")
+    [ "${have_kitty}" ] && options+=("Kitty Music Player Plus")
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
@@ -1917,6 +2055,11 @@ show_main_menu() {
               ;;
           "Music Player Plus",*|*,"Music Player Plus")
               MPCPLUS="mpcplus"
+              break
+              ;;
+          "Kitty Music Player Plus",*|*,"Kitty Music Player Plus")
+              MPCPLUS="mpcplus"
+              KITTY=1
               break
               ;;
           "GNOME Music Player Plus",*|*,"GNOME Music Player Plus")
@@ -2082,7 +2225,9 @@ init_vars() {
   RECORD=
   RETRO=
   SPLASH=
+  GNOME=
   TILIX=
+  KITTY=1
   TMUX_MPC=
   TMUX_SPLASH=
   USAGE=
@@ -2133,15 +2278,18 @@ then
   have_gnome=
   have_retro=
   have_tilix=
+  have_kitty=
 else
   have_cantata=`type -p cantata`
   have_gnome=`type -p gnome-terminal`
   have_retro=`type -p cool-retro-term`
   have_tilix=`type -p tilix`
+  have_kitty=`type -p kitty`
 fi
 have_uebz=`type -p ueberzug`
 have_fzf=`type -p fzf`
 have_mopidy=`type -p mopidy`
+have_xdpyinfo=`type -p xdpyinfo`
 if [ -x /opt/navidrome/navidrome ]
 then
   have_navi=1
@@ -2172,7 +2320,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBC:D:d:FfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBC:D:d:EFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -2236,6 +2384,9 @@ while getopts "AabBC:D:d:FfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
     d)
       MUSIC_DIRECTORY="${OPTARG}"
       ;;
+    E)
+      USE_GRAD=
+      ;;
     F)
       CONVERT_WAV=1
       ;;
@@ -2246,7 +2397,19 @@ while getopts "AabBC:D:d:FfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       CONVERT_M4A=1
       ;;
     g)
-      USE_GRAD=
+      GNOME=1
+      KITTY=
+      [ "${have_gnome}" ] || {
+        echo "Option '-g' indicates use gnome-terminal emulator."
+        echo "However, gnome-terminal is not installed or not in your path."
+        echo "You can install gnome-terminal using apt, pacman, or dnf:"
+        printf "\n\n\tsudo apt install gnome-terminal\nor"
+        printf "\n\n\tsudo pacman -S gnome-terminal\nor"
+        printf "\n\tsudo dnf install gnome-terminal\n\n"
+        echo "Proceeding with Kitty terminal emulator"
+        KITTY=1
+        GNOME=
+      }
       ;;
     h)
       HALFHEIGHT=1
@@ -2301,17 +2464,19 @@ while getopts "AabBC:D:d:FfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       QRTRHEIGHT=1
       ;;
     r)
+      RETRO=1
+      KITTY=
       [ "${have_retro}" ] || {
         echo "Option '-r' indicates use cool-retro-term terminal emulator."
         echo "However, cool-retro-term is not installed or not in your path."
-        echo "You can install cool-retro-term using apt or dnf as follows:"
+        echo "You can install cool-retro-term using apt, pacman, or dnf:"
         printf "\n\n\tsudo apt install cool-retro-term\nor"
+        printf "\n\tsudo pacman -S cool-retro-term\nor"
         printf "\n\tsudo dnf install cool-retro-term\n\n"
-        echo "Exiting"
-        exit 1
+        echo "Proceeding with Kitty"
+        KITTY=1
+        RETRO=
       }
-      RETRO=1
-      [ "${have_tilix}" ] && TILIX=1
       ;;
     R)
       [ "${have_nema}" ] && {
@@ -2329,16 +2494,19 @@ while getopts "AabBC:D:d:FfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -s ${OPTARG}"
       ;;
     t)
+      TILIX=1
+      KITTY=
       [ "${have_tilix}" ] || {
         echo "Option '-t' indicates use tilix terminal emulator."
         echo "However, tilix is not installed, unavailable, or not in your path."
-        echo "You can install tilix using apt or dnf as follows:"
+        echo "You can install tilix using apt, pacman, or dnf as follows:"
         printf "\n\n\tsudo apt install tilix\nor"
+        printf "\n\n\tsudo pacman -S tilix\nor"
         printf "\n\tsudo dnf install tilix\n\n"
-        echo "Exiting"
-        exit 1
+        echo "Proceeding with Kitty terminal emulator"
+        KITTY=1
+        TILIX=
       }
-      TILIX=1
       ;;
     T)
       USE_TMUX=1
@@ -2396,33 +2564,30 @@ impflags="${tagflag} ${writeflag}"
 }
 
 [ "${CONSOLE_MODE}" ] || {
-  [ "${TILIX}" ] || {
-    [ "${RETRO}" ] || {
-      [ "${have_gnome}" ] || {
-        echo "No option '-t' or '-r' indicates use gnome-terminal"
-        echo "terminal emulator. However, gnome-terminal is not installed,"
-        echo "unavailable, or not in your path."
-        echo "You can install gnome-terminal using apt or dnf as follows:"
-        printf "\n\n\tsudo apt install gnome-terminal\nor"
-        printf "\n\tsudo dnf install gnome-terminal\n\n"
-        [ "${have_tilix}" ] || usage
-        echo "Alternately, invoke mpplus with the '-t' option to use tilix."
+  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || {
+    [ "${have_kitty}" ] || {
+      echo "No option '-g', '-t', or '-r' indicates use Kitty"
+      echo "terminal emulator. However, Kitty is not installed,"
+      echo "unavailable, or not in your path."
+      echo "You can install Kitty using apt, pacman, or dnf as follows:"
+      printf "\n\n\tsudo apt install kitty\nor"
+      printf "\n\n\tsudo pacman -S kitty\nor"
+      printf "\n\tsudo dnf install kitty\n\n"
+      [ "${have_tilix}" ] || usage
+      echo "Alternately, invoke mpplus with the '-t' option to use tilix"
+      echo "with the '-g' option to use gnome-terminal."
+      if [ "${have_gnome}" ]
+      then
+        echo "Continuing with gnome-terminal as the terminal emulator."
+        GNOME=1
+        KITTY=
+        TILIX=
+      else
         echo "Continuing with tilix as the terminal emulator."
+        GNOME=
+        KITTY=
         TILIX=1
-      }
-    }
-    [ "${TILIX}" ] || {
-      [ "${have_gnome}" ] || {
-        echo "No option '-t' indicates use gnome-terminal terminal emulator."
-        echo "However, gnome-terminal is not installed or not in your path."
-        echo "You can install gnome-terminal using apt or dnf as follows:"
-        printf "\n\n\tsudo apt install gnome-terminal\nor"
-        printf "\n\tsudo dnf install gnome-terminal\n\n"
-        [ "${have_tilix}" ] || usage
-        echo "Alternately, invoke mpplus with the '-t' option to use tilix."
-        echo "Continuing with tilix as the terminal emulator."
-        TILIX=1
-      }
+      fi
     }
   }
 }

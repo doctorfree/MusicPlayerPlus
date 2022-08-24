@@ -26,7 +26,7 @@ If applicable, add screenshots or logs to help explain your problem.
 **Desktop (please complete the following information):**
  - OS: [e.g. Ubuntu]
  - Version [e.g. 20.04.4]
- - Terminal: [e.g. gnome-terminal]
+ - Terminal: [e.g. kitty]
 
 **Additional context**
 Add any other context about the problem here.

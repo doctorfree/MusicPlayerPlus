@@ -121,9 +121,10 @@ Integration is provided for:
 * [tmuxp](https://github.com/tmux-python/tmuxp), a tmux session manager
 * Enhanced key bindings for extended control of terminal windows and tmux sessions
 * Several terminal emulators
+    * kitty (the default MusicPlayerPlus terminal emulator)
+    * cool-retro-term
     * gnome-terminal
     * tilix
-    * cool-retro-term
 
 The goal of MusicPlayerPlus is to provide the user with a sophisticated set
 of complex music library tools that can be integrated and managed in a fairly
@@ -1048,11 +1049,18 @@ terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
 an enhanced visual presentation.
 
-**[Note:]** Use of the Tilix terminal emulator is an optional additional
-feature supported by MusicPlayerPlus. Tilix is not installed by MusicPlayerPlus.
-In order to use the Tilix terminal emulator it must be installed manually.
-If you wish to use the Tilix terminal emulator, then use your system's
-package manager to install it.
+**[Note:]** Use of the Gnome and Tilix terminal emulators is an optional
+additional feature supported by MusicPlayerPlus. Gnome-terminal and Tilix
+are not installed by MusicPlayerPlus. The default terminal emulator used
+by MusicPlayerPlus is Kitty and it is installed as a dependency.
+
+In order to use the Gnome or Tilix terminal emulators they must be installed
+manually. If you wish to use the Gnome or Tilix terminal emulator, then use
+your system's package manager to install them prior to initializing
+MusicPlayerPlus with the `mppinit` command. If either or both of these
+optional terminal emulators are installed after MusicPlayerPlus
+initialization with `mppinit` then run `mppinit profiles` after installing
+the additional terminal emulator(s).
 
 There are four terminal profiles in two terminal emulators used by
 MusicPlayerPlus. The `gnome-terminal` emulator and the `tilix` terminal
@@ -1486,7 +1494,7 @@ Open the cantata MPD graphical client and mppcava visualizer:
 `mpplus -C cantata`
 
 Open the mpcplus client in the cool-retro-term terminal and mppcava visualizer
-in gnome-terminal:
+in kitty:
 
 `mpplus -r`
 

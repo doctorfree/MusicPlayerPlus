@@ -168,22 +168,22 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 ## EXAMPLES
 **mpplus**
-: Launches `mpcplus` music player client running in gnome terminal emulator with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `mpcplus` music player client running in the kitty terminal emulator with mppcava spectrum visualizer running in another kitty window. 
 
 **mpplus -i**
 : Launches `mpplus` in interactive mode with menu selections controlling actions rather than command line arguments
 
 **mpplus -r**
-: Launches `mpcplus` music player client running in cool-retro-term terminal emulator with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `mpcplus` music player client running in cool-retro-term terminal emulator with mppcava spectrum visualizer running in a kitty terminal emulator window. 
 
 **mpplus -C cantata**
-: Launches `cantata` music player client running in a separate window with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches `cantata` music player client running in a separate window with mppcava spectrum visualizer running in a kitty terminal emulator window. 
 
 **mpplus -C cmus**
-: Launches the `cmus` music player client with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches the `cmus` music player client with mppcava spectrum visualizer running in a kitty terminal emulator window. 
 
 **mpplus -C mcg**
-: Launches the CoverGrid music player client (`mcg`) running in a separate window with mppcava spectrum visualizer running in a gnome-terminal terminal emulator window. 
+: Launches the CoverGrid music player client (`mcg`) running in a separate window with mppcava spectrum visualizer running in a kitty terminal emulator window. 
 
 **mpplus -f -q -t**
 : Launches `mpcplus` music player client in fullscreen mode with mppcava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 

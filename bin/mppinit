@@ -20,6 +20,8 @@ BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
 CALIPCONFDIR="${CONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
+KITTYCONFDIR="${CONF}/kitty"
+KITTYCONF="${KITTYCONFDIR}/mpplus.conf"
 MOPIDCONFDIR="${CONF}/mopidy"
 MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
 NAVIDCONFDIR="${CONF}/navidrome"
@@ -156,6 +158,71 @@ create_new_profile() {
   dconf write $profile_path/background-transparency-percent "50" 2> /dev/null
   dconf write $profile_path/use-system-font "false" 2> /dev/null
   dconf write $profile_path/font "'Monospace ${profont}'" 2> /dev/null
+}
+
+create_profiles() {
+  # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
+  [ "${quiet}" ] || {
+    printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
+  }
+  declare -a profiles
+  have_gnome=`type -p gnome-terminal`
+  [ "${have_gnome}" ] && {
+    dconfdir=/org/gnome/terminal/legacy/profiles:
+    profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
+
+    for profile_name in MusicPlayer Visualizer
+    do
+      profile_exists=
+      fontsize=8
+      [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+      if [ "$profiles" = "" ]
+      then
+        create_new_profile gnome ${profile_name} ${fontsize}
+      else
+        for i in ${!profiles[*]}
+        do
+          visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
+          [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+          [ "$profile_exists" ] && break
+        done
+      fi
+
+      [ "$profile_exists" ] || {
+        create_new_profile gnome ${profile_name} ${fontsize}
+      }
+    done
+  }
+
+  have_tilix=`type -p tilix`
+  [ "${have_tilix}" ] && {
+    # Create Tilix profiles, similar to Gnome-terminal's
+    dconfdir=/com/gexperts/Tilix/profiles
+    profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
+
+    for profile_name in MusicPlayer Visualizer
+    do
+      profile_exists=
+      fontsize=8
+      [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
+
+      if [ "$profiles" = "" ]
+      then
+        create_new_profile tilix ${profile_name} ${fontsize}
+      else
+        for i in ${!profiles[*]}
+        do
+          visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
+          [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
+          [ "$profile_exists" ] && break
+        done
+      fi
+
+      [ "$profile_exists" ] || {
+        create_new_profile tilix ${profile_name} ${fontsize}
+      }
+    done
+  }
 }
 
 pip_install() {
@@ -1226,6 +1293,11 @@ remove_navidrome() {
   exit 0
 }
 
+[ "$1" == "profiles" ] && {
+  create_profiles
+  exit 0
+}
+
 [ "$1" == "yams" ] && {
   if [ "${initialized}" ]
   then
@@ -1336,92 +1408,7 @@ else
   cp -a ${MPPCDIR}/tmuxp ${CONF}/tmuxp
 fi
 
-# In development
-# if [ -d ${CONF}/ytdl-sub ]
-# then
-#   for ytdl in ${MPPCDIR}/ytdl-sub/*
-#   do
-#     ytdlbase=`basename "${ytdl}"`
-#     if [ -d "${ytdl}" ]
-#     then
-#       [ -d "${CONF}/ytdl-sub/${ytdlbase}" ] || {
-#         cp -a "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
-#       }
-#     else
-#       if [ -f "${CONF}/ytdl-sub/${ytdlbase}" ]
-#       then
-#         [ "${overwrite}" ] && cp "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
-#       else
-#         cp "${ytdl}" "${CONF}/ytdl-sub/${ytdlbase}"
-#       fi
-#     fi
-#   done
-# else
-#   cp -a ${MPPCDIR}/ytdl-sub ${CONF}/ytdl-sub
-# fi
-
-# If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
-[ "${quiet}" ] || {
-  printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
-}
-declare -a profiles
-have_gnome=`type -p gnome-terminal`
-[ "${have_gnome}" ] && {
-  dconfdir=/org/gnome/terminal/legacy/profiles:
-  profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
-
-  for profile_name in MusicPlayer Visualizer
-  do
-    profile_exists=
-    fontsize=8
-    [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
-    if [ "$profiles" = "" ]
-    then
-      create_new_profile gnome ${profile_name} ${fontsize}
-    else
-      for i in ${!profiles[*]}
-      do
-        visname="$(dconf read $dconfdir/:${profiles[i]}/visible-name)"
-        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
-        [ "$profile_exists" ] && break
-      done
-    fi
-
-    [ "$profile_exists" ] || {
-      create_new_profile gnome ${profile_name} ${fontsize}
-    }
-  done
-}
-
-have_tilix=`type -p tilix`
-[ "${have_tilix}" ] && {
-  # Create Tilix profiles, similar to Gnome-terminal's
-  dconfdir=/com/gexperts/Tilix/profiles
-  profiles=($(gsettings get com.gexperts.Tilix.ProfilesList list | tr -d "[]\',"))
-
-  for profile_name in MusicPlayer Visualizer
-  do
-    profile_exists=
-    fontsize=8
-    [ "${profile_name}" == "MusicPlayer" ] && fontsize=32
-
-    if [ "$profiles" = "" ]
-    then
-      create_new_profile tilix ${profile_name} ${fontsize}
-    else
-      for i in ${!profiles[*]}
-      do
-        visname="$(dconf read $dconfdir/${profiles[i]}/visible-name)"
-        [ "${visname}" == "'${profile_name}'" ] && profile_exists=1
-        [ "$profile_exists" ] && break
-      done
-    fi
-
-    [ "$profile_exists" ] || {
-      create_new_profile tilix ${profile_name} ${fontsize}
-    }
-  done
-}
+create_profiles
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling MPD configuration in ${MPDCONFDIR} ..."
@@ -1490,6 +1477,24 @@ else
     cp -a ${MPPCDIR}/calliope ${CALIPCONFDIR}
   fi
 fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling Kitty configuration in ${KITTYCONFDIR} ..."
+}
+# If there is no user kitty config folder then copy the
+# MusicPlayerPlus kitty config folder into the user's home
+if [ -d ${KITTYCONFDIR} ]
+then
+  if [ "${overwrite}" ]
+  then
+    cp -a ${MPPCDIR}/kitty ${CONF}
+  else
+    cp -an ${MPPCDIR}/kitty ${CONF}
+  fi
+else
+  cp -a ${MPPCDIR}/kitty ${KITTYCONFDIR}
+fi
+[ -f ${KITTYCONFDIR}/kitty.conf ] || cp ${KITTYCONF} ${KITTYCONFDIR}/kitty.conf
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling Mopidy configuration in ${MOPIDCONFDIR} ..."

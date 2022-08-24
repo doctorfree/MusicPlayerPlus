@@ -1,0 +1,5 @@
+new_tab mpplus
+title mpplus
+launch bash -c 'mpcplus'
+launch bash -c 'mppcava'
+layout tall

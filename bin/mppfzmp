@@ -8,6 +8,7 @@ have_fzmp=`type -p fzmp`
 [ "${have_fzmp}" ] || exit 1
 
 have_gnome=`type -p gnome-terminal`
+have_kitty=`type -p kitty`
 have_tilix=`type -p tilix`
 
 if [ "${DISPLAY}" ]
@@ -27,29 +28,36 @@ then
   fi
   [ ${status} -eq 0 ] || {
     have_gnome=
+    have_kitty=
     have_tilix=
   }
 else
   have_gnome=
+  have_kitty=
   have_tilix=
 fi
 
-if [ "${have_tilix}" ]
+if [ "${have_kitty}" ]
 then
-  tilix --title="${MTITLE}" \
-        --window-style=borderless \
-        --geometry=90x20+150+25 \
-        --profile=MusicPlayer \
-        --command="${MPCOMM}" 2> /dev/null
+  kitty --title="${MTITLE}" ${MPCOMM} 2> /dev/null
 else
-  if [ "${have_gnome}" ]
+  if [ "${have_tilix}" ]
   then
-    gnome-terminal --title="${MTITLE}" \
-        --profile=MusicPlayer \
-        --hide-menubar \
-        --geometry=90x20+150+25 \
-        -- ${MPCOMM}
+    tilix --title="${MTITLE}" \
+          --window-style=borderless \
+          --geometry=90x20+150+25 \
+          --profile=MusicPlayer \
+          --command="${MPCOMM}" 2> /dev/null
   else
-    ${MPCOMM}
+    if [ "${have_gnome}" ]
+    then
+      gnome-terminal --title="${MTITLE}" \
+          --profile=MusicPlayer \
+          --hide-menubar \
+          --geometry=90x20+150+25 \
+          -- ${MPCOMM}
+    else
+      ${MPCOMM}
+    fi
   fi
 fi

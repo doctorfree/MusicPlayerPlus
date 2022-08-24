@@ -6,23 +6,35 @@
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 
-cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+cavawin=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
 [ "${cavawin}" ] || {
-  cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
+  cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
   [ "${cavawin}" ] || {
-    cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+    cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
     [ "${cavawin}" ] || {
-      cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+      cavawin=`wmctrl -l -G -x | grep kitty.kitty | grep "cava"`
+      [ "${cavawin}" ] || {
+        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
+        [ "${cavawin}" ] || {
+          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
+        }
+      }
     }
   }
 }
-mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${MTITLE}"`
+mppwin=`wmctrl -l -G -x | grep kitty.kitty | grep "${MTITLE}"`
 [ "${mppwin}" ] || {
-  mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${MTITLE}"`
+  mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${MTITLE}"`
   [ "${mppwin}" ] || {
-    mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "mpcplus"`
+    mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${MTITLE}"`
     [ "${mppwin}" ] || {
-      mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "mpcplus"`
+      mppwin=`wmctrl -l -G -x | grep kitty.kitty | grep "mpcplus"`
+      [ "${mppwin}" ] || {
+        mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "mpcplus"`
+        [ "${mppwin}" ] || {
+          mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "mpcplus"`
+        }
+      }
     }
   }
 }
