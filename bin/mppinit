@@ -161,12 +161,28 @@ create_new_profile() {
 }
 
 create_profiles() {
+  have_gnome=`type -p gnome-terminal`
+  have_tilix=`type -p tilix`
+  [ "${have_gnome}" ] || [ "${have_tilix}" ] && {
+    have_dconf=`type -p dconf`
+    have_gsettings=`type -p gsettings`
+    [ "${have_dconf}" ] && [ "${have_gsettings}" ] || {
+      printf "\n\nGnome and Tilix terminal emulators require profiles."
+      printf "\nIn order to create profiles for these terminal emulators,"
+      printf "\nthe 'dconf' and glib2' packages are required."
+      printf "\n\nTo use either the Gnome or Tilix terminal emulator,"
+      printf "\ninstall these packages with your package manager."
+      printf "\nAfter installing these dependencies, run 'mppinit profiles'."
+      printf "\nSkipping terminal profiles creation. MusicPlayerPlus will"
+      printf "\nuse the Kitty terminal emulator.\n"
+      return
+    }
+  }
   # If no MusicPlayerPlus and Visualizer terminal profiles exist, create them
   [ "${quiet}" ] || {
     printf "\n\tCreating MusicPlayerPlus terminal profiles ..."
   }
   declare -a profiles
-  have_gnome=`type -p gnome-terminal`
   [ "${have_gnome}" ] && {
     dconfdir=/org/gnome/terminal/legacy/profiles:
     profiles=($(gsettings get org.gnome.Terminal.ProfilesList list | tr -d "[]\',"))
@@ -194,7 +210,6 @@ create_profiles() {
     done
   }
 
-  have_tilix=`type -p tilix`
   [ "${have_tilix}" ] && {
     # Create Tilix profiles, similar to Gnome-terminal's
     dconfdir=/com/gexperts/Tilix/profiles

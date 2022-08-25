@@ -177,45 +177,26 @@ kill_tmux_sessions() {
 }
 
 center_window() {
-  position="$1"
-  kit_win="$2"
+  kit_win="$1"
+  position="$2"
   winid=`echo ${kit_win} | awk ' { print $1 } '`
   grav=`echo ${kit_win} | awk ' { print $2 } '`
   width=`echo ${kit_win} | awk ' { print $5 } '`
   height=`echo ${kit_win} | awk ' { print $6 } '`
   [ "${winid}" ] && {
-    s_wid=
-    s_hit=
-    if [ "${have_xdpyinfo}" ]
-    then
-      rez=`xdpyinfo | awk '/dimensions/ {print $2}'`
-      echo ${rez} | grep x > /dev/null && {
-        s_wid=`echo ${rez} | awk -F 'x' ' { print $1 } '`
-        s_hit=`echo ${rez} | awk -F 'x' ' { print $2 } '`
-      }
-      if ! [[ "${s_wid}" =~ ^[0-9]+$ ]]
-      then
-        s_wid=`xrandr | grep current | \
-          awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
-      fi
-      if ! [[ "${s_hit}" =~ ^[0-9]+$ ]]
-      then
-        s_hit=`xrandr | grep current | \
-          awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
-      fi
-    else
-      s_wid=`xrandr | grep current | \
-        awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
-      s_hit=`xrandr | grep current | \
-        awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
-    fi
     xoff=$((s_wid - width))
     xoff=$((xoff / 2))
     if [ "${position}" == "bottom" ]
     then
+      vhit=${height}
       yoff=$((s_hit - height))
     else
-      yoff=0
+      toff=$((s_hit - position))
+      yoff=$((toff - height))
+      [ ${toff} -lt 0 ] && {
+        height=${toff}
+        yoff=0
+      }
     fi
     mvarg="${grav},${xoff},${yoff},${width},${height}"
     wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
@@ -820,6 +801,7 @@ make_it_so() {
         }
       }
     else
+      vhit=
       if [ "${KITTY}" ]
       then
         kitty --title="${VTITLE}" \
@@ -835,7 +817,7 @@ make_it_so() {
         [ "${kit_win}" ] || {
           kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
         }
-        [ "${kit_win}" ] && center_window bottom "${kit_win}" 
+        [ "${kit_win}" ] && center_window "${kit_win}" bottom
       else
         if [ "${TILIX}" ]
         then
@@ -930,7 +912,7 @@ make_it_so() {
             mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
               grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
           }
-          [ "${mpc_win}" ] && center_window top "${mpc_win}" 
+          [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
         else
           if [ "${TILIX}" ]
           then
@@ -2279,17 +2261,29 @@ then
   have_retro=
   have_tilix=
   have_kitty=
+  s_wid=1920
+  s_hit=1080
 else
   have_cantata=`type -p cantata`
   have_gnome=`type -p gnome-terminal`
   have_retro=`type -p cool-retro-term`
   have_tilix=`type -p tilix`
   have_kitty=`type -p kitty`
+  have_xrandr=`type -p xrandr`
+  if [ "${have_xrandr}" ]
+  then
+    s_wid=`xrandr | grep current | \
+      awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
+    s_hit=`xrandr | grep current | \
+      awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
+  else
+    s_wid=1920
+    s_hit=1080
+  fi
 fi
 have_uebz=`type -p ueberzug`
 have_fzf=`type -p fzf`
 have_mopidy=`type -p mopidy`
-have_xdpyinfo=`type -p xdpyinfo`
 if [ -x /opt/navidrome/navidrome ]
 then
   have_navi=1
