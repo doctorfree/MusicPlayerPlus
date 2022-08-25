@@ -85,7 +85,7 @@ mpd_music_dir = ~/Music
 ##
 ## If you set format to 44100:16:2, make it 'yes'.
 ##
-#visualizer_in_stereo = yes
+visualizer_in_stereo = yes
 #
 ##
 ## Note: To enable spectrum frequency visualization you need to compile mpcplus
@@ -94,7 +94,7 @@ mpd_music_dir = ~/Music
 #
 ## Available values: spectrum, wave, wave_filled, ellipse.
 ##
-#visualizer_type = spectrum
+visualizer_type = spectrum
 #
 #visualizer_fps = 60
 #
@@ -160,7 +160,7 @@ mpd_music_dir = ~/Music
 #
 ## Defines how long messages are supposed to be visible.
 ##
-#message_delay_time = 5
+message_delay_time = 5
 #
 ##### song format #####
 ##
@@ -231,8 +231,10 @@ mpd_music_dir = ~/Music
 ##
 #
 #song_list_format = {%a - }{%t}|{$8%f$9}$R{$3%l$9}
+song_list_format = "$3{%l}$9 $1│$9 $5{%a}$9 $1│$9 $2{%t}$9 $R $6{%b}$9 $7({%y})$9 $1│$9 $4{%n}"
 #
 #song_status_format = {{%a{ "%b"{ (%y)}} - }{%t}}|{%f}
+song_status_format = "{%a} - {%t}|{%f} - \"{%b}\" ({%y})"
 #
 #song_library_format = {%n - }{%t}|{%f}
 #
@@ -248,9 +250,9 @@ mpd_music_dir = ~/Music
 #
 #current_item_inactive_column_suffix = $/r$(end)
 #
-#now_playing_prefix = $b
+now_playing_prefix = $b
 #
-#now_playing_suffix = $/b
+now_playing_suffix = $/b
 #
 #browser_playlist_prefix = "$2playlist$9 "
 #
@@ -340,7 +342,6 @@ playlist_shorten_total_times = yes
 ##
 ## Note: Possible display modes: classic, columns.
 ##
-#playlist_display_mode = columns
 playlist_display_mode = columns
 #
 #browser_display_mode = classic
@@ -362,7 +363,6 @@ playlist_editor_display_mode = columns
 #
 #volume_change_step = 2
 #
-#autocenter_mode = no
 autocenter_mode = yes
 #
 #centered_cursor = no
@@ -375,7 +375,8 @@ centered_cursor = yes
 #progressbar_look = =>
 #progressbar_look = ->▃
 #progressbar_look = ▃_▃
-progressbar_look = __▃
+progressbar_look = "━━╸"
+#progressbar_look = __▃
 #
 ## Available values: database, playlist.
 ##
@@ -403,23 +404,23 @@ media_library_hide_album_dates = yes
 #
 #default_tag_editor_pattern = %n - %t
 #
-#header_visibility = yes
+header_visibility = no
 #
-#statusbar_visibility = yes
+statusbar_visibility = yes
 #
 ## Show the "Connected to ..." message on startup
 #connected_message_on_startup = yes
 #
-#titles_visibility = yes
+titles_visibility = no
 #
-#header_text_scrolling = yes
+header_text_scrolling = yes
 #
 #cyclic_scrolling = no
 #
 #lyrics_fetchers = azlyrics, genius, musixmatch, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, zeneszoveg, internet
+lyrics_fetchers = musixmatch, sing365, justsomelyrics, jahlyrics, plyrics, tekstowo, zeneszoveg, internet
 #
-#follow_now_playing_lyrics = no
-#follow_now_playing_lyrics = yes
+follow_now_playing_lyrics = yes
 #
 #fetch_lyrics_for_current_song_in_background = no
 #
@@ -452,7 +453,7 @@ media_library_hide_album_dates = yes
 ## media_library, playlist_editor, tag_editor, outputs, visualizer, clock,
 ## lyrics, last_fm.
 ##
-screen_switcher_mode = media_library, playlist, browser
+screen_switcher_mode = media_library, playlist, browser, lyrics
 #
 ##
 ## Note: You can define startup screen by choosing screen from the list above.
@@ -492,15 +493,14 @@ locked_screen_width_part = 60
 #
 #playlist_editor_column_width_ratio = 1:2
 #
-#jump_to_now_playing_song_at_start = yes
+jump_to_now_playing_song_at_start = yes
 #
 #ask_before_clearing_playlists = yes
 #
-#clock_display_seconds = no
+clock_display_seconds = yes
 #
-#display_volume_level = yes
+display_volume_level = no
 #
-#display_bitrate = no
 display_bitrate = yes
 #
 #display_remaining_time = no
@@ -513,7 +513,7 @@ display_bitrate = yes
 ## Note: if below is enabled, mpcplus will ignore leading "The" word while
 ## sorting items in browser, tags in media library, etc.
 ##
-#ignore_leading_the = no
+ignore_leading_the = yes
 #
 ##
 ## Note: if below is enabled, mpcplus will ignore diacritics while searching and
@@ -524,13 +524,13 @@ display_bitrate = yes
 #
 #block_search_constraints_change_if_items_found = yes
 #
-#mouse_support = yes
+mouse_support = yes
 #
 #mouse_list_scroll_whole_page = no
 #
 #lines_scrolled = 5
 #
-#empty_tag_marker = <empty>
+empty_tag_marker = "-"
 #
 #tags_separator = " | "
 #
@@ -538,7 +538,7 @@ display_bitrate = yes
 #
 #media_library_sort_by_mtime = no
 #
-#enable_window_title = yes
+enable_window_title = yes
 #
 ##
 ## Note: You can choose default search mode for search engine. Available modes
@@ -594,7 +594,7 @@ use_console_editor = yes
 ## are used there is a possibility that you'll be able to use only colors with
 ## transparent background.
 #
-#colors_enabled = yes
+colors_enabled = yes
 #
 #empty_tag_color = cyan
 #
@@ -602,22 +602,28 @@ use_console_editor = yes
 header_window_color = cyan
 #
 #volume_color = default
-volume_color = red
+#volume_color = red
+volume_color = blue
 #
 #state_line_color = default
-state_line_color = yellow
+#state_line_color = yellow
+state_line_color = green
 #
 #state_flags_color = default:b
+#state_flags_color = "red"
 state_flags_color = red:b
 #
-#main_window_color = yellow
+main_window_color = blue
 #
 #color1 = white
+color1 = "red"
 #
 #color2 = green
+color2 = "magenta"
 #
 #progressbar_color = black:b
-progressbar_color = cyan
+progressbar_color = blue
+#progressbar_color = cyan
 #
 #progressbar_elapsed_color = green:b
 progressbar_elapsed_color = cyan:b
@@ -630,8 +636,9 @@ statusbar_color = cyan
 #player_state_color = default:b
 #
 #alternative_ui_separator_color = black:b
+alternative_ui_separator_color = "green"
 #
-#window_border_color = green
+window_border_color = "magenta"
 #
-#active_window_border = red
+active_window_border = "blue"
 #

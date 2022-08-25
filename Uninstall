@@ -38,7 +38,7 @@ else
     then
       if [ "${have_pac}" ]
       then
-        sudo pacman -R "${PKG}"
+        sudo pacman -Rs "${PKG}"
       else
         echo "Cannot locate pacman to remove. Skipping."
       fi

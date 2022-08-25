@@ -121,6 +121,7 @@ struct Status
 	unsigned elapsedTime() const { return mpd_status_get_elapsed_time(m_status.get()); }
 	unsigned totalTime() const { return mpd_status_get_total_time(m_status.get()); }
 	unsigned kbps() const { return mpd_status_get_kbit_rate(m_status.get()); }
+	const mpd_audio_format *format() const { return mpd_status_get_audio_format(m_status.get()); }
 	unsigned updateID() const { return mpd_status_get_update_id(m_status.get()); }
 	const char *error() const { return mpd_status_get_error(m_status.get()); }
 	

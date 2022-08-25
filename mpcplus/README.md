@@ -40,6 +40,11 @@ Project page - https://github.com/doctorfree/MusicPlayerPlus
 * fftw library (optional, required for frequency spectrum music visualization mode) [http://www.fftw.org/]
 * tag library (optional, required for tag editing) [https://taglib.org/]
 
+For example, on Ubuntu/Debian (boost, ncurses, readline, curl, mpd):
+```
+sudo apt install libboost-all-dev libncurses5-dev libncursesw5-dev libreadline-dev libcurl4-gnutls-dev libmpdclient-dev
+```
+
 ### Known issues
 * No full support for handling encodings other than UTF-8.
 

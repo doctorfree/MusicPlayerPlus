@@ -132,6 +132,31 @@ usage() {
   exit 1
 }
 
+is_running() {
+  svc=$1
+  [ "${svc}" ] || return 1
+  if [ "${svc}" == "mpd" ]
+  then
+    pgrep "mpd" &> /dev/null
+    if [ $? -eq 0 ]
+    then
+      return 0
+    else
+      pgrep "mopidy" &> /dev/null
+      if [ $? -eq 0 ]
+      then
+        return 0
+      else
+        systemctl --user is-active mpd.socket > /dev/null 2>&1
+        return $?
+      fi
+    fi
+  else
+    pgrep "${svc}" &> /dev/null
+    return $?
+  fi
+}
+
 prompt_for_url() {
   local url
   if [ "$1" == "youtube" ]
@@ -179,10 +204,8 @@ kill_tmux_sessions() {
 center_window() {
   kit_win="$1"
   position="$2"
-  winid=`echo ${kit_win} | awk ' { print $1 } '`
-  grav=`echo ${kit_win} | awk ' { print $2 } '`
-  width=`echo ${kit_win} | awk ' { print $5 } '`
-  height=`echo ${kit_win} | awk ' { print $6 } '`
+  read -r winid grav width height \
+    < <(echo ${kit_win} | awk ' { print $1, $2, $5, $6} ')
   [ "${winid}" ] && {
     xoff=$((s_wid - width))
     xoff=$((xoff / 2))
@@ -190,12 +213,19 @@ center_window() {
     then
       vhit=${height}
       yoff=$((s_hit - height))
+      echo "vhit = $vhit" >> /tmp/kit$$
+      echo "yoff = $yoff" >> /tmp/kit$$
     else
       toff=$((s_hit - position))
+      [ "${KITTY}" ] && toff=$((toff - 150))
       yoff=$((toff - height))
+      echo "toff = $toff" >> /tmp/kit$$
+      echo "yoff = $yoff" >> /tmp/kit$$
       [ ${toff} -lt 0 ] && {
         height=${toff}
         yoff=0
+        echo "height = $height" >> /tmp/kit$$
+        echo "yoff = $yoff" >> /tmp/kit$$
       }
     fi
     mvarg="${grav},${xoff},${yoff},${width},${height}"
@@ -709,6 +739,31 @@ make_it_so() {
     return
   }
 
+  # Check if MPD is active before starting mppcava and mpcplus
+  is_running mpd || {
+    if systemctl --user is-active navidrome.service >/dev/null 2>&1
+    then
+      DO_NOT_EXIT=1
+      clear
+      show_main_menu
+    else
+      printf "\n\nRequired MPD"
+      [ "${have_mopidy}" ] && printf " or Mopidy"
+      printf " service is not active."
+      printf "\nStart the MPD service with the command:"
+      printf "\n\tmpplus -M start"
+      [ "${have_mopidy}" ] && {
+        printf "\nAlternatively, start the Mopidy service with the command:"
+        printf "\n\tsystemctl --user start mopidy.service"
+      }
+      printf "\nRe-run 'mpplus' to start the MPD client and visualizer.\n\n"
+      read -p "Press Enter to continue to MusicPlayerPlus menus " yn
+      DO_NOT_EXIT=1
+      clear
+      show_main_menu
+    fi
+  }
+
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
@@ -777,12 +832,8 @@ make_it_so() {
           fi
         }
         [ "${viz_win}" ] && {
-          winid=`echo ${viz_win} | awk ' { print $1 } '`
-          grav=`echo ${viz_win} | awk ' { print $2 } '`
-          xoff=`echo ${viz_win} | awk ' { print $3 } '`
-          yoff=`echo ${viz_win} | awk ' { print $4 } '`
-          width=`echo ${viz_win} | awk ' { print $5 } '`
-          height=`echo ${viz_win} | awk ' { print $6 } '`
+          read -r winid grav xoff yoff width height \
+            < <(echo ${viz_win} | awk ' { print $1, $2, $3, $4, $5, $6} ')
           [ "${winid}" ] && {
             if [ "${HALFHEIGHT}" ]
             then
@@ -2021,7 +2072,7 @@ show_main_menu() {
     options+=("AcousticBrainz Info Retrieval")
     options+=("Manage Music Downloads")
     options+=("Manage Music Services")
-    [ "${have_fzf}" ] && options+=("List/Search/Select Media")
+    [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Fullscreen (${fullstat})" "Quit")
@@ -2272,10 +2323,10 @@ else
   have_xrandr=`type -p xrandr`
   if [ "${have_xrandr}" ]
   then
-    s_wid=`xrandr | grep current | \
-      awk -F ',' ' { print $2 } ' | awk ' { print $2 } '`
-    s_hit=`xrandr | grep current | \
-      awk -F ',' ' { print $2 } ' | awk ' { print $4 } '`
+    read -r s_wid s_hit \
+      < <(xrandr | grep current | \
+                   awk -F ',' '{ print $2 }' | \
+                   awk '{ print $2, $4 }')
   else
     s_wid=1920
     s_hit=1080
@@ -2613,6 +2664,7 @@ impflags="${tagflag} ${writeflag}"
 if [ "${INTERACTIVE}" ]
 then
   DO_NOT_EXIT=1
+  clear
   show_main_menu
 else
   if [ "${FZMPOPT}" ]

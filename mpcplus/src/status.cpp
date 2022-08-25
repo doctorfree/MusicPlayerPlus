@@ -73,6 +73,9 @@ int m_current_song_id;
 int m_current_song_pos;
 unsigned m_elapsed_time;
 unsigned m_kbps;
+int m_samplerate;
+int m_bits;
+int m_channels;
 MPD::PlayerState m_player_state;
 unsigned m_playlist_version;
 unsigned m_playlist_length;
@@ -259,9 +262,15 @@ void Status::trace(bool update_timer, bool update_window_timeout)
 void Status::update(int event)
 {
 	auto st = Mpd.getStatus();
+	const mpd_audio_format *m_format = st.format();
 	m_current_song_pos = st.currentSongPosition();
 	m_elapsed_time = st.elapsedTime();
 	m_kbps = st.kbps();
+	if (m_format != nullptr) {
+		m_samplerate= m_format->sample_rate;
+		m_bits = m_format->bits;
+		m_channels = m_format->channels;
+	}
 	m_player_state = st.playerState();
 	m_playlist_length = st.playlistLength();
 	m_total_time = st.totalTime();
@@ -355,6 +364,9 @@ void Status::clear()
 	m_current_song_id = -1;
 	m_current_song_pos = -1;
 	m_kbps = 0;
+	m_samplerate= 0;
+	m_bits = 0;
+	m_channels = 0;
 	m_player_state = MPD::psUnknown;
 	m_playlist_length = 0;
 	m_playlist_version = 0;
@@ -625,8 +637,14 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 	if (update_elapsed)
 	{
 		auto st = Mpd.getStatus();
+		const mpd_audio_format *m_format = st.format();
 		m_elapsed_time = st.elapsedTime();
 		m_kbps = st.kbps();
+		if (m_format != nullptr) {
+			m_samplerate= m_format->sample_rate;
+			m_bits = m_format->bits;
+			m_channels = m_format->channels;
+		}
 	}
 
 	std::string ps = playerStateToString(m_player_state);
@@ -693,10 +711,22 @@ void Status::Changes::elapsedTime(bool update_elapsed)
 			// bitrate here doesn't look good, but it can be moved somewhere else later
 			if (Config.display_bitrate && m_kbps)
 			{
-				tracklength += " (";
-				tracklength += boost::lexical_cast<std::string>(m_kbps);
-				tracklength += " kbps)";
+				ps += "\t";
+				ps += boost::lexical_cast<std::string>(m_kbps);
+				ps += " kb/s";
 			}
+
+			if (m_samplerate && m_bits && m_channels)
+			{
+				tracklength += "\t";
+				tracklength += boost::lexical_cast<std::string>(m_samplerate);
+				tracklength += " Hz · ";
+				tracklength += boost::lexical_cast<std::string>(m_bits);
+				tracklength += " bit · ";
+				tracklength += boost::lexical_cast<std::string>(m_channels);
+				tracklength += " ch";
+			}
+			
 
 			NC::WBuffer first, second;
 			Format::print(Config.new_header_first_line, first, &np);

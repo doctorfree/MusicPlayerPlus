@@ -27,6 +27,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Supported platforms](#supported-platforms)
     1. [Debian package installation](#debian-package-installation)
     1. [RPM Package installation](#rpm-package-installation)
+    1. [Arch Package installation](#arch-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [Client Configuration (required)](#client-configuration-required)
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
@@ -43,6 +44,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Initialize Music Database](#initialize-music-database)
     1. [Installing Mopidy](#installing-mopidy)
     1. [Installing Navidrome](#installing-navidrome)
+        1. [Navidrome clients](#navidrome-clients)
     1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
 1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
     1. [Services](#services)
@@ -460,6 +462,25 @@ sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
 or
 ```console
 sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
+```
+
+### Arch Package installation
+
+Arch Linux, Manjaro, and other Arch Linux derivatives use the Pacman packaging
+format. In addition to Arch Linux, Arch based Linux distributions include
+ArchBang, Arch Linux, Artix Linux, ArchLabs, Asahi Linux, BlackArch,
+Chakra Linux, EndeavourOS, Frugalware Linux, Garuda Linux,
+Hyperbola GNU/Linux-libre, LinHES, Manjaro, Parabola GNU/Linux-libre,
+SteamOS, and SystemRescue.
+
+To install on an Arch based Linux system, download the latest Pacman format
+package from the
+[MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases).
+
+Install the MusicPlayerPlus package by executing the command
+
+```console
+sudo pacman -U ./MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst
 ```
 
 ## Post Installation Configuration
@@ -1014,19 +1035,27 @@ MusicPlayerPlus tested and recommended free open source Navidrome clients:
 - **Linux/MacOS/Windows**
     - [Sonixd](https://github.com/jeffvli/sonixd)
 
+Character based terminal/console Navidrome clients:
+
+- **Linux/Windows**
+    - [Jellycli](https://github.com/tryffel/jellycli)
+- **Linux**
+    - [Stmp](https://github.com/wildeyedskies/stmp)
+
 Navidrome clients are not installed by MusicPlayerPlus. Install Navidrome
-clients using your device's app store or following the instructions for
-Sonixd installation on a desktop. If you do not have or wish to use a
-Navidrome client, then most modern browsers are supported Navidrome clients.
+clients using your device's app store or following the installation
+instructions at the client link above.
+
+If you do not have or wish to use a Navidrome client, then most modern
+browsers are supported Navidrome clients. To use a browser as a Navidrome
+web client, open the URL `http://ip-address:4533` where *ip-address* is
+the IP address of the Navidrome server.
 
 For a list of Airsonic compatible applications, see
 https://airsonic.github.io/docs/apps/
 
 For a list of Subsonic compatible clients, see
 https://www.navidrome.org/docs/overview/#apps
-
-Any device with a browser can act as a web client by opening the Navidrome
-server URL `http://ip-address:4533`.
 
 [Sonixd](https://github.com/jeffvli/sonixd) is a cross-platform desktop
 Subsonic client compatible with Navidrome. On Apple MacOS, install sonixd
@@ -1552,8 +1581,8 @@ Orchestra, issue the command `beet fetchart -f electric eldorado`.
 ### Custom key bindings
 
 A few custom key bindings are configured during MusicPlayerPlus initialization
-with the `mppinit` command. These are purely for convenience and can be altered or
-removed if desired.
+with the `mppinit` command. These are purely for convenience and can be altered
+or removed if desired.
 
 Tmux custom key bindings are defined in `$HOME/.tmux.conf`.
 MusicPlayerPlus custom key bindings for tmux sessions include the following:
@@ -1580,9 +1609,10 @@ be used to select and resize tmux panes and windows.
 There are hundreds of tmux key bindings. To view the currently configured
 tmux key bindings, execute the command `tmux list-keys`.
 
-Custom key bindings are also defined for the `mpcplus` music player client command.
-Mpcplus custom key bindings are defined in `$HOME/.config/mpcplus/bindings`.
-MusicPlayerPlus custom key bindings for `mpcplus` include the following:
+Custom key bindings are also defined for the `mpcplus` music player client
+command. Mpcplus custom key bindings are defined in
+`$HOME/.config/mpcplus/bindings`. MusicPlayerPlus custom key bindings for
+`mpcplus` include the following:
 
 -   `[ Alt-c ]` - Display album cover art for currently playing song
 -   `[ Alt-f ]` - Open the fuzzy finder to search/select media
@@ -1660,6 +1690,14 @@ package by executing the command:
 or
 ```console
     sudo rpm -e MusicPlayerPlus
+```
+
+On Arch based Linux systems where the MusicPlayerPlus package was installed
+using the MusicPlayerPlus Pacman format package, remove the MusicPlayerPlus
+package by executing the command:
+
+```console
+    sudo pacman -Rs musicplayerplus
 ```
 
 The MusicPlayerPlus package can be removed by executing the "Uninstall"
