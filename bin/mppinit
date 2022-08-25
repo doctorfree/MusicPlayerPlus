@@ -361,18 +361,22 @@ init_mopidy() {
     systemctl --user stop mpd.socket
   }
 
+  # Perform a local scan of the music library
+  have_mopidy=`type -p mopidy`
+  [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+
   # Enable Mopidy services
-  systemctl --user is-active mopidy.service >/dev/null 2>&1 || {
-    systemctl --user start mopidy.service
-  }
-  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 || {
-    systemctl --user enable mopidy.service
-  }
   systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
     systemctl --user start webplugin.service
   }
   systemctl --user is-enabled webplugin.service >/dev/null 2>&1 || {
     systemctl --user enable webplugin.service
+  }
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 || {
+    systemctl --user start mopidy.service
+  }
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 || {
+    systemctl --user enable mopidy.service
   }
 }
 

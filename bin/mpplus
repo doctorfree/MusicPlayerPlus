@@ -739,7 +739,7 @@ make_it_so() {
     return
   }
 
-  # Check if MPD is active before starting mppcava and mpcplus
+  # Check if MPD or Mopidy is active before starting mppcava and mpcplus
   is_running mpd || {
     if systemctl --user is-active navidrome.service >/dev/null 2>&1
     then
@@ -1018,63 +1018,100 @@ select_font() {
   }
 }
 
-mpp_service() {
-  MPP_SERVICE_ACTION=$1
-  SERVICE=${2}.service
-  case ${MPP_SERVICE_ACTION} in
+do_service_action() {
+  local service="$1"
+  local action="$2"
+  case ${action} in
     alsaconf)
-      echo "Executing: sudo alsa_conf -e -m"
       sudo alsa_conf -e -m
       ;;
     start)
-      systemctl --user is-active ${SERVICE} >/dev/null 2>&1 || {
-        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
-        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user is-active ${service} >/dev/null 2>&1 || {
+        systemctl --user ${action} ${service}
+      }
+      [ "${service}" == "mopidy.service" ] && {
+        # Perform a local scan of the music library
+        have_mopidy=`type -p mopidy`
+        [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+      }
+      [ "${service}" == "mpd.service" ] && {
+        # Update the MPD library database
+        have_mpc=`type -p mpc`
+        [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
       }
       ;;
     stop)
-      systemctl --user is-active ${SERVICE} >/dev/null 2>&1 && {
-        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
-        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user is-active ${service} >/dev/null 2>&1 && {
+        systemctl --user ${action} ${service}
       }
-      [ "${SERVICE}" == "mpd.service" ] && {
+      [ "${service}" == "mpd.service" ] && {
         systemctl --user is-active mpd.socket >/dev/null 2>&1 && {
-          echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
-          systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
+          systemctl --user ${action} mpd.socket
         }
       }
       ;;
     disable)
-      systemctl --user is-enabled ${SERVICE} >/dev/null 2>&1 && {
-        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
-        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user is-enabled ${service} >/dev/null 2>&1 && {
+        systemctl --user ${action} ${service}
       }
-      [ "${SERVICE}" == "mpd.service" ] && {
+      [ "${service}" == "mpd.service" ] && {
         systemctl --user is-enabled mpd.socket >/dev/null 2>&1 && {
-          echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} mpd.socket"
-          systemctl --user ${MPP_SERVICE_ACTION} mpd.socket
+          systemctl --user ${action} mpd.socket
         }
         sudo systemctl --user --global disable mpd.socket
       }
       ;;
     enable)
-      systemctl --user is-enabled ${SERVICE} >/dev/null 2>&1 || {
-        echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
-        systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user is-enabled ${service} >/dev/null 2>&1 || {
+        systemctl --user ${action} ${service}
+      }
+      [ "${service}" == "mopidy.service" ] && {
+        # Perform a local scan of the music library
+        have_mopidy=`type -p mopidy`
+        [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+      }
+      [ "${service}" == "mpd.service" ] && {
+        # Update the MPD library database
+        have_mpc=`type -p mpc`
+        [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
       }
       ;;
     restart)
-      echo "Executing: systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}"
-      systemctl --user ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user ${action} ${service}
+      [ "${service}" == "mopidy.service" ] && {
+        # Perform a local scan of the music library
+        have_mopidy=`type -p mopidy`
+        [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+      }
+      [ "${service}" == "mpd.service" ] && {
+        # Update the MPD library database
+        have_mpc=`type -p mpc`
+        [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
+      }
       ;;
     status)
-      echo "Executing: systemctl --user --full ${MPP_SERVICE_ACTION} ${SERVICE}"
-      systemctl --user --full ${MPP_SERVICE_ACTION} ${SERVICE}
+      systemctl --user --full ${action} ${service}
       ;;
     *)
-      echo "Unrecognized service action: ${MPP_SERVICE_ACTION}"
+      echo "Unrecognized service action: ${action}"
       ;;
   esac
+}
+
+mpp_service() {
+  ALL_SERVICES="navidrome mopidy mpdstats webplugin yams mpd"
+  SERVICE_ACTION=$1
+  if [ "$2" == "ALL" ]
+  then
+    for srvc in ${ALL_SERVICES}
+    do
+      SERVICE="${srvc}.service"
+      do_service_action "${SERVICE}" "${SERVICE_ACTION}"
+    done
+  else
+    SERVICE=${2}.service
+    do_service_action "${SERVICE}" "${SERVICE_ACTION}"
+  fi
 }
 
 show_menu_title() {
@@ -1528,6 +1565,7 @@ show_services_menu() {
     [ "${have_mopidy}" ] && options+=("Status of Mopidy Server")
     [ "${have_navi}" ] && options+=("Status of Navidrome Server")
     options+=("Status of Last.FM Scrobbler")
+    options+=("Stop All Active Services")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -1800,6 +1838,10 @@ show_services_menu() {
               ;;
           "Status of Last.FM Scrobbler",*|*,"Status of Last.FM Scrobbler")
               mpp_service status yams
+              break
+              ;;
+          "Stop All"*,*|*,"Stop All"*)
+              mpp_service stop ALL
               break
               ;;
           "Quit",*|*,"Quit"|"quit",*|*,"quit")
