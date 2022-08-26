@@ -789,13 +789,20 @@ make_it_so() {
                 --profile=Visualizer \
                 --command="${VISUALIZER}" 2> /dev/null &
         else
-          gnome-terminal --title="${VTITLE}" \
-                --profile=Visualizer \
-                --hide-menubar \
-                --full-screen \
-                -- ${VISUALIZER} &
+          if [ "${GNOME}" ]
+          then
+            gnome-terminal --title="${VTITLE}" \
+                  --profile=Visualizer \
+                  --hide-menubar \
+                  --full-screen \
+                  -- ${VISUALIZER} &
+          else
+            # No supported terminal emulator available, use tmux
+            TMUX_MPC=1
+          fi
         fi
       fi
+      viz_win=
       [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
         sleep 1
         if [ "${KITTY}" ]
@@ -808,8 +815,10 @@ make_it_so() {
             viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
               grep "${VTITLE}"`
           else
-            viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-              grep "${VTITLE}"`
+            [ "${GNOME}" ] && {
+              viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                grep "${VTITLE}"`
+            }
           fi
         fi
         [ "${viz_win}" ] || {
@@ -825,9 +834,11 @@ make_it_so() {
                 grep "${VISUALIZER}"`
               [ "${viz_win}" ] || echo "Could not find visualizer window"
             else
-              viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep "${VISUALIZER}"`
-              [ "${viz_win}" ] || echo "Could not find visualizer window"
+              [ "${GNOME}" ] && {
+                viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                  grep "${VISUALIZER}"`
+                [ "${viz_win}" ] || echo "Could not find visualizer window"
+              }
             fi
           fi
         }
@@ -877,16 +888,36 @@ make_it_so() {
                 --geometry=390x16+150-0 \
                 --profile=Visualizer \
                 --command="${VISUALIZER}" 2> /dev/null &
+          sleep 1
+          til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+          [ "${til_win}" ] || {
+            til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+          }
+          [ "${til_win}" ] && center_window "${til_win}" bottom
         else
-          gnome-terminal --title="${VTITLE}" \
-                --profile=Visualizer \
-                --hide-menubar \
-                --geometry 390x16+150-0 \
-                -- ${VISUALIZER} &
+          if [ "${GNOME}" ]
+          then
+            gnome-terminal --title="${VTITLE}" \
+                  --profile=Visualizer \
+                  --hide-menubar \
+                  --geometry 390x16+150-0 \
+                  -- ${VISUALIZER} &
+            sleep 1
+            gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+              grep "${VTITLE}"`
+            [ "${gno_win}" ] || {
+              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                grep "${VISUALIZER}"`
+            }
+            [ "${gno_win}" ] && center_window "${gno_win}" bottom
+          else
+            # No supported terminal emulator available, use tmux
+            TMUX_MPC=1
+          fi
         fi
       fi
     fi
-    sleep 1
+#   sleep 1
   }
   # End visualizer startup section
 
@@ -939,11 +970,21 @@ make_it_so() {
                   --profile=MusicPlayer \
                   --command="${MPCOMM}" 2> /dev/null &
           else
-            gnome-terminal --title="${MTITLE}" \
-                  --profile=MusicPlayer \
-                  --hide-menubar \
-                  --full-screen \
-                  -- ${MPCOMM} &
+            if [ "${GNOME}" ]
+            then
+              gnome-terminal --title="${MTITLE}" \
+                    --profile=MusicPlayer \
+                    --hide-menubar \
+                    --full-screen \
+                    -- ${MPCOMM} &
+            else
+              [ "${have_kitty}" ] || mppinit -q -y kitty
+              kitty --title="${MTITLE}" \
+                    --start-as fullscreen \
+                    --override font_size=24 \
+                    --override background_opacity=0.7 \
+                    ${MPCOMM} 2> /dev/null &
+            fi
           fi
         fi
       else
@@ -972,12 +1013,48 @@ make_it_so() {
                   --geometry=90x20+150+25 \
                   --profile=MusicPlayer \
                   --command="${MPCOMM}" 2> /dev/null &
+            sleep 1
+            til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+              grep -v "${VTITLE}" | grep "${MTITLE}"`
+            [ "${til_win}" ] || {
+              til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+                grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+            }
+            [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
           else
-            gnome-terminal --title="${MTITLE}" \
-                  --profile=MusicPlayer \
-                  --hide-menubar \
-                  --geometry=90x20+150+25 \
-                  -- ${MPCOMM} &
+            if [ "${GNOME}" ]
+            then
+              gnome-terminal --title="${MTITLE}" \
+                    --profile=MusicPlayer \
+                    --hide-menubar \
+                    --geometry=90x20+150+25 \
+                    -- ${MPCOMM} &
+              sleep 1
+              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                grep -v "${VTITLE}" | grep "${MTITLE}"`
+              [ "${gno_win}" ] || {
+                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+              }
+              [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
+            else
+              [ "${have_kitty}" ] || mppinit -q -y kitty
+              kitty --title="${MTITLE}" \
+                    --start-as normal \
+                    --override font_size=24 \
+                    --override initial_window_width=120c \
+                    --override initial_window_height=28c \
+                    --instance-group musicplayerplus \
+                    ${MPCOMM} 2> /dev/null &
+              sleep 1
+              mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                grep -v "${VTITLE}" | grep "${MTITLE}"`
+              [ "${mpc_win}" ] || {
+                mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+              }
+              [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
+            fi
           fi
         fi
       fi
@@ -2315,6 +2392,14 @@ init_vars() {
   TMUX_SPLASH=
   USAGE=
 }
+
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+pathadd "${HOME}/.local/bin"
 
 init_vars
 if [ "${DISPLAY}" ]
