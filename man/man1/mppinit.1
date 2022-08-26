@@ -22,7 +22,7 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
 \f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u]
-[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+[bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -46,6 +46,10 @@ folder configured in \f[V]$HOME/.config/mpd/mpd.conf\f[R] in a
 .PP
 Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
 imports the music library to the Beets media management system.
+.PP
+Invoked with the \f[V]kitty\f[R] argument, \f[I]mppinit kitty\f[R]
+installs the Kitty terminal emulator used as the default terminal in
+MusicPlayerPlus.
 .PP
 Invoked with the \f[V]metadata\f[R] argument, \f[I]mppinit metadata\f[R]
 analyzess the MPD music library and creates a song similarity database
@@ -130,7 +134,7 @@ Installs, configures, and activates Navidrome music server/streamer
 synchronizes the music library location across configs
 .PP
 \f[I]mppinit\f[R] must be performed before a \f[I]sync\f[R],
-\f[I]metadata\f[R], \f[I]mopidy\f[R], \f[I]mpd\f[R],
+\f[I]kitty\f[R], \f[I]metadata\f[R], \f[I]mopidy\f[R], \f[I]mpd\f[R],
 \f[I]navidrome\f[R], \f[I]bandcamp\f[R], \f[I]soundcloud\f[R], or
 \f[I]import\f[R]
 .SS AUTHORS

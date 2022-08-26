@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+**mppinit** [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -30,6 +30,9 @@ provided at the prompt. The Soundcloud favorites are downloaded to the
 
 Invoked with the `import` argument, *mppinit import* imports the music
 library to the Beets media management system.
+
+Invoked with the `kitty` argument, *mppinit kitty* installs the Kitty
+terminal emulator used as the default terminal in MusicPlayerPlus.
 
 Invoked with the `metadata` argument, *mppinit metadata* analyzess the
 MPD music library and creates a song similarity database for playlist
@@ -103,7 +106,7 @@ library location across all configuration files.
 **sync**
 : synchronizes the music library location across configs
 
-*mppinit* must be performed before a *sync*, *metadata*, *mopidy*, *mpd*, *navidrome*, *bandcamp*, *soundcloud*, or *import*
+*mppinit* must be performed before a *sync*, *kitty*, *metadata*, *mopidy*, *mpd*, *navidrome*, *bandcamp*, *soundcloud*, or *import*
 
 ## AUTHORS
 Written by Ronald Record github@ronrecord.com

@@ -1313,7 +1313,7 @@ provide a brief summary of the command line options.
 The `mppinit` performs one-time initializations:
 
 ```
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
@@ -1330,6 +1330,7 @@ Where:
 
 	'bandcamp' downloads all albums in your Bandcamp collections
 	'import' performs a Beets music library import
+	'kitty' installs the Kitty terminal emulator
 	'metadata' performs a library metadata update
 	'mopidy' installs and configures Mopidy extensible music server
 		Note: activating Mopidy deactivates MPD
@@ -1341,7 +1342,11 @@ Where:
 	'sync' synchronizes the music library location across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
-'mppinit' must be run prior to sync, metadata, bandcamp, mopidy, navidrome, soundcloud, or import
+
+'mppinit' must be run as the MusicPlayerPlus user, not root.
+'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',
+	'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',
+	'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'
 ```
 
 The `mpplus` command serves as a general user interface for all of the

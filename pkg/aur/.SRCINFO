@@ -24,7 +24,6 @@ pkgbase = musicplayerplus
 	depends = ffmpeg4.4
 	depends = inotify-tools
 	depends = figlet
-	depends = kitty
 	depends = tmux
 	depends = fzf
 	depends = mpc

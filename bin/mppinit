@@ -35,13 +35,16 @@ EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
+MPP_USER=$(id -un)
+
 IP="<ip address>"
 mpd_music="~/Music"
 exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] "
-  printf "[bandcamp|import|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]"
+  printf "[bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|"
+  printf "soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -57,6 +60,7 @@ usage() {
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
   printf "\n\t'import' performs a Beets music library import"
+  printf "\n\t'kitty' installs the Kitty terminal emulator"
   printf "\n\t'metadata' performs a library metadata update"
   printf "\n\t'mopidy' installs and configures Mopidy extensible music server"
   printf "\n\t\tNote: activating Mopidy deactivates MPD"
@@ -67,8 +71,10 @@ usage() {
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes the music library location across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
-  printf "\n\n'mppinit' must be run prior to sync, metadata, bandcamp,"
-  printf "\nmopidy, navidrome, soundcloud, or import\n\n"
+  printf "\n\n'mppinit' must be run as the MusicPlayerPlus user, not root."
+  printf "\n'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',"
+  printf "\n\t'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',"
+  printf "\n\t'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'\n\n"
   exit 1
 }
 
@@ -571,6 +577,67 @@ visit_wiki() {
   printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 }
 
+acbrainz=
+essentia=1
+overwrite=
+proceed=
+remove=
+upgrade=1
+quiet=
+beetsdev=
+have_bliss=`type -p blissify`
+while getopts "abdeoqrUyu" flag; do
+    case $flag in
+        a)
+            acbrainz=1
+            essentia=
+            ;;
+        b)
+            if [ "${have_bliss}" ]
+            then
+              essentia=
+              acbrainz=
+            else
+              echo "Blissify unavailable. Using Essentia."
+              essentia=1
+              acbrainz=
+            fi
+            ;;
+        d)
+            beetsdev=1
+            ;;
+        e)
+            essentia=1
+            acbrainz=
+            ;;
+        o)
+            overwrite=1
+            ;;
+        q)
+            quiet=1
+            ;;
+        r)
+            remove=1
+            ;;
+        U)
+            upgrade=
+            ;;
+        y)
+            proceed=1
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "${essentia}" ] && [ "${acbrainz}" ] && {
+  printf "\nOnly one of '-a' and '-e' can be specified."
+  printf "\nExiting."
+  usage
+}
+
 PYTHON=""
 POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
 PY3_SUPPORT=false
@@ -595,7 +662,7 @@ fi
 # User needs to be in group adm for some systemctl actions
 # This is performed in this way to avoid password prompts and subshells
 id -nG | grep -qw adm || {
-  sudo usermod -aG adm `id -un`
+  sudo usermod -aG adm ${MPP_USER}
   exec sg adm newgrp `id -gn`
 }
 
@@ -657,67 +724,6 @@ else
     initialized=
   fi
 fi
-
-acbrainz=
-essentia=1
-overwrite=
-proceed=
-remove=
-upgrade=1
-quiet=
-beetsdev=
-have_bliss=`type -p blissify`
-while getopts "abdeoqrUyu" flag; do
-    case $flag in
-        a)
-            acbrainz=1
-            essentia=
-            ;;
-        b)
-            if [ "${have_bliss}" ]
-            then
-              essentia=
-              acbrainz=
-            else
-              echo "Blissify unavailable. Using Essentia."
-              essentia=1
-              acbrainz=
-            fi
-            ;;
-        d)
-            beetsdev=1
-            ;;
-        e)
-            essentia=1
-            acbrainz=
-            ;;
-        o)
-            overwrite=1
-            ;;
-        q)
-            quiet=1
-            ;;
-        r)
-            remove=1
-            ;;
-        U)
-            upgrade=
-            ;;
-        y)
-            proceed=1
-            ;;
-        u)
-            usage
-            ;;
-    esac
-done
-shift $(( OPTIND - 1 ))
-
-[ "${essentia}" ] && [ "${acbrainz}" ] && {
-  printf "\nOnly one of '-a' and '-e' can be specified."
-  printf "\nExiting."
-  usage
-}
 
 [ "$1" == "sync" ] && {
   if [ "${initialized}" ]
@@ -1093,7 +1099,7 @@ init_navidrome() {
 }
 
 remove_navidrome() {
-  mppuser=`id -un`
+  mppuser="${MPP_USER}"
   varuser=$(stat -c '%U' /var/lib/navidrome)
   optuser=$(stat -c '%U' /opt/navidrome)
 
@@ -1134,6 +1140,104 @@ remove_navidrome() {
     SUDO=sudo
   fi
   ${SUDO} rm -f "${BINDIR}/navidrome"
+}
+
+install_kitty() {
+  have_kitty=`type -p kitty`
+  [ "${have_kitty}" ] || {
+    [ "${quiet}" ] || {
+      printf "\n\tInstalling Kitty terminal emulator ..."
+    }
+    curl --silent --location \
+      https://sw.kovidgoyal.net/kitty/installer.sh > /tmp/kitty-$$.sh
+    if [ -f /tmp/kitty-$$.sh ]
+    then
+      sh /tmp/kitty-$$.sh launch=n
+      rm -f /tmp/kitty-$$.sh
+      # Create a symbolic link to add kitty to PATH
+      # (assuming ~/.local/bin is in your system-wide PATH)
+      [ -x ~/.local/bin/kitty ] || {
+        ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
+      }
+      # Place the kitty.desktop file somewhere it can be found by the OS
+      [ -f ~/.local/share/applications//kitty.desktop ] || {
+        cp ~/.local/kitty.app/share/applications/kitty.desktop \
+           ~/.local/share/applications/
+      }
+      # If you want to open text files and images in kitty via your file manager
+      # also add the kitty-open.desktop file
+      [ -f ~/.local/share/applications/kitty-open.desktop ] || {
+        cp ~/.local/kitty.app/share/applications/kitty-open.desktop \
+           ~/.local/share/applications/
+      }
+      # Update the paths to the kitty and its icon in the kitty.desktop file(s)
+      sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+      sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+      [ "${quiet}" ] || printf " done!\n"
+    else
+      printf "\n${BOLD}ERROR:${NORM} Download of Kitty installation script failed"
+      printf "\nSee https://sw.kovidgoyal.net/kitty/binary/#manually-installing"
+      printf "\nto manually install the Kitty terminal emulator\n"
+    fi
+  }
+}
+
+remove_kitty() {
+  rm -rf ~/.local/kitty.app
+  rm -f ~/.local/bin/kitty
+  rm -f ~/.local/share/applications/kitty.desktop
+  rm -f ~/.local/share/applications/kitty-open.desktop
+}
+
+[ "$1" == "kitty" ] && {
+  [ "${remove}" ] && {
+    printf "\nRemoving Kitty terminal emulator.\n\n"
+    while true
+    do
+      read -p "Do you wish to continue with Kitty removal ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nKitty removal aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    remove_kitty
+    printf "\n${BOLD}Kitty removed${NORM}"
+    printf "\nTo re-install Kitty run ${BOLD}'mppinit kitty'${NORM}\n\n"
+    exit 0
+  }
+  if [ "${initialized}" ]
+  then
+    printf "\nInstalling Kitty terminal emulator\n"
+    while true
+    do
+      read -p "Do you wish to continue with Kitty installation ? (y/n) " yn
+      case $yn in
+          [Yy]* )
+                break
+                ;;
+          [Nn]* )
+                printf "\nKitty installation aborted."
+                printf "\nExiting.\n\n"
+                exit 0
+                ;;
+              * ) echo "Please answer yes or no."
+                ;;
+      esac
+    done
+    install_kitty
+  else
+    init_warn kitty
+  fi
+  printf "\n\n${BOLD}Kitty terminal emulator installed${NORM}\n"
+  exit 0
 }
 
 [ "$1" == "navidrome" ] && {
@@ -1367,6 +1471,9 @@ remove_navidrome() {
 }
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
+
+install_kitty
+
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $CONF ..."
 }
