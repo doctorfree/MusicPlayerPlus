@@ -456,7 +456,7 @@ follow_now_playing_lyrics = yes
 ## media_library, playlist_editor, tag_editor, outputs, visualizer, clock,
 ## lyrics, last_fm.
 ##
-screen_switcher_mode = media_library, playlist, browser, lyrics
+screen_switcher_mode = media_library, playlist, browser
 #
 ##
 ## Note: You can define startup screen by choosing screen from the list above.

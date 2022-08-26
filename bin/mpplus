@@ -768,9 +768,7 @@ make_it_so() {
   #
   # Do not start visualizer here if we are going to start a tmux session,
   # if we are displaying an asciimatics animation, or using cool-retro-term.
-  # Also do not start visualizer if using Mopidy.
-  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || \
-  [ "${RETRO}" ] || is_running mopidy || {
+  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || [ "${RETRO}" ] || {
     if [ "${FULLSCREEN}" ]
     then
       if [ "${KITTY}" ]
@@ -799,7 +797,7 @@ make_it_so() {
         fi
       fi
       [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
-        sleep 0.5
+        sleep 1
         if [ "${KITTY}" ]
         then
           viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
@@ -865,7 +863,7 @@ make_it_so() {
               --single-instance \
               --instance-group musicplayerplus \
               ${VISUALIZER} 2> /dev/null &
-        sleep 0.5
+        sleep 1
         kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
         [ "${kit_win}" ] || {
           kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
@@ -1035,14 +1033,14 @@ do_service_action() {
         # Perform a local scan of the music library
         have_mopidy=`type -p mopidy`
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
-        # Reconfigure mpcplus with Mopidy visualizer data source
+        # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
         have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
-        # Reconfigure mpcplus with MPD visualizer data source
+        # Reconfigure mpcplus/mppcava with MPD visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
       }
       ;;
@@ -1075,14 +1073,14 @@ do_service_action() {
         # Perform a local scan of the music library
         have_mopidy=`type -p mopidy`
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
-        # Reconfigure mpcplus with Mopidy visualizer data source
+        # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
         have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
-        # Reconfigure mpcplus with MPD visualizer data source
+        # Reconfigure mpcplus/mppcava with MPD visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
       }
       ;;

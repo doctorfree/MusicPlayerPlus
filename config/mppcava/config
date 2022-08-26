@@ -60,7 +60,7 @@ higher_cutoff_freq = 20000
 # For fifo 'source' will be the path to fifo-file.
 # For shmem 'source' will be /squeezelite-AA:BB:CC:DD:EE:FF where 'AA:BB:CC:DD:EE:FF' will be squeezelite's MAC address
 ; method = pulse
-; source = auto
+; source = auto # pulse
 
 ; method = alsa
 ; source = hw:Loopback,1
@@ -74,7 +74,7 @@ sample_bits = 16
 ; source = /squeezelite-AA:BB:CC:DD:EE:FF
 
 ; method = portaudio
-; source = auto
+; source = auto # portaudio
 
 
 [output]
