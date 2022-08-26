@@ -365,6 +365,9 @@ init_mopidy() {
   have_mopidy=`type -p mopidy`
   [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
 
+  # Reconfigure mpcplus with Mopidy visualizer data source
+  [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mopidy
+
   # Enable Mopidy services
   systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
     systemctl --user start webplugin.service
@@ -388,6 +391,9 @@ remove_mopidy() {
   systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && {
     systemctl --user disable mopidy.service
   }
+
+  # Reconfigure mpcplus with MPD visualizer data source
+  [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mpd
 
   for extension in ${EXT_MOPIDY}
   do
@@ -1278,6 +1284,10 @@ remove_navidrome() {
     [ "${m_active}" ] && {
       systemctl --user stop mopidy.service
     }
+
+    # Reconfigure mpcplus with MPD visualizer data source
+    [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mpd
+
     systemctl --user is-active mpd.service >/dev/null 2>&1 || {
       systemctl --user start mpd.service
     }

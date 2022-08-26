@@ -72,7 +72,10 @@ mpd_music_dir = ~/Music
 ## visualizer.
 ##
 #
+# The default:
 #visualizer_data_source = ~/.config/mpd/mpd.fifo
+# For use with Mopidy:
+#visualizer_data_source = localhost:5555
 #
 ##
 ## Note: Below parameter is needed for mpcplus to determine which output
@@ -418,7 +421,7 @@ header_text_scrolling = yes
 #cyclic_scrolling = no
 #
 #lyrics_fetchers = azlyrics, genius, musixmatch, sing365, metrolyrics, justsomelyrics, jahlyrics, plyrics, tekstowo, zeneszoveg, internet
-lyrics_fetchers = musixmatch, sing365, justsomelyrics, jahlyrics, plyrics, tekstowo, zeneszoveg, internet
+lyrics_fetchers = azlyrics, genius, musixmatch, justsomelyrics, plyrics, tekstowo, zeneszoveg, internet
 #
 follow_now_playing_lyrics = yes
 #

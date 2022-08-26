@@ -767,8 +767,10 @@ make_it_so() {
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
-  # if we are displaying an asciimatics animation, or using cool-retro-term
-  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || [ "${RETRO}" ] || {
+  # if we are displaying an asciimatics animation, or using cool-retro-term.
+  # Also do not start visualizer if using Mopidy.
+  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || \
+  [ "${RETRO}" ] || is_running mopidy || {
     if [ "${FULLSCREEN}" ]
     then
       if [ "${KITTY}" ]
@@ -852,7 +854,7 @@ make_it_so() {
         }
       }
     else
-      vhit=
+      vhit=0
       if [ "${KITTY}" ]
       then
         kitty --title="${VTITLE}" \
@@ -1033,11 +1035,15 @@ do_service_action() {
         # Perform a local scan of the music library
         have_mopidy=`type -p mopidy`
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+        # Reconfigure mpcplus with Mopidy visualizer data source
+        [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
         have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
+        # Reconfigure mpcplus with MPD visualizer data source
+        [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
       }
       ;;
     stop)
@@ -1069,11 +1075,15 @@ do_service_action() {
         # Perform a local scan of the music library
         have_mopidy=`type -p mopidy`
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
+        # Reconfigure mpcplus with Mopidy visualizer data source
+        [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
         have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
+        # Reconfigure mpcplus with MPD visualizer data source
+        [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
       }
       ;;
     restart)
