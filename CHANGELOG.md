@@ -5,6 +5,13 @@ All notable changes to this project will be documented in this file.
 ## MusicPlayerPlus-2.0.1r2 (2022-08-20)
 
 * Add Arch Linux build and packaging support
+* Add management of Navidrome to mpplus
+* Add support for Navidrome integration
+* Add Mopidy administration to mpplus services menu
+* Add support for Mopidy
+* Change default terminal emulator from gnome-terminal to kitty
+* Add support for Kitty, custom Kitty config/themes/sessions
+* Add Beets web plugin service
 * Add mpplus menu to manage downloads
 * Add new command 'listyt' to list YouTube video titles and urls
 * Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
@@ -14,6 +21,8 @@ All notable changes to this project will be documented in this file.
 * Install Cargo if it is not previously installed
 * Additional python module dependencies installed during mppinit
 * Messages in mppinit tailored to which acoustic analysis is performed
+* Remove dependencies on gnome-terminal and tilix
+* Add dependency on wmctrl and xrandr, remove dependency on dconf
 
 ## MusicPlayerPlus-2.0.1r1 (2022-08-08)
 

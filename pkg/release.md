@@ -4,6 +4,11 @@ This major release of MusicPlayerPlus adds:
 
 * Arch Linux build and packaging support
 * Integration of the Beets media library management system
+* Add support for Navidrome integration
+* Add support for Mopidy
+* Add support for Kitty as default terminal emualator
+    * Custom Kitty configuration, themes, and sessions
+* Add Beets web plugin service
 * Automated Beets xtractor plugin installation and configuration
     * Beets xtractor plugin performs acoustic analysis and metadata updates
     * Gaia and Essentia for audio analysis and audio-based information retrieval
@@ -20,7 +25,19 @@ This major release of MusicPlayerPlus adds:
 * Bandcamp and Soundcloud downloads to mppinit
 * Import and metadata retrieval to `mppinit`
 * Add blissify MPD library analysis and smart playlist generator
+* Add mpplus menu to manage downloads
+* Add new command 'listyt' to list YouTube video titles and urls
+* Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
+* Add mppdl command and yt-dlp module for downloading audio from various sites
+* Add mppcover command to display album cover art of currently playing song
+* Only install Bliss utils if they compile successfully
+* Install Cargo if it is not previously installed
+* Additional python module dependencies installed during mppinit
+* Messages in mppinit tailored to which acoustic analysis is performed
+* Remove dependencies on gnome-terminal and tilix
+* Add dependency on wmctrl and xrandr, remove dependency on dconf
 * Many more improvements and features (See [Changelog](#changelog) below)
+
 
 ## Installation
 
@@ -78,6 +95,16 @@ sudo yum remove MusicPlayerPlus
 
 Changes in version 2.0.1 release 2 include:
 
+* Change default terminal emulator from gnome-terminal to kitty
+* Remove dependencies on gnome-terminal and tilix
+* Add dependency on wmctrl and xrandr, remove dependency on dconf
+* Add support for Kitty, custom Kitty config/themes/sessions
+* Add management of Navidrome to mpplus
+* Add support for Navidrome integration
+* Add Beets web plugin service
+* Add Mopidy administration to mpplus services menu
+* Add support for Mopidy
+* Add PKGBUILD support for Arch Linux distribution/build/install
 * Add mpplus menu to manage downloads
 * Add new command 'listyt' to list YouTube video titles and urls
 * Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
