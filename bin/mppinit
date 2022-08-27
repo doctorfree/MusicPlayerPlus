@@ -30,8 +30,9 @@ YTDLPCONFDIR="${CONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
-EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
-            Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
+EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local \
+            Mopidy-Podcast Mopidy-Iris Mopidy-Podcast-iTunes \
+            Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
@@ -1345,9 +1346,10 @@ remove_kitty() {
   if [ "${initialized}" ]
   then
     printf "\nInstalling, configuring, and activating Mopidy music server."
-    printf "\nThis will deactivate MPD. However, configured Mopidy extensions"
-    printf "\nwill continue to support MusicPlayerPlus MPD clients, Beets,"
-    printf "\nand local music library search, organization, and playback.\n\n"
+    printf "\nThis will deactivate the Music Player Daemon (MPD). However,"
+    printf "\nconfigured Mopidy extensions will continue to support"
+    printf "\nMusicPlayerPlus MPD clients, Beets, and local music library"
+    printf "\nsearch, organization, and playback.\n\n"
     while true
     do
       read -p "Do you wish to continue with Mopidy activation ? (y/n) " yn
