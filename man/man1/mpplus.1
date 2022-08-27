@@ -22,8 +22,8 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SS SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-C client] [-D
-art|bandcamp|soundcloud] [-d music_directory] [-F] [-f] [-G] [-g] [-h]
-[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
+art|bandcamp|soundcloud] [-d music_directory] [-E] [-F] [-f] [-G] [-g]
+[-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
 [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x
 query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -92,11 +92,14 @@ Indicates display album cover art (implies tmux session)
 \f[B]-C \[aq]client\[aq]\f[R]
 Indicates use \[aq]client\[aq] MPD client rather than mpcplus
 .TP
+\f[B]-E\f[R]
+Indicates do not use gradient colors for spectrum visualizer
+.TP
 \f[B]-f\f[R]
 Indicates fullscreen display
 .TP
 \f[B]-g\f[R]
-Indicates do not use gradient colors for spectrum visualizer
+Indicates use gnome terminal emulator
 .TP
 \f[B]-h\f[R]
 Indicates half-height for mppcava window (with -f only)
