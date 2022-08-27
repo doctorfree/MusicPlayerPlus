@@ -822,7 +822,7 @@ fi
     num_wav=`find "${exp_music}" -type f -name \*\.wav | wc -l`
     num_m4a=`find "${exp_music}" -type f -name \*\.m4a | wc -l`
     num_all=`find "${exp_music}" -type f | wc -l`
-    [ ${num_wav} -gt 0 ] || [ ${num_m4a} -gt 0 ] && {
+    [ ${num_wav} -gt 0 ] && {
       printf "\nConverting WAV format media to MP3 format\n\tand"
     }
     printf "\nPerforming Beets media library management import"
