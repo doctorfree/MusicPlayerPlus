@@ -577,6 +577,9 @@ visit_wiki() {
   printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
 }
 
+# Clear the Bash cache so we know for sure if something is installed
+hash -r
+
 acbrainz=
 essentia=1
 overwrite=
@@ -1152,27 +1155,38 @@ install_kitty() {
       https://sw.kovidgoyal.net/kitty/installer.sh > /tmp/kitty-$$.sh
     if [ -f /tmp/kitty-$$.sh ]
     then
-      sh /tmp/kitty-$$.sh launch=n
+      have_stow=`type -p stow`
+      if [ "${have_stow}" ]
+      then
+        sh /tmp/kitty-$$.sh launch=n dest=~/.local/stow > /dev/null 2>&1
+        cd ~/.local/stow
+        stow kitty.app
+        LOCAL=".local/stow"
+      else
+        sh /tmp/kitty-$$.sh launch=n > /dev/null 2>&1
+        LOCAL=".local"
+      fi
       rm -f /tmp/kitty-$$.sh
       # Create a symbolic link to add kitty to PATH
       # (assuming ~/.local/bin is in your system-wide PATH)
+      [ -d ~/.local/bin ] || mkdir -p ~/.local/bin
       [ -x ~/.local/bin/kitty ] || {
-        ln -s ~/.local/kitty.app/bin/kitty ~/.local/bin/
+        ln -s ~/${LOCAL}/kitty.app/bin/kitty ~/.local/bin/
       }
       # Place the kitty.desktop file somewhere it can be found by the OS
       [ -f ~/.local/share/applications//kitty.desktop ] || {
-        cp ~/.local/kitty.app/share/applications/kitty.desktop \
+        cp ~/${LOCAL}/kitty.app/share/applications/kitty.desktop \
            ~/.local/share/applications/
       }
       # If you want to open text files and images in kitty via your file manager
       # also add the kitty-open.desktop file
       [ -f ~/.local/share/applications/kitty-open.desktop ] || {
-        cp ~/.local/kitty.app/share/applications/kitty-open.desktop \
+        cp ~/${LOCAL}/kitty.app/share/applications/kitty-open.desktop \
            ~/.local/share/applications/
       }
       # Update the paths to the kitty and its icon in the kitty.desktop file(s)
-      sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/.local/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
-      sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/.local/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+      sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/${LOCAL}/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
+      sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/${LOCAL}/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
       [ "${quiet}" ] || printf " done!\n"
     else
       printf "\n${BOLD}ERROR:${NORM} Download of Kitty installation script failed"
@@ -1215,11 +1229,14 @@ remove_kitty() {
   }
   if [ "${initialized}" ]
   then
-    printf "\nInstalling Kitty terminal emulator\n"
-    while true
-    do
-      read -p "Do you wish to continue with Kitty installation ? (y/n) " yn
-      case $yn in
+    [ "${quiet}" ] || {
+      printf "\nInstalling Kitty terminal emulator\n"
+    }
+    [ "${proceed}" ] || {
+      while true
+      do
+        read -p "Do you wish to continue with Kitty installation ? (y/n) " yn
+        case $yn in
           [Yy]* )
                 break
                 ;;
@@ -1230,13 +1247,16 @@ remove_kitty() {
                 ;;
               * ) echo "Please answer yes or no."
                 ;;
-      esac
-    done
+        esac
+      done
+    }
     install_kitty
   else
     init_warn kitty
   fi
-  printf "\n\n${BOLD}Kitty terminal emulator installed${NORM}\n"
+  [ "${quiet}" ] || {
+    printf "\n\n${BOLD}Kitty terminal emulator installed${NORM}\n"
+  }
   exit 0
 }
 
