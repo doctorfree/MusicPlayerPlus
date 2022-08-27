@@ -2401,6 +2401,32 @@ pathadd() {
 
 pathadd "${HOME}/.local/bin"
 
+# Check if initialization has been run
+[ -f ${HOME}/.config/mpcplus/config ] || {
+  echo ""
+  echo "MusicPlayerPlus initialization needs to be run once."
+  echo "Answer 'y' to initialize, or 'n' to skip it for now."
+  echo ""
+  while true
+  do
+    read -p "Initialize MusicPlayerPlus now [y/n] " answer
+    case ${answer} in
+      [Yy]* )
+        mppinit
+        break
+        ;;
+      [Nn]* )
+        printf "\nSkipping initialization.\n"
+        printf "\nInitialize MusicPlayerPlus with the command 'mppinit'\n"
+        read -p "Press Enter to continue" contans
+        break
+        ;;
+      * ) echo "Please answer 'y' to initialize, or 'n' to skip."
+        ;;
+    esac
+  done
+}
+
 init_vars
 if [ "${DISPLAY}" ]
 then

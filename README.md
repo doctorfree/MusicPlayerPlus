@@ -925,11 +925,14 @@ songs, albums, and playlists in your music library appear in the client view.
 
 ### Installing Mopidy
 
+To install, configure, and activate Mopidy issue the command `mppinit mopidy`.
+After Mopidy initialization completes, open `http://<ip address>:6680/iris`.
+After adding music to the local music library, run `mopidy local scan`.
+
 The default music server in MusicPlayerPlus is the Music Player Daemon (MPD).
 An alternate music server, Mopidy, is supported and can perform the same
 functions as MPD, is compatible with MPD clients, and can be extended to
-offer many more features. To install, configure, and activate Mopidy 
-issue the command `mppinit mopidy`.
+offer many more features.
 
 Activating Mopidy will first deactivate MPD. The MusicPlayerPlus Mopidy
 activation runs as a user level system service. Configuration for Mopidy
@@ -942,6 +945,9 @@ the `mppinit mopidy` command installs the following Mopidy extensions:
 
 - **Mopidy-Beets**
     - Mopidy extension for playing music from Beets' web plugin
+- **Mopidy-Iris**
+    - A comprehensive and mobile-friendly client that presents your library and extensions in a user-friendly and intuitive interface. Built using React and Redux
+    - Open `http://<ip address>:6680/iris`
 - **Mopidy-Mobile**
     - Fully control a Mopidy music server from your mobile device
     - Android App available on [Google Play](https://play.google.com/store/apps/details?id=at.co.kemmer.mopidy_mobile)
@@ -964,7 +970,7 @@ Additional Mopidy extensions can be installed and configured. For example,
 to stream Spotify with Mopidy, install and configure the Mopidy-Spotify
 extension. Learn more at https://mopidy.com/ext/
 
-To view the effective Mopidy configuration run the command `mopidyctl config`.
+To view the effective Mopidy configuration run the command `mopidy config`.
 This will display the full Mopidy configuration with passwords masked out
 so that you can safely share the output with others for debugging.
 
@@ -1226,6 +1232,9 @@ The following clients are included with MusicPlayerPlus:
 - **Mopidy web client**
     - Installed, configured, and activated with `mppinit mopidy`
     - Open `http://<ip address>:6680`
+- **Mopidy Iris web client**
+    - Installed, configured, and activated with `mppinit mopidy`
+    - Open `http://<ip address>:6680/iris`
 - **Navidrome web client**
     - Installed, configured, and activated with `mppinit navidrome`
     - Open `http://<ip address>:4533`
