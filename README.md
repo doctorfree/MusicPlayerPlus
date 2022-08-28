@@ -1362,20 +1362,23 @@ The `mpplus` command serves as a general user interface for all of the
 MusicPlayerPlus capabilities:
 
 ```
-Usage: mpplus [-A] [-a] [-b] [-B] [-C client] [-F] [-f] [-G] [-g]
-	[-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]
-	[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
+Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
+	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
+	[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status]
 	[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-E indicates do not use gradient colors for spectrum visualizer
 	-f indicates fullscreen display
-	-g indicates do not use gradient colors for spectrum visualizer
 	-h indicates half-height for visualizer window (with -f only)
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for visualizer window (with -f only)
+	-c indicates use current terminal emulator / console mode
+	-e indicates use simple terminal emulator
+	-g indicates use gnome terminal emulator
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
 	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava

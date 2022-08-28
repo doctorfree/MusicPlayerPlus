@@ -1174,8 +1174,21 @@ install_kitty() {
       [ -x ~/.local/bin/kitty ] || {
         ln -s ~/${LOCAL}/kitty.app/bin/kitty ~/.local/bin/
       }
+      # Link the kitty man pages somewhere it can be found by the man command
+      [ -f ~/.local/share/man/man1/kitty.1 ] || {
+        [ -d ${HOME}/.local/share/man/man1 ] || \
+          mkdir -p ${HOME}/.local/share/man/man1
+        ln -s ~/${LOCAL}/kitty.app/share/man/man1/kitty.1 \
+           ~/.local/share/man/man1/
+      }
+      [ -f ~/.local/share/man/man5/kitty.conf.5 ] || {
+        [ -d ${HOME}/.local/share/man/man5 ] || \
+          mkdir -p ${HOME}/.local/share/man/man5
+        ln -s ~/${LOCAL}/kitty.app/share/man/man5/kitty.conf.5 \
+           ~/.local/share/man/man5/
+      }
       # Place the kitty.desktop file somewhere it can be found by the OS
-      [ -f ~/.local/share/applications//kitty.desktop ] || {
+      [ -f ~/.local/share/applications/kitty.desktop ] || {
         cp ~/${LOCAL}/kitty.app/share/applications/kitty.desktop \
            ~/.local/share/applications/
       }
@@ -1202,6 +1215,8 @@ remove_kitty() {
   rm -f ~/.local/bin/kitty
   rm -f ~/.local/share/applications/kitty.desktop
   rm -f ~/.local/share/applications/kitty-open.desktop
+  rm -f ~/.local/share/man/man1/kitty.1
+  rm -f ~/.local/share/man/man5/kitty.conf.5
 }
 
 [ "$1" == "kitty" ] && {

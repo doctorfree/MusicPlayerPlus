@@ -21,9 +21,9 @@
 mpplus - Launch an MPD music player client and spectrum visualizer
 .SS SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-C client] [-D
-art|bandcamp|soundcloud] [-d music_directory] [-E] [-F] [-f] [-G] [-g]
-[-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
+\f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-c] [-C client] [-D
+art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G]
+[-g] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
 [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x
 query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -89,8 +89,14 @@ and easily killed by executing the \f[V]mpplus -k\f[R] command.
 \f[B]-A\f[R]
 Indicates display album cover art (implies tmux session)
 .TP
+\f[B]-c\f[R]
+Indicates use current terminal emulator / console mode
+.TP
 \f[B]-C \[aq]client\[aq]\f[R]
 Indicates use \[aq]client\[aq] MPD client rather than mpcplus
+.TP
+\f[B]-e\f[R]
+indicates use simple terminal emulator
 .TP
 \f[B]-E\f[R]
 Indicates do not use gradient colors for spectrum visualizer

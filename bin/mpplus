@@ -52,9 +52,9 @@ SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-C client] [-E] [-F] [-f] [-G]"
-  printf "\n\t[-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h] [-I]"
-  printf "\n\t[-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
+  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]"
+  printf "\n\t[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
+  printf "\n\t[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
@@ -66,6 +66,8 @@ usage() {
   printf "\n\t-h indicates half-height for visualizer window (with -f only)"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
+  printf "\n\t-c indicates use current terminal emulator / console mode"
+  printf "\n\t-e indicates use simple terminal emulator"
   printf "\n\t-g indicates use gnome terminal emulator"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
@@ -217,7 +219,7 @@ center_window() {
       echo "yoff = $yoff" >> /tmp/kit$$
     else
       toff=$((s_hit - position))
-      [ "${KITTY}" ] && toff=$((toff - 150))
+      [ "${KITTY}" ] || [ "${SIMPLE}" ] && toff=$((toff - 150))
       yoff=$((toff - height))
       echo "toff = $toff" >> /tmp/kit$$
       echo "yoff = $yoff" >> /tmp/kit$$
@@ -232,6 +234,42 @@ center_window() {
     wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
     wmctrl -i -r "${winid}" -e "${mvarg}"
   }
+}
+
+pick_terminal() {
+  if [ "${have_kitty}" ]
+  then
+    echo "Continuing with Kitty as the terminal emulator."
+    KITTY=1
+  else
+    if [ "${have_gnome}" ]
+    then
+      echo "Continuing with gnome-terminal as the terminal emulator."
+      GNOME=1
+    else
+      if [ "${have_tilix}" ]
+      then
+        echo "Continuing with tilix as the terminal emulator."
+        TILIX=1
+      else
+        if [ "${have_retro}" ]
+        then
+          echo "Continuing with cool-retro-term as the terminal emulator."
+          RETRO=1
+        else
+          if [ "${have_simple}" ]
+          then
+            echo "Continuing with st as the terminal emulator."
+            SIMPLE=1
+          else
+            echo "No supported terminal emulator located."
+            return 1
+          fi
+        fi
+      fi
+    fi
+  fi
+  return 0
 }
 
 make_it_so() {
@@ -764,6 +802,19 @@ make_it_so() {
     fi
   }
 
+  # Simple terminal emulator not supported in fullscreen mode
+  [ "${FULLSCREEN}" ] && [ "${SIMPLE}" ] && {
+    SIMPLE=
+    pick_terminal || {
+      echo "No available supported terminal emulators. Exiting."
+      usage
+    }
+    [ "${SIMPLE}" ] && {
+      echo "Simple terminal emulator unsupported in fullscreen mode."
+      echo "No available fullscreen supported terminal emulators. Exiting."
+      usage
+    }
+  }
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
@@ -911,8 +962,24 @@ make_it_so() {
             }
             [ "${gno_win}" ] && center_window "${gno_win}" bottom
           else
-            # No supported terminal emulator available, use tmux
-            TMUX_MPC=1
+            if [ "${SIMPLE}" ]
+            then
+              st -t "${VTITLE}" \
+                 -g "190x12+50-0" \
+                 -f "Monospace:size=12" \
+                 "${VISUALIZER}" 2> /dev/null &
+              sleep 1
+              stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                                         grep "${VTITLE}"`
+              [ "${stl_win}" ] || {
+                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                                           grep "${VISUALIZER}"`
+              }
+              [ "${stl_win}" ] && center_window "${stl_win}" bottom
+            else
+              # No supported terminal emulator available, use tmux
+              TMUX_MPC=1
+            fi
           fi
         fi
       fi
@@ -1038,22 +1105,38 @@ make_it_so() {
               }
               [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
             else
-              [ "${have_kitty}" ] || mppinit -q -y kitty
-              kitty --title="${MTITLE}" \
-                    --start-as normal \
-                    --override font_size=24 \
-                    --override initial_window_width=120c \
-                    --override initial_window_height=28c \
-                    --instance-group musicplayerplus \
-                    ${MPCOMM} 2> /dev/null &
-              sleep 1
-              mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                grep -v "${VTITLE}" | grep "${MTITLE}"`
-              [ "${mpc_win}" ] || {
+              if [ "${SIMPLE}" ]
+              then
+                st -t "${MTITLE}" \
+                   -g "100x26+50+25" \
+                   -f "Monospace:size=24" \
+                   "${MPCOMM}" 2> /dev/null &
+                sleep 1
+                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                  grep -v "${VTITLE}" | grep "${MTITLE}"`
+                [ "${stl_win}" ] || {
+                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                }
+                [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
+              else
+                [ "${have_kitty}" ] || mppinit -q -y kitty
+                kitty --title="${MTITLE}" \
+                      --start-as normal \
+                      --override font_size=24 \
+                      --override initial_window_width=120c \
+                      --override initial_window_height=28c \
+                      --instance-group musicplayerplus \
+                      ${MPCOMM} 2> /dev/null &
+                sleep 1
                 mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
-              }
-              [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
+                  grep -v "${VTITLE}" | grep "${MTITLE}"`
+                [ "${mpc_win}" ] || {
+                  mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                }
+                [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
+              fi
             fi
           fi
         fi
@@ -1275,6 +1358,7 @@ show_help_menu() {
     [ "${have_retro}" ] && options+=("Retro Terminal Man Page")
     [ "${have_gnome}" ] && options+=("Gnome Terminal Man Page")
     [ "${have_kitty}" ] && options+=("Kitty Terminal Man Page")
+    [ "${have_simple}" ] && options+=("Simple Terminal Man Page")
     [ "${have_tilix}" ] && options+=("Tilix Terminal Man Page")
     options+=("Done / Back" "Quit")
     select opt in "${options[@]}"
@@ -1411,6 +1495,10 @@ show_help_menu() {
           ;;
         "Kitty"*,*|*,"Kitty"*)
           man kitty
+          break
+          ;;
+        "Simple"*,*|*,"Simple"*)
+          man st
           break
           ;;
         "Tilix"*,*|*,"Tilix"*)
@@ -2188,6 +2276,7 @@ show_main_menu() {
     [ "${have_kitty}" ] && options+=("Kitty Music Player Plus")
     [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
     [ "${have_retro}" ] && options+=("Retro Music Player Plus")
+    [ "${have_simple}" ] && options+=("Simple Music Player Plus")
     [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler")
@@ -2229,6 +2318,11 @@ show_main_menu() {
           "Retro Music Player Plus",*|*,"Retro Music Player Plus")
               MPCPLUS="mpcplus"
               RETRO=1
+              break
+              ;;
+          "Simple Music Player Plus",*|*,"Simple Music Player Plus")
+              MPCPLUS="mpcplus"
+              SIMPLE=1
               break
               ;;
           "Tilix Music Player Plus",*|*,"Tilix Music Player Plus")
@@ -2386,6 +2480,7 @@ init_vars() {
   RETRO=
   SPLASH=
   GNOME=
+  SIMPLE=
   TILIX=
   KITTY=1
   TMUX_MPC=
@@ -2472,6 +2567,7 @@ then
   have_gnome=
   have_retro=
   have_tilix=
+  have_simple=
   have_kitty=
   s_wid=1920
   s_hit=1080
@@ -2479,6 +2575,7 @@ else
   have_cantata=`type -p cantata`
   have_gnome=`type -p gnome-terminal`
   have_retro=`type -p cool-retro-term`
+  have_simple=`type -p st`
   have_tilix=`type -p tilix`
   have_kitty=`type -p kitty`
   have_xrandr=`type -p xrandr`
@@ -2526,7 +2623,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBC:D:d:EFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBcC:D:d:eEFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -2550,6 +2647,11 @@ while getopts "AabBC:D:d:EFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     B)
       BLISSIFY=1
+      ;;
+    c)
+      TMUX_MPC=1
+      USE_TMUX=1
+      KITTY=
       ;;
     C)
       CLIENT="${OPTARG}"
@@ -2592,6 +2694,21 @@ while getopts "AabBC:D:d:EFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     E)
       USE_GRAD=
+      ;;
+    e)
+      SIMPLE=1
+      KITTY=
+      [ "${have_simple}" ] || {
+        echo "Option '-e' indicates use simple terminal emulator."
+        echo "However, st is not installed, unavailable, or not in your path."
+        echo "You can install st using apt, pacman, or dnf as follows:"
+        printf "\n\n\tsudo apt install stterm\nor"
+        printf "\n\n\tsudo pacman -S stterm\nor"
+        printf "\n\tsudo dnf install stterm\n\n"
+        echo "Proceeding with Kitty terminal emulator"
+        KITTY=1
+        TILIX=
+      }
       ;;
     F)
       CONVERT_WAV=1
@@ -2770,31 +2887,22 @@ impflags="${tagflag} ${writeflag}"
 }
 
 [ "${CONSOLE_MODE}" ] || {
-  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || {
-    [ "${have_kitty}" ] || {
-      echo "No option '-g', '-t', or '-r' indicates use Kitty"
+  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
+    if [ "${have_kitty}" ]
+    then
+      KITTY=1
+    else
+      echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
       echo "terminal emulator. However, Kitty is not installed,"
       echo "unavailable, or not in your path."
       echo "You can install Kitty using apt, pacman, or dnf as follows:"
       printf "\n\n\tsudo apt install kitty\nor"
       printf "\n\n\tsudo pacman -S kitty\nor"
       printf "\n\tsudo dnf install kitty\n\n"
-      [ "${have_tilix}" ] || usage
-      echo "Alternately, invoke mpplus with the '-t' option to use tilix"
-      echo "with the '-g' option to use gnome-terminal."
-      if [ "${have_gnome}" ]
-      then
-        echo "Continuing with gnome-terminal as the terminal emulator."
-        GNOME=1
-        KITTY=
-        TILIX=
-      else
-        echo "Continuing with tilix as the terminal emulator."
-        GNOME=
-        KITTY=
-        TILIX=1
-      fi
-    }
+      echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
+      echo "the '-g' option to use gnome-terminal, or '-e' to use st."
+      pick_terminal || usage
+    fi
   }
 }
 
