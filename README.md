@@ -45,7 +45,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Installing Mopidy](#installing-mopidy)
     1. [Installing Navidrome](#installing-navidrome)
         1. [Navidrome clients](#navidrome-clients)
-    1. [Terminal Emulator Profiles](#terminal-emulator-profiles)
+    1. [Terminal Emulator Support](#terminal-emulator-support)
 1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
     1. [Services](#services)
     1. [Which services should be installed and activated](#which-services-should-be-installed-and-activated)
@@ -368,6 +368,7 @@ and Soundcloud accounts with songs and albums in a collection or liked,
 and who wish to apply thorough, reliable, complete, and accurate metadata:
 
 ```
+# Initialize MusicPlayerPlus, activate Music Player Daemon
 # This is the only required setup step
 mppinit
 
@@ -375,15 +376,18 @@ mppinit
 mppinit bandcamp
 mppinit soundcloud
 
-# Beets library import can take hours
+# Beets library import (can take hours)
 mppinit import
 
-# Additional metadata including Blissify "song similarity" database
-mppinit -b metadata
+# Install, configure, and activate Mopidy music server
+mppinit mopidy
+
+# Install, configure, and activate Navidrome streaming music server
+mppinit navidrome
 
 # Perform analysis and extraction of acoustic metadata with Essentia
 # This background process can take hours or even days for a large library
-mpplus -X all
+mppinit metadata
 ```
 
 ## Installation
@@ -1075,7 +1079,27 @@ native Subsonic client compatible with Navidrome for the Linux Desktop.
 See https://sublime-music.gitlab.io/sublime-music/index.html to install
 Sublime on a variety of Linux distributions.
 
-### Terminal Emulator Profiles
+### Terminal Emulator Support
+
+Supported terminal emulators in MusicPlayerPlus include `kitty`, `tilix`,
+`gnome-terminal`, `st`, and `cool-retro-term`. Kitty is the default terminal
+emulator used by MusicPlayerPlus. An alternate terminal emulator can be
+specified on the `mpplus` command line:
+
+```
+mpplus -c ... # indicates use the current terminal and a tmux session
+mpplus -e ... # indicates use the simple terminal emulator (st)
+mpplus -g ... # indicates use the gnome terminal emulator
+mpplus -r ... # indicates use the cool-retro-term terminal emulator
+mpplus -t ... # indicates use the tilix terminal emulator
+```
+
+If an alternate terminal emulator is not specified on the command line
+then Kitty will be used unless console mode is detected. Console mode
+is used when no DISPLAY can be opened (e.g. running on a console, running
+over SSH without a display, running on a headless server). In console mode
+MusicPlayerPlus utilizes `tmux` sessions to display the character-based music
+player `mpcplus` and spectrum visualizer `mppcava`.
 
 The `mppcava` spectrum visualizer looks better when the font used by the
 terminal emulator in which it is running is a small sized font. Some
@@ -1083,18 +1107,18 @@ terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
 an enhanced visual presentation.
 
-**[Note:]** Use of the Gnome and Tilix terminal emulators is an optional
-additional feature supported by MusicPlayerPlus. Gnome-terminal and Tilix
-are not installed by MusicPlayerPlus. The default terminal emulator used
-by MusicPlayerPlus is Kitty and it is installed as a dependency.
+**[Note:]** Use of the Gnome, Simple, and Tilix terminal emulators is an
+optional additional feature supported by MusicPlayerPlus. Gnome-terminal,
+Simple terminal, and Tilix are not installed by MusicPlayerPlus. The default
+terminal emulator used by MusicPlayerPlus is Kitty, installed by `mppinit`.
 
-In order to use the Gnome or Tilix terminal emulators they must be installed
-manually. If you wish to use the Gnome or Tilix terminal emulator, then use
-your system's package manager to install them prior to initializing
-MusicPlayerPlus with the `mppinit` command. If either or both of these
-optional terminal emulators are installed after MusicPlayerPlus
+In order to use the Gnome, Simple, or Tilix terminal emulators they must be
+installed manually. If you wish to use the Gnome, Simple, or Tilix terminal
+emulators, then use your system's package manager to install them prior to
+initializing MusicPlayerPlus with the `mppinit` command. If either or both
+of Gnome or Tilix terminal emulators are installed after MusicPlayerPlus
 initialization with `mppinit` then run `mppinit profiles` after installing
-the additional terminal emulator(s).
+gnome-terminal or tilix terminal emulator(s).
 
 There are four terminal profiles in two terminal emulators used by
 MusicPlayerPlus. The `gnome-terminal` emulator and the `tilix` terminal
