@@ -1,27 +1,35 @@
 # MusicPlayerPlus Kitty tabbed startup session
 #
 # Kitty tab with Bash shell
-new_tab shell
-title shell
+new_tab Home
+title Home
 launch bash
 enabled_layouts tall:bias=50;full_size=1
 layout tall
 
+# Kitty tab with Bash shell in Asciiville source directory
+# new_tab Asciiville
+# title Asciiville
+# cd ~/src/Asciiville
+# launch bash
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall 
+
 # Kitty tab with Bash shell in MusicPlayerPlus source directory
-# new_tab dev
-# title dev
-# cd ~/src/MusicPlayerPlus2
+# new_tab MusicPlayerPlus
+# title MusicPlayerPlus
+# cd ~/src/MusicPlayerPlus
 # launch bash
 # enabled_layouts tall:bias=50;full_size=1
 # layout tall 
 
 # Kitty tab with MusicPlayerPlus interactive menu system
-new_tab mpplus
-title mpplus
-cd ~
-launch bash -c 'mpplus -i'
-enabled_layouts tall:bias=50;full_size=1
-layout tall 
+# new_tab mpplus
+# title mpplus
+# cd ~
+# launch bash -c 'mpplus -i'
+# enabled_layouts tall:bias=50;full_size=1
+# layout tall 
 
 # Create a window and run the specified command in it
 # launch bash
