@@ -18,6 +18,7 @@
 Mpplus <mpplus>
 Mppinit <mppinit>
 Alsa_conf <alsa_conf>
+Artist_to_albumartist <artist_to_albumartist>
 Bandcamp-dl <bandcamp-dl>
 Beet <beet>
 Beetsconfig <beetsconfig>
