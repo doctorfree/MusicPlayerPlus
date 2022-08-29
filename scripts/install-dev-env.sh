@@ -31,7 +31,7 @@ else
     PKGS="base-devel eigen fftw clang ffmpeg4.4 libsamplerate taglib \
           chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
           alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
-          qt5-tools python python-numpy python-six pandoc sndio zip"
+          qt5-tools python python-numpy python-six pandoc sndio zip cargo"
     RUN_PKGS="mpd inotify-tools figlet cool-retro-term \
           fzf mpc python-pip mplayer dconf"
     if [ "$1" == "-r" ]
@@ -55,23 +55,26 @@ else
   fi
 fi
 
-have_cargo=`type -p cargo`
-if [ "$1" == "-r" ]
-then
-  [ "${have_cargo}" ] && rustup self uninstall
-else
-  [ "${have_cargo}" ] || {
-    [ -f ~/.cargo/env ] && source ~/.cargo/env
-    have_cargo=`type -p cargo`
+# Cargo is a build dependency on Arch
+[ "${arch}" ] || {
+  have_cargo=`type -p cargo`
+  if [ "$1" == "-r" ]
+  then
+    [ "${have_cargo}" ] && rustup self uninstall
+  else
     [ "${have_cargo}" ] || {
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-        [ -f ~/.cargo/env ] && source ~/.cargo/env
+      [ -f ~/.cargo/env ] && source ~/.cargo/env
+      have_cargo=`type -p cargo`
+      [ "${have_cargo}" ] || {
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          [ -f ~/.cargo/env ] && source ~/.cargo/env
+      }
+      have_cargo=`type -p cargo`
+      [ "${have_cargo}" ] || {
+          echo "The cargo tool cannot be located."
+          echo "Cargo is required to build blissify. Exiting."
+          exit 1
+      }
     }
-    have_cargo=`type -p cargo`
-    [ "${have_cargo}" ] || {
-        echo "The cargo tool cannot be located."
-        echo "Cargo is required to build blissify. Exiting."
-        exit 1
-    }
-  }
-fi
+  fi
+}
