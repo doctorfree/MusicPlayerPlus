@@ -6,7 +6,7 @@ footer: blissify 0.2.7
 date: August 6, 2022
 ---
 ## NAME
-blissify = Analyze and make smart playlists from an MPD music database.
+blissify - Analyze and make smart playlists from an MPD music database.
 
 ## SYNOPSIS
 **blissify** [SUBCOMMAND] [FLAGS]

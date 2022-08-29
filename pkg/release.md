@@ -1,41 +1,21 @@
-## MusicPlayerPlus
+[MusicPlayerPlus](https://github.com/doctorfree/MusicPlayerPlus#readme) is an open source suite of character-based/console utilities, services, and tools to ease the installation, configuration, integration, and management of a music library, music server(s), music player, spectrum visualizer, music downloads, and more.
 
-This major release of MusicPlayerPlus adds:
+This major new release of MusicPlayerPlus adds support for many new features and components including:
 
-* Arch Linux build and packaging support
-* Integration of the Beets media library management system
-* Add support for Navidrome integration
-* Add support for Mopidy
-* Add support for Kitty as default terminal emualator
+* Integration of the [Beets media library management system](https://beets.io/)
+* Support for the [Mopidy Music Server](https://mopidy.com/) and extensions
+* Support for the [Navidrome Streaming Music Server](https://www.navidrome.org/)
+* Several supported Operating System platforms:
+    * Arch Linux build and packaging support (NEW)
+    * Debian format packaging (tested on Ubuntu 20.04 and Raspbian bullseye)
+    * RPM format packaging (tested on Fedora 35)
+* Support for Kitty as default terminal emualator
     * Custom Kitty configuration, themes, and sessions
-* Add Beets web plugin service
-* Automated Beets xtractor plugin installation and configuration
-    * Beets xtractor plugin performs acoustic analysis and metadata updates
-    * Gaia and Essentia for audio analysis and audio-based information retrieval
-    * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
-* Support for automated WAV to MP3 conversion with `mpplus -F`
-* Support for automated lyrics download with `mpplus -L`
-* Support for YAMS Last.fm scrobbler activation with `mpplus -Y`
-* Help menu to `mpplus`
-* Man pages for `scdl` and `bandcamp-dl`
-* Script to download Soundcloud favorites
-* Script to download Bandcamp collections
-* Options to use AcousticBrainz rather than Essentia for audio information
-* Custom targets to xtractor config
-* Bandcamp and Soundcloud downloads to mppinit
-* Import and metadata retrieval to `mppinit`
-* Add blissify MPD library analysis and smart playlist generator
-* Add mpplus menu to manage downloads
-* Add new command 'listyt' to list YouTube video titles and urls
-* Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
-* Add mppdl command and yt-dlp module for downloading audio from various sites
-* Add mppcover command to display album cover art of currently playing song
-* Only install Bliss utils if they compile successfully
-* Install Cargo if it is not previously installed
-* Additional python module dependencies installed during mppinit
-* Messages in mppinit tailored to which acoustic analysis is performed
-* Remove dependencies on gnome-terminal and tilix
-* Add dependency on wmctrl and xrandr, remove dependency on dconf
+* Support for YAMS Last.fm scrobbler activation
+* Automated download of Soundcloud favorites
+* Automated download of Bandcamp collections
+* Automated download of YouTube playlist audio
+* Automated download of audio from many other sites
 * Many more improvements and features (See [Changelog](#changelog) below)
 
 ## Installation
@@ -139,24 +119,38 @@ sudo pacman -Rs musicplayerplus
 
 Changes in version 2.0.1 release 2 include:
 
-* Change default terminal emulator from gnome-terminal to kitty
-* Remove dependencies on gnome-terminal and tilix
-* Add dependency on wmctrl and xrandr, remove dependency on dconf
-* Add support for Kitty, custom Kitty config/themes/sessions
-* Add management of Navidrome to mpplus
+* Arch Linux build and packaging support
+* Integration of the Beets media library management system
 * Add support for Navidrome integration
-* Add Beets web plugin service
-* Add Mopidy administration to mpplus services menu
 * Add support for Mopidy
-* Add PKGBUILD support for Arch Linux distribution/build/install
+* Add support for Kitty as default terminal emualator
+    * Custom Kitty configuration, themes, and sessions
+* Add Beets web plugin service
+* Automated Beets xtractor plugin installation and configuration
+    * Beets xtractor plugin performs acoustic analysis and metadata updates
+    * Gaia and Essentia for audio analysis and audio-based information retrieval
+    * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
+* Support for automated WAV to MP3 conversion with `mpplus -F`
+* Support for automated lyrics download with `mpplus -L`
+* Support for YAMS Last.fm scrobbler activation with `mpplus -Y`
+* Help menu to `mpplus`
+* Man pages for `scdl` and `bandcamp-dl`
+* Script to download Soundcloud favorites
+* Script to download Bandcamp collections
+* Options to use AcousticBrainz rather than Essentia for audio information
+* Custom targets to xtractor config
+* Bandcamp and Soundcloud downloads to mppinit
+* Import and metadata retrieval to `mppinit`
+* Add blissify MPD library analysis and smart playlist generator
 * Add mpplus menu to manage downloads
 * Add new command 'listyt' to list YouTube video titles and urls
 * Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
 * Add mppdl command and yt-dlp module for downloading audio from various sites
 * Add mppcover command to display album cover art of currently playing song
 * Only install Bliss utils if they compile successfully
-* Install Cargo if it is not previously installed
 * Additional python module dependencies installed during mppinit
 * Messages in mppinit tailored to which acoustic analysis is performed
+* Remove dependencies on gnome-terminal and tilix
+* Add dependency on wmctrl and xrandr, remove dependency on dconf
 
 See [CHANGELOG.md](https://github.com/doctorfree/MusicPlayerPlus/blob/master/CHANGELOG.md) for a full list of changes in every MusicPlayerPlus release

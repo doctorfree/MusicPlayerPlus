@@ -186,7 +186,7 @@ Additional detail and info can be found in the
 * Create a music library if you do not already have one
     * Default MusicPlayerPlus location for the music library is `$HOME/Music`
     * Recommended structure of the music library is `artist/album/songs`
-* Install the latest Debian or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
+* Install the latest Arch, Debian, or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
 * Run the `mppinit` command as your normal user
 
 ### Optional additional setup steps
@@ -338,7 +338,7 @@ section below.
 
 To summarize, a MusicPlayer quickstart can be accomplished by:
 
-* Install the latest Debian or RPM format installation package
+* Install the latest Arch, Debian, or RPM format installation package
 * Run the `mppinit` command as your normal user
 * If the music library is not located at `$HOME/Music`:
     * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
@@ -392,13 +392,16 @@ mppinit metadata
 
 ## Installation
 
-MusicPlayerPlus v1.0.0 and later can be installed on Linux systems using
-either the Debian packaging format or the Red Hat Package Manager (RPM).
+MusicPlayerPlus v2.0.1 and later can be installed on Linux systems using
+the Arch packaging format, the Debian packaging format, or the Red Hat
+Package Manager (RPM).
 
 ### Supported platforms
 
 MusicPlayerPlus has been tested successfully on the following platforms:
 
+- **Arch Linux 2022.07.01**
+    - `MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst`
 - **Ubuntu Linux 20.04**
     - `MusicPlayerPlus_<version>-<release>.amd64.deb`
 - **Fedora Linux 35**
@@ -1265,7 +1268,7 @@ The following clients are included with MusicPlayerPlus:
 
 ## Documentation
 
-**[NEW:]** MusicPlayerPlus documentation is now available on [Read the Docs](https://musicplayerplus.readthedocs.io/en/latest/index.html)
+**[NEW:]** MusicPlayerPlus documentation is now available on [Read the Docs](https://musicplayerplus.readthedocs.io/en/latest/)
 
 All MusicPlayerPlus commands have manual pages. Execute `man <command-name>`
 to view the manual page for a command. The `mpplus` frontend is the primary
@@ -1975,6 +1978,11 @@ git clone https://github.com/doctorfree/MusicPlayerPlus.git
 cd MusicPlayerPlus
 ```
 
+**[Note:]** The `mkpkg` script in the top level of the MusicPlayerPlus
+repository can be used to build an installation package on all supported
+platforms. After cloning, `cd MusicPlayerPlus` and `./mkpkg`. The resulting
+installation package(s) will be found in `./releases/<version>/`.
+
 ### Install build dependencies
 
 MusicPlayerPlus components have build dependencies on the following:
@@ -2038,6 +2046,10 @@ sudo pacman -S --needed base-devel eigen fftw clang ffmpeg4.4 libsamplerate \
      alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
      qt5-tools python python-numpy python-six pandoc zip
 ```
+
+**[Note:]** The MusicPlayerPlus `PKGBUILD` on Arch Linux defines build
+dependencies and these will be automatically installed when performing
+a `makepkg` build. It is not necessary to pre-install these packages.
 
 #### Install Gaia
 
