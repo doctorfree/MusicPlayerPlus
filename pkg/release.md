@@ -41,7 +41,7 @@ This major release of MusicPlayerPlus adds:
 
 ## Installation
 
-Download the [latest Debian or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
+Download the [latest Debian, Arch, or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
 
 Install the package on Debian based systems by executing the command
 
@@ -55,9 +55,44 @@ or, on a Raspberry Pi:
 sudo apt install ./MusicPlayerPlus_2.0.1-2.armhf.deb
 ```
 
+Install the package on Arch Linux based systems by executing the command
+```bash
+sudo pacman -U ./MusicPlayerPlus_2.0.1-2-x86_64.pkg.tar.zst
+```
+
 Install the package on RPM based systems by executing the command
 ```bash
-sudo yum localinstall ./MusicPlayerPlus-2.0.1-2.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_2.0.1-2.x86_64.rpm
+```
+
+### PKGBUILD Installation
+
+To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be
+built from sources using the Arch PKGBUILD files provided in
+`MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz`. This process can be performed on
+any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64`
+architecture precompiled package is supplied (see above). To rebuild this
+package from sources, extract `MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz`
+and use the `makepkg` command to download the sources, build the binaries,
+and create the installation package:
+
+```
+tar xzf MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz
+cd musicplayerplus
+makepkg --force --log --cleanbuild --noconfirm --syncdeps
+```
+
+**[Note:]** The full MusicPlayerPlus build from sources can be time consuming.
+Use a pre-built package if one is available for your platform.
+
+To install on Arch Linux from the latest development sources rather than the
+stable release packages, clone the MusicPlayerPlus repository and use the
+`makepkg` tool to create a package similar to that described above:
+
+```
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
+cd MusicPlayerPlus/pkg/aur
+makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
 
 ## Configuration
