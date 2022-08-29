@@ -1,5 +1,5 @@
 pkgbase = musicplayerplus
-	pkgdesc = Character based MPD client, spectrum visualizer, Beets library management, plus more
+	pkgdesc = Character based MPD client, spectrum visualizer, Beets library management, Mopidy and Navidrome servers, plus more
 	pkgver = 2.0.1
 	pkgrel = 2
 	url = https://github.com/doctorfree/MusicPlayerPlus
@@ -58,7 +58,7 @@ pkgbase = musicplayerplus
 	options = purge
 	options = !debug
 	options = !lto
-	source = git+https://github.com/doctorfree/MusicPlayerPlus.git
+	source = musicplayerplus::git+https://github.com/doctorfree/MusicPlayerPlus.git#tag=v2.0.1r2
 	sha256sums = SKIP
 
 pkgname = musicplayerplus

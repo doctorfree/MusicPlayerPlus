@@ -1,4 +1,4 @@
-# Maintainer: Ronald Record <ronaldrecord@gmail.com>
+# Maintainer: Ronald Record <github@ronrecord.com>
 # Contributor: Karl Stavestrand <karl@stavestrand.no>
 # Contributor: Adrian Kowalski <adpkow@gmail.com>
 # Contributor: Alexander Lopatin <sbar.geek@gmail.com>
@@ -237,14 +237,14 @@ package() {
   cd "${srcdir}/${pkgname}"
   destdir=usr
   for dir in "${destdir}" "${destdir}/share" "${destdir}/share/man" \
-      "${destdir}/share/applications" "${destdir}/share/doc" \
-      "${destdir}/share/doc/${pkgname}" "${destdir}/share/doc/${pkgname}/mpcplus" \
-      "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}" \
-      "${destdir}/share/licenses" \
-      "${destdir}/share/licenses/${pkgname}" \
-      "${destdir}/share/${pkgname}/mpcplus" \
-      "${destdir}/share/doc/${pkgname}/blissify" \
-      "${destdir}/share/doc/${pkgname}/bliss-analyze"
+    "${destdir}/share/applications" "${destdir}/share/doc" \
+    "${destdir}/share/doc/${pkgname}" "${destdir}/share/doc/${pkgname}/mpcplus" \
+    "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}" \
+    "${destdir}/share/licenses" \
+    "${destdir}/share/licenses/${pkgname}" \
+    "${destdir}/share/${pkgname}/mpcplus" \
+    "${destdir}/share/doc/${pkgname}/blissify" \
+    "${destdir}/share/doc/${pkgname}/bliss-analyze"
   do
     [ -d ${pkgdir}/${dir} ] || mkdir ${pkgdir}/${dir}
   done
