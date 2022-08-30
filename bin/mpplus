@@ -923,7 +923,6 @@ make_it_so() {
               --override initial_window_width=240c \
               --override initial_window_height=12c \
               --single-instance \
-              --instance-group musicplayerplus \
               ${VISUALIZER} 2> /dev/null &
         sleep 1
         kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
@@ -1062,7 +1061,6 @@ make_it_so() {
                 --override font_size=24 \
                 --override initial_window_width=120c \
                 --override initial_window_height=28c \
-                --instance-group musicplayerplus \
                 ${MPCOMM} 2> /dev/null &
           sleep 1
           mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
@@ -1126,7 +1124,6 @@ make_it_so() {
                       --override font_size=24 \
                       --override initial_window_width=120c \
                       --override initial_window_height=28c \
-                      --instance-group musicplayerplus \
                       ${MPCOMM} 2> /dev/null &
                 sleep 1
                 mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
