@@ -14,6 +14,7 @@ CCPTDIR=${MPPCDIR}/calliope
 CONF=${HOME}/.config
 MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
+MPPCONF="${CONF}/musicplayerplus/config"
 BEETSCONFDIR="${CONF}/beets"
 BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
@@ -168,8 +169,6 @@ create_new_profile() {
 }
 
 create_profiles() {
-  have_gnome=`type -p gnome-terminal`
-  have_tilix=`type -p tilix`
   [ "${have_gnome}" ] || [ "${have_tilix}" ] && {
     have_dconf=`type -p dconf`
     have_gsettings=`type -p gsettings`
@@ -410,12 +409,104 @@ remove_mopidy() {
   sudo ${PYTHHON} -m pip uninstall -y Mopidy
 }
 
+init_mpp_conf() {
+  echo "# Music library location" > ${MPPCONF}
+  echo "MUSIC_DIR=\"${exp_music}\"" >> ${MPPCONF}
+  echo "# General settings" >> ${MPPCONF}
+  echo "AUDIO=" >> ${MPPCONF}
+  echo "COVER_ART=" >> ${MPPCONF}
+  echo "FULLSCREEN=" >> ${MPPCONF}
+  echo "USE_TMUX=" >> ${MPPCONF}
+  echo "USE_EWMH=1" >> ${MPPCONF}
+  echo "# Terminal emulator preference" >> ${MPPCONF}
+  if [ "${have_kitty}" ]
+  then
+    echo "CURRENT=" >> ${MPPCONF}
+    echo "GNOME=" >> ${MPPCONF}
+    echo "RETRO=" >> ${MPPCONF}
+    echo "TILIX=" >> ${MPPCONF}
+    echo "KITTY=1" >> ${MPPCONF}
+    echo "XFCE4=" >> ${MPPCONF}
+  else
+    if [ "${have_gnome}" ]
+    then
+      echo "CURRENT=" >> ${MPPCONF}
+      echo "GNOME=1" >> ${MPPCONF}
+      echo "RETRO=" >> ${MPPCONF}
+      echo "TILIX=" >> ${MPPCONF}
+      echo "KITTY=" >> ${MPPCONF}
+      echo "XFCE4=" >> ${MPPCONF}
+    else
+      if [ "${have_tilix}" ]
+      then
+        echo "CURRENT=" >> ${MPPCONF}
+        echo "GNOME=" >> ${MPPCONF}
+        echo "RETRO=" >> ${MPPCONF}
+        echo "TILIX=1" >> ${MPPCONF}
+        echo "KITTY=" >> ${MPPCONF}
+        echo "XFCE4=" >> ${MPPCONF}
+      else
+        if [ "${have_xfce4}" ]
+        then
+          echo "CURRENT=" >> ${MPPCONF}
+          echo "GNOME=" >> ${MPPCONF}
+          echo "RETRO=" >> ${MPPCONF}
+          echo "TILIX=" >> ${MPPCONF}
+          echo "KITTY=" >> ${MPPCONF}
+          echo "XFCE4=1" >> ${MPPCONF}
+        else
+          if [ "${have_retro}" ]
+          then
+            echo "CURRENT=" >> ${MPPCONF}
+            echo "GNOME=" >> ${MPPCONF}
+            echo "RETRO=1" >> ${MPPCONF}
+            echo "TILIX=" >> ${MPPCONF}
+            echo "KITTY=" >> ${MPPCONF}
+            echo "XFCE4=" >> ${MPPCONF}
+          else
+            echo "CURRENT=1" >> ${MPPCONF}
+            echo "GNOME=" >> ${MPPCONF}
+            echo "RETRO=" >> ${MPPCONF}
+            echo "TILIX=" >> ${MPPCONF}
+            echo "KITTY=" >> ${MPPCONF}
+            echo "XFCE4=" >> ${MPPCONF}
+          fi
+        fi
+      fi
+    fi
+  fi
+}
+
 set_music_dir() {
-  mpd_music=`grep ^music_directory ${MPDCONF}`
-  [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
-  mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-  # Need to expand the tilda to $HOME
-  exp_music="${mpd_music/#\~/$HOME}"
+  mpd_music=
+  set_mpd_conf=
+  set_mpp_conf=
+  # Use $HOME/.config/musicplayerplus/config as source of truth
+  [ -f "${MPPCONF}" ] && {
+    mpd_music=`grep ^MUSIC_DIR ${MPPCONF}`
+    mpd_music=`echo ${mpd_music} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
+    # Need to expand the tilda to $HOME
+    exp_music="${mpd_music/#\~/$HOME}"
+    set_mpd_conf=1
+  }
+  [ "${mpd_music}" ] || {
+    # If not set in $MPPCONF then look in MPD config
+    [ -f "${MPDCONF}" ] && {
+      mpd_music=`grep ^music_directory ${MPDCONF}`
+      [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
+      mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+      # Need to expand the tilda to $HOME
+      exp_music="${mpd_music/#\~/$HOME}"
+      set_mpp_conf=1
+    }
+  }
+  # Why wasn't it set in either config?
+  [ "${mpd_music}" ] || {
+    mpd_music="~/Music"
+    exp_music="${HOME}/Music"
+    set_mpp_conf=1
+    set_mpd_conf=1
+  }
 }
 
 sync_music_dir() {
@@ -430,9 +521,43 @@ sync_music_dir() {
     mpd_play=`grep ^playlist_directory ${MPDCONF}`
     mpd_play=`echo ${mpd_play} | awk ' { print $2 } ' | sed -e "s/\"//g"`
     [ "${mpd_music}/Playlists" == "${mpd_play}" ] || {
-      cat ${MPDCONF} | sed -e "s%^playlist_directory .*%playlist_directory \"${mpd_music}/Playlists\"%" \ > /tmp/mpd$$
+      cat ${MPDCONF} | \
+        sed -e "s%^playlist_directory .*%playlist_directory \"${mpd_music}/Playlists\"%" \
+        > /tmp/mpd$$
       cp /tmp/mpd$$ ${MPDCONF}
       rm -f /tmp/mpd$$
+    }
+    [ "${set_mpd_conf}" ] && {
+      [ -f "${MPDCONF}" ] && {
+        # Sync music_directory in mpd.conf
+        mpd_currm=`grep ^music_directory ${MPDCONF}`
+        [ "${mpd_currm}" ] || mpd_currm=`grep \#music_directory ${MPDCONF}`
+        mpd_currm=`echo ${mpd_currm} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+        [ "${mpd_music}" == "${mpd_currm}" ] || {
+          cat ${MPDCONF} | \
+            sed -e "s%^music_directory .*%music_directory \"${mpd_music}\"%" \
+            > /tmp/mpd$$
+          cp /tmp/mpd$$ ${MPDCONF}
+          rm -f /tmp/mpd$$
+        }
+      }
+    }
+    [ "${set_mpp_conf}" ] && {
+      if [ -f "${MPPCONF}" ]
+      then
+        # Sync music_directory in $HOME/.config/musicplayerplus/config
+        mpp_currm=`grep ^MUSIC_DIR ${MPPCONF}`
+        mpp_currm=`echo ${mpp_currm} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
+        [ "${exp_music}" == "${mpp_currm}" ] || {
+          cat ${MPPCONF} | \
+            sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" \
+            > /tmp/mpp$$
+          cp /tmp/mpp$$ ${MPPCONF}
+          rm -f /tmp/mpp$$
+        }
+      else
+        init_mpp_conf
+      fi
     }
     mpc_custom=1
     mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
@@ -552,7 +677,7 @@ sync_music_dir() {
   else
     echo "WARNING:"
     echo "Could not detect any music_directory setting in ${MPDCONF}"
-    echo "Manual configuration of ${MPDCONF} and ${HOME}/${MPCDIR}/config required"
+    echo "Manual configuration of ${MPPCONF} or ${MPDCONF} required"
   fi
 }
 
@@ -590,6 +715,12 @@ upgrade=1
 quiet=
 beetsdev=
 have_bliss=`type -p blissify`
+have_gnome=`type -p gnome-terminal`
+have_kitty=`type -p kitty`
+have_tilix=`type -p tilix`
+have_retro=`type -p cool-retro-term`
+have_xfce4=`type -p xfce4-terminal`
+
 while getopts "abdeoqrUyu" flag; do
     case $flag in
         a)
@@ -712,6 +843,7 @@ fi
     exit 1
 }
 
+[ -d ${CONF} ] || mkdir ${CONF}
 if [ -f ${CONF}/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
@@ -1149,7 +1281,6 @@ remove_navidrome() {
 }
 
 install_kitty() {
-  have_kitty=`type -p kitty`
   [ "${have_kitty}" ] || {
     [ "${quiet}" ] || {
       printf "\n\tInstalling Kitty terminal emulator ..."
@@ -2077,6 +2208,12 @@ fi
     cp /tmp/ext$$ "${have_xtractor}"
     rm -f /tmp/ext$$
   }
+}
+
+[ -d ${CONF}/musicplayerplus ] || mkdir ${CONF}/musicplayerplus
+[ -f ${MPPCONF} ] || {
+  set_music_dir
+  init_mpp_conf
 }
 
 [ "${quiet}" ] || {

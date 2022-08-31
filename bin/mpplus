@@ -50,11 +50,13 @@ MPP_DIR="/usr/share/musicplayerplus"
 DOC_DIR="/usr/share/doc/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
+# Some configuration can be maintained here
+MPPCONF="${HOME}/.config/musicplayerplus/config"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]"
   printf "\n\t[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
-  printf "\n\t[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
+  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status]"
   printf "\n\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
@@ -64,6 +66,7 @@ usage() {
   printf "\n\t-E indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-f indicates fullscreen display"
   printf "\n\t-h indicates half-height for visualizer window (with -f only)"
+  printf "\n\t-H indicates disable use of extended window manager hints"
   printf "\n\t-P script specifies the ASCIImatics script to run in visualizer pane"
   printf "\n\t-q indicates quarter-height for visualizer window (with -f only)"
   printf "\n\t-c indicates use current terminal emulator / console mode"
@@ -855,61 +858,63 @@ make_it_so() {
       fi
       viz_win=
       [ "${HALFHEIGHT}" ] || [ "${QRTRHEIGHT}" ] && {
-        sleep 1
-        if [ "${KITTY}" ]
-        then
-          viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
-            grep "${VTITLE}"`
-        else
-          if [ "${TILIX}" ]
-          then
-            viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-              grep "${VTITLE}"`
-          else
-            [ "${GNOME}" ] && {
-              viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep "${VTITLE}"`
-            }
-          fi
-        fi
-        [ "${viz_win}" ] || {
+        [ "${USE_EWMH}" ] && {
+          sleep 1
           if [ "${KITTY}" ]
           then
             viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
-              grep "${VISUALIZER}"`
-            [ "${viz_win}" ] || echo "Could not find visualizer window"
+              grep "${VTITLE}"`
           else
             if [ "${TILIX}" ]
             then
               viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-                grep "${VISUALIZER}"`
-              [ "${viz_win}" ] || echo "Could not find visualizer window"
+                grep "${VTITLE}"`
             else
               [ "${GNOME}" ] && {
                 viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                  grep "${VISUALIZER}"`
-                [ "${viz_win}" ] || echo "Could not find visualizer window"
+                  grep "${VTITLE}"`
               }
             fi
           fi
-        }
-        [ "${viz_win}" ] && {
-          read -r winid grav xoff yoff width height \
-            < <(echo ${viz_win} | awk ' { print $1, $2, $3, $4, $5, $6} ')
-          [ "${winid}" ] && {
-            if [ "${HALFHEIGHT}" ]
+          [ "${viz_win}" ] || {
+            if [ "${KITTY}" ]
             then
-              height=$((height / 2))
+              viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                grep "${VISUALIZER}"`
+              [ "${viz_win}" ] || echo "Could not find visualizer window"
             else
-              height=$((height / 4))
-              # Fudge this to compensate for differing window decoration size
-              [ "${TILIX}" ] || height=$((height - 30))
-              [ "${KITTY}" ] && height=$((height - 75))
-              [ ${height} -lt 70 ] && height=70
+              if [ "${TILIX}" ]
+              then
+                viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+                  grep "${VISUALIZER}"`
+                [ "${viz_win}" ] || echo "Could not find visualizer window"
+              else
+                [ "${GNOME}" ] && {
+                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                    grep "${VISUALIZER}"`
+                  [ "${viz_win}" ] || echo "Could not find visualizer window"
+                }
+              fi
             fi
-            mvarg="${grav},${xoff},${yoff},${width},${height}"
-            wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
-            wmctrl -i -r "${winid}" -e "${mvarg}"
+          }
+          [ "${viz_win}" ] && {
+            read -r winid grav xoff yoff width height \
+              < <(echo ${viz_win} | awk ' { print $1, $2, $3, $4, $5, $6} ')
+            [ "${winid}" ] && {
+              if [ "${HALFHEIGHT}" ]
+              then
+                height=$((height / 2))
+              else
+                height=$((height / 4))
+                # Fudge this to compensate for differing window decoration size
+                [ "${TILIX}" ] || height=$((height - 30))
+                [ "${KITTY}" ] && height=$((height - 75))
+                [ ${height} -lt 70 ] && height=70
+              fi
+              mvarg="${grav},${xoff},${yoff},${width},${height}"
+              wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
+              wmctrl -i -r "${winid}" -e "${mvarg}"
+            }
           }
         }
       }
@@ -924,12 +929,14 @@ make_it_so() {
               --override initial_window_height=12c \
               --single-instance \
               ${VISUALIZER} 2> /dev/null &
-        sleep 1
-        kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
-        [ "${kit_win}" ] || {
-          kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
+        [ "${USE_EWMH}" ] && {
+          sleep 1
+          kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
+          [ "${kit_win}" ] || {
+            kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
+          }
+          [ "${kit_win}" ] && center_window "${kit_win}" bottom
         }
-        [ "${kit_win}" ] && center_window "${kit_win}" bottom
       else
         if [ "${TILIX}" ]
         then
@@ -938,12 +945,14 @@ make_it_so() {
                 --geometry=390x16+150-0 \
                 --profile=Visualizer \
                 --command="${VISUALIZER}" 2> /dev/null &
-          sleep 1
-          til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
-          [ "${til_win}" ] || {
-            til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+          [ "${USE_EWMH}" ] && {
+            sleep 1
+            til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+            [ "${til_win}" ] || {
+              til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+            }
+            [ "${til_win}" ] && center_window "${til_win}" bottom
           }
-          [ "${til_win}" ] && center_window "${til_win}" bottom
         else
           if [ "${GNOME}" ]
           then
@@ -952,14 +961,16 @@ make_it_so() {
                   --hide-menubar \
                   --geometry 390x16+150-0 \
                   -- ${VISUALIZER} &
-            sleep 1
-            gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-              grep "${VTITLE}"`
-            [ "${gno_win}" ] || {
+            [ "${USE_EWMH}" ] && {
+              sleep 1
               gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep "${VISUALIZER}"`
+                grep "${VTITLE}"`
+              [ "${gno_win}" ] || {
+                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                  grep "${VISUALIZER}"`
+              }
+              [ "${gno_win}" ] && center_window "${gno_win}" bottom
             }
-            [ "${gno_win}" ] && center_window "${gno_win}" bottom
           else
             if [ "${SIMPLE}" ]
             then
@@ -967,14 +978,16 @@ make_it_so() {
                  -g "190x12+50-0" \
                  -f "Monospace:size=12" \
                  "${VISUALIZER}" 2> /dev/null &
-              sleep 1
-              stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                                         grep "${VTITLE}"`
-              [ "${stl_win}" ] || {
+              [ "${USE_EWMH}" ] && {
+                sleep 1
                 stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                                           grep "${VISUALIZER}"`
+                                           grep "${VTITLE}"`
+                [ "${stl_win}" ] || {
+                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                                             grep "${VISUALIZER}"`
+                }
+                [ "${stl_win}" ] && center_window "${stl_win}" bottom
               }
-              [ "${stl_win}" ] && center_window "${stl_win}" bottom
             else
               # No supported terminal emulator available, use tmux
               TMUX_MPC=1
@@ -1062,14 +1075,16 @@ make_it_so() {
                 --override initial_window_width=120c \
                 --override initial_window_height=28c \
                 ${MPCOMM} 2> /dev/null &
-          sleep 1
-          mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-            grep -v "${VTITLE}" | grep "${MTITLE}"`
-          [ "${mpc_win}" ] || {
+          [ "${USE_EWMH}" ] && {
+            sleep 1
             mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-              grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+              grep -v "${VTITLE}" | grep "${MTITLE}"`
+            [ "${mpc_win}" ] || {
+              mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+            }
+            [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
           }
-          [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
         else
           if [ "${TILIX}" ]
           then
@@ -1078,14 +1093,16 @@ make_it_so() {
                   --geometry=90x20+150+25 \
                   --profile=MusicPlayer \
                   --command="${MPCOMM}" 2> /dev/null &
-            sleep 1
-            til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-              grep -v "${VTITLE}" | grep "${MTITLE}"`
-            [ "${til_win}" ] || {
+            [ "${USE_EWMH}" ] && {
+              sleep 1
               til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-                grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                grep -v "${VTITLE}" | grep "${MTITLE}"`
+              [ "${til_win}" ] || {
+                til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+              }
+              [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
             }
-            [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
           else
             if [ "${GNOME}" ]
             then
@@ -1094,14 +1111,16 @@ make_it_so() {
                     --hide-menubar \
                     --geometry=90x20+150+25 \
                     -- ${MPCOMM} &
-              sleep 1
-              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep -v "${VTITLE}" | grep "${MTITLE}"`
-              [ "${gno_win}" ] || {
+              [ "${USE_EWMH}" ] && {
+                sleep 1
                 gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                  grep -v "${VTITLE}" | grep "${MTITLE}"`
+                [ "${gno_win}" ] || {
+                  gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                }
+                [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
               }
-              [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
             else
               if [ "${SIMPLE}" ]
               then
@@ -1109,14 +1128,16 @@ make_it_so() {
                    -g "100x26+50+25" \
                    -f "Monospace:size=24" \
                    "${MPCOMM}" 2> /dev/null &
-                sleep 1
-                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                  grep -v "${VTITLE}" | grep "${MTITLE}"`
-                [ "${stl_win}" ] || {
+                [ "${USE_EWMH}" ] && {
+                  sleep 1
                   stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                    grep -v "${VTITLE}" | grep "${MTITLE}"`
+                  [ "${stl_win}" ] || {
+                    stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                      grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                  }
+                  [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
                 }
-                [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
               else
                 [ "${have_kitty}" ] || mppinit -q -y kitty
                 kitty --title="${MTITLE}" \
@@ -1125,14 +1146,16 @@ make_it_so() {
                       --override initial_window_width=120c \
                       --override initial_window_height=28c \
                       ${MPCOMM} 2> /dev/null &
-                sleep 1
-                mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                  grep -v "${VTITLE}" | grep "${MTITLE}"`
-                [ "${mpc_win}" ] || {
+                [ "${USE_EWMH}" ] && {
+                  sleep 1
                   mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                    grep -v "${VTITLE}" | grep "${MTITLE}"`
+                  [ "${mpc_win}" ] || {
+                    mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+                      grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                  }
+                  [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
                 }
-                [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
               fi
             fi
           fi
@@ -2123,6 +2146,7 @@ show_ascii_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
+    save_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
     [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
@@ -2173,6 +2197,7 @@ show_ascii_menu() {
                 TMUX_MPC=
                 MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -a//"`
               fi
+              save_it_so=1
               skip_it_so=1
               break
               ;;
@@ -2191,6 +2216,7 @@ show_ascii_menu() {
                 MPPSPLASH=`echo ${MPPSPLASH} | sed -e "s/ -a//"`
                 MPPSPLASH_TMUX=`echo ${MPPSPLASH_TMUX} | sed -e "s/ -a//"`
               fi
+              save_it_so=1
               skip_it_so=1
               break
               ;;
@@ -2219,6 +2245,7 @@ show_ascii_menu() {
               else
                 USE_TMUX=1
               fi
+              save_it_so=1
               skip_it_so=1
               break
               ;;
@@ -2229,12 +2256,60 @@ show_ascii_menu() {
       esac
       REPLY=
     done
+    [ "${save_it_so}" ] && {
+      save_config
+    }
     [ "${skip_it_so}" ] || {
       make_it_so
       init_vars
     }
   done
   init_vars
+}
+
+choose_folder() {
+  TMP="$(mktemp)"
+  ranger --choosedir="${TMP}" "${HOME}" 1>&2
+  cat ${TMP}
+  rm  -f ${TMP}
+}
+
+select_music_dir() {
+  if [ "${have_ranger}" ]
+  then
+    echo ""
+    echo "Choosing the music directory in Ranger is done by visiting a directory"
+    echo ""
+    echo "Use the arrow keys to browse folders"
+    echo "Press 'Enter' to enter a directory"
+    echo "Create a new directory with ':mkdir <dirname>'"
+    echo ""
+    echo "While in the directory you wish to select, quit Ranger with 'q'"
+    echo ""
+    while true
+    do
+      read -p "Select music directory now? (y/n) " answer
+      case ${answer} in
+        [Yy]* )
+          MUSIC_DIR="$(choose_folder)"
+          echo ""
+          echo "Selected music directory = ${MUSIC_DIR}"
+          echo ""
+          break
+          ;;
+        [Nn]* )
+          printf "\nSkipping music directory selection.\n"
+          break
+          ;;
+        * ) echo "Please answer 'y' to select directory, or 'n' to skip."
+          ;;
+      esac
+    done
+  else
+    MUSIC_DIR=$(dialog --stdout \
+                          --title "Please select a music folder" \
+                          --fselect ${HOME} 14 48)
+  fi
 }
 
 show_main_menu() {
@@ -2259,6 +2334,7 @@ show_main_menu() {
       usetmux="OFF"
     fi
     skip_it_so=
+    save_it_so=
     FIG_TEXT="Main Menu"
     if [ "${use_figlet}" ]
     then
@@ -2286,6 +2362,7 @@ show_main_menu() {
     options+=("Manage Music Downloads")
     options+=("Manage Music Services")
     [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
+    options+=("Select Music Directory")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Fullscreen (${fullstat})" "Quit")
@@ -2351,6 +2428,16 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
+          "Select Music"*,*|*,"Select Music"*)
+              CUR_MUS_DIR="${MUSIC_DIR}"
+              select_music_dir
+              [ "${CUR_MUS_DIR}" == "${MUSIC_DIR}" ] || {
+                save_config
+                mppinit sync
+              }
+              skip_it_so=1
+              break
+              ;;
           "Convert M4A"*,*|*,"Convert M4A"*)
               CONVERT_M4A=1
               break
@@ -2391,6 +2478,7 @@ show_main_menu() {
               else
                 USE_TMUX=1
               fi
+              save_it_so=1
               skip_it_so=1
               break
               ;;
@@ -2418,6 +2506,7 @@ show_main_menu() {
               else
                 FULLSCREEN=1
               fi
+              save_it_so=1
               skip_it_so=1
               break
               ;;
@@ -2428,6 +2517,9 @@ show_main_menu() {
       esac
       REPLY=
     done
+    [ "${save_it_so}" ] && {
+      save_config
+    }
     [ "${skip_it_so}" ] || {
       make_it_so
       init_vars
@@ -2482,7 +2574,35 @@ init_vars() {
   KITTY=1
   TMUX_MPC=
   TMUX_SPLASH=
+  USE_EWMH=1
   USAGE=
+  [ -f ${MPPCONF} ] && . ${MPPCONF}
+}
+
+save_config() {
+  [ -f ${MPPCONF} ] && {
+    echo "# Music library location" > ${MPPCONF}
+    echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >> ${MPPCONF}
+    echo "# General settings" >> ${MPPCONF}
+    echo "AUDIO=${AUDIO}" >> ${MPPCONF}
+    echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
+    echo "FULLSCREEN=${FULLSCREEN}" >> ${MPPCONF}
+    echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
+    echo "USE_EWMH=${USE_EWMH}" >> ${MPPCONF}
+    echo "# Terminal emulator preference" >> ${MPPCONF}
+    echo "CURRENT=${CURRENT}" >> ${MPPCONF}
+    echo "GNOME=${GNOME}" >> ${MPPCONF}
+    echo "RETRO=${RETRO}" >> ${MPPCONF}
+    echo "TILIX=${TILIX}" >> ${MPPCONF}
+    echo "KITTY=${KITTY}" >> ${MPPCONF}
+    echo "XFCE4=${XFCE4}" >> ${MPPCONF}
+  }
+}
+
+set_user_conf() {
+  exitcode=$?
+  save_config
+  exit ${exitcode}
 }
 
 pathadd() {
@@ -2494,7 +2614,13 @@ pathadd() {
 pathadd "${HOME}/.local/bin"
 
 # Check if initialization has been run
-[ -f ${HOME}/.config/mpcplus/config ] || {
+if [ -f ${HOME}/.config/mpcplus/config ]
+then
+  [ -f ${MPPCONF} ] || {
+    touch ${MPPCONF}
+    save_config
+  }
+else
   echo ""
   echo "MusicPlayerPlus initialization needs to be run once."
   echo "Answer 'y' to initialize, or 'n' to skip it for now."
@@ -2517,7 +2643,7 @@ pathadd "${HOME}/.local/bin"
         ;;
     esac
   done
-}
+fi
 
 init_vars
 if [ "${DISPLAY}" ]
@@ -2538,10 +2664,12 @@ then
   [ ${status} -eq 0 ] || {
     CONSOLE_MODE=1
     TMUX_MPC=1
+    USE_EWMH=
   }
 else
   CONSOLE_MODE=1
   TMUX_MPC=1
+  USE_EWMH=
 fi
 
 systemctl --user is-active --quiet yams.service
@@ -2601,6 +2729,7 @@ have_figlet=`type -p figlet`
 have_lolcat=`type -p lolcat`
 have_lynx=`type -p lynx`
 have_w3m=`type -p w3m`
+have_ranger=`type -p ranger`
 writeflag=
 tagflag=
 
@@ -2620,7 +2749,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBcC:D:d:eEFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -2730,6 +2859,9 @@ while getopts "AabBcC:D:d:eEFfGghiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
         KITTY=1
         GNOME=
       }
+      ;;
+    H)
+      USE_EWMH=
       ;;
     h)
       HALFHEIGHT=1
@@ -2901,6 +3033,10 @@ impflags="${tagflag} ${writeflag}"
       pick_terminal || usage
     fi
   }
+  [ "${USE_EWMH}" ] && {
+    wmctrl -l > /dev/null 2>&1
+    [ $? -eq 0 ] || USE_EWMH=
+  }
 }
 
 [ "${HALFHEIGHT}" ] && [ "${QRTRHEIGHT}" ] && {
@@ -2927,9 +3063,11 @@ impflags="${tagflag} ${writeflag}"
 
 [ "${USAGE}" ] && usage
 
+save_config
 if [ "${INTERACTIVE}" ]
 then
   DO_NOT_EXIT=1
+  trap 'set_user_conf' SIGINT SIGTERM SIGHUP EXIT
   clear
   show_main_menu
 else
