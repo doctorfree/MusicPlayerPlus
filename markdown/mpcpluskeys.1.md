@@ -239,9 +239,6 @@ MusicPlayerPlus provides the following custom *mpcplus* key bindings:
 -   `[ Alt-Up ]`       - Move pane focus up
 -   `[ Alt-Down ]`     - Move pane focus down
 
-When `mpcplus` is executed in a `tmux` session `Shift-Right Arrow` will switch
-to a tmux window running the fuzzy media finder `fzmp`.
-
 ## KEYS - TINY TAG EDITOR
 
 -   `[ Enter ]` - Edit tag

@@ -2652,12 +2652,23 @@ then
     ${SCRIPTS}/check_tty.sh
     status=$?
   else
-    have_tty=`type -p tty`
-    [ "${have_tty}" ] && {
-      tty=$(tty)
-      echo "${tty}" | grep /dev/tty > /dev/null && status=1
-      echo "${tty}" | grep /dev/con > /dev/null && status=1
-    }
+    have_xdpy=`type -p xdpyinfo`
+    if [ "${have_xdpy}" ]
+    then
+      xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+      status=$?
+    else
+      if [ "${have_kitty}" ]
+      then
+        kitty echo "" > /dev/null 2>&1
+        status=$?
+      else
+        [ "${have_gnome}" ] && {
+          gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+          status=$?
+        }
+      fi
+    fi
   fi
   [ ${status} -eq 0 ] || {
     CONSOLE_MODE=1
@@ -3017,43 +3028,46 @@ impflags="${tagflag} ${writeflag}"
 }
 
 [ "${CONSOLE_MODE}" ] || {
-  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
-    if [ "${have_kitty}" ]
-    then
-      KITTY=1
-    else
-      echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
-      echo "terminal emulator. However, Kitty is not installed,"
-      echo "unavailable, or not in your path."
-      echo "You can install Kitty using apt, pacman, or dnf as follows:"
-      printf "\n\n\tsudo apt install kitty\nor"
-      printf "\n\n\tsudo pacman -S kitty\nor"
-      printf "\n\tsudo dnf install kitty\n\n"
-      echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
-      echo "the '-g' option to use gnome-terminal, or '-e' to use st."
-      pick_terminal || usage
-    fi
-  }
   if [ "${disable_ewmh}" ]
   then
     USE_EWMH=
+    CONSOLE_MODE=1
   else
     USE_EWMH=1
     if [ "${have_xprop}" ]
     then
-      have_ewmh=`xprop -root -notype | \
-        awk '$1=="_NET_SUPPORTING_WM_CHECK:"{print $5}'`
-      [ "${have_ewmh}" ] || USE_EWMH=
-    else
-      if [ "${have_wmctrl}" ]
-      then
-        wmctrl -l > /dev/null 2>&1
-        [ $? -eq 0 ] || USE_EWMH=
-      else
+      movewindow=
+      hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
+      echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
+      [ "${movewindow}" ] || {
         USE_EWMH=
-      fi
+        CONSOLE_MODE=1
+      }
+    else
+      # Why didn't xprop get installed, it's a dependency
+      USE_EWMH=
+      CONSOLE_MODE=1
     fi
   fi
+  [ "${CONSOLE_MODE}" ] || {
+    [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
+      if [ "${have_kitty}" ]
+      then
+        KITTY=1
+      else
+        echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
+        echo "terminal emulator. However, Kitty is not installed,"
+        echo "unavailable, or not in your path."
+        echo "You can install Kitty using apt, pacman, or dnf as follows:"
+        printf "\n\n\tsudo apt install kitty\nor"
+        printf "\n\n\tsudo pacman -S kitty\nor"
+        printf "\n\tsudo dnf install kitty\n\n"
+        echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
+        echo "the '-g' option to use gnome-terminal, or '-e' to use st."
+        pick_terminal || usage
+      fi
+    }
+  }
 }
 
 [ "${HALFHEIGHT}" ] && [ "${QRTRHEIGHT}" ] && {

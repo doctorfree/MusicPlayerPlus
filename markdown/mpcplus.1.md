@@ -353,9 +353,6 @@ Alt-f opens a terminal window running the fuzzy media finder `fzmp`.
 
 Alt-r raises/lowers the spectrum visualizer window.
 
-When `mpcplus` is executed in a `tmux` session `Shift-Right Arrow` will switch
-to a tmux window running the fuzzy media finder `fzmp`.
-
 You can view current keybindings by pressing F1.
 
 ## SONG FORMAT

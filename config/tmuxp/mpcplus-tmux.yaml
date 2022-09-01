@@ -11,8 +11,3 @@ windows:
       - mppcava -p ${HOME}/.config/mppcava/config-tmux; exit
     options:
       main-pane-height: 20
-  - window_name: Fuzzy Finder
-    panes:
-    - shell_command:
-      - fzmp -a; exit
-      focus: true

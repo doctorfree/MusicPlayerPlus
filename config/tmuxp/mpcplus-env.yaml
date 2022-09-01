@@ -11,8 +11,3 @@ windows:
       - ${VIZCOMM}; exit
     options:
       main-pane-height: ${MAIN_PANE_HEIGHT}
-  - window_name: Fuzzy Finder
-    panes:
-    - shell_command:
-      - ${FZFCOMM}; exit
-      focus: true
