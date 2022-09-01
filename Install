@@ -38,7 +38,12 @@ get_available_packages() {
     [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/${PKG_VER}/*.${SUF}" ] || {
       for pkg in ${pkgs}
       do
-        pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}//"` 
+        if [ "${arch}" ]
+        then
+          pkgname=`basename ${pkg} | sed -e "s/-v${PKG_VER}r${PKG_REL}-${PACKAGE}-${ARCH}.${SUF}//"` 
+        else
+          pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}//"` 
+        fi
         PKG_AVAILABLE="${PKG_AVAILABLE} ${pkgname}"
       done
     }
@@ -159,7 +164,7 @@ for PKG_NAME in ${PKG_NAMES}
 do
   if [ "${arch}" ]
   then
-    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}-${ARCH}.pkg.tar.${SUF}"
+    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}-v${PKG_VER}r${PKG_REL}-${PACKAGE}-${ARCH}.pkg.tar.${SUF}"
   else
     PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}"
   fi
