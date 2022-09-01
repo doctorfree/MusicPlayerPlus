@@ -417,7 +417,6 @@ init_mpp_conf() {
   echo "COVER_ART=" >> ${MPPCONF}
   echo "FULLSCREEN=" >> ${MPPCONF}
   echo "USE_TMUX=" >> ${MPPCONF}
-  echo "USE_EWMH=1" >> ${MPPCONF}
   echo "# Terminal emulator preference" >> ${MPPCONF}
   if [ "${have_kitty}" ]
   then

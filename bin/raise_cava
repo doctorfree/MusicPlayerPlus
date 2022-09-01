@@ -6,6 +6,25 @@
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
 
+have_xprop=`type -p xprop`
+have_wmctrl=`type -p wmctrl`
+
+# Not all window managers implement support for extended window manager hints
+if [ "${have_xprop}" ]
+then
+  have_ewmh=`xprop -root -notype | \
+    awk '$1=="_NET_SUPPORTING_WM_CHECK:"{print $5}'`
+  [ "${have_ewmh}" ] || exit 1
+else
+  if [ "${have_wmctrl}" ]
+  then
+    wmctrl -l > /dev/null 2>&1
+    [ $? -eq 0 ] || exit 1
+  else
+    exit 1
+  fi
+fi
+
 cavawin=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
 [ "${cavawin}" ] || {
   cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`

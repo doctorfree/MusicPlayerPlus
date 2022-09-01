@@ -2574,7 +2574,6 @@ init_vars() {
   KITTY=1
   TMUX_MPC=
   TMUX_SPLASH=
-  USE_EWMH=1
   USAGE=
   [ -f ${MPPCONF} ] && . ${MPPCONF}
 }
@@ -2588,7 +2587,6 @@ save_config() {
     echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
     echo "FULLSCREEN=${FULLSCREEN}" >> ${MPPCONF}
     echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
-    echo "USE_EWMH=${USE_EWMH}" >> ${MPPCONF}
     echo "# Terminal emulator preference" >> ${MPPCONF}
     echo "CURRENT=${CURRENT}" >> ${MPPCONF}
     echo "GNOME=${GNOME}" >> ${MPPCONF}
@@ -2703,17 +2701,19 @@ else
   have_simple=`type -p st`
   have_tilix=`type -p tilix`
   have_kitty=`type -p kitty`
-  have_xrandr=`type -p xrandr`
-  if [ "${have_xrandr}" ]
-  then
-    read -r s_wid s_hit \
-      < <(xrandr | grep current | \
-                   awk -F ',' '{ print $2 }' | \
-                   awk '{ print $2, $4 }')
-  else
-    s_wid=1920
-    s_hit=1080
-  fi
+fi
+have_wmctrl=`type -p wmctrl`
+have_xprop=`type -p xprop`
+have_xrandr=`type -p xrandr`
+if [ "${have_xrandr}" ]
+then
+  read -r s_wid s_hit \
+    < <(xrandr | grep current | \
+                 awk -F ',' '{ print $2 }' | \
+                 awk '{ print $2, $4 }')
+else
+  s_wid=1920
+  s_hit=1080
 fi
 have_uebz=`type -p ueberzug`
 have_fzf=`type -p fzf`
@@ -2732,6 +2732,7 @@ have_w3m=`type -p w3m`
 have_ranger=`type -p ranger`
 writeflag=
 tagflag=
+disable_ewmh=
 
 if [ "${have_figlet}" ]
 then
@@ -2861,7 +2862,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       }
       ;;
     H)
-      USE_EWMH=
+      disable_ewmh=1
       ;;
     h)
       HALFHEIGHT=1
@@ -3033,10 +3034,26 @@ impflags="${tagflag} ${writeflag}"
       pick_terminal || usage
     fi
   }
-  [ "${USE_EWMH}" ] && {
-    wmctrl -l > /dev/null 2>&1
-    [ $? -eq 0 ] || USE_EWMH=
-  }
+  if [ "${disable_ewmh}" ]
+  then
+    USE_EWMH=
+  else
+    USE_EWMH=1
+    if [ "${have_xprop}" ]
+    then
+      have_ewmh=`xprop -root -notype | \
+        awk '$1=="_NET_SUPPORTING_WM_CHECK:"{print $5}'`
+      [ "${have_ewmh}" ] || USE_EWMH=
+    else
+      if [ "${have_wmctrl}" ]
+      then
+        wmctrl -l > /dev/null 2>&1
+        [ $? -eq 0 ] || USE_EWMH=
+      else
+        USE_EWMH=
+      fi
+    fi
+  fi
 }
 
 [ "${HALFHEIGHT}" ] && [ "${QRTRHEIGHT}" ] && {
