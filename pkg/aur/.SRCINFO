@@ -15,6 +15,7 @@ pkgbase = musicplayerplus
 	makedepends = zip
 	depends = util-linux
 	depends = boost-libs
+	depends = jq
 	depends = libcurl-compat
 	depends = libmpdclient
 	depends = ncurses

@@ -2796,8 +2796,9 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       type -p "${CLIENT}" > /dev/null || {
         echo "Option '-C' indicates use ${CLIENT} MPD client."
         echo "However, ${CLIENT} is not installed or not in your path."
-        echo "You may be able to install ${CLIENT} using apt or dnf as follows:"
+        echo "You may be able to install ${CLIENT} as follows:"
         printf "\n\n\tsudo apt install ${CLIENT}\nor"
+        printf "\n\tsudo pacman -S ${CLIENT}\nor"
         printf "\n\tsudo dnf install ${CLIENT}\n\n"
         if [ "${have_cantata}" ]
         then
@@ -2841,7 +2842,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
         echo "However, st is not installed, unavailable, or not in your path."
         echo "You can install st using apt, pacman, or dnf as follows:"
         printf "\n\n\tsudo apt install stterm\nor"
-        printf "\n\n\tsudo pacman -S stterm\nor"
+        printf "\n\tsudo pacman -S stterm\nor"
         printf "\n\tsudo dnf install stterm\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
@@ -2865,7 +2866,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
         echo "However, gnome-terminal is not installed or not in your path."
         echo "You can install gnome-terminal using apt, pacman, or dnf:"
         printf "\n\n\tsudo apt install gnome-terminal\nor"
-        printf "\n\n\tsudo pacman -S gnome-terminal\nor"
+        printf "\n\tsudo pacman -S gnome-terminal\nor"
         printf "\n\tsudo dnf install gnome-terminal\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
@@ -2965,7 +2966,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
         echo "However, tilix is not installed, unavailable, or not in your path."
         echo "You can install tilix using apt, pacman, or dnf as follows:"
         printf "\n\n\tsudo apt install tilix\nor"
-        printf "\n\n\tsudo pacman -S tilix\nor"
+        printf "\n\tsudo pacman -S tilix\nor"
         printf "\n\tsudo dnf install tilix\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
@@ -3058,10 +3059,8 @@ impflags="${tagflag} ${writeflag}"
         echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
         echo "terminal emulator. However, Kitty is not installed,"
         echo "unavailable, or not in your path."
-        echo "You can install Kitty using apt, pacman, or dnf as follows:"
-        printf "\n\n\tsudo apt install kitty\nor"
-        printf "\n\n\tsudo pacman -S kitty\nor"
-        printf "\n\tsudo dnf install kitty\n\n"
+        echo "You can install Kitty as follows:"
+        printf "\n\n\tmppinit kitty\n\n"
         echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
         echo "the '-g' option to use gnome-terminal, or '-e' to use st."
         pick_terminal || usage

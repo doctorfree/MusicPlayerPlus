@@ -2116,44 +2116,47 @@ then
     pip_install "${pkg}"
   done
   [ "${quiet}" ] || printf " done!\n"
+
+  [ "${quiet}" ] || {
+    printf "\n\tVerifying minimum version of PyYAML module is installed ..."
+  }
+  # Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
+  VMIN="5.4.1"
+  # Ensure PyYAML is version ${VMIN} or greater
+  YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
+  [ -x ${SCPTDIR}/vercomp.sh ] && {
+    ${SCPTDIR}/vercomp.sh "${YAMV}" "${VMIN}" > /dev/null
+    [ $? -eq 2 ] && {
+      # Update Python PyYAML to get support for safe_load of lastgenre
+      # Beets plugin when used with Python 3.10
+      # Specify version ${VMIN} to avoid updating to version 6
+      YLOC=`${PYTHON} -m pip show PyYAML | grep Location: | awk ' { print $2 } '`
+      pylocal=
+      echo "${YLOC}" | grep "${HOME}" > /dev/null && pylocal=1
+      if [ "${pylocal}" ]
+      then
+        ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
+      else
+        sudo ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
+      fi
+    }
+  }
 else
   echo ""
   echo "WARNING: Python pip module not found."
   echo "Pip is required to install several MusicPlayerPlus components."
   echo ""
   echo "Install the Python pip module with:"
+  echo ""
   printf "\n\tsudo apt install python3-pip\n"
   echo "or"
   printf "\n\tsudo dnf install python3-pip\n"
+  echo "or"
+  printf "\n\tsudo pacman -S python-pip\n"
   echo ""
   echo "After verifying that pip is installed,"
   echo "rerun the 'mppinit' MusicPlayer initialization."
 fi
-
-[ "${quiet}" ] || {
-  printf "\n\tVerifying minimum version of Python PyYAML module is installed ..."
-}
-# Minimum version of PyYAML, 5.1 would do but we use the latest 5.x release
-VMIN="5.4.1"
-# Ensure PyYAML is version ${VMIN} or greater
-YAMV=`${PYTHON} -m pip show PyYAML | grep Version: | awk ' { print $2 } '`
-[ -x ${SCPTDIR}/vercomp.sh ] && {
-  ${SCPTDIR}/vercomp.sh "${YAMV}" "${VMIN}" > /dev/null
-  [ $? -eq 2 ] && {
-    # Update Python PyYAML to get support for safe_load of lastgenre
-    # Beets plugin when used with Python 3.10
-    # Specify version ${VMIN} to avoid updating to version 6
-    YLOC=`${PYTHON} -m pip show PyYAML | grep Location: | awk ' { print $2 } '`
-    pylocal=
-    echo "${YLOC}" | grep "${HOME}" > /dev/null && pylocal=1
-    if [ "${pylocal}" ]
-    then
-      ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
-    else
-      sudo ${PYTHON} -m pip install PyYAML==${VMIN} > /dev/null 2>&1
-    fi
-  }
-}
 
 [ "${quiet}" ] || {
   printf "\n\tPatching Beets plugins ..."
@@ -2223,9 +2226,10 @@ sync_music_dir
 printf " done.\n"
 
 printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
-printf "\nMusic directory set to ${BOLD}${mpd_music}${NORM} in ${MPDCONF}"
-printf "\nModify ${MPDCONF} 'music_directory' to change this."
-printf "\nIf 'music_directory' is modified, run '${BOLD}mppinit sync${NORM}'\n"
+printf "\nMusic library location set to ${BOLD}${mpd_music}${NORM} in:"
+printf "\n\t${MPPCONF}"
+printf "\nModify ${MPPCONF} 'MUSIC_DIR' to change this."
+printf "\nIf 'MUSIC_DIR' is modified, run '${BOLD}mppinit sync${NORM}'\n"
 printf "\nDownload albums in your Bandcamp collections with:"
 printf "\n\t${BOLD}mppinit bandcamp${NORM}"
 printf "\nDownload favorites in your Soundcloud account with:"

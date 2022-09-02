@@ -35,9 +35,13 @@ have_jq=`type -p jq`
 [ "${have_jq}" ] || {
   echo "Required utility, jq, not found."
   echo "Install the jq json processor with:"
+  echo ""
   echo "    sudo apt install jq"
   echo "or"
   echo "    sudo dnf install jq"
+  echo "or"
+  echo "    sudo pacman -S jq"
+  echo ""
   echo "Exiting"
   exit 1
 }
