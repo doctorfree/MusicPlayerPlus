@@ -2695,6 +2695,12 @@ else
   fi
 fi
 
+have_wmctrl=`type -p wmctrl`
+have_xprop=`type -p xprop`
+have_xrandr=`type -p xrandr`
+have_uebz=`type -p ueberzug`
+have_fzf=`type -p fzf`
+have_mopidy=`type -p mopidy`
 if [ "${CONSOLE_MODE}" ]
 then
   have_cantata=
@@ -2712,23 +2718,11 @@ else
   have_simple=`type -p st`
   have_tilix=`type -p tilix`
   have_kitty=`type -p kitty`
+  [ "${have_xrandr}" ] && {
+    read -r s_wid s_hit < <(xrandr | grep current | \
+            awk -F ',' '{ print $2 }' | awk '{ print $2, $4 }')
+   }
 fi
-have_wmctrl=`type -p wmctrl`
-have_xprop=`type -p xprop`
-have_xrandr=`type -p xrandr`
-if [ "${have_xrandr}" ]
-then
-  read -r s_wid s_hit \
-    < <(xrandr | grep current | \
-                 awk -F ',' '{ print $2 }' | \
-                 awk '{ print $2, $4 }')
-else
-  s_wid=1920
-  s_hit=1080
-fi
-have_uebz=`type -p ueberzug`
-have_fzf=`type -p fzf`
-have_mopidy=`type -p mopidy`
 if [ -x /opt/navidrome/navidrome ]
 then
   have_navi=1
