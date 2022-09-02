@@ -276,9 +276,6 @@ smartplaylist:
 #   - name: beatles.m3u
 #     query: 'artist:Beatles'
 
-    - name: 'ween.m3u'
-      query: 'artist:Ween'
-
     - name: 1940s.m3u
       query: 'original_year:1940..1949'
 

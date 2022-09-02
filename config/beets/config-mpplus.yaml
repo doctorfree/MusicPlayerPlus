@@ -179,8 +179,6 @@ smartplaylist:
     playlists:
     -   name: rating.m3u
         query: rating:0.4..1.0
-    -   name: ween.m3u
-        query: artist:Ween
     -   name: 1940s.m3u
         query: original_year:1940..1949
     -   name: 1950s.m3u
