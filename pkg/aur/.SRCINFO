@@ -46,6 +46,7 @@ pkgbase = musicplayerplus
 	depends = sndio
 	depends = sqlite
 	depends = qt5-base
+	depends = wget
 	depends = wmctrl
 	depends = xorg-xdpyinfo
 	depends = xorg-xprop
