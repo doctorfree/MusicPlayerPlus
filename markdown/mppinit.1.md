@@ -19,14 +19,14 @@ modules if not already installed.
 Invoked with the `bandcamp` argument, *mppinit bandcamp* downloads the
 albums in your Bandcamp collections. A valid Bandcamp username must be
 configured in `$HOME/.config/calliope/calliope.conf`. The Bandcamp albums
-are downloaded to the `music_directory` folder configured in
-`$HOME/.config/mpd/mpd.conf` in a `Bandcamp` sub-folder.
+are downloaded to the `MUSIC_DIR` folder configured in
+`$HOME/.config/musicplayerplus/config` in a `Bandcamp` sub-folder.
 
 Invoked with the `soundcloud` argument, *mppinit soundcloud* downloads the
 favorites in your Soundcloud account. A valid Soundcloud user slug must be
 provided at the prompt. The Soundcloud favorites are downloaded to the
-`music_directory` folder configured in `$HOME/.config/mpd/mpd.conf` in a
-`Soundcloud` sub-folder.
+`MUSIC_DIR` folder configured in `$HOME/.config/musicplayerplus/config`
+in a `Soundcloud` sub-folder.
 
 Invoked with the `import` argument, *mppinit import* imports the music
 library to the Beets media management system.

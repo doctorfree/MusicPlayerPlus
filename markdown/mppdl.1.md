@@ -9,7 +9,7 @@ date: August 11, 2022
 mppdl - download audio tracks from Bandcamp, Soundcloud, or a URL
 
 ## SYNOPSIS
-**mppdl** [-a album] [-A artist] [-i] [-I] [-f fmt] [-l] [-t track] [-T title] bandcamp|soundcloud|downloads|URL
+**mppdl** [-a album] [-A artist] [-d music_dir] [-i] [-I] [-f fmt] [-l] [-t track] [-T title] bandcamp|soundcloud|downloads|URL
 
 ## DESCRIPTION
 
@@ -18,8 +18,8 @@ collection, Soundcloud favorites, or a specified URL using `yt-dlp`.
 Bandcamp collections are downloaded into *music_directory/Bandcamp/*,
 Soundcloud favorites are downloaded into *music_directory/Soundcloud/*, and
 audio in the specified URL is downloaded into *music_directory/Downloads/*.
-The *music_directory* path is that specified in `$HOME/.config/mpd/mpd.conf`,
-by default this is `$HOME/Music/`.
+The *music_directory* path is that specified in `$HOME/.config/mpd/mpd.conf`
+or `$HOME/.config/musicplayerplus/config`. By default this is `$HOME/Music/`.
 
 If a Beets import is specified with the `-i` option then the import is
 performed non-interactively. Beets tries to identify the audio using
@@ -42,6 +42,9 @@ a URL with `mppdl -I`.
 
 **-A 'artist'**
 : saves the download with filename 'artist'-'title'.m4a
+
+**-d 'music_dir'**
+: overrides the 'music_dir' location specified in config files
 
 **-i**
 : indicates import audio into Beets after download completes

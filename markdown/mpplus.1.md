@@ -122,7 +122,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : Indicates download songs from Soundcloud and exit
 
 **-d 'music_directory'**
-: Specifies the music directory to use for downloaded album cover art (without this option -D will use the `music_directory` setting in `~/.config/mpd/mpd.conf`
+: Specifies the music directory to use for downloaded album cover art (without this option -D will use the `MUSIC_DIR` setting in `~/.config/musicplayerplus/config`
 
 **-F**
 : Indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.

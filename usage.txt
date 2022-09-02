@@ -2,7 +2,7 @@
 
 Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
-	[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
+	[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status]
 	[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -12,6 +12,7 @@ MPCplus/Visualizer options:
 	-E indicates do not use gradient colors for spectrum visualizer
 	-f indicates fullscreen display
 	-h indicates half-height for visualizer window (with -f only)
+	-H indicates disable use of extended window manager hints
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for visualizer window (with -f only)
 	-c indicates use current terminal emulator / console mode
@@ -40,8 +41,8 @@ General options:
 	-D 'bandcamp' indicates download Bandcamp songs and exit
 	-D 'soundcloud' indicates download Soundcloud songs and exit
 	-d 'music_directory' specifies the music directory to use for
-		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
+		downloaded album cover art. Without this option -D will use
+		the 'MUSIC_DIR' setting in '~/.config/musicplayerplus/config'
 	-F indicates convert WAV format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.

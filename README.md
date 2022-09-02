@@ -206,10 +206,20 @@ Some common additional setup steps that can be performed include:
 - Activation of YAMS scrobbler for Last.fm
 - Analysis and retrieval of audio-based information for media matching a query
 
-Configure the music library location by editing `~/.config/mpd/mpd.conf` and
-setting the `music_directory` to your music library location (default setting
-is `~/Music`). If you change the `music_directory` setting in mpd.conf then
-run the command `mppinit sync`.
+Configure the music library location by editing
+`~/.config/musicplayerplus/config` and setting `MUSIC_DIR` to your music
+library location (default setting is `~/Music`). If you change the `MUSIC_DIR`
+setting then run the command `mppinit sync`.
+
+**[Important Note:]** MusicPlayerPlus integrates several services, each of
+which has its own configuration for the location of the music library. Because
+of this, MusicPlayerPlus provides its own configuration file
+`~/.config/musicplayerplus/config`. The `MUSIC_DIR` setting in that config
+file is used as the source of truth for the location of the music library.
+In order to keep all of the services in sync with respect to the music
+library location, set the location in `~/.config/musicplayerplus/config`
+and run the command `mppinit sync`. If the music library is moved to a new
+location, repeat this procedure.
 
 Download albums in your Bandcamp collections with `mppinit bandcamp`.
 
@@ -341,7 +351,7 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
 * Install the latest Arch, Debian, or RPM format installation package
 * Run the `mppinit` command as your normal user
 * If the music library is not located at `$HOME/Music`:
-    * Configure the `music_directory` setting by editing `~/.config/mpd/mpd.conf`
+    * Configure `MUSIC_DIR` by editing `~/.config/musicplayerplus/config`
     * Run the command `mppinit sync`
 * Optionally:
     * Download albums in your Bandcamp collections with `mppinit bandcamp`
@@ -500,10 +510,8 @@ may be necessary. See the [Quickstart](#quickstart) section.
 After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
-be configured by editing the MPD configuration file `~/.config/mpd/mpd.conf`.
-
-Following any modification of the music library location in
-`~/.config/mpd/mpd.conf` execute `mppinit sync`.
+be configured by editing the MusicPlayerPlus configuration file
+`~/.config/musicplayerplus/config` and running the command `mppinit sync`.
 
 ### Client Configuration (required)
 
@@ -537,17 +545,17 @@ The default MPD and `mpcplus` music directory is set to:
 If your media library resides in another location then perform the following
 steps and run `mppinit sync`:
 
-* Edit `$HOME/.config/mpd/mpd.conf` and set the `music_directory` entry to the location of your music library (e.g. `vi ~/.config/mpd/mpd.conf`)
+* Edit `$HOME/.config/musicplayerplus/config` and set the `MUSIC_DIR` entry to the location of your music library (e.g. `vi ~/.config/musicplayerplus/config`)
 * Run the `mppinit sync` command
 
 For example, to set the MPD music directory to the `/u/audio/music` directory,
-edit `$HOME/.config/mpd/mpd.conf` and change the *music_directory* setting:
+edit `$HOME/.config/musicplayerplus/config` and change the *MUSIC_DIR* setting:
 
 ```
-music_directory		"/u/audio/music"
+MUSIC_DIR="/u/audio/music"
 ```
 
-The *music_directory* location must be writeable by your user.
+The *MUSIC_DIR* location must be writeable by your user.
 
 Any time the MPD music directory is manually modified, run `mppinit sync`.
 
@@ -992,11 +1000,11 @@ It's a tradeoff.
 To re-activate MPD and disable Mopidy, issue the command `mppinit mpd`.
 Easily switch back and forth between MPD and Mopidy with `mppinit mpd`
 and `mppinit mopidy`. Note that MusicPlayerPlus continues to use the
-MPD configured `music_directory` as the master music library location.
-To change the location of the music library, edit `~/.config/mpd/mpd.conf`,
-set `music_directory` to the new location, and run `mppinit sync` to
-synchronize the music library location across Beets, MPD, Mopidy, and
-downloaders.
+configured `MUSIC_DIR` as the master music library location.
+To change the location of the music library, edit
+`~/.config/musicplayerplus/config`, set `MUSIC_DIR` to the new location,
+and run `mppinit sync` to synchronize the music library location across
+Beets, MPD, Mopidy, and downloaders.
 
 ### Installing Navidrome
 
@@ -1391,7 +1399,7 @@ MusicPlayerPlus capabilities:
 ```
 Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
-	[-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
+	[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status]
 	[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -1401,6 +1409,7 @@ MPCplus/Visualizer options:
 	-E indicates do not use gradient colors for spectrum visualizer
 	-f indicates fullscreen display
 	-h indicates half-height for visualizer window (with -f only)
+	-H indicates disable use of extended window manager hints
 	-P script specifies the ASCIImatics script to run in visualizer pane
 	-q indicates quarter-height for visualizer window (with -f only)
 	-c indicates use current terminal emulator / console mode
@@ -1429,8 +1438,8 @@ General options:
 	-D 'bandcamp' indicates download Bandcamp songs and exit
 	-D 'soundcloud' indicates download Soundcloud songs and exit
 	-d 'music_directory' specifies the music directory to use for
-		downloaded album cover art (without this option -D will use
-		the 'music_directory' setting in '~/.config/mpd/mpd.conf'
+		downloaded album cover art. Without this option -D will use
+		the 'MUSIC_DIR' setting in '~/.config/musicplayerplus/config'
 	-F indicates convert WAV format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.

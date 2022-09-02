@@ -5,6 +5,7 @@
 # Written 10-Aug-2022 by Ronald Record <ronaldrecord@gmail.com>
 
 MPD_CONF="${HOME}/.config/mpd/mpd.conf"
+MPP_CONF="${HOME}/.config/musicplayerplus/config"
 FMT="m4a"
 LISTCOMM="yt-dlp -Uv -F -f 'ba' -x --list-formats"
 URL=
@@ -15,15 +16,17 @@ IMPORT=
 IMPORT_ONLY=
 TITLE=
 TRACK=
+MUSIC_DIR=
 
 usage() {
-  printf "\nUsage: mppdl [-a album] [-A artist] [-i] [-I] [-f fmt] [-l]"
-  printf "\n             [-p playlist] [-t track] [-T title]"
+  printf "\nUsage: mppdl [-a album] [-A artist] [-d music_dir] [-i] [-I]"
+  printf "\n             [-f fmt] [-l] [-p playlist] [-t track] [-T title]"
   printf "\n             bandcamp|soundcloud|URL"
   printf "\nWhere:"
   printf "\n\t-a 'album' saves the downloads in the subdirectory 'album'"
   printf "\n\t-A 'artist' saves the download with filename"
   printf "\n\t\t'artist'-'title'.${FMT}"
+  printf "\n\t-d 'music_dir' saves the downloads in 'music_dir/...'"
   printf "\n\t-i indicates import audio into Beets after download completes"
   printf "\n\t-I indicates import already downloaded audio into Beets"
   printf "\n\t-f 'fmt' saves the download in 'fmt' format (default m4a)"
@@ -45,13 +48,16 @@ usage() {
   exit 1
 }
 
-while getopts "a:A:f:p:t:T:iIlu" flag; do
+while getopts "a:A:d:f:p:t:T:iIlu" flag; do
     case $flag in
         a)
             ALBUM="$OPTARG"
             ;;
         A)
             ARTIST="$OPTARG"
+            ;;
+        d)
+            MUSIC_DIR="$OPTARG"
             ;;
         f)
             FMT="$OPTARG"
@@ -102,18 +108,23 @@ shift $(( OPTIND - 1 ))
   }
 }
 
-mpd_music=`grep ^music_directory ${MPD_CONF}`
-mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
-[ "${mpd_music}" ] || mpd_music="${HOME}/Music"
-# Need to expand the tilda to $HOME
-mpd_music="${mpd_music/#\~/$HOME}"
+[ "${MUSIC_DIR}" ] || {
+  [ -f "${MPP_CONF}" ] && . "${MPP_CONF}"
+  [ "${MUSIC_DIR}" ] || {
+    MUSIC_DIR=`grep ^music_directory ${MPD_CONF}`
+    MUSIC_DIR=`echo ${MUSIC_DIR} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+    [ "${MUSIC_DIR}" ] || MUSIC_DIR="${HOME}/Music"
+    # Need to expand the tilda to $HOME
+    MUSIC_DIR="${MUSIC_DIR/#\~/$HOME}"
+  }
+}
 
 if [ "$1" == "bandcamp" ]
 then
   [ "${IMPORT_ONLY}" ] || mppinit bandcamp
   [ "${IMPORT}" ] && {
-    [ -d "${mpd_music}/Bandcamp" ] && beet import -q "${mpd_music}/Bandcamp"
-    [ -d "${mpd_music}/Bandcamp" ] && beet import -q -s "${mpd_music}/Bandcamp"
+    [ -d "${MUSIC_DIR}/Bandcamp" ] && beet import -q "${MUSIC_DIR}/Bandcamp"
+    [ -d "${MUSIC_DIR}/Bandcamp" ] && beet import -q -s "${MUSIC_DIR}/Bandcamp"
   }
   exit 0
 else
@@ -121,11 +132,11 @@ else
   then
     [ "${IMPORT_ONLY}" ] || mppinit soundcloud
     [ "${IMPORT}" ] && {
-      [ -d "${mpd_music}/Soundcloud" ] && {
-        beet import -q "${mpd_music}/Soundcloud"
+      [ -d "${MUSIC_DIR}/Soundcloud" ] && {
+        beet import -q "${MUSIC_DIR}/Soundcloud"
       }
-      [ -d "${mpd_music}/Soundcloud" ] && {
-        beet import -q -s "${mpd_music}/Soundcloud"
+      [ -d "${MUSIC_DIR}/Soundcloud" ] && {
+        beet import -q -s "${MUSIC_DIR}/Soundcloud"
       }
     }
     exit 0
@@ -142,11 +153,11 @@ fi
 
 COMMAND="yt-dlp -x -f bestaudio[ext=${FMT}]/bestaudio --embed-metadata"
 URL="$1"
-DDIR="${mpd_music}/Downloads"
+DDIR="${MUSIC_DIR}/Downloads"
 
 [ -d "${DDIR}" ] || mkdir -p "${DDIR}"
 [ "${ALBUM}" ] && {
-  DDIR="${mpd_music}/Downloads/${ALBUM}"
+  DDIR="${MUSIC_DIR}/Downloads/${ALBUM}"
   [ -d "${DDIR}" ] || mkdir -p "${DDIR}"
 }
 
@@ -161,15 +172,15 @@ else
       echo "Beets import of ${DDIR} complete"
     }
     [ "${URL}" == "downloads" ] || {
-      [ -d "${mpd_music}/Bandcamp" ] && {
-        beet import -q "${mpd_music}/Bandcamp"
-        beet import -q -s "${mpd_music}/Bandcamp"
-        echo "Beets import of ${mpd_music}/Bandcamp complete"
+      [ -d "${MUSIC_DIR}/Bandcamp" ] && {
+        beet import -q "${MUSIC_DIR}/Bandcamp"
+        beet import -q -s "${MUSIC_DIR}/Bandcamp"
+        echo "Beets import of ${MUSIC_DIR}/Bandcamp complete"
       }
-      [ -d "${mpd_music}/Soundcloud" ] && {
-        beet import -q "${mpd_music}/Soundcloud"
-        beet import -q -s "${mpd_music}/Soundcloud"
-        echo "Beets import of ${mpd_music}/Soundcloud complete"
+      [ -d "${MUSIC_DIR}/Soundcloud" ] && {
+        beet import -q "${MUSIC_DIR}/Soundcloud"
+        beet import -q -s "${MUSIC_DIR}/Soundcloud"
+        echo "Beets import of ${MUSIC_DIR}/Soundcloud complete"
       }
     }
     exit 0
