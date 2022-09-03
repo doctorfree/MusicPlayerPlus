@@ -280,6 +280,7 @@ set_have_navi() {
 
 init_mopidy() {
   # Mopidy requires GStreamer >= 1.14.0 with Python bindings.
+  # The spectrum visualizer with Mopidy requires PulseAudio
   debian=
   arch=
   [ -f /etc/os-release ] && . /etc/os-release
@@ -303,7 +304,7 @@ init_mopidy() {
       fi
     fi
     [ "${APT}" ] && {
-      sudo ${APT} install python3-gst-1.0 \
+      sudo ${APT} install pulseaudio python3-gst-1.0 \
                           gir1.2-gstreamer-1.0 \
                           gir1.2-gst-plugins-base-1.0 \
                           gstreamer1.0-plugins-good \
@@ -315,7 +316,9 @@ init_mopidy() {
     then
       sudo pacman -S --needed --noconfirm gst-python \
                                           gst-plugins-good \
-                                          gst-plugins-ugly
+                                          gst-plugins-ugly \
+                                          pulseaudio \
+                                          pulseaudio-alsa
     else
       DNF=
       have_dnf=`type -p dnf`
@@ -333,7 +336,7 @@ init_mopidy() {
         fi
       fi
       [ "${DNF}" ] && {
-        sudo ${DNF} install -y python3-gstreamer1 \
+        sudo ${DNF} install -y pulseaudio python3-gstreamer1 \
                                gstreamer1-plugins-good \
                                gstreamer1-plugins-ugly-free
       }
@@ -383,6 +386,32 @@ init_mopidy() {
   # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
   [ -x ${SCPTDIR}/viz_data_src.sh ] && ${SCPTDIR}/viz_data_src.sh mopidy
 
+  # Disable system-wide PulseAudio
+  systemctl is-enabled pulseaudio.service >/dev/null 2>&1 && {
+    sudo systemctl disable pulseaudio.service
+  }
+  systemctl is-enabled pulseaudio.socket >/dev/null 2>&1 && {
+    sudo systemctl disable pulseaudio.socket
+  }
+  systemctl is-active pulseaudio.service >/dev/null 2>&1 && {
+    sudo systemctl stop pulseaudio.service
+  }
+  systemctl is-active pulseaudio.socket >/dev/null 2>&1 && {
+    sudo systemctl stop pulseaudio.socket
+  }
+  # Enable and start user-level PulseAudio
+  systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && {
+    systemctl --user stop pulseaudio.service
+  }
+  systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && {
+    systemctl --user disable pulseaudio.service
+  }
+  systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 || {
+    systemctl --user enable pulseaudio.socket
+  }
+  systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 || {
+    systemctl --user start pulseaudio.socket
+  }
   # Enable Mopidy services
   systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
     systemctl --user start webplugin.service

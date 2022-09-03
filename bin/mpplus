@@ -870,10 +870,16 @@ make_it_so() {
               viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
                 grep "${VTITLE}"`
             else
-              [ "${GNOME}" ] && {
-                viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+              if [ "${SIMPLE}" ]
+              then
+                viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                   grep "${VTITLE}"`
-              }
+              else
+                [ "${GNOME}" ] && {
+                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                    grep "${VTITLE}"`
+                }
+              fi
             fi
           fi
           [ "${viz_win}" ] || {
@@ -881,23 +887,27 @@ make_it_so() {
             then
               viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
                 grep "${VISUALIZER}"`
-              [ "${viz_win}" ] || echo "Could not find visualizer window"
             else
               if [ "${TILIX}" ]
               then
                 viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
                   grep "${VISUALIZER}"`
-                [ "${viz_win}" ] || echo "Could not find visualizer window"
               else
-                [ "${GNOME}" ] && {
-                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                if [ "${SIMPLE}" ]
+                then
+                  viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                     grep "${VISUALIZER}"`
-                  [ "${viz_win}" ] || echo "Could not find visualizer window"
-                }
+                else
+                  [ "${GNOME}" ] && {
+                    viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                      grep "${VISUALIZER}"`
+                  }
+                fi
               fi
             fi
           }
-          [ "${viz_win}" ] && {
+          if [ "${viz_win}" ]
+          then
             read -r winid grav xoff yoff width height \
               < <(echo ${viz_win} | awk ' { print $1, $2, $3, $4, $5, $6} ')
             [ "${winid}" ] && {
@@ -915,7 +925,9 @@ make_it_so() {
               wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
               wmctrl -i -r "${winid}" -e "${mvarg}"
             }
-          }
+          else
+            echo "Could not find visualizer window"
+          fi
         }
       }
     else
@@ -2531,9 +2543,9 @@ init_vars() {
   MPCPLUS="mpcplus"
   if [ "${USE_GRAD}" ]
   then
-    MPCPLUS_TMUX="mpcplus-tmux -f"
+    MPCPLUS_TMUX="mpcplus-tmux"
   else
-    MPCPLUS_TMUX="mpcplus-tmux -f -g"
+    MPCPLUS_TMUX="mpcplus-tmux -g"
   fi
   MPPSPLASH="mppsplash"
   MPPSPLASH_TMUX="mppsplash-tmux"
@@ -2644,41 +2656,65 @@ else
 fi
 
 init_vars
+
+have_wmctrl=`type -p wmctrl`
+have_xprop=`type -p xprop`
+have_xrandr=`type -p xrandr`
+have_xdpy=`type -p xdpyinfo`
+have_cantata=`type -p cantata`
+have_gnome=`type -p gnome-terminal`
+have_retro=`type -p cool-retro-term`
+have_simple=`type -p st`
+have_tilix=`type -p tilix`
+have_kitty=`type -p kitty`
+
+# Check if the window manager supports move/resize and DISPLAY can be opened
 if [ "${DISPLAY}" ]
 then
-  status=0
-  if [ -x ${SCRIPTS}/check_tty.sh ]
-  then
-    ${SCRIPTS}/check_tty.sh
-    status=$?
-  else
-    have_xdpy=`type -p xdpyinfo`
-    if [ "${have_xdpy}" ]
+  movewindow=
+  [ "${have_xprop}" ] && {
+    hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
+    echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
+    [ "${movewindow}" ] || {
+      USE_EWMH=
+      CONSOLE_MODE=1
+      USE_TMUX=1
+    }
+  }
+  [ "${movewindow}" ] || {
+    status=0
+    if [ -x ${SCRIPTS}/check_tty.sh ]
     then
-      xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+      ${SCRIPTS}/check_tty.sh
       status=$?
     else
-      if [ "${have_kitty}" ]
+      if [ "${have_xdpy}" ]
       then
-        kitty echo "" > /dev/null 2>&1
+        xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
         status=$?
       else
-        [ "${have_gnome}" ] && {
-          gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+        if [ "${have_kitty}" ]
+        then
+          kitty echo "" > /dev/null 2>&1
           status=$?
-        }
+        else
+          [ "${have_gnome}" ] && {
+            gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+            status=$?
+          }
+        fi
       fi
     fi
-  fi
+  }
   [ ${status} -eq 0 ] || {
     CONSOLE_MODE=1
-    TMUX_MPC=1
     USE_EWMH=
+    USE_TMUX=1
   }
 else
   CONSOLE_MODE=1
-  TMUX_MPC=1
   USE_EWMH=
+  USE_TMUX=1
 fi
 
 systemctl --user is-active --quiet yams.service
@@ -2695,12 +2731,6 @@ else
   fi
 fi
 
-have_wmctrl=`type -p wmctrl`
-have_xprop=`type -p xprop`
-have_xrandr=`type -p xrandr`
-have_uebz=`type -p ueberzug`
-have_fzf=`type -p fzf`
-have_mopidy=`type -p mopidy`
 if [ "${CONSOLE_MODE}" ]
 then
   have_cantata=
@@ -2712,12 +2742,6 @@ then
   s_wid=1920
   s_hit=1080
 else
-  have_cantata=`type -p cantata`
-  have_gnome=`type -p gnome-terminal`
-  have_retro=`type -p cool-retro-term`
-  have_simple=`type -p st`
-  have_tilix=`type -p tilix`
-  have_kitty=`type -p kitty`
   [ "${have_xrandr}" ] && {
     read -r s_wid s_hit < <(xrandr | grep current | \
             awk -F ',' '{ print $2 }' | awk '{ print $2, $4 }')
@@ -2729,6 +2753,9 @@ then
 else
   have_navi=
 fi
+have_uebz=`type -p ueberzug`
+have_fzf=`type -p fzf`
+have_mopidy=`type -p mopidy`
 have_nema=`type -p asciinema`
 have_figlet=`type -p figlet`
 have_lolcat=`type -p lolcat`
@@ -3023,43 +3050,20 @@ impflags="${tagflag} ${writeflag}"
 }
 
 [ "${CONSOLE_MODE}" ] || {
-  if [ "${disable_ewmh}" ]
-  then
-    USE_EWMH=
-    CONSOLE_MODE=1
-  else
-    USE_EWMH=1
-    if [ "${have_xprop}" ]
+  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
+    if [ "${have_kitty}" ]
     then
-      movewindow=
-      hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
-      echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
-      [ "${movewindow}" ] || {
-        USE_EWMH=
-        CONSOLE_MODE=1
-      }
+      KITTY=1
     else
-      # Why didn't xprop get installed, it's a dependency
-      USE_EWMH=
-      CONSOLE_MODE=1
+      echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
+      echo "terminal emulator. However, Kitty is not installed,"
+      echo "unavailable, or not in your path."
+      echo "You can install Kitty as follows:"
+      printf "\n\n\tmppinit kitty\n\n"
+      echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
+      echo "the '-g' option to use gnome-terminal, or '-e' to use st."
+      pick_terminal || usage
     fi
-  fi
-  [ "${CONSOLE_MODE}" ] || {
-    [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
-      if [ "${have_kitty}" ]
-      then
-        KITTY=1
-      else
-        echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
-        echo "terminal emulator. However, Kitty is not installed,"
-        echo "unavailable, or not in your path."
-        echo "You can install Kitty as follows:"
-        printf "\n\n\tmppinit kitty\n\n"
-        echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
-        echo "the '-g' option to use gnome-terminal, or '-e' to use st."
-        pick_terminal || usage
-      fi
-    }
   }
 }
 

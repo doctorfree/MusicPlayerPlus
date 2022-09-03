@@ -5,53 +5,74 @@
 
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
+cavawin=
+mpcpwin=
+windoid=
 
-cavawin=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
-[ "${cavawin}" ] || {
-  cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
-  [ "${cavawin}" ] || {
-    cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}"`
-    [ "${cavawin}" ] || {
-      cavawin=`wmctrl -l -G -x | grep kitty.kitty | grep "cava"`
-      [ "${cavawin}" ] || {
-        cavawin=`wmctrl -l -G -x | grep tilix.Tilix | grep "cava"`
-        [ "${cavawin}" ] || {
-          cavawin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "cava"`
-        }
-      }
-    }
+have_xprop=`type -p xprop`
+have_wmctrl=`type -p wmctrl`
+
+# Check if window manager supports WM_STATE_ABOVE
+raise=
+[ "${have_xprop}" ] && [ "${have_wmctrl}" ] && {
+  hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
+  echo "${hints}" | grep WM_STATE_ABOVE > /dev/null && raise=1
+}
+
+[ "${raise}" ] || exit 1
+
+get_window_id() {
+  windoid=
+  windoid=`wmctrl -l -G -x | grep kitty.kitty | grep "${wintit}"`
+  [ "${windoid}" ] || {
+    windoid=`wmctrl -l -G -x | grep tilix.Tilix | grep "${wintit}"`
+  }
+  [ "${windoid}" ] || {
+    windoid=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${wintit}"`
+  }
+  [ "${windoid}" ] || {
+    windoid=`wmctrl -l -G -x | grep st-256color.st-256color | grep "${wintit}"`
   }
 }
-mppwin=`wmctrl -l -G -x | grep kitty.kitty | grep "${MTITLE}"`
-[ "${mppwin}" ] || {
-  mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "${MTITLE}"`
-  [ "${mppwin}" ] || {
-    mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "${MTITLE}"`
-    [ "${mppwin}" ] || {
-      mppwin=`wmctrl -l -G -x | grep kitty.kitty | grep "mpcplus"`
-      [ "${mppwin}" ] || {
-        mppwin=`wmctrl -l -G -x | grep tilix.Tilix | grep "mpcplus"`
-        [ "${mppwin}" ] || {
-          mppwin=`wmctrl -l -G -x | grep gnome-terminal-server | grep "mpcplus"`
-        }
-      }
-    }
-  }
-}
-[ "${cavawin}" ] && {
-  winid=`echo ${cavawin} | awk ' { print $1 } '`
-}
-[ "${mppwin}" ] && {
-  mppid=`echo ${mppwin} | awk ' { print $1 } '`
-}
-[ "${winid}" ] && [ "${mppid}" ] && {
-  above=`xprop -id ${winid} _NET_WM_STATE | grep WM_STATE_ABOVE`
+
+get_window_id "${VTITLE}"
+if [ "${windoid}" ]
+then
+  cavawin="${windoid}"
+else
+  get_window_id "mppcava"
+  if [ "${windoid}" ]
+  then
+    cavawin="${windoid}"
+  else
+    exit 1
+  fi
+fi
+
+get_window_id "${MTITLE}"
+if [ "${windoid}" ]
+then
+  mpcpwin="${windoid}"
+else
+  get_window_id "mpcplus"
+  if [ "${windoid}" ]
+  then
+    mpcpwin="${windoid}"
+  else
+    exit 1
+  fi
+fi
+
+cavid=`echo ${cavawin} | awk ' { print $1 } '`
+mppid=`echo ${mpcpwin} | awk ' { print $1 } '`
+[ "${cavid}" ] && [ "${mppid}" ] && {
+  above=`xprop -id ${cavid} _NET_WM_STATE | grep WM_STATE_ABOVE`
   if [ "${above}" ]
   then
-    wmctrl -i -r "${winid}" -b "remove,above"
+    wmctrl -i -r "${cavid}" -b "remove,above"
     wmctrl -i -r "${mppid}" -b "add,above"
   else
     wmctrl -i -r "${mppid}" -b "remove,above"
-    wmctrl -i -r "${winid}" -b "add,above"
+    wmctrl -i -r "${cavid}" -b "add,above"
   fi
 }
