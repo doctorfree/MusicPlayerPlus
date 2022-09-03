@@ -2681,8 +2681,8 @@ then
       USE_TMUX=1
     }
   }
+  status=0
   [ "${movewindow}" ] || {
-    status=0
     if [ -x ${SCRIPTS}/check_tty.sh ]
     then
       ${SCRIPTS}/check_tty.sh
