@@ -400,17 +400,17 @@ init_mopidy() {
     sudo systemctl stop pulseaudio.socket
   }
   # Enable and start user-level PulseAudio
-  systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && {
-    systemctl --user stop pulseaudio.service
+  systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 && {
+    systemctl --user disable pulseaudio.socket
   }
-  systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && {
-    systemctl --user disable pulseaudio.service
+  systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 && {
+    systemctl --user stop pulseaudio.socket
   }
-  systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 || {
-    systemctl --user enable pulseaudio.socket
+  systemctl --user is-active pulseaudio.service >/dev/null 2>&1 || {
+    systemctl --user start pulseaudio.service
   }
-  systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 || {
-    systemctl --user start pulseaudio.socket
+  systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 || {
+    systemctl --user enable pulseaudio.service
   }
   # Enable Mopidy services
   systemctl --user is-active webplugin.service >/dev/null 2>&1 || {
