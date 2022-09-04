@@ -389,9 +389,11 @@ init_mopidy() {
   # Disable system-wide PulseAudio
   systemctl is-enabled pulseaudio.service >/dev/null 2>&1 && {
     sudo systemctl disable pulseaudio.service
+    sudo systemctl --user --global disable pulseaudio.service
   }
   systemctl is-enabled pulseaudio.socket >/dev/null 2>&1 && {
     sudo systemctl disable pulseaudio.socket
+    sudo systemctl --user --global disable pulseaudio.socket
   }
   systemctl is-active pulseaudio.service >/dev/null 2>&1 && {
     sudo systemctl stop pulseaudio.service
