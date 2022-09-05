@@ -1,0 +1,72 @@
+## MusicPlayerPlus runtime configuration
+#
+#  After modifying any of the following settings, run the command:
+#    mppinit sync
+#  as your normal MusicPlayerPlus user
+
+## Music library location
+#
+MUSIC_DIR="~/Music"
+
+## General settings
+#
+# To enable any of these, set to 1
+# For example, to enable cover art display in tmux sessions set COVER_ART=1
+#
+# Play audio during asciimatics animations
+AUDIO=
+# Display cover art in tmux sessions
+COVER_ART=
+# Use fullscreen display for mpcplus and mppcava
+FULLSCREEN=
+# Display mpcplus and mppcava in a tmux session
+USE_TMUX=
+
+## Terminal emulator preference
+#
+#  Can be one of: console, current, gnome, kitty, retro, simple, tilix
+#  Where:
+#    'console' will force a tmux session
+#    'current' will force a tmux session in the current terminal window
+#    'gnome' will use the gnome-terminal emulator if installed
+#    'kitty' will use the Kitty terminal emulator if installed
+#    'retro' will use cool-retro-term if installed
+#    'simple' will use the ST terminal emulator if installed
+#    'tilix' will use the Tilix terminal emulator if installed
+#  Default fallback if none specified or not available is Kitty
+#
+#  Uncomment the preferred mode
+#MODE=console
+#MODE=current
+#MODE=gnome
+#MODE=retro
+#MODE=simple
+#MODE=tilix
+MODE=kitty
+
+## Service access
+#
+# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'
+# If you do not have a Bandcamp account, leave blank
+BANDCAMP_USER=
+
+# Your Last.fm username, api key, and api secret
+# If you do not have a Last.fm account, leave blank
+LASTFM_USER=
+LASTFM_APIKEY=
+LASTFM_SECRET=
+
+# The Soundcloud user slug can be found by logging in to Soundcloud
+# click on the username at top right then 'Profile'. The user slug
+# is the last component of the URL when viewing your Soundcloud Profile.
+# If you do not have a Soundcloud account, leave blank
+SOUNDCLOUD_SLUG=
+
+# Your Spotify client id and client secret
+# If you do not have a Spotify account, leave blank
+SPOTIFY_CLIENT=
+SPOTIFY_SECRET=
+
+# Your YouTube api key
+# If you do not have a YouTube account, leave blank
+YOUTUBE_APIKEY=

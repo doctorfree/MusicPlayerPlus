@@ -206,20 +206,21 @@ Some common additional setup steps that can be performed include:
 - Activation of YAMS scrobbler for Last.fm
 - Analysis and retrieval of audio-based information for media matching a query
 
-Configure the music library location by editing
-`~/.config/musicplayerplus/config` and setting `MUSIC_DIR` to your music
-library location (default setting is `~/Music`). If you change the `MUSIC_DIR`
-setting then run the command `mppinit sync`.
+Configure the music library location by editing `~/.config/mpprc` and setting
+`MUSIC_DIR` to your music library location (default setting is `~/Music`).
+Optionally configure any additional settings in `~/.config/mpprc` such as
+your preferred terminal emulator, Bandcamp username, Soundcloud slug, or
+more. Any changes to `~/.config/mpprc` must be followed by running the command
+`mppinit sync`.
 
 **[Important Note:]** MusicPlayerPlus integrates several services, each of
 which has its own configuration for the location of the music library. Because
 of this, MusicPlayerPlus provides its own configuration file
-`~/.config/musicplayerplus/config`. The `MUSIC_DIR` setting in that config
-file is used as the source of truth for the location of the music library.
-In order to keep all of the services in sync with respect to the music
-library location, set the location in `~/.config/musicplayerplus/config`
-and run the command `mppinit sync`. If the music library is moved to a new
-location, repeat this procedure.
+`~/.config/mpprc`. The `MUSIC_DIR` setting in that config file is used as the
+source of truth for the location of the music library. In order to keep all
+of the services in sync with respect to the music library location, set the
+location in `~/.config/mpprc` and run the command `mppinit sync`.
+If the music library is moved to a new location, repeat this procedure.
 
 Download albums in your Bandcamp collections with `mppinit bandcamp`.
 
@@ -275,7 +276,7 @@ on the command line:
     - `mppinit -e metadata`
 
 If none of the `-a, -b, or -e` options are specified then acoustic
-analysis, extraction, and retrieval is performed by Blissify.
+analysis, extraction, and retrieval is performed by Essentia.
 
 The AcousticBrainz service is the fastest method but is being retired in
 2023, the service is no longer being updated, and it is often inaccurate.
@@ -283,12 +284,12 @@ The AcousticBrainz service is the fastest method but is being retired in
 The Essentia acoustic analysis is the most thorough, adds acoustic
 metadata to the Beets library management system, and provides the greatest
 flexibility but at a cost of possibly days of analysis and extraction time.
+Metadata analysis and extraction with Essentia is the default behavior.
 
-The Blissify analysis is the default method employed by `mppinit metadata`.
-Blissify creates a similarity database of all songs in the MPD music library.
-This can be used to automate the creation of playlists and other actions.
-The drawback of using Blissify is it does not add acoustic metadata to
-the Beets library so the results of a Blissify analysis are only available
+The Blissify analysis creates a similarity database of all songs in the music
+library. This can be used to automate the creation of playlists and other
+actions. The drawback of using Blissify is it does not add acoustic metadata
+to the Beets library so the results of a Blissify analysis are only available
 to Blissify and not Beets.
 
 **[NOTE:]** Acoustic analysis with `blissify` is currently not available on
@@ -351,9 +352,10 @@ To summarize, a MusicPlayer quickstart can be accomplished by:
 * Install the latest Arch, Debian, or RPM format installation package
 * Run the `mppinit` command as your normal user
 * If the music library is not located at `$HOME/Music`:
-    * Configure `MUSIC_DIR` by editing `~/.config/musicplayerplus/config`
+    * Configure `MUSIC_DIR` by editing `~/.config/mpprc`
     * Run the command `mppinit sync`
 * Optionally:
+    * Modify user-specific settings in `~/.config/mpprc` and run `mppinit sync`
     * Download albums in your Bandcamp collections with `mppinit bandcamp`
     * Download favorites in your Soundcloud account with `mppinit soundcloud`
     * Perform these steps with the command `mppinit import`
@@ -511,7 +513,7 @@ After installing MusicPlayerPlus there are several recommended
 configuration steps. If not already configured, the MPD server
 will need to know where to locate your music library. This can
 be configured by editing the MusicPlayerPlus configuration file
-`~/.config/musicplayerplus/config` and running the command `mppinit sync`.
+`~/.config/mpprc` and running the command `mppinit sync`.
 
 ### Client Configuration (required)
 
@@ -545,11 +547,11 @@ The default MPD and `mpcplus` music directory is set to:
 If your media library resides in another location then perform the following
 steps and run `mppinit sync`:
 
-* Edit `$HOME/.config/musicplayerplus/config` and set the `MUSIC_DIR` entry to the location of your music library (e.g. `vi ~/.config/musicplayerplus/config`)
+* Edit `$HOME/.config/mpprc` and set the `MUSIC_DIR` entry to the location of your music library (e.g. `vi ~/.config/mpprc`)
 * Run the `mppinit sync` command
 
 For example, to set the MPD music directory to the `/u/audio/music` directory,
-edit `$HOME/.config/musicplayerplus/config` and change the *MUSIC_DIR* setting:
+edit `$HOME/.config/mpprc` and change the *MUSIC_DIR* setting:
 
 ```
 MUSIC_DIR="/u/audio/music"
@@ -590,7 +592,13 @@ or to skip WAV format media conversion and just perform the Beets import:
 mpplus -I
 ```
 
-Try playing something with a command like:
+**[Note:]** If additional songs or albums are added to the music library
+after the initial Beets import is performed, simply rerun `mppinit import`
+or `beet import /path/to/new/items` to import any new library items.
+To remove duplicates and retrieve metadata for the newly imported items,
+run `mppinit metadata`.
+
+After importing the music library into Beets, try playing something with:
 
 ```
 beet play QUERY
@@ -944,6 +952,9 @@ To install, configure, and activate Mopidy issue the command `mppinit mopidy`.
 After Mopidy initialization completes, open `http://<ip address>:6680/iris`.
 After adding music to the local music library, run `mopidy local scan`.
 
+**[Note:]** In order to use the Mopidy-Beets extension, perform a
+`mppinit import` and optionally `mppinit metadata` prior to `mppinit mopidy`.
+
 The default music server in MusicPlayerPlus is the Music Player Daemon (MPD).
 An alternate music server, Mopidy, is supported and can perform the same
 functions as MPD, is compatible with MPD clients, and can be extended to
@@ -1002,7 +1013,7 @@ Easily switch back and forth between MPD and Mopidy with `mppinit mpd`
 and `mppinit mopidy`. Note that MusicPlayerPlus continues to use the
 configured `MUSIC_DIR` as the master music library location.
 To change the location of the music library, edit
-`~/.config/musicplayerplus/config`, set `MUSIC_DIR` to the new location,
+`~/.config/mpprc`, set `MUSIC_DIR` to the new location,
 and run `mppinit sync` to synchronize the music library location across
 Beets, MPD, Mopidy, and downloaders.
 
@@ -1041,6 +1052,11 @@ does not configure a reverse proxy for Navidrome. See the Navidrome network
 configuration documentation at https://www.navidrome.org/docs/usage/security/
 to get started securing Navidrome. To use the MusicPlayerPlus default
 configuration of Navidrome, use `http://...` rather than `https://...`.
+
+If all you want is a Navidrome streaming music server and you do not care
+about Beets library management, additional downloads, or a Mopidy server
+then setup can be accomplished with just `mppinit` followed by
+`mppinit navidrome`.
 
 #### Navidrome clients
 
@@ -1383,7 +1399,7 @@ Where:
 		Note: 'mppinit navidrome <version>' can be used to specify
 		an alternate version of Navidrome to download and install
 	'soundcloud' downloads all favorites in your Soundcloud account
-	'sync' synchronizes the music library location across configs
+	'sync' synchronizes MusicPlayerPlus configuration across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
 
@@ -1400,8 +1416,8 @@ MusicPlayerPlus capabilities:
 Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
 	[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]
-	[-M alsaconf|enable|disable|restart|start|stop|status]
-	[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]
+	[-M alsaconf|enable|disable|restart|start|stop|status] [-p]
+	[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
@@ -1439,7 +1455,7 @@ General options:
 	-D 'soundcloud' indicates download Soundcloud songs and exit
 	-d 'music_directory' specifies the music directory to use for
 		downloaded album cover art. Without this option -D will use
-		the 'MUSIC_DIR' setting in '~/.config/musicplayerplus/config'
+		the 'MUSIC_DIR' setting in '~/.config/mpprc'
 	-F indicates convert WAV format files in the music library
 		to MP3 format files and exit. A subsequent 'mpplus -I' import
 		will be necessary to import these newly converted music files.
@@ -1458,7 +1474,7 @@ General options:
 		Asciinema is not installed by MusicPlayerPlus
 		To record tmux sessions with asciinema, use your system's
 		package manager to install it (e.g. apt install asciinema)
-	-T indicates use a tmux session for either ASCIImatics or mpcplus
+	-T 'on|off' specifies whether to use a tmux session
 	-w indicates write metadata during beets import
 	-W indicates do not write metadata during beets import
 	-x 'query' uses AcousticBrainz to retrieve audio-based information

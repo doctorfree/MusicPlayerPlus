@@ -8,7 +8,7 @@
 # click on the username at top right then 'Profile'. The user slug
 # is the last component of the URL when viewing your Soundcloud Profile.
 #
-USERSLUG=
+SOUNDCLOUD_SLUG=
 
 # Make sure we have the required utilities
 have_scdl=`type -p scdl`
@@ -20,7 +20,11 @@ have_scdl=`type -p scdl`
   exit 1
 }
 
-[ "${USERSLUG}" ] || {
+# Source in the MusicPlayerPlus configuration to get any slug setting
+MPPCONF="${HOME}/.config/mpprc"
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+
+[ "${SOUNDCLOUD_SLUG}" ] || {
   echo "Enter your Soundcloud account 'user slug' at the prompt."
   echo ""
   echo "The Soundcloud user slug can be found by logging in to soundcloud.com,"
@@ -34,10 +38,10 @@ have_scdl=`type -p scdl`
   echo "    https://soundcloud.com/john-doe"
   echo "Soundcloud user johndoe would enter the Soundcloud user slug 'john-doe'"
   echo ""
-  read -p "Enter your Soundcloud user slug: " USERSLUG
+  read -p "Enter your Soundcloud user slug: " SOUNDCLOUD_SLUG
 }
 
-[ "${USERSLUG}" ] || {
+[ "${SOUNDCLOUD_SLUG}" ] || {
   echo "Soundcloud user slug required."
   scdl --help
   exit 1
@@ -56,6 +60,6 @@ MUSIC_DIR="${mpd_music}/Soundcloud"
 
 printf "\nSoundcloud favorites will be downloaded to ${MUSIC_DIR}\n"
 
-scdl -l https://soundcloud.com/${USERSLUG} -c -f --path "${MUSIC_DIR}"
+scdl -l https://soundcloud.com/${SOUNDCLOUD_SLUG} -c -f --path "${MUSIC_DIR}"
 
 printf "\n\nSoundcloud favorites downloads complete\n"

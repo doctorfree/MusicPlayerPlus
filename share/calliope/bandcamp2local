@@ -4,11 +4,14 @@
 # that are missing from your local collection.
 
 # Set Bandcamp username here or in $HOME/.config/calliope/calliope.conf
-USERNAME=
+BANDCAMP_USER=
 
-if [ "${USERNAME}" ]
+MPPCONF="${HOME}/.config/mpprc"
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+
+if [ "${BANDCAMP_USER}" ]
 then
-  ONLINE_ALBUMS="cpe bandcamp --user ${USERNAME} collection"
+  ONLINE_ALBUMS="cpe bandcamp --user ${BANDCAMP_USER} collection"
 else
   ONLINE_ALBUMS="cpe bandcamp collection"
 fi

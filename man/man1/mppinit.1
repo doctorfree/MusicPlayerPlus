@@ -34,14 +34,14 @@ downloads the albums in your Bandcamp collections.
 A valid Bandcamp username must be configured in
 \f[V]$HOME/.config/calliope/calliope.conf\f[R].
 The Bandcamp albums are downloaded to the \f[V]MUSIC_DIR\f[R] folder
-configured in \f[V]$HOME/.config/musicplayerplus/config\f[R] in a
-\f[V]Bandcamp\f[R] sub-folder.
+configured in \f[V]$HOME/.config/mpprc\f[R] in a \f[V]Bandcamp\f[R]
+sub-folder.
 .PP
 Invoked with the \f[V]soundcloud\f[R] argument, \f[I]mppinit
 soundcloud\f[R] downloads the favorites in your Soundcloud account.
 A valid Soundcloud user slug must be provided at the prompt.
 The Soundcloud favorites are downloaded to the \f[V]MUSIC_DIR\f[R]
-folder configured in \f[V]$HOME/.config/musicplayerplus/config\f[R] in a
+folder configured in \f[V]$HOME/.config/mpprc\f[R] in a
 \f[V]Soundcloud\f[R] sub-folder.
 .PP
 Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
@@ -77,7 +77,8 @@ To install a specified version of Navidrome, use the command
 \f[V]mppinit navidrome <version>\f[R].
 .PP
 Invoked with the \f[V]sync\f[R] argument, \f[I]mppinit sync\f[R]
-synchronizes the music library location across all configuration files.
+synchronizes MusicPlayerPlus configuration across all configuration
+files.
 .SS COMMAND LINE OPTIONS
 .TP
 \f[B]-a\f[R]
@@ -131,7 +132,7 @@ Activates MPD, deactivates Mopidy
 Installs, configures, and activates Navidrome music server/streamer
 .TP
 \f[B]sync\f[R]
-synchronizes the music library location across configs
+synchronizes MusicPlayerPlus configuration across configs
 .PP
 \f[I]mppinit\f[R] must be performed before a \f[I]sync\f[R],
 \f[I]kitty\f[R], \f[I]metadata\f[R], \f[I]mopidy\f[R], \f[I]mpd\f[R],

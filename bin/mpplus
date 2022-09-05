@@ -28,10 +28,6 @@
 # visualizer window. I could not figure out how to specify a geometry
 # for the cool-retro-term window when invoked with "-e mpcplus".
 #
-# Note also that the key bindings I have configured for mpcplus
-# to dynamically set the transparency of the terminal window only
-# work when using xfce4-terminal for mpcplus.
-#
 # An alternate MPD client can be specified on the command line.
 
 BOLD=$(tput bold)
@@ -51,14 +47,14 @@ DOC_DIR="/usr/share/doc/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
 # Some configuration can be maintained here
-MPPCONF="${HOME}/.config/musicplayerplus/config"
+MPPCONF="${HOME}/.config/mpprc"
 
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]"
   printf "\n\t[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
   printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
-  printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status]"
-  printf "\n\t[-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u]"
+  printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
+  printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A indicates display album cover art (implies tmux session)"
@@ -96,7 +92,7 @@ usage() {
   printf "\n\t-D 'soundcloud' indicates download Soundcloud songs and exit"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art. Without this option -D will use"
-  printf "\n\t\tthe 'MUSIC_DIR' setting in '~/.config/musicplayerplus/config'"
+  printf "\n\t\tthe 'MUSIC_DIR' setting in '~/.config/mpprc'"
   printf "\n\t-F indicates convert WAV format files in the music library"
   printf "\n\t\tto MP3 format files and exit. A subsequent 'mpplus -I' import"
   printf "\n\t\twill be necessary to import these newly converted music files."
@@ -115,7 +111,7 @@ usage() {
   printf "\n\t\tAsciinema is not installed by MusicPlayerPlus"
   printf "\n\t\tTo record tmux sessions with asciinema, use your system's"
   printf "\n\t\tpackage manager to install it (e.g. apt install asciinema)"
-  printf "\n\t-T indicates use a tmux session for either ASCIImatics or mpcplus"
+  printf "\n\t-T 'on|off' specifies whether to use a tmux session"
   printf "\n\t-w indicates write metadata during beets import"
   printf "\n\t-W indicates do not write metadata during beets import"
   printf "\n\t-x 'query' uses AcousticBrainz to retrieve audio-based information"
@@ -805,19 +801,12 @@ make_it_so() {
     fi
   }
 
-  # Simple terminal emulator not supported in fullscreen mode
-  [ "${FULLSCREEN}" ] && [ "${SIMPLE}" ] && {
-    SIMPLE=
-    pick_terminal || {
-      echo "No available supported terminal emulators. Exiting."
-      usage
-    }
-    [ "${SIMPLE}" ] && {
-      echo "Simple terminal emulator unsupported in fullscreen mode."
-      echo "No available fullscreen supported terminal emulators. Exiting."
-      usage
-    }
+  # In fullscreen mode terminals without transparency use tmux
+  [ "${FULLSCREEN}" ] && {
+    [ "${SIMPLE}" ] && TMUX_MPC=1
+    [ "${USE_OPAC}" ] || TMUX_MPC=1
   }
+
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
@@ -830,7 +819,7 @@ make_it_so() {
         QRTRHEIGHT=1
         kitty --title "${VTITLE}" \
               --start-as fullscreen \
-              --override font_size=12 \
+              --override font_size=8 \
               --override background_opacity=1.0 \
               --override hide_window_decorations=yes \
               ${VISUALIZER} 2> /dev/null &
@@ -870,13 +859,13 @@ make_it_so() {
               viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
                 grep "${VTITLE}"`
             else
-              if [ "${SIMPLE}" ]
+              if [ "${GNOME}" ]
               then
-                viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
                   grep "${VTITLE}"`
               else
-                [ "${GNOME}" ] && {
-                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                [ "${SIMPLE}" ] && {
+                  viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                     grep "${VTITLE}"`
                 }
               fi
@@ -893,13 +882,13 @@ make_it_so() {
                 viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
                   grep "${VISUALIZER}"`
               else
-                if [ "${SIMPLE}" ]
+                if [ "${GNOME}" ]
                 then
-                  viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
+                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
                     grep "${VISUALIZER}"`
                 else
-                  [ "${GNOME}" ] && {
-                    viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                  [ "${SIMPLE}" ] && {
+                    viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                       grep "${VISUALIZER}"`
                   }
                 fi
@@ -936,7 +925,7 @@ make_it_so() {
       then
         kitty --title="${VTITLE}" \
               --start-as normal \
-              --override font_size=12 \
+              --override font_size=8 \
               --override initial_window_width=240c \
               --override initial_window_height=12c \
               --single-instance \
@@ -1049,7 +1038,7 @@ make_it_so() {
         then
           kitty --title="${MTITLE}" \
                 --start-as fullscreen \
-                --override font_size=24 \
+                --override font_size=18 \
                 --override background_opacity=0.7 \
                 ${MPCOMM} 2> /dev/null &
         else
@@ -1069,12 +1058,7 @@ make_it_so() {
                     --full-screen \
                     -- ${MPCOMM} &
             else
-              [ "${have_kitty}" ] || mppinit -q -y kitty
-              kitty --title="${MTITLE}" \
-                    --start-as fullscreen \
-                    --override font_size=24 \
-                    --override background_opacity=0.7 \
-                    ${MPCOMM} 2> /dev/null &
+              ${MPCOMM}
             fi
           fi
         fi
@@ -1083,7 +1067,7 @@ make_it_so() {
         then
           kitty --title="${MTITLE}" \
                 --start-as normal \
-                --override font_size=24 \
+                --override font_size=18 \
                 --override initial_window_width=120c \
                 --override initial_window_height=28c \
                 ${MPCOMM} 2> /dev/null &
@@ -1151,23 +1135,7 @@ make_it_so() {
                   [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
                 }
               else
-                [ "${have_kitty}" ] || mppinit -q -y kitty
-                kitty --title="${MTITLE}" \
-                      --start-as normal \
-                      --override font_size=24 \
-                      --override initial_window_width=120c \
-                      --override initial_window_height=28c \
-                      ${MPCOMM} 2> /dev/null &
-                [ "${USE_EWMH}" ] && {
-                  sleep 1
-                  mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                    grep -v "${VTITLE}" | grep "${MTITLE}"`
-                  [ "${mpc_win}" ] || {
-                    mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                      grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
-                  }
-                  [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
-                }
+                ${MPCOMM}
               fi
             fi
           fi
@@ -2550,9 +2518,7 @@ init_vars() {
   MPPSPLASH="mppsplash"
   MPPSPLASH_TMUX="mppsplash-tmux"
 
-  AUDIO=
   CLIENT=
-  COVER_ART=
   CONVERT_WAV=
   CONVERT_M4A=
   DOWNLOAD_ART=
@@ -2571,42 +2537,126 @@ init_vars() {
   ACBRAINZ=
   BLISSIFY=
   XTRACTOR=
-  FULLSCREEN=
   HALFHEIGHT=
   INTERACTIVE=
   FZMPOPT=
   MUSIC_DIRECTORY=
   QRTRHEIGHT=
   RECORD=
-  RETRO=
   SPLASH=
-  GNOME=
-  SIMPLE=
-  TILIX=
-  KITTY=1
-  TMUX_MPC=
   TMUX_SPLASH=
   USAGE=
-  [ -f ${MPPCONF} ] && . ${MPPCONF}
 }
 
 save_config() {
-  [ -f ${MPPCONF} ] && {
-    echo "# Music library location" > ${MPPCONF}
-    echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >> ${MPPCONF}
-    echo "# General settings" >> ${MPPCONF}
-    echo "AUDIO=${AUDIO}" >> ${MPPCONF}
-    echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
-    echo "FULLSCREEN=${FULLSCREEN}" >> ${MPPCONF}
-    echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
-    echo "# Terminal emulator preference" >> ${MPPCONF}
-    echo "CURRENT=${CURRENT}" >> ${MPPCONF}
-    echo "GNOME=${GNOME}" >> ${MPPCONF}
-    echo "RETRO=${RETRO}" >> ${MPPCONF}
-    echo "TILIX=${TILIX}" >> ${MPPCONF}
-    echo "KITTY=${KITTY}" >> ${MPPCONF}
-    echo "XFCE4=${XFCE4}" >> ${MPPCONF}
-  }
+  echo "## MusicPlayerPlus runtime configuration" > ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  After modifying any of the following settings, run the command:" >> ${MPPCONF}
+  echo "#    mppinit sync" >> ${MPPCONF}
+  echo "#  as your normal MusicPlayerPlus user" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## Music library location" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## General settings" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# To enable any of these, set to 1" >> ${MPPCONF}
+  echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Play audio during asciimatics animations" >> ${MPPCONF}
+  echo "AUDIO=${AUDIO}" >> ${MPPCONF}
+  echo "# Display cover art in tmux sessions" >> ${MPPCONF}
+  echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
+  echo "# Use fullscreen display for mpcplus and mppcava" >> ${MPPCONF}
+  echo "FULLSCREEN=${FULLSCREEN}" >> ${MPPCONF}
+  echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
+  echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## Terminal emulator preference" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  Can be one of: console, current, gnome, kitty, retro, simple, tilix" >> ${MPPCONF}
+  echo "#  Where:" >> ${MPPCONF}
+  echo "#    'console' will force a tmux session" >> ${MPPCONF}
+  echo "#    'current' will force a tmux session in the current terminal window" >> ${MPPCONF}
+  echo "#    'gnome' will use the gnome-terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'kitty' will use the Kitty terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'retro' will use cool-retro-term if installed" >> ${MPPCONF}
+  echo "#    'simple' will use the ST terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'tilix' will use the Tilix terminal emulator if installed" >> ${MPPCONF}
+  echo "#  Default fallback if none specified or not available is Kitty" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  Uncomment the preferred mode" >> ${MPPCONF}
+  if [ "${CONSOLE_MODE}" ]
+  then
+    echo "MODE=console" >> ${MPPCONF}
+  else
+    echo "#MODE=console" >> ${MPPCONF}
+  fi
+  if [ "${CURRENT}" ]
+  then
+    echo "MODE=current" >> ${MPPCONF}
+  else
+    echo "#MODE=current" >> ${MPPCONF}
+  fi
+  if [ "${GNOME}" ]
+  then
+    echo "MODE=gnome" >> ${MPPCONF}
+  else
+    echo "#MODE=gnome" >> ${MPPCONF}
+  fi
+  if [ "${RETRO}" ]
+  then
+    echo "MODE=retro" >> ${MPPCONF}
+  else
+    echo "#MODE=retro" >> ${MPPCONF}
+  fi
+  if [ "${SIMPLE}" ]
+  then
+    echo "MODE=simple" >> ${MPPCONF}
+  else
+    echo "#MODE=simple" >> ${MPPCONF}
+  fi
+  if [ "${TILIX}" ]
+  then
+    echo "MODE=tilix" >> ${MPPCONF}
+  else
+    echo "#MODE=tilix" >> ${MPPCONF}
+  fi
+  if [ "${KITTY}" ]
+  then
+    echo "MODE=kitty" >> ${MPPCONF}
+  else
+    echo "#MODE=kitty" >> ${MPPCONF}
+  fi
+
+  echo "" >> ${MPPCONF}
+  echo "## Service access" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}
+  echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
+  echo "BANDCAMP_USER=${BANDCAMP_USER}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
+  echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
+  echo "LASTFM_USER=${LASTFM_USER}" >> ${MPPCONF}
+  echo "LASTFM_APIKEY=${LASTFM_APIKEY}" >> ${MPPCONF}
+  echo "LASTFM_SECRET=${LASTFM_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >> ${MPPCONF}
+  echo "# click on the username at top right then 'Profile'. The user slug" >> ${MPPCONF}
+  echo "# is the last component of the URL when viewing your Soundcloud Profile." >> ${MPPCONF}
+  echo "# If you do not have a Soundcloud account, leave blank" >> ${MPPCONF}
+  echo "SOUNDCLOUD_SLUG=${SOUNDCLOUD_SLUG}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Spotify client id and client secret" >> ${MPPCONF}
+  echo "# If you do not have a Spotify account, leave blank" >> ${MPPCONF}
+  echo "SPOTIFY_CLIENT=${SPOTIFY_CLIENT}" >> ${MPPCONF}
+  echo "SPOTIFY_SECRET=${SPOTIFY_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your YouTube api key" >> ${MPPCONF}
+  echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
+  echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >> ${MPPCONF}
 }
 
 set_user_conf() {
@@ -2626,10 +2676,7 @@ pathadd "${HOME}/.local/bin"
 # Check if initialization has been run
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
-  [ -f ${MPPCONF} ] || {
-    touch ${MPPCONF}
-    save_config
-  }
+  [ -f ${MPPCONF} ] || save_config
 else
   echo ""
   echo "MusicPlayerPlus initialization needs to be run once."
@@ -2655,8 +2702,6 @@ else
   done
 fi
 
-init_vars
-
 have_wmctrl=`type -p wmctrl`
 have_xprop=`type -p xprop`
 have_xrandr=`type -p xrandr`
@@ -2668,21 +2713,92 @@ have_simple=`type -p st`
 have_tilix=`type -p tilix`
 have_kitty=`type -p kitty`
 
+init_vars
+AUDIO=
+COVER_ART=
+FULLSCREEN=
+CURRENT=
+GNOME=
+KITTY=
+RETRO=
+SIMPLE=
+TILIX=
+TMUX_MPC=
+USE_TMUX=
+[ -f ${MPPCONF} ] && . ${MPPCONF}
+case "${MODE}" in
+  console)
+    CONSOLE_MODE=1
+    TMUX_MPC=1
+    USE_TMUX=1
+    ;;
+  current)
+    TMUX_MPC=1
+    USE_TMUX=1
+    CURRENT=1
+    ;;
+  gnome)
+    GNOME=1
+    [ "${have_gnome}" ] || {
+      KITTY=1
+      GNOME=
+    }
+    ;;
+  kitty)
+    KITTY=1
+    ;;
+  retro)
+    RETRO=1
+    [ "${have_retro}" ] || {
+      KITTY=1
+      RETRO=
+    }
+    ;;
+  simple)
+    SIMPLE=1
+    [ "${have_simple}" ] || {
+      KITTY=1
+      SIMPLE=
+    }
+    ;;
+  tilix)
+    TILIX=1
+    [ "${have_tilix}" ] || {
+      KITTY=1
+      TILIX=
+    }
+    ;;
+  *)
+    KITTY=1
+    ;;
+esac
+
 # Check if the window manager supports move/resize and DISPLAY can be opened
 if [ "${DISPLAY}" ]
 then
   movewindow=
-  [ "${have_xprop}" ] && {
+  hasopacity=
+  if [ "${have_xprop}" ]
+  then
     hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
     echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
-    [ "${movewindow}" ] || {
+    echo "${hints}" | grep _NET_WM_WINDOW_OPACITY > /dev/null && hasopacity=1
+    if [ "${movewindow}" ]
+    then
+      USE_EWMH=1
+    else
       USE_EWMH=
       CONSOLE_MODE=1
       USE_TMUX=1
-    }
-  }
-  status=0
-  [ "${movewindow}" ] || {
+    fi
+    if [ "${hasopacity}" ]
+    then
+      USE_OPAC=1
+    else
+      USE_OPAC=
+    fi
+  else
+    status=0
     if [ -x ${SCRIPTS}/check_tty.sh ]
     then
       ${SCRIPTS}/check_tty.sh
@@ -2705,15 +2821,21 @@ then
         fi
       fi
     fi
-  }
-  [ ${status} -eq 0 ] || {
-    CONSOLE_MODE=1
-    USE_EWMH=
-    USE_TMUX=1
-  }
+    if [ ${status} -eq 0 ]
+    then
+      USE_EWMH=1
+      USE_OPAC=1
+    else
+      CONSOLE_MODE=1
+      USE_EWMH=
+      USE_OPAC=
+      USE_TMUX=1
+    fi
+  fi
 else
   CONSOLE_MODE=1
   USE_EWMH=
+  USE_OPAC=
   USE_TMUX=1
 fi
 
@@ -2782,7 +2904,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
+while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -2810,7 +2932,12 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
     c)
       TMUX_MPC=1
       USE_TMUX=1
+      CURRENT=1
+      GNOME=
       KITTY=
+      RETRO=
+      SIMPLE=
+      TILIX=
       ;;
     C)
       CLIENT="${OPTARG}"
@@ -2857,7 +2984,12 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     e)
       SIMPLE=1
+      CURRENT=
+      GNOME=
       KITTY=
+      RETRO=
+      SIMPLE=
+      TILIX=
       [ "${have_simple}" ] || {
         echo "Option '-e' indicates use simple terminal emulator."
         echo "However, st is not installed, unavailable, or not in your path."
@@ -2881,7 +3013,12 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     g)
       GNOME=1
+      CURRENT=
+      GNOME=
       KITTY=
+      RETRO=
+      SIMPLE=
+      TILIX=
       [ "${have_gnome}" ] || {
         echo "Option '-g' indicates use gnome-terminal emulator."
         echo "However, gnome-terminal is not installed or not in your path."
@@ -2951,7 +3088,12 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     r)
       RETRO=1
+      CURRENT=
+      GNOME=
       KITTY=
+      RETRO=
+      SIMPLE=
+      TILIX=
       [ "${have_retro}" ] || {
         echo "Option '-r' indicates use cool-retro-term terminal emulator."
         echo "However, cool-retro-term is not installed or not in your path."
@@ -2981,7 +3123,12 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       ;;
     t)
       TILIX=1
+      CURRENT=
+      GNOME=
       KITTY=
+      RETRO=
+      SIMPLE=
+      TILIX=
       [ "${have_tilix}" ] || {
         echo "Option '-t' indicates use tilix terminal emulator."
         echo "However, tilix is not installed, unavailable, or not in your path."
@@ -2995,7 +3142,19 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tTv:wWx:X:yYz:u" flag; do
       }
       ;;
     T)
-      USE_TMUX=1
+      tmux_onoff=`echo "${OPTARG}" | tr '[:upper:]' '[:lower:]'`
+      if [ "${tmux_onoff}" == "on" ]
+      then
+        USE_TMUX=1
+      else
+        if [ "${tmux_onoff}" == "off" ]
+        then
+          USE_TMUX=
+        else
+          echo "Invalid argument to -T option: ${OPTARG}"
+          usage
+        fi
+      fi
       ;;
     v)
       viz_com=`echo "${OPTARG}" | awk ' { print $1 } '`

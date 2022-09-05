@@ -19,7 +19,7 @@ Bandcamp collections are downloaded into *music_directory/Bandcamp/*,
 Soundcloud favorites are downloaded into *music_directory/Soundcloud/*, and
 audio in the specified URL is downloaded into *music_directory/Downloads/*.
 The *music_directory* path is that specified in `$HOME/.config/mpd/mpd.conf`
-or `$HOME/.config/musicplayerplus/config`. By default this is `$HOME/Music/`.
+or `$HOME/.config/mpprc`. By default this is `$HOME/Music/`.
 
 If a Beets import is specified with the `-i` option then the import is
 performed non-interactively. Beets tries to identify the audio using

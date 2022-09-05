@@ -237,6 +237,8 @@ package() {
   cp config/xterm-24bit.src ${pkgdir}/${destdir}/share/${pkgname}
   cp config/tmux.conf ${pkgdir}/${destdir}/share/${pkgname}
 
+  cp config/mpprc ${pkgdir}/${destdir}/share/${pkgname}
+
   cp -a config/beets "${pkgdir}/${destdir}/share/${pkgname}/beets"
   cp -a beets "${pkgdir}/${destdir}/share/${pkgname}/beets/plugins"
   cp config/calliope/* "${pkgdir}/${destdir}/share/${pkgname}/calliope"

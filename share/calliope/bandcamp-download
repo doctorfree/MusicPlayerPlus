@@ -5,11 +5,13 @@
 # Set Bandcamp username here or in $HOME/.config/calliope/calliope.conf
 # It's best to set it in calliope.conf for all 'cpe bandcamp' commands.
 # The username, if set here, takes precedence over that in calliope.conf
-USERNAME=
+BANDCAMP_USER=
+MPPCONF="${HOME}/.config/mpprc"
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
 
-if [ "${USERNAME}" ]
+if [ "${BANDCAMP_USER}" ]
 then
-  USEROPT="--user ${USERNAME}"
+  USEROPT="--user ${BANDCAMP_USER}"
 else
   USEROPT=
 fi

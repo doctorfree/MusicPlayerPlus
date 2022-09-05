@@ -5,7 +5,7 @@
 # Written 10-Aug-2022 by Ronald Record <ronaldrecord@gmail.com>
 
 MPD_CONF="${HOME}/.config/mpd/mpd.conf"
-MPP_CONF="${HOME}/.config/musicplayerplus/config"
+MPP_CONF="${HOME}/.config/mpprc"
 FMT="m4a"
 LISTCOMM="yt-dlp -Uv -F -f 'ba' -x --list-formats"
 URL=

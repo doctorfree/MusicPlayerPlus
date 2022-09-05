@@ -20,12 +20,12 @@ Invoked with the `bandcamp` argument, *mppinit bandcamp* downloads the
 albums in your Bandcamp collections. A valid Bandcamp username must be
 configured in `$HOME/.config/calliope/calliope.conf`. The Bandcamp albums
 are downloaded to the `MUSIC_DIR` folder configured in
-`$HOME/.config/musicplayerplus/config` in a `Bandcamp` sub-folder.
+`$HOME/.config/mpprc` in a `Bandcamp` sub-folder.
 
 Invoked with the `soundcloud` argument, *mppinit soundcloud* downloads the
 favorites in your Soundcloud account. A valid Soundcloud user slug must be
 provided at the prompt. The Soundcloud favorites are downloaded to the
-`MUSIC_DIR` folder configured in `$HOME/.config/musicplayerplus/config`
+`MUSIC_DIR` folder configured in `$HOME/.config/mpprc`
 in a `Soundcloud` sub-folder.
 
 Invoked with the `import` argument, *mppinit import* imports the music
@@ -53,8 +53,8 @@ Navidrome music server and streamer. The Navidrome user system service
 is activated. To install a specified version of Navidrome, use the command
 `mppinit navidrome <version>`.
 
-Invoked with the `sync` argument, *mppinit sync* synchronizes the music
-library location across all configuration files.
+Invoked with the `sync` argument, *mppinit sync* synchronizes
+MusicPlayerPlus configuration across all configuration files.
 
 ## COMMAND LINE OPTIONS
 
@@ -104,7 +104,7 @@ library location across all configuration files.
 : Installs, configures, and activates Navidrome music server/streamer
 
 **sync**
-: synchronizes the music library location across configs
+: synchronizes MusicPlayerPlus configuration across configs
 
 *mppinit* must be performed before a *sync*, *kitty*, *metadata*, *mopidy*, *mpd*, *navidrome*, *bandcamp*, *soundcloud*, or *import*
 

@@ -25,8 +25,8 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G]
 [-g] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
-[-q] [-r] [-R] [-s song] [-S] [-t] [-T] [-u] [-v viz_comm] [-w|W] [-x
-query] [-X query] [-y] [-Y] [-z fzmpopt]
+[-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W]
+[-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SS DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -48,7 +48,7 @@ disabled, restarted, and status queried.
 .PP
 The \f[I]mpplus\f[R] command can also act as a front-end to the
 \f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
-with the \f[V]-S\f[R] and \f[V]-T\f[R] command line options.
+with the \f[V]-S\f[R] and \f[V]-T on\f[R] command line options.
 .PP
 The \f[I]mpplus\f[R] command can be used in conjunction with the Beets
 music library management system:
@@ -175,7 +175,7 @@ Indicates download songs from Soundcloud and exit
 \f[B]-d \[aq]music_directory\[aq]\f[R]
 Specifies the music directory to use for downloaded album cover art
 (without this option -D will use the \f[V]MUSIC_DIR\f[R] setting in
-\f[V]\[ti]/.config/musicplayerplus/config\f[R]
+\f[V]\[ti]/.config/mpprc\f[R]
 .TP
 \f[B]-F\f[R]
 Indicates convert all WAV format files in the music library to MP3
@@ -213,8 +213,8 @@ To record tmux sessions with asciinema, use your system\[aq]s package
 manager to install it (e.g.
 apt install asciinema)
 .TP
-\f[B]-T\f[R]
-Indicates use a tmux session for either ASCIImatics or mpcplus
+\f[B]-T \[aq]on|off\[aq]\f[R]
+Specifies whether to use a tmux session
 .TP
 \f[B]-w\f[R]
 Indicates write metadata during Beets import
@@ -283,7 +283,7 @@ Launches \f[V]mpcplus\f[R] music player client in fullscreen mode with
 mppcava spectrum visualizer in quarter-screen mode, both running in a
 tilix terminal emulator window.
 .TP
-\f[B]mpplus -a -T\f[R]
+\f[B]mpplus -a -T on\f[R]
 Launches \f[V]mpcplus\f[R] music player client and visualizer running in
 a tmux session displaying album cover art.
 .TP
@@ -291,7 +291,7 @@ a tmux session displaying album cover art.
 Stops the Music Player Daemon service and the associated MPD socket
 service
 .TP
-\f[B]mpplus -R -T\f[R]
+\f[B]mpplus -R -T on\f[R]
 Creates an asciinema recording of \f[V]mpcplus\f[R] music player client
 and visualizer running in a tmux session
 .TP

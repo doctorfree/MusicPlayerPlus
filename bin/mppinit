@@ -14,7 +14,7 @@ CCPTDIR=${MPPCDIR}/calliope
 CONF=${HOME}/.config
 MPDCONFDIR="${CONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
-MPPCONF="${CONF}/musicplayerplus/config"
+MPPCONF="${CONF}/mpprc"
 BEETSCONFDIR="${CONF}/beets"
 BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
@@ -38,6 +38,13 @@ EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local \
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
 MPP_USER=$(id -un)
+
+if [ -x "${SCPTDIR}/crudini.py" ]
+then
+  CRUDINI="${SCPTDIR}/crudini.py"
+else
+  CRUDINI=
+fi
 
 IP="<ip address>"
 mpd_music="~/Music"
@@ -71,7 +78,7 @@ usage() {
   printf "\n\t\tNote: 'mppinit navidrome <version>' can be used to specify"
   printf "\n\t\tan alternate version of Navidrome to download and install"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
-  printf "\n\t'sync' synchronizes the music library location across configs"
+  printf "\n\t'sync' synchronizes MusicPlayerPlus configuration across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
   printf "\n\n'mppinit' must be run as the MusicPlayerPlus user, not root."
   printf "\n'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',"
@@ -451,78 +458,98 @@ remove_mopidy() {
 }
 
 init_mpp_conf() {
-  echo "# Music library location" > ${MPPCONF}
-  echo "MUSIC_DIR=\"${exp_music}\"" >> ${MPPCONF}
-  echo "# General settings" >> ${MPPCONF}
-  echo "AUDIO=" >> ${MPPCONF}
-  echo "COVER_ART=" >> ${MPPCONF}
-  echo "FULLSCREEN=" >> ${MPPCONF}
-  echo "USE_TMUX=" >> ${MPPCONF}
-  echo "# Terminal emulator preference" >> ${MPPCONF}
-  if [ "${have_kitty}" ]
+  if [ -f ${MPPCDIR}/mpprc ]
   then
-    echo "CURRENT=" >> ${MPPCONF}
-    echo "GNOME=" >> ${MPPCONF}
-    echo "RETRO=" >> ${MPPCONF}
-    echo "TILIX=" >> ${MPPCONF}
-    echo "KITTY=1" >> ${MPPCONF}
-    echo "XFCE4=" >> ${MPPCONF}
+    cp ${MPPCDIR}/mpprc ${MPPCONF}
   else
-    if [ "${have_gnome}" ]
-    then
-      echo "CURRENT=" >> ${MPPCONF}
-      echo "GNOME=1" >> ${MPPCONF}
-      echo "RETRO=" >> ${MPPCONF}
-      echo "TILIX=" >> ${MPPCONF}
-      echo "KITTY=" >> ${MPPCONF}
-      echo "XFCE4=" >> ${MPPCONF}
-    else
-      if [ "${have_tilix}" ]
-      then
-        echo "CURRENT=" >> ${MPPCONF}
-        echo "GNOME=" >> ${MPPCONF}
-        echo "RETRO=" >> ${MPPCONF}
-        echo "TILIX=1" >> ${MPPCONF}
-        echo "KITTY=" >> ${MPPCONF}
-        echo "XFCE4=" >> ${MPPCONF}
-      else
-        if [ "${have_xfce4}" ]
-        then
-          echo "CURRENT=" >> ${MPPCONF}
-          echo "GNOME=" >> ${MPPCONF}
-          echo "RETRO=" >> ${MPPCONF}
-          echo "TILIX=" >> ${MPPCONF}
-          echo "KITTY=" >> ${MPPCONF}
-          echo "XFCE4=1" >> ${MPPCONF}
-        else
-          if [ "${have_retro}" ]
-          then
-            echo "CURRENT=" >> ${MPPCONF}
-            echo "GNOME=" >> ${MPPCONF}
-            echo "RETRO=1" >> ${MPPCONF}
-            echo "TILIX=" >> ${MPPCONF}
-            echo "KITTY=" >> ${MPPCONF}
-            echo "XFCE4=" >> ${MPPCONF}
-          else
-            echo "CURRENT=1" >> ${MPPCONF}
-            echo "GNOME=" >> ${MPPCONF}
-            echo "RETRO=" >> ${MPPCONF}
-            echo "TILIX=" >> ${MPPCONF}
-            echo "KITTY=" >> ${MPPCONF}
-            echo "XFCE4=" >> ${MPPCONF}
-          fi
-        fi
-      fi
-    fi
+    echo "## MusicPlayerPlus runtime configuration" > ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "#  After modifying any of the following settings, run the command:" >> ${MPPCONF}
+    echo "#    mppinit sync" >> ${MPPCONF}
+    echo "#  as your normal MusicPlayerPlus user" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "## Music library location" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "MUSIC_DIR=\"~/Music\"" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "## General settings" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "# To enable any of these, set to 1" >> ${MPPCONF}
+    echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "# Play audio during asciimatics animations" >> ${MPPCONF}
+    echo "AUDIO=" >> ${MPPCONF}
+    echo "# Display cover art in tmux sessions" >> ${MPPCONF}
+    echo "COVER_ART=" >> ${MPPCONF}
+    echo "# Use fullscreen display for mpcplus and mppcava" >> ${MPPCONF}
+    echo "FULLSCREEN=" >> ${MPPCONF}
+    echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
+    echo "USE_TMUX=" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "## Terminal emulator preference" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "#  Can be one of: console, current, gnome, kitty, retro, simple, tilix" >> ${MPPCONF}
+    echo "#  Where:" >> ${MPPCONF}
+    echo "#    'console' will force a tmux session" >> ${MPPCONF}
+    echo "#    'current' will force a tmux session in the current terminal window" >> ${MPPCONF}
+    echo "#    'gnome' will use the gnome-terminal emulator if installed" >> ${MPPCONF}
+    echo "#    'kitty' will use the Kitty terminal emulator if installed" >> ${MPPCONF}
+    echo "#    'retro' will use cool-retro-term if installed" >> ${MPPCONF}
+    echo "#    'simple' will use the ST terminal emulator if installed" >> ${MPPCONF}
+    echo "#    'tilix' will use the Tilix terminal emulator if installed" >> ${MPPCONF}
+    echo "#  Default fallback if none specified or not available is Kitty" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "#  Uncomment the preferred mode" >> ${MPPCONF}
+    echo "#MODE=console" >> ${MPPCONF}
+    echo "#MODE=current" >> ${MPPCONF}
+    echo "#MODE=gnome" >> ${MPPCONF}
+    echo "#MODE=retro" >> ${MPPCONF}
+    echo "#MODE=simple" >> ${MPPCONF}
+    echo "#MODE=tilix" >> ${MPPCONF}
+    echo "MODE=kitty" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "## Service access" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}
+    echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
+    echo "BANDCAMP_USER=" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
+    echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
+    echo "LASTFM_USER=" >> ${MPPCONF}
+    echo "LASTFM_APIKEY=" >> ${MPPCONF}
+    echo "LASTFM_SECRET=" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >> ${MPPCONF}
+    echo "# click on the username at top right then 'Profile'. The user slug" >> ${MPPCONF}
+    echo "# is the last component of the URL when viewing your Soundcloud Profile." >> ${MPPCONF}
+    echo "# If you do not have a Soundcloud account, leave blank" >> ${MPPCONF}
+    echo "SOUNDCLOUD_SLUG=" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "# Your Spotify client id and client secret" >> ${MPPCONF}
+    echo "# If you do not have a Spotify account, leave blank" >> ${MPPCONF}
+    echo "SPOTIFY_CLIENT=" >> ${MPPCONF}
+    echo "SPOTIFY_SECRET=" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
+    echo "# Your YouTube api key" >> ${MPPCONF}
+    echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
+    echo "YOUTUBE_APIKEY=" >> ${MPPCONF}
   fi
+}
+
+check_mpp_conf() {
+  cat "${MPPCONF}" | sed -e "s%\ *=\ *%=%g" > /tmp/mpprc$$
+  cp /tmp/mpprc$$ "${MPPCONF}"
+  rm -f /tmp/mpprc$$
 }
 
 set_music_dir() {
   mpd_music=
   set_mpd_conf=
   set_mpp_conf=
-  # Use $HOME/.config/musicplayerplus/config as source of truth
+  # Use $HOME/.config/mpprc as source of truth
   [ -f "${MPPCONF}" ] && {
+    check_mpp_conf
     mpd_music=`grep ^MUSIC_DIR ${MPPCONF}`
     mpd_music=`echo ${mpd_music} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
     # Need to expand the tilda to $HOME
@@ -585,7 +612,7 @@ sync_music_dir() {
     [ "${set_mpp_conf}" ] && {
       if [ -f "${MPPCONF}" ]
       then
-        # Sync music_directory in $HOME/.config/musicplayerplus/config
+        # Sync music_directory in $HOME/.config/mpprc
         mpp_currm=`grep ^MUSIC_DIR ${MPPCONF}`
         mpp_currm=`echo ${mpp_currm} | awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
         [ "${exp_music}" == "${mpp_currm}" ] || {
@@ -676,6 +703,35 @@ sync_music_dir() {
         sed -e "s%^-o .*/Downloads/%-o ${mpd_music}/Downloads/%" > /tmp/ytd$$
       cp /tmp/ytd$$ ${YTDLPCONF}
       rm -f /tmp/ytd$$
+    }
+
+    # Sync Calliope config
+    [ "${CRUDINI}" ] && {
+      [ -f "${CALIPCONF}" ] && {
+        [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+        CRUDINI="${SCPTDIR}/crudini.py"
+        [ "${BANDCAMP_USER}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} bandcamp user ${BANDCAMP_USER}
+        }
+        [ "${LASTFM_USER}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm user ${LASTFM_USER}
+        }
+        [ "${LASTFM_APIKEY}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm client-id ${LASTFM_APIKEY}
+        }
+        [ "${LASTFM_SECRET}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} lastfm client-secret ${LASTFM_SECRET}
+        }
+        [ "${SPOTIFY_CLIENT}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} spotify client-id ${SPOTIFY_CLIENT}
+        }
+        [ "${SPOTIFY_SECRET}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} spotify client-secret ${SPOTIFY_SECRET}
+        }
+        [ "${YOUTUBE_APIKEY}" ] && {
+          ${CRUDINI} --set ${CALIPCONF} youtube api-key ${YOUTUBE_APIKEY}
+        }
+      }
     }
 
     # Disable and stop any system-wide MPD service
@@ -920,9 +976,18 @@ fi
   if [ "${initialized}" ]
   then
     printf "\nDownloading albums in your Bandcamp collections"
-    printf "\nA Bandcamp username must be configured in:"
-    printf "\n\t${CALIPCONF}\n\n"
+    [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+    [ "${CRUDINI}" ] && {
+      [ -f "${CALIPCONF}" ] && {
+        [ "${BANDCAMP_USER}" ] && {
+          CALLIOPE_USER=`${CRUDINI} --get ${CALIPCONF} bandcamp user`
+          [ "${BANDCAMP_USER}" == "${CALLIOPE_USER}" ] && proceed=1
+        }
+      }
+    }
     [ "${proceed}" ] || {
+      printf "\nA Bandcamp username must be configured in:"
+      printf "\n\t${CALIPCONF}\n\n"
       while true
       do
         read -p "My Bandcamp username is configured, proceed with download ? (y/n) " yn
@@ -2198,7 +2263,7 @@ then
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
              pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
              python-mpd2 requests sacad tmuxp ueberzug ${YT_DLP} \
-             calliope-music bandcamp-downloader scdl flask-cors
+             calliope-music bandcamp-downloader scdl flask-cors iniparse
   do
     pip_install "${pkg}"
   done
@@ -2299,14 +2364,13 @@ fi
   }
 }
 
-[ -d ${CONF}/musicplayerplus ] || mkdir ${CONF}/musicplayerplus
 [ -f ${MPPCONF} ] || {
   set_music_dir
   init_mpp_conf
 }
 
 [ "${quiet}" ] || {
-  printf "\n\tSyncing music directory across configs ..."
+  printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."
 }
 sync_music_dir
 
