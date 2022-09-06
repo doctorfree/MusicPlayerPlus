@@ -1,15 +1,22 @@
 #!/bin/bash
 
+MODE=
 MTITLE="MusicPlayerPlus Fuzzy Finder"
 MPCOMM="fzmp -a"
+MPPCONF="${HOME}/.config/mpprc"
 SCRIPTS="/usr/share/musicplayerplus/scripts"
 
 have_fzmp=`type -p fzmp`
 [ "${have_fzmp}" ] || exit 1
 
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+
 have_gnome=`type -p gnome-terminal`
 have_kitty=`type -p kitty`
+have_retro=`type -p cool-retro-term`
+have_simple=`type -p st`
 have_tilix=`type -p tilix`
+have_xdpy=`type -p xdpyinfo`
 
 if [ "${DISPLAY}" ]
 then
@@ -19,29 +26,117 @@ then
     ${SCRIPTS}/check_tty.sh
     status=$?
   else
-    have_tty=`type -p tty`
-    [ "${have_tty}" ] && {
-      tty=$(tty)
-      echo "${tty}" | grep /dev/tty > /dev/null && status=1
-      echo "${tty}" | grep /dev/con > /dev/null && status=1
-    }
+    if [ "${have_xdpy}" ]
+    then
+      xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+      status=$?
+    else
+      if [ "${have_kitty}" ]
+      then
+        kitty echo "" > /dev/null 2>&1
+        status=$?
+      else
+        [ "${have_gnome}" ] && {
+          gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+          status=$?
+        }
+      fi
+    fi
   fi
   [ ${status} -eq 0 ] || {
     have_gnome=
     have_kitty=
+    have_retro=
+    have_simple=
     have_tilix=
   }
 else
   have_gnome=
   have_kitty=
+  have_retro=
+  have_simple=
   have_tilix=
 fi
 
-if [ "${have_kitty}" ]
+case "${MODE}" in
+  console|current)
+    GNOME=
+    KITTY=
+    RETRO=
+    SIMPLE=
+    TILIX=
+    ;;
+  gnome)
+    GNOME=1
+    KITTY=
+    RETRO=
+    SIMPLE=
+    TILIX=
+    [ "${have_gnome}" ] || {
+      KITTY=1
+      GNOME=
+    }
+    ;;
+  kitty)
+    KITTY=1
+    GNOME=
+    RETRO=
+    SIMPLE=
+    TILIX=
+    ;;
+  retro)
+    RETRO=1
+    GNOME=
+    KITTY=
+    SIMPLE=
+    TILIX=
+    [ "${have_retro}" ] || {
+      KITTY=1
+      RETRO=
+    }
+    ;;
+  simple)
+    SIMPLE=1
+    GNOME=
+    KITTY=
+    RETRO=
+    TILIX=
+    [ "${have_simple}" ] || {
+      KITTY=1
+      SIMPLE=
+    }
+    ;;
+  tilix)
+    TILIX=1
+    GNOME=
+    KITTY=
+    RETRO=
+    SIMPLE=
+    [ "${have_tilix}" ] || {
+      KITTY=1
+      TILIX=
+    }
+    ;;
+  *)
+    KITTY=1
+    GNOME=
+    RETRO=
+    SIMPLE=
+    TILIX=
+    ;;
+esac
+
+[ "${KITTY}" ] && [ "${have_kitty}" ] || KITTY=
+[ "${GNOME}" ] && [ "${have_gnome}" ] || GNOME=
+[ "${RETRO}" ] && [ "${have_retro}" ] || RETRO=
+[ "${SIMPLE}" ] && [ "${have_simple}" ] || SIMPLE=
+[ "${TILIX}" ] && [ "${have_tilix}" ] || TILIX=
+
+if [ "${KITTY}" ]
 then
   kitty --title="${MTITLE}" ${MPCOMM} 2> /dev/null
 else
-  if [ "${have_tilix}" ]
+  if [ "${TILIX}" ]
   then
     tilix --title="${MTITLE}" \
           --window-style=borderless \
@@ -49,7 +144,7 @@ else
           --profile=MusicPlayer \
           --command="${MPCOMM}" 2> /dev/null
   else
-    if [ "${have_gnome}" ]
+    if [ "${GNOME}" ]
     then
       gnome-terminal --title="${MTITLE}" \
           --profile=MusicPlayer \
@@ -57,7 +152,20 @@ else
           --geometry=90x20+150+25 \
           -- ${MPCOMM}
     else
-      ${MPCOMM}
+     if [ "${SIMPLE}" ]
+     then
+       st -t "${MTITLE}" \
+          -g "100x26+50+25" \
+          -f "Monospace:size=24" \
+          ${MPCOMM} 2> /dev/null
+     else
+       if [ "${RETRO}" ]
+       then
+         cool-retro-term -e "${MPCOMM}" 2> /dev/null
+       else
+         ${MPCOMM}
+       fi
+     fi
     fi
   fi
 fi

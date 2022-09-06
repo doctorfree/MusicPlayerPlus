@@ -978,7 +978,7 @@ make_it_so() {
               st -t "${VTITLE}" \
                  -g "190x12+50-0" \
                  -f "Monospace:size=12" \
-                 "${VISUALIZER}" 2> /dev/null &
+                 ${VISUALIZER} 2> /dev/null &
               [ "${USE_EWMH}" ] && {
                 sleep 1
                 stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
@@ -1123,7 +1123,7 @@ make_it_so() {
                 st -t "${MTITLE}" \
                    -g "100x26+50+25" \
                    -f "Monospace:size=24" \
-                   "${MPCOMM}" 2> /dev/null &
+                   ${MPCOMM} 2> /dev/null &
                 [ "${USE_EWMH}" ] && {
                   sleep 1
                   stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
@@ -2040,11 +2040,13 @@ show_fzmp_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Search artist filtered by album")
-    options+=("Search all songs in library")
-    options+=("List genres in library")
-    options+=("Search current playlist")
-    options+=("List saved playlists")
+    options=()
+    [ "${have_fzf}" ] && options+=("Search all songs in library")
+    [ "${have_fzf}" ] && options+=("Search artist/album with fzf")
+    [ "${have_dmenu}" ] && options+=("Search artist/album with dmenu")
+    [ "${have_fzf}" ] && options+=("List genres in library")
+    [ "${have_fzf}" ] && options+=("Search current playlist")
+    [ "${have_fzf}" ] && options+=("List saved playlists")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -2060,8 +2062,12 @@ show_fzmp_menu() {
               init_vars
               break 2
               ;;
-          "Search artist"*,*|*,"Search artist"*)
+          "Search artist/album with fzf",*|*,"Search artist/album with fzf")
               fzmp -a
+              break
+              ;;
+          "Search artist/album with dmenu",*|*,"Search artist/album with dmenu")
+              [ -x ${SCRIPTS}/mpdmenu.sh ] && ${SCRIPTS}/mpdmenu.sh
               break
               ;;
           "Search all"*,*|*,"Search all"*)
@@ -2590,44 +2596,65 @@ save_config() {
   if [ "${CONSOLE_MODE}" ]
   then
     echo "MODE=console" >> ${MPPCONF}
+    echo "#MODE=current" >> ${MPPCONF}
+    echo "#MODE=gnome" >> ${MPPCONF}
+    echo "#MODE=retro" >> ${MPPCONF}
+    echo "#MODE=simple" >> ${MPPCONF}
+    echo "#MODE=tilix" >> ${MPPCONF}
+    echo "#MODE=kitty" >> ${MPPCONF}
   else
     echo "#MODE=console" >> ${MPPCONF}
-  fi
-  if [ "${CURRENT}" ]
-  then
-    echo "MODE=current" >> ${MPPCONF}
-  else
-    echo "#MODE=current" >> ${MPPCONF}
-  fi
-  if [ "${GNOME}" ]
-  then
-    echo "MODE=gnome" >> ${MPPCONF}
-  else
-    echo "#MODE=gnome" >> ${MPPCONF}
-  fi
-  if [ "${RETRO}" ]
-  then
-    echo "MODE=retro" >> ${MPPCONF}
-  else
-    echo "#MODE=retro" >> ${MPPCONF}
-  fi
-  if [ "${SIMPLE}" ]
-  then
-    echo "MODE=simple" >> ${MPPCONF}
-  else
-    echo "#MODE=simple" >> ${MPPCONF}
-  fi
-  if [ "${TILIX}" ]
-  then
-    echo "MODE=tilix" >> ${MPPCONF}
-  else
-    echo "#MODE=tilix" >> ${MPPCONF}
-  fi
-  if [ "${KITTY}" ]
-  then
-    echo "MODE=kitty" >> ${MPPCONF}
-  else
-    echo "#MODE=kitty" >> ${MPPCONF}
+    if [ "${CURRENT}" ]
+    then
+      echo "MODE=current" >> ${MPPCONF}
+      echo "#MODE=gnome" >> ${MPPCONF}
+      echo "#MODE=retro" >> ${MPPCONF}
+      echo "#MODE=simple" >> ${MPPCONF}
+      echo "#MODE=tilix" >> ${MPPCONF}
+      echo "#MODE=kitty" >> ${MPPCONF}
+    else
+      echo "#MODE=current" >> ${MPPCONF}
+      if [ "${GNOME}" ]
+      then
+        echo "MODE=gnome" >> ${MPPCONF}
+        echo "#MODE=retro" >> ${MPPCONF}
+        echo "#MODE=simple" >> ${MPPCONF}
+        echo "#MODE=tilix" >> ${MPPCONF}
+        echo "#MODE=kitty" >> ${MPPCONF}
+      else
+        echo "#MODE=gnome" >> ${MPPCONF}
+        if [ "${RETRO}" ]
+        then
+          echo "MODE=retro" >> ${MPPCONF}
+          echo "#MODE=simple" >> ${MPPCONF}
+          echo "#MODE=tilix" >> ${MPPCONF}
+          echo "#MODE=kitty" >> ${MPPCONF}
+        else
+          echo "#MODE=retro" >> ${MPPCONF}
+          if [ "${SIMPLE}" ]
+          then
+            echo "MODE=simple" >> ${MPPCONF}
+            echo "#MODE=tilix" >> ${MPPCONF}
+            echo "#MODE=kitty" >> ${MPPCONF}
+          else
+            echo "#MODE=simple" >> ${MPPCONF}
+            if [ "${TILIX}" ]
+            then
+              echo "MODE=tilix" >> ${MPPCONF}
+              echo "#MODE=kitty" >> ${MPPCONF}
+            else
+              echo "#MODE=tilix" >> ${MPPCONF}
+              if [ "${KITTY}" ]
+              then
+                echo "MODE=kitty" >> ${MPPCONF}
+              else
+                echo "#MODE=kitty" >> ${MPPCONF}
+              fi
+            fi
+          fi
+        fi
+      fi
+    fi
   fi
 
   echo "" >> ${MPPCONF}
@@ -2876,6 +2903,7 @@ else
   have_navi=
 fi
 have_uebz=`type -p ueberzug`
+have_dmenu=`type -p dmenu`
 have_fzf=`type -p fzf`
 have_mopidy=`type -p mopidy`
 have_nema=`type -p asciinema`
