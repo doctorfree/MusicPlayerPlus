@@ -34,15 +34,16 @@ have_tmuxp=`type -p tmuxp`
 }
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-g] [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-A] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
-  printf "\n\t-a indicates display album cover art"
+  printf "\n\t-a indicates display album cover art using original method"
+  printf "\n\t-A indicates disable display of album cover art"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
   printf "\n\t-r indicates record tmux session with asciinema"
   printf "\n\t-u displays this usage message and exits\n"
-  printf "\nDefaults: cover art disabled, ascii art disabled, recording disabled"
+  printf "\nDefaults: cover art enabled, ascii art disabled, recording disabled"
   printf "\nThis run:"
   if [ "${PYART}" ]
   then
@@ -62,14 +63,25 @@ usage() {
 }
 
 USE_GRAD=1
+USE_ART=1
+ALT_ART=1
 PYART=
 RECORD=
 USAGE=
+ART_SCRIPT="${HOME}/${MPCDIR}/mpcplus-art.sh"
+ALT_SCRIPT="${HOME}/${MPCDIR}/ueberzug/mpcplus-ueberzug"
 ARGS="$*"
-while getopts "agp:ru" flag; do
+while getopts "aAgp:ru" flag; do
     case $flag in
         a)
-          [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ] && USE_TMUXP=
+          [ -x "${ART_SCRIPT}" ] && {
+            USE_TMUXP=
+            ALT_ART=
+          }
+          ;;
+        A)
+            USE_ART=
+            ALT_ART=
           ;;
         g)
           USE_GRAD=
@@ -100,6 +112,18 @@ shift $(( OPTIND - 1 ))
 
 numrows=`tput lines`
 MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
+
+if [ "${USE_ART}" ]
+then
+  if [ "${ALT_ART}" ]
+  then
+    MPPCOMM="${ALT_SCRIPT}"
+  else
+    MPPCOMM="${ART_SCRIPT}"
+  fi
+else
+  MPPCOMM="mpcplus"
+fi
 if [ "${USE_GRAD}" ]
 then
   VIZCOMM="mppcava"
@@ -113,7 +137,7 @@ fi
     MAIN_PANE_HEIGHT=$((${numrows} / 2))
   }
 }
-export MAIN_PANE_HEIGHT VIZCOMM
+export MAIN_PANE_HEIGHT MPPCOMM VIZCOMM
 
 tmuxp load mpcplus-env
 

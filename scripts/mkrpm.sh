@@ -212,6 +212,7 @@ ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf
 ${SUDO} cp -a config/navidrome "${OUT_DIR}/${DESTDIR}/share/${PKG}/navidrome"
 ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp
+${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus/ueberzug
 ${SUDO} cp -a config/yt-dlp "${OUT_DIR}/${DESTDIR}/share/${PKG}/yt-dlp"
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/${PKG}/music"
 

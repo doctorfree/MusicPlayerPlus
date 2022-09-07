@@ -26,6 +26,7 @@ pkgbase = musicplayerplus
 	depends = inotify-tools
 	depends = figlet
 	depends = tmux
+	depends = flac
 	depends = fzf
 	depends = mpc
 	depends = python

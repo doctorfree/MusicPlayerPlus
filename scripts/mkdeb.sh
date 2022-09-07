@@ -143,7 +143,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: ${ARCH}
-Depends: jq, libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), cool-retro-term (>= 1.1.1), tmux, ffmpeg, inotify-tools, figlet, fzf, mpc, python3-dev, python3-pip, mplayer, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3-dev, libfftw3-dev, libsamplerate0, libiniparser-dev, libyaml-dev, libasound2, libpulse-dev, libcurl4-openssl-dev, libsqlite3-0 (>= 3.6.0), libavformat58 (>= 7:4.1), libavfilter7 (>= 7:4.0), libswresample3 (>= 7:4.0), libavcodec58 (>= 7:4.2), libswscale5 (>= 7:4.0), libavdevice58 (>= 7:4.0), libavutil56 (>= 7:4.0), wget, wmctrl, x11-utils, x11-xserver-utils
+Depends: flac, jq, libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mpd (>= 0.21.20), cool-retro-term (>= 1.1.1), tmux, ffmpeg, inotify-tools, figlet, fzf, mpc, python3-dev, python3-pip, mplayer, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3-dev, libfftw3-dev, libsamplerate0, libiniparser-dev, libyaml-dev, libasound2, libpulse-dev, libcurl4-openssl-dev, libsqlite3-0 (>= 3.6.0), libavformat58 (>= 7:4.1), libavfilter7 (>= 7:4.0), libswresample3 (>= 7:4.0), libavcodec58 (>= 7:4.2), libswscale5 (>= 7:4.0), libavdevice58 (>= 7:4.0), libavutil56 (>= 7:4.0), wget, wmctrl, x11-utils, x11-xserver-utils
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 193000
 Build-Depends: debhelper (>= 11)
@@ -264,6 +264,7 @@ ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
 ${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf
 ${SUDO} cp -a config/navidrome "${OUT_DIR}/${DESTDIR}/share/${PKG}/navidrome"
 ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp
+${SUDO} cp -a config/ueberzug ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus/ueberzug
 ${SUDO} cp -a config/yt-dlp "${OUT_DIR}/${DESTDIR}/share/${PKG}/yt-dlp"
 ${SUDO} cp -a music "${OUT_DIR}/${DESTDIR}/share/${PKG}/music"
 

@@ -26,7 +26,7 @@ pkgdesc="Character based MPD client, spectrum visualizer, Beets library manageme
 arch=('x86_64' 'armv7h')
 url="https://github.com/doctorfree/MusicPlayerPlus"
 license=('MIT')
-depends=(util-linux boost-libs jq libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet tmux fzf mpc python python-pip python-numpy python-six mplayer eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sndio sqlite qt5-base wget wmctrl xorg-xdpyinfo xorg-xprop xorg-xrandr yt-dlp)
+depends=(util-linux boost-libs flac jq libcurl-compat libmpdclient ncurses readline taglib mpd ffmpeg4.4 inotify-tools figlet tmux fzf mpc python python-pip python-numpy python-six mplayer eigen fftw clang libsamplerate chromaprint iniparser libyaml swig alsa-lib libpulse sndio sqlite qt5-base wget wmctrl xorg-xdpyinfo xorg-xprop xorg-xrandr yt-dlp)
 makedepends=(boost cargo git pandoc qt5-tools zip)
 optdepends=('cool-retro-term: cool retro terminal emulator')
 install=musicplayerplus.install
@@ -249,6 +249,7 @@ package() {
   cp mppcava/example_files/config ${pkgdir}/${destdir}/share/${pkgname}/mppcava/template.conf
   cp -a config/navidrome "${pkgdir}/${destdir}/share/${pkgname}/navidrome"
   cp -a config/tmuxp ${pkgdir}/${destdir}/share/${pkgname}/tmuxp
+  cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/mpcplus/ueberzug
   cp -a config/yt-dlp "${pkgdir}/${destdir}/share/${pkgname}/yt-dlp"
   cp -a music "${pkgdir}/${destdir}/share/${pkgname}/music"
 

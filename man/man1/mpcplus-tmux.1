@@ -22,7 +22,7 @@ mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a
 tmux session
 .SS SYNOPSIS
 .PP
-\f[B]mpcplus-tmux\f[R] [-a] [-f] [-g] [-p script] [-r] [-u]
+\f[B]mpcplus-tmux\f[R] [-a] [-A] [-f] [-g] [-p script] [-r] [-u]
 .PP
 \f[B]NOTE:\f[R] \f[V]mpcplus-tmux\f[R] can be run by invoking
 \f[V]mpplus [-a] [-g] [-p script] [-R]\f[R]
@@ -42,7 +42,10 @@ visualization.
 Defaults: cover art disabled, ascii art disabled, recording disabled
 .TP
 \f[B]-a\f[R]
-Indicates display album cover art
+Indicates display album cover art using original method
+.TP
+\f[B]-A\f[R]
+Indicates disable display of album cover art
 .TP
 \f[B]-f\f[R]
 Indicates we have been invoked from a fullscreen window
@@ -63,17 +66,22 @@ recorded)
 Displays this usage message and exits
 .TP
 \f[B]Defaults:\f[R]
-cover art disabled, python art disabled, recording disabled
+cover art enabled, python art disabled, recording disabled
 .SS EXAMPLES
 .TP
 \f[B]mpcplus-tmux\f[R]
-Without options, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD client
-and mppcava spectrum visualizer in a tmux session.
+Without options, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD client,
+mppcava spectrum visualizer, and album cover art in a tmux session.
+.TP
+\f[B]mpcplus-tmux -A\f[R]
+With the -A option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
+client and mppcava spectrum visualizer.
+No album cover art is displayed.
 .TP
 \f[B]mpcplus-tmux -a\f[R]
 With the -a option, \f[I]mpcplus-tmux\f[R] displays the mpcplus MPD
-client, mppcava spectrum visualizer, and album cover art in a tmux
-session.
+client, mppcava spectrum visualizer, and album cover art using the
+original art display method
 .TP
 \f[B]mpcplus-tmux -p plasma\f[R]
 With the -p plasma option, \f[I]mpcplus-tmux\f[R] displays the mpcplus

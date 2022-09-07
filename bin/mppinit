@@ -1828,6 +1828,42 @@ do
   fi
   chmod 755 ${HOME}/${MPCDIR}/${scp}
 done
+if [ -d "${HOME}/${MPCDIR}/ueberzug" ]
+then
+  for ueb in ${CONFDIR}/ueberzug/*
+  do
+    [ "${ueb}" == "${CONFDIR}/ueberzug/*" ] && continue
+    b=`basename "${ueb}"`
+    if [ -d "${ueb}" ]
+    then
+      if [ -d ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      then
+        for img in "${ueb}"/*
+        do
+          [ "${img}" == "${ueb}/*" ] && continue
+          i=`basename "${img}"`
+          if [ -f ${HOME}/${MPCDIR}/ueberzug/${b}/${i} ]
+          then
+            [ "${overwrite}" ] && cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+          else
+            cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+          fi
+        done
+      else
+        cp -a "${ueb}" ${HOME}/${MPCDIR}/ueberzug/${b}
+      fi
+    else
+      if [ -f ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      then
+        [ "${overwrite}" ] && cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+      else
+        cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+      fi
+    fi
+  done
+else
+  cp -a ${CONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
+fi
 
 [ -d ${CONF}/mppcava ] || mkdir -p ${CONF}/mppcava
 if [ -f ${CONF}/mppcava/config ]

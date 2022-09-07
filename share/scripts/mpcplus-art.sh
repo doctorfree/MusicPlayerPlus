@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# mpcplus-tmux - run the mpcplus MPD client, spectrum visualizer,
-#                and display album cover art in a tmux session
+# mpcplus-art.sh - run the mpcplus MPD client, spectrum visualizer,
+#                  and display album cover art in a tmux session
 
 SESSION=musicplayerplus
 
@@ -19,7 +19,7 @@ else
 fi
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-f] [-g] [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-art.sh [-a] [-f] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art"
   printf "\n\t-f indicates we have been invoked from a fullscreen window"

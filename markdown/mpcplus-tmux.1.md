@@ -9,7 +9,7 @@ date: March 26, 2022
 mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a tmux session
 
 ## SYNOPSIS
-**mpcplus-tmux** [-a] [-f] [-g] [-p script] [-r] [-u]
+**mpcplus-tmux** [-a] [-A] [-f] [-g] [-p script] [-r] [-u]
 
 **NOTE:** `mpcplus-tmux` can be run by invoking `mpplus [-a] [-g] [-p script] [-R]`
 
@@ -26,7 +26,10 @@ Alternately, the visualizer pane can display a Python ASCIImatics visualization.
 Defaults: cover art disabled, ascii art disabled, recording disabled
 
 **-a**
-: Indicates display album cover art
+: Indicates display album cover art using original method
+
+**-A**
+: Indicates disable display of album cover art
 
 **-f**
 : Indicates we have been invoked from a fullscreen window
@@ -44,14 +47,17 @@ Defaults: cover art disabled, ascii art disabled, recording disabled
 : Displays this usage message and exits
 
 **Defaults:**
-: cover art disabled, python art disabled, recording disabled
+: cover art enabled, python art disabled, recording disabled
 
 ## EXAMPLES
 **mpcplus-tmux**
-: Without options, *mpcplus-tmux* displays the mpcplus MPD client and mppcava spectrum visualizer in a tmux session. 
+: Without options, *mpcplus-tmux* displays the mpcplus MPD client, mppcava spectrum visualizer, and album cover art in a tmux session. 
+
+**mpcplus-tmux -A**
+: With the -A option, *mpcplus-tmux* displays the mpcplus MPD client and mppcava spectrum visualizer. No album cover art is displayed.
 
 **mpcplus-tmux -a**
-: With the -a option, *mpcplus-tmux* displays the mpcplus MPD client, mppcava spectrum visualizer, and album cover art in a tmux session. 
+: With the -a option, *mpcplus-tmux* displays the mpcplus MPD client, mppcava spectrum visualizer, and album cover art using the original art display method
 
 **mpcplus-tmux -p plasma**
 : With the -p plasma option, *mpcplus-tmux* displays the mpcplus MPD client and plasma ASCIImatics display in a tmux session. 

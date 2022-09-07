@@ -2230,10 +2230,10 @@ show_ascii_menu() {
               if [ "${COVER_ART}" ]
               then
                 TMUX_MPC=1
-                MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -A//"`
               else
                 TMUX_MPC=
-                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -a//"`
+                MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
               fi
               save_it_so=1
               skip_it_so=1
@@ -2994,11 +2994,8 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
       ;;
     A)
       [ "${have_uebz}" ] && {
-        [ "${CONSOLE_MODE}" ] || {
-          COVER_ART=1
-          TMUX_MPC=1
-          MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
-        }
+        COVER_ART=1
+        TMUX_MPC=1
       }
       tagflag="-A"
       ;;

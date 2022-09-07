@@ -5,7 +5,7 @@ windows:
     layout: main-horizontal
     panes:
     - shell_command:
-      - mpcplus; exit
+      - ${MPPCOMM}; exit
       focus: true
     - shell_command:
       - ${VIZCOMM}; exit
