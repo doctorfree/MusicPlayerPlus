@@ -121,8 +121,10 @@ Changes in version 2.0.1 release 2 include:
 
 * Arch Linux build and packaging support
 * Integration of the Beets media library management system
-* Add support for Navidrome integration
-* Add support for Mopidy
+* Add support for Mopidy and Mopidy administration
+* Add support for Navidrome and Navidrome administration
+* Add new config file `~/.config/mpprc` for MusicPlayerPlus preferences
+* Fixes for EWMH non-compliant window managers (e.g. DWM)
 * Add support for Kitty as default terminal emualator
     * Custom Kitty configuration, themes, and sessions
 * Add Beets web plugin service

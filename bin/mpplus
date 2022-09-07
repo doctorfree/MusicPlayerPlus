@@ -1213,6 +1213,11 @@ do_service_action() {
           systemctl --user ${action} mpd.socket
         }
       }
+      [ "${service}" == "pulseaudio.service" ] && {
+        systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 && {
+          systemctl --user ${action} pulseaudio.socket
+        }
+      }
       ;;
     disable)
       systemctl --user is-enabled ${service} >/dev/null 2>&1 && {
@@ -1223,6 +1228,12 @@ do_service_action() {
           systemctl --user ${action} mpd.socket
         }
         sudo systemctl --user --global disable mpd.socket
+      }
+      [ "${service}" == "pulseaudio.service" ] && {
+        systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 && {
+          systemctl --user ${action} pulseaudio.socket
+        }
+        sudo systemctl --user --global disable pulseaudio.socket
       }
       ;;
     enable)
@@ -1267,7 +1278,7 @@ do_service_action() {
 }
 
 mpp_service() {
-  ALL_SERVICES="navidrome mopidy mpdstats webplugin yams mpd"
+  ALL_SERVICES="navidrome mopidy mpdstats webplugin yams mpd pulseaudio"
   SERVICE_ACTION=$1
   if [ "$2" == "ALL" ]
   then
@@ -1613,6 +1624,8 @@ show_services_menu() {
     fi
     systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
     systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
+    systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && p_active="active" || p_active="inactive"
+    systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && p_enabled="enabled" || p_enabled="disabled"
     systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
     systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
     systemctl --user is-active webplugin.service >/dev/null 2>&1 && w_active="active" || w_active="inactive"
@@ -1621,12 +1634,6 @@ show_services_menu() {
     systemctl --user is-enabled yams.service >/dev/null 2>&1 && y_enabled="enabled" || y_enabled="disabled"
     systemctl --user is-active mopidy.service >/dev/null 2>&1 && z_active="active" || z_active="inactive"
     systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && z_enabled="enabled" || z_enabled="disabled"
-    if [ "${have_mopidy}" ]
-    then
-      z_inst="installed"
-    else
-      z_inst="not installed"
-    fi
     systemctl --user is-active navidrome.service >/dev/null 2>&1 && n_active="active" || n_active="inactive"
     systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && n_enabled="enabled" || n_enabled="disabled"
     if [ "${have_navi}" ]
@@ -1635,8 +1642,15 @@ show_services_menu() {
     else
       n_inst="not installed"
     fi
+    if [ "${have_mopidy}" ]
+    then
+      z_inst="installed"
+    else
+      z_inst="not installed"
+    fi
     printf "\nCurrent status of MusicPlayerPlus Services:"
     printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
+    printf "\n\tPulseAudio service is ${p_enabled} and ${p_active}"
     printf "\n\tBeets MPD Stats service is ${s_enabled} and ${s_active}"
     printf "\n\tBeets Web service is ${w_enabled} and ${w_active}"
     printf "\n\tLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
@@ -1680,6 +1694,12 @@ show_services_menu() {
         options+=("Enable Navidrome Server")
       fi
     }
+    if [ "${p_enabled}" == "enabled" ]
+    then
+      options+=("Disable PulseAudio")
+    else
+      options+=("Enable PulseAudio")
+    fi
     if [ "${y_enabled}" == "enabled" ]
     then
       options+=("Disable Last.FM Scrobbler")
@@ -1725,6 +1745,13 @@ show_services_menu() {
         options+=("Start Navidrome Server")
       fi
     }
+    if [ "${p_active}" == "active" ]
+    then
+      options+=("Stop PulseAudio")
+      options+=("Restart PulseAudio")
+    else
+      options+=("Start PulseAudio")
+    fi
     if [ "${y_active}" == "active" ]
     then
       options+=("Stop Last.FM Scrobbler")
@@ -1737,6 +1764,7 @@ show_services_menu() {
     options+=("Status of Beets Web Service")
     [ "${have_mopidy}" ] && options+=("Status of Mopidy Server")
     [ "${have_navi}" ] && options+=("Status of Navidrome Server")
+    options+=("Status of PulseAudio")
     options+=("Status of Last.FM Scrobbler")
     options+=("Stop All Active Services")
     options+=("Main menu" "Quit")
@@ -1873,6 +1901,30 @@ show_services_menu() {
               ;;
           "Status of Music Player Daemon",*|*,"Status of Music Player Daemon")
               mpp_service status mpd
+              break
+              ;;
+          "Enable PulseAudio",*|*,"Enable PulseAudio")
+              mpp_service enable pulseaudio
+              break
+              ;;
+          "Disable PulseAudio",*|*,"Disable PulseAudio")
+              mpp_service disable pulseaudio
+              break
+              ;;
+          "Start PulseAudio",*|*,"Start PulseAudio")
+              mpp_service start pulseaudio
+              break
+              ;;
+          "Stop PulseAudio",*|*,"Stop PulseAudio")
+              mpp_service stop pulseaudio
+              break
+              ;;
+          "Restart PulseAudio",*|*,"Restart PulseAudio")
+              mpp_service restart pulseaudio
+              break
+              ;;
+          "Status of PulseAudio",*|*,"Status of PulseAudio")
+              mpp_service status pulseaudio
               break
               ;;
           "Enable Beets MPD Stats",*|*,"Enable Beets MPD Stats")

@@ -5,10 +5,10 @@ All notable changes to this project will be documented in this file.
 ## MusicPlayerPlus-2.0.1r2 (2022-08-20)
 
 * Add Arch Linux build and packaging support
-* Add management of Navidrome to mpplus
-* Add support for Navidrome integration
-* Add Mopidy administration to mpplus services menu
-* Add support for Mopidy
+* Add support for Mopidy and Mopidy administration
+* Add support for Navidrome and Navidrome administration
+* Add new config file `~/.config/mpprc` for MusicPlayerPlus preferences
+* Fixes for EWMH non-compliant window managers (e.g. DWM)
 * Change default terminal emulator from gnome-terminal to kitty
 * Add support for Kitty, custom Kitty config/themes/sessions
 * Add Beets web plugin service
@@ -17,8 +17,6 @@ All notable changes to this project will be documented in this file.
 * Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
 * Add mppdl command and yt-dlp module for downloading audio from various sites
 * Add mppcover command to display album cover art of currently playing song
-* Only install Bliss utils if they compile successfully
-* Install Cargo if it is not previously installed
 * Additional python module dependencies installed during mppinit
 * Messages in mppinit tailored to which acoustic analysis is performed
 * Remove dependencies on gnome-terminal and tilix
