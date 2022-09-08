@@ -111,6 +111,21 @@ shift $(( OPTIND - 1 ))
 
 export MPP_ENV_MODE
 
+if [ "${DISPLAY}" ]
+then
+  consolemode=
+  # Check if on a console screen
+  have_tty=`type -p tty`
+  [ "${have_tty}" ] && {
+    tty=$(tty)
+    echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
+    echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+  }
+  [ "${consolemode}" ] && USE_ART=
+else
+  USE_ART=
+fi
+
 [ "${USE_TMUXP}" ] || {
   ${HOME}/${MPCDIR}/mpcplus-art.sh ${ARGS}
   exit 0

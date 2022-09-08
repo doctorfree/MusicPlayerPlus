@@ -2860,58 +2860,75 @@ if [ "${DISPLAY}" ]
 then
   movewindow=
   hasopacity=
-  if [ "${have_xprop}" ]
+  consolemode=
+  # First check if on a console screen
+  have_tty=`type -p tty`
+  [ "${have_tty}" ] && {
+    tty=$(tty)
+    echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
+    echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+  }
+  if [ "${consolemode}" ]
   then
-    hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
-    echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
-    echo "${hints}" | grep _NET_WM_WINDOW_OPACITY > /dev/null && hasopacity=1
-    if [ "${movewindow}" ]
-    then
-      USE_EWMH=1
-    else
-      USE_EWMH=
-      CONSOLE_MODE=1
-      USE_TMUX=1
-    fi
-    if [ "${hasopacity}" ]
-    then
-      USE_OPAC=1
-    else
-      USE_OPAC=
-    fi
+    CONSOLE_MODE=1
+    USE_EWMH=
+    USE_OPAC=
+    USE_TMUX=1
   else
-    status=0
-    if [ -x ${SCRIPTS}/check_tty.sh ]
+    # Check window manager's supported hints
+    if [ "${have_xprop}" ]
     then
-      ${SCRIPTS}/check_tty.sh
-      status=$?
-    else
-      if [ "${have_xdpy}" ]
+      hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
+      echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
+      echo "${hints}" | grep _NET_WM_WINDOW_OPACITY > /dev/null && hasopacity=1
+      if [ "${movewindow}" ]
       then
-        xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
+        USE_EWMH=1
+      else
+        USE_EWMH=
+        CONSOLE_MODE=1
+        USE_TMUX=1
+      fi
+      if [ "${hasopacity}" ]
+      then
+        USE_OPAC=1
+      else
+        USE_OPAC=
+      fi
+    else
+      status=0
+      if [ -x ${SCRIPTS}/check_tty.sh ]
+      then
+        ${SCRIPTS}/check_tty.sh
         status=$?
       else
-        if [ "${have_kitty}" ]
+        if [ "${have_xdpy}" ]
         then
-          kitty echo "" > /dev/null 2>&1
+          xdpyinfo -display "${DISPLAY}" > /dev/null 2>&1
           status=$?
         else
-          [ "${have_gnome}" ] && {
-            gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+          if [ "${have_kitty}" ]
+          then
+            kitty echo "" > /dev/null 2>&1
             status=$?
-          }
+          else
+            [ "${have_gnome}" ] && {
+              gnome-terminal --quiet -- echo "" > /dev/null 2>&1
+              status=$?
+            }
+          fi
         fi
       fi
-    fi
-    if [ ${status} -eq 0 ]
-    then
-      USE_EWMH=1
-      USE_OPAC=1
-    else
-      CONSOLE_MODE=1
-      USE_EWMH=
-      USE_OPAC=
-      USE_TMUX=1
+      if [ ${status} -eq 0 ]
+      then
+        USE_EWMH=1
+        USE_OPAC=1
+      else
+        CONSOLE_MODE=1
+        USE_EWMH=
+        USE_OPAC=
+        USE_TMUX=1
+      fi
     fi
   fi
 else
