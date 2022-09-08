@@ -1,7 +1,7 @@
 #!/bin/bash
 # Cover art script for mpcplus-ueberzug
 
-# SETTINGS
+## SETTINGS
 # Get music library location from MusicPlayerPlus configuration
 MUSIC_DIR=
 [ -f "${HOME}/.config/mpprc" ] && . "${HOME}/.config/mpprc"
@@ -17,17 +17,64 @@ MUSIC_DIR=
 # Need to expand a tilda to $HOME
 music_library="${MUSIC_DIR/#\~/$HOME}"
 fallback_image="$HOME/.config/mpcplus/ueberzug/img/fallback.png"
-padding_top=5
-padding_bottom=1
-padding_right=1
+# Customize padding for each supported terminal emulator
+[ "${MPP_ENV_MODE}" ] && MPP_MODE="${MPP_ENV_MODE}"
+case "${MPP_MODE}" in
+  console)
+    padding_top=3
+    padding_bottom=1
+    padding_right=1
+    padding_left=2
+    ;;
+  current)
+    padding_top=3
+    padding_bottom=1
+    padding_right=1
+    padding_left=2
+    ;;
+  gnome)
+    padding_top=4
+    padding_left=3
+    padding_bottom=1
+    padding_right=1
+    ;;
+  kitty)
+    padding_top=3
+    padding_bottom=1
+    padding_right=1
+    padding_left=2
+    ;;
+  retro)
+    padding_top=2
+    padding_left=3
+    padding_bottom=1
+    padding_right=1
+    ;;
+  simple)
+    padding_left=1
+    padding_top=3
+    padding_bottom=1
+    padding_right=1
+    ;;
+  tilix)
+    padding_top=4
+    padding_bottom=1
+    padding_right=1
+    padding_left=2
+    ;;
+  *)
+    padding_top=5
+    padding_bottom=1
+    padding_right=1
+    padding_left=1
+    ;;
+esac
 max_width=25
 reserved_playlist_cols=30
 reserved_cols_in_percent="false"
 force_square="false"
 square_alignment="top"
-
 left_aligned="true"
-padding_left=1
 
 # Only set this if the geometries are wrong or mpcplus shouts at you to do it.
 # Visually select/highlight a character on your terminal, zoom in an image 

@@ -62,6 +62,7 @@ usage() {
   exit 1
 }
 
+MPP_ENV_MODE=unknown
 USE_GRAD=1
 USE_ART=1
 ALT_ART=1
@@ -71,7 +72,7 @@ USAGE=
 ART_SCRIPT="${HOME}/${MPCDIR}/mpcplus-art.sh"
 ALT_SCRIPT="${HOME}/${MPCDIR}/ueberzug/mpcplus-ueberzug"
 ARGS="$*"
-while getopts "aAgp:ru" flag; do
+while getopts "aAgm:p:ru" flag; do
     case $flag in
         a)
           [ -x "${ART_SCRIPT}" ] && {
@@ -85,6 +86,9 @@ while getopts "aAgp:ru" flag; do
           ;;
         g)
           USE_GRAD=
+          ;;
+        m)
+          MPP_ENV_MODE=${OPTARG}
           ;;
         p)
           PYART=${OPTARG}
@@ -104,6 +108,8 @@ done
 shift $(( OPTIND - 1 ))
 
 [ "${USAGE}" ] && usage
+
+export MPP_ENV_MODE
 
 [ "${USE_TMUXP}" ] || {
   ${HOME}/${MPCDIR}/mpcplus-art.sh ${ARGS}

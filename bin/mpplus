@@ -997,12 +997,11 @@ make_it_so() {
         fi
       fi
     fi
-#   sleep 1
   }
   # End visualizer startup section
 
-  # Fullscreen tmux sessions and ASCIImatics Animations
-  [ "${SPLASH}" ] || [ "${TMUX_MPC}" ] && FULLSCREEN=1
+  # Fullscreen ASCIImatics Animations
+  [ "${SPLASH}" ] && FULLSCREEN=1
 
   # Set the command to use based on command line switches (-S, -T)
   MPCOMM="${MPCPLUS}"
@@ -1019,7 +1018,7 @@ make_it_so() {
   fi
 
   # Begin MPD client startup section
-  if [ "${CONSOLE_MODE}" ] || [ "${TMUX_MPC}" ]
+  if [ "${CONSOLE_MODE}" ] || [ "${CURRENT}" ]
   then
     ${MPCOMM}
   else
@@ -2805,6 +2804,7 @@ TILIX=
 TMUX_MPC=
 USE_TMUX=
 [ -f ${MPPCONF} ] && . ${MPPCONF}
+[ "${MPP_MODE}" ] && MPCPLUS_TMUX="${MPCPLUS_TMUX} -m ${MPP_MODE}"
 case "${MPP_MODE}" in
   console)
     CONSOLE_MODE=1
