@@ -312,9 +312,16 @@ make_it_so() {
   }
 
   [ "${DOWNLOAD_ART}" ] && {
+    [ -f "${HOME}/.config/beets/logs/import.log" ] && {
+      [ "${have_beet}" ] && {
+        printf "\n\tDownloading album cover art with Beets fetchart ..."
+        beet fetchart ${MUSIC_DIR} > /dev/null 2>&1
+        printf " done\n\n"
+      }
+    }
     if [ -x ${SCRIPTS}/download_cover_art.sh ]
     then
-      printf "\n\tDownloading album cover art ..."
+      printf "\n\tDownloading album cover art with sacad ..."
       if [ "${MUSIC_DIRECTORY}" ]
       then
         ${SCRIPTS}/download_cover_art.sh -d "${MUSIC_DIRECTORY}"
@@ -327,9 +334,6 @@ make_it_so() {
       echo "Check your MusicPlayerPlus installation"
       echo ""
     fi
-    # printf "\n\tDownloading album cover art for missed albums ..."
-    # beet fetchart > /dev/null 2>&1
-    # printf " done\n\n"
     [ "${DO_NOT_EXIT}" ] || exit 0
     return
   }
@@ -473,7 +477,6 @@ make_it_so() {
   }
 
   [ "${FETCH_LYRICS}" ] && {
-    have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""
@@ -516,7 +519,6 @@ make_it_so() {
   }
 
   [ "${ACBRAINZ}" ] && {
-    have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""
@@ -655,7 +657,6 @@ make_it_so() {
   }
 
   [ "${XTRACTOR}" ] && {
-    have_beet=`type -p beet`
     if [ "${have_beet}" ]
     then
       echo ""
@@ -2158,12 +2159,6 @@ show_ascii_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     SPLASH=1
-    if [ "${COVER_ART}" ]
-    then
-      coverstat="ON"
-    else
-      coverstat="OFF"
-    fi
     if [ "${AUDIO}" ]
     then
       audiostat="ON"
@@ -2186,7 +2181,6 @@ show_ascii_menu() {
     save_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
-    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Use Tmux (${usetmux})" "Main menu" "Quit")
     select opt in "${options[@]}"
@@ -2217,25 +2211,6 @@ show_ascii_menu() {
           "Plasma ASCIImatics Animation",*|*,"Plasma ASCIImatics Animation")
               MPPSPLASH="${MPPSPLASH} -p"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
-              break
-              ;;
-          "Toggle Show Cover Art"*,*|*,"Toggle Show Cover Art"*)
-              if [ "${COVER_ART}" ]
-              then
-                COVER_ART=
-              else
-                COVER_ART=1
-              fi
-              if [ "${COVER_ART}" ]
-              then
-                TMUX_MPC=1
-                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -A//"`
-              else
-                TMUX_MPC=
-                MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
-              fi
-              save_it_so=1
-              skip_it_so=1
               break
               ;;
           "Toggle Audio"*,*|*,"Toggle Audio"*)
@@ -2364,6 +2339,12 @@ show_main_menu() {
     else
       recordstat="OFF"
     fi
+    if [ "${COVER_ART}" ]
+    then
+      coverstat="ON"
+    else
+      coverstat="OFF"
+    fi
     if [ "${USE_TMUX}" ]
     then
       usetmux="ON"
@@ -2382,12 +2363,12 @@ show_main_menu() {
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
-    [ "${CONSOLE_MODE}" ] && options+=("Music Player Plus Visualizer")
-    [ "${have_kitty}" ] && options+=("Kitty Music Player Plus")
-    [ "${have_gnome}" ] && options+=("GNOME Music Player Plus")
-    [ "${have_retro}" ] && options+=("Retro Music Player Plus")
-    [ "${have_simple}" ] && options+=("Simple Music Player Plus")
-    [ "${have_tilix}" ] && options+=("Tilix Music Player Plus")
+    [ "${CONSOLE_MODE}" ] && options+=("Launch Music Player Plus")
+    [ "${have_kitty}" ] && options+=("Launch mpcplus with Kitty")
+    [ "${have_gnome}" ] && options+=("Launch mpcplus with Gnome")
+    [ "${have_retro}" ] && options+=("Launch mpcplus with Retro")
+    [ "${have_simple}" ] && options+=("Launch mpcplus with Simple")
+    [ "${have_tilix}" ] && options+=("Launch mpcplus with Tilix")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler")
     options+=("ASCIImatics Animations")
@@ -2400,6 +2381,7 @@ show_main_menu() {
     options+=("Manage Music Services")
     [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
     options+=("Select Music Directory")
+    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Fullscreen (${fullstat})" "Quit")
@@ -2413,30 +2395,31 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Music Player Plus",*|*,"Music Player Plus")
+          "Launch Music Player Plus",*|*,"Launch Music Player Plus")
               MPCPLUS="mpcplus"
               break
               ;;
-          "Kitty Music Player Plus",*|*,"Kitty Music Player Plus")
+          "Launch mpcplus with Kitty",*|*,"Launch mpcplus with Kitty")
               MPCPLUS="mpcplus"
               KITTY=1
               break
               ;;
-          "GNOME Music Player Plus",*|*,"GNOME Music Player Plus")
+          "Launch mpcplus with Gnome",*|*,"Launch mpcplus with Gnome")
               MPCPLUS="mpcplus"
+              GNOME=1
               break
               ;;
-          "Retro Music Player Plus",*|*,"Retro Music Player Plus")
+          "Launch mpcplus with Retro",*|*,"Launch mpcplus with Retro")
               MPCPLUS="mpcplus"
               RETRO=1
               break
               ;;
-          "Simple Music Player Plus",*|*,"Simple Music Player Plus")
+          "Launch mpcplus with Simple",*|*,"Launch mpcplus with Simple")
               MPCPLUS="mpcplus"
               SIMPLE=1
               break
               ;;
-          "Tilix Music Player Plus",*|*,"Tilix Music Player Plus")
+          "Launch mpcplus with Tilix",*|*,"Launch mpcplus with Tilix")
               MPCPLUS="mpcplus"
               TILIX=1
               break
@@ -2505,6 +2488,25 @@ show_main_menu() {
               ;;
           "Import"*,*|*,"Import"*)
               BEETS_IMPORT=1
+              break
+              ;;
+          "Toggle Show Cover Art"*,*|*,"Toggle Show Cover Art"*)
+              if [ "${COVER_ART}" ]
+              then
+                COVER_ART=
+              else
+                COVER_ART=1
+              fi
+              if [ "${COVER_ART}" ]
+              then
+                TMUX_MPC=1
+                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -A//"`
+              else
+                TMUX_MPC=
+                MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
+              fi
+              save_it_so=1
+              skip_it_so=1
               break
               ;;
           "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
@@ -2780,6 +2782,7 @@ else
   done
 fi
 
+have_beet=`type -p beet`
 have_wmctrl=`type -p wmctrl`
 have_xprop=`type -p xprop`
 have_xrandr=`type -p xrandr`
