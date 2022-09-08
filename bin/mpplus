@@ -52,7 +52,7 @@ MPPCONF="${HOME}/.config/mpprc"
 usage() {
   printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]"
   printf "\n\t[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
-  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-N]"
+  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
   printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
@@ -68,6 +68,7 @@ usage() {
   printf "\n\t-c indicates use current terminal emulator / console mode"
   printf "\n\t-e indicates use simple terminal emulator"
   printf "\n\t-g indicates use gnome terminal emulator"
+  printf "\n\t-k indicates use kitty terminal emulator"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
   printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava"
@@ -102,7 +103,7 @@ usage() {
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
   printf "\n\t\tIn conjunction with '-I', the '-A' flag disables auto-tagging"
   printf "\n\t-i indicates start mpplus in interactive mode"
-  printf "\n\t-k indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
+  printf "\n\t-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-L indicates download lyrics to the Beets library and exit"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"
@@ -2635,8 +2636,6 @@ save_config() {
   echo "AUDIO=${AUDIO}" >> ${MPPCONF}
   echo "# Display cover art in tmux sessions" >> ${MPPCONF}
   echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
-  echo "# Use fullscreen display for mpcplus and mppcava" >> ${MPPCONF}
-  echo "FULLSCREEN=${FULLSCREEN}" >> ${MPPCONF}
   echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
   echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
   echo "" >> ${MPPCONF}
@@ -2818,9 +2817,33 @@ USE_TMUX=
 [ "${MPP_MODE}" ] && MPCPLUS_TMUX="${MPCPLUS_TMUX} -m ${MPP_MODE}"
 case "${MPP_MODE}" in
   console)
-    CONSOLE_MODE=1
-    TMUX_MPC=1
-    USE_TMUX=1
+    if [ "${DISPLAY}" ]
+    then
+      consolemode=
+      # Check if on a console screen
+      have_tty=`type -p tty`
+      [ "${have_tty}" ] && {
+        tty=$(tty)
+        echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
+        echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+      }
+      if [ "${consolemode}" ]
+      then
+        CONSOLE_MODE=1
+        TMUX_MPC=1
+        USE_TMUX=1
+      else
+        pick_terminal || {
+          CONSOLE_MODE=1
+          TMUX_MPC=1
+          USE_TMUX=1
+        }
+      fi
+    else
+      CONSOLE_MODE=1
+      TMUX_MPC=1
+      USE_TMUX=1
+    fi
     ;;
   current)
     TMUX_MPC=1
@@ -3012,7 +3035,7 @@ else
   use_figlet=
 fi
 
-while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; do
+while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; do
   case $flag in
     a)
       AUDIO=1
@@ -3093,7 +3116,6 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
       GNOME=
       KITTY=
       RETRO=
-      SIMPLE=
       TILIX=
       [ "${have_simple}" ] || {
         echo "Option '-e' indicates use simple terminal emulator."
@@ -3119,7 +3141,6 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
     g)
       GNOME=1
       CURRENT=
-      GNOME=
       KITTY=
       RETRO=
       SIMPLE=
@@ -3148,10 +3169,6 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
     i)
       INTERACTIVE=1
       ;;
-    k)
-      kill_tmux_sessions
-      exit 0
-      ;;
     j)
       MPPSPLASH="${MPPSPLASH} -j"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
@@ -3159,6 +3176,27 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
     J)
       MPPSPLASH="${MPPSPLASH} -J"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -J"
+      ;;
+    K)
+      kill_tmux_sessions
+      exit 0
+      ;;
+    k)
+      KITTY=1
+      GNOME=
+      CURRENT=
+      RETRO=
+      SIMPLE=
+      TILIX=
+      [ "${have_kitty}" ] || {
+        echo "Option '-k' indicates use Kitty terminal emulator."
+        echo "However, kitty is not installed or not in your path."
+        echo "Proceeding with current terminal emulator"
+        KITTY=
+        CURRENT=1
+        TMUX_MPC=1
+        USE_TMUX=1
+      }
       ;;
     L)
       FETCH_LYRICS=1
@@ -3196,7 +3234,6 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
       CURRENT=
       GNOME=
       KITTY=
-      RETRO=
       SIMPLE=
       TILIX=
       [ "${have_retro}" ] || {
@@ -3233,7 +3270,6 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; d
       KITTY=
       RETRO=
       SIMPLE=
-      TILIX=
       [ "${have_tilix}" ] || {
         echo "Option '-t' indicates use tilix terminal emulator."
         echo "However, tilix is not installed, unavailable, or not in your path."
@@ -3314,20 +3350,26 @@ impflags="${tagflag} ${writeflag}"
 }
 
 [ "${CONSOLE_MODE}" ] || {
-  [ "${GNOME}" ] || [ "${TILIX}" ] || [ "${RETRO}" ] || [ "${SIMPLE}" ] || {
-    if [ "${have_kitty}" ]
-    then
-      KITTY=1
-    else
-      echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
-      echo "terminal emulator. However, Kitty is not installed,"
-      echo "unavailable, or not in your path."
-      echo "You can install Kitty as follows:"
-      printf "\n\n\tmppinit kitty\n\n"
-      echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
-      echo "the '-g' option to use gnome-terminal, or '-e' to use st."
-      pick_terminal || usage
-    fi
+  [ "${GNOME}" ] || {
+    [ "${TILIX}" ] || {
+      [ "${RETRO}" ] || {
+        [ "${SIMPLE}" ] || {
+          if [ "${have_kitty}" ]
+          then
+            KITTY=1
+          else
+            echo "No option '-e', '-g', '-t', or '-r' indicates use Kitty"
+            echo "terminal emulator. However, Kitty is not installed,"
+            echo "unavailable, or not in your path."
+            echo "You can install Kitty as follows:"
+            printf "\n\n\tmppinit kitty\n\n"
+            echo "Alternately, invoke mpplus with the '-t' option to use tilix,"
+            echo "the '-g' option to use gnome-terminal, or '-e' to use st."
+            pick_terminal || usage
+          fi
+        }
+      }
+    }
   }
 }
 

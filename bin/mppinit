@@ -481,8 +481,6 @@ init_mpp_conf() {
     echo "AUDIO=" >> ${MPPCONF}
     echo "# Display cover art in tmux sessions" >> ${MPPCONF}
     echo "COVER_ART=1" >> ${MPPCONF}
-    echo "# Use fullscreen display for mpcplus and mppcava" >> ${MPPCONF}
-    echo "FULLSCREEN=" >> ${MPPCONF}
     echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
     echo "USE_TMUX=" >> ${MPPCONF}
     echo "" >> ${MPPCONF}

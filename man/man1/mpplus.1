@@ -23,7 +23,7 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .PP
 \f[B]mpplus\f[R] [-A] [-a] [-b] [-B] [-c] [-C client] [-D
 art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G]
-[-g] [-h] [-I] [-i] [-jJ] [-k] [-L] [-m] [-n num] [-M
+[-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
 [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W]
 [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -81,7 +81,7 @@ selection menu and operates in interactive mode.
 .PP
 Occasionally a tmux session or asciimatics script will hang.
 Previously started tmux sessions and asciimatics scripts can be quickly
-and easily killed by executing the \f[V]mpplus -k\f[R] command.
+and easily killed by executing the \f[V]mpplus -K\f[R] command.
 .SS COMMAND LINE OPTIONS
 .PP
 \f[I]MPCplus/Visualizer options:\f[R]
@@ -109,6 +109,9 @@ Indicates use gnome terminal emulator
 .TP
 \f[B]-h\f[R]
 Indicates half-height for mppcava window (with -f only)
+.TP
+\f[B]-k\f[R]
+Indicates use kitty terminal emulator
 .TP
 \f[B]-P script\f[R]
 Specifies the ASCIImatics script to run in visualizer pane
@@ -196,7 +199,7 @@ Beets and exit
 \f[B]-i\f[R]
 Indicates interactive mode with selection menus
 .TP
-\f[B]-k\f[R]
+\f[B]-K\f[R]
 Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 .TP
 \f[B]-L\f[R]
