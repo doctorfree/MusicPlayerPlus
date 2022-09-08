@@ -97,6 +97,7 @@ shift $(( OPTIND - 1 ))
 COVER="${HOME}/${MPCDIR}/album_cover.png"
 [ -f ${COVER} ] || cp ${HOME}/${MPCDIR}/default_cover.png ${COVER}
 
+sleep 1
 tmux new-session -d -x "$(tput cols)" -y "$(tput lines)" -s ${SESSION}
 tmux set -g status off
 

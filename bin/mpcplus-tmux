@@ -131,6 +131,7 @@ fi
   exit 0
 }
 
+sleep 1
 numrows=`tput lines`
 MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
 

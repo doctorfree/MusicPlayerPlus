@@ -1058,7 +1058,15 @@ make_it_so() {
                     --full-screen \
                     -- ${MPCOMM} &
             else
-              ${MPCOMM}
+              if [ "${SIMPLE}" ]
+              then
+                st -t "${MTITLE}" \
+                   -g "800x600" \
+                   -f "Monospace:size=24" \
+                   ${MPCOMM} 2> /dev/null &
+              else
+                ${MPCOMM}
+              fi
             fi
           fi
         fi
