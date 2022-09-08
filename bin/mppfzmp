@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MODE=
+MPP_MODE=
 MTITLE="MusicPlayerPlus Fuzzy Finder"
 MPCOMM="fzmp -a"
 MPPCONF="${HOME}/.config/mpprc"
@@ -58,7 +58,7 @@ else
   have_tilix=
 fi
 
-case "${MODE}" in
+case "${MPP_MODE}" in
   console|current)
     GNOME=
     KITTY=

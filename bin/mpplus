@@ -2647,60 +2647,60 @@ save_config() {
   echo "#  Uncomment the preferred mode" >> ${MPPCONF}
   if [ "${CONSOLE_MODE}" ]
   then
-    echo "MODE=console" >> ${MPPCONF}
-    echo "#MODE=current" >> ${MPPCONF}
-    echo "#MODE=gnome" >> ${MPPCONF}
-    echo "#MODE=retro" >> ${MPPCONF}
-    echo "#MODE=simple" >> ${MPPCONF}
-    echo "#MODE=tilix" >> ${MPPCONF}
-    echo "#MODE=kitty" >> ${MPPCONF}
+    echo "MPP_MODE=console" >> ${MPPCONF}
+    echo "#MPP_MODE=current" >> ${MPPCONF}
+    echo "#MPP_MODE=gnome" >> ${MPPCONF}
+    echo "#MPP_MODE=retro" >> ${MPPCONF}
+    echo "#MPP_MODE=simple" >> ${MPPCONF}
+    echo "#MPP_MODE=tilix" >> ${MPPCONF}
+    echo "#MPP_MODE=kitty" >> ${MPPCONF}
   else
-    echo "#MODE=console" >> ${MPPCONF}
+    echo "#MPP_MODE=console" >> ${MPPCONF}
     if [ "${CURRENT}" ]
     then
-      echo "MODE=current" >> ${MPPCONF}
-      echo "#MODE=gnome" >> ${MPPCONF}
-      echo "#MODE=retro" >> ${MPPCONF}
-      echo "#MODE=simple" >> ${MPPCONF}
-      echo "#MODE=tilix" >> ${MPPCONF}
-      echo "#MODE=kitty" >> ${MPPCONF}
+      echo "MPP_MODE=current" >> ${MPPCONF}
+      echo "#MPP_MODE=gnome" >> ${MPPCONF}
+      echo "#MPP_MODE=retro" >> ${MPPCONF}
+      echo "#MPP_MODE=simple" >> ${MPPCONF}
+      echo "#MPP_MODE=tilix" >> ${MPPCONF}
+      echo "#MPP_MODE=kitty" >> ${MPPCONF}
     else
-      echo "#MODE=current" >> ${MPPCONF}
+      echo "#MPP_MODE=current" >> ${MPPCONF}
       if [ "${GNOME}" ]
       then
-        echo "MODE=gnome" >> ${MPPCONF}
-        echo "#MODE=retro" >> ${MPPCONF}
-        echo "#MODE=simple" >> ${MPPCONF}
-        echo "#MODE=tilix" >> ${MPPCONF}
-        echo "#MODE=kitty" >> ${MPPCONF}
+        echo "MPP_MODE=gnome" >> ${MPPCONF}
+        echo "#MPP_MODE=retro" >> ${MPPCONF}
+        echo "#MPP_MODE=simple" >> ${MPPCONF}
+        echo "#MPP_MODE=tilix" >> ${MPPCONF}
+        echo "#MPP_MODE=kitty" >> ${MPPCONF}
       else
-        echo "#MODE=gnome" >> ${MPPCONF}
+        echo "#MPP_MODE=gnome" >> ${MPPCONF}
         if [ "${RETRO}" ]
         then
-          echo "MODE=retro" >> ${MPPCONF}
-          echo "#MODE=simple" >> ${MPPCONF}
-          echo "#MODE=tilix" >> ${MPPCONF}
-          echo "#MODE=kitty" >> ${MPPCONF}
+          echo "MPP_MODE=retro" >> ${MPPCONF}
+          echo "#MPP_MODE=simple" >> ${MPPCONF}
+          echo "#MPP_MODE=tilix" >> ${MPPCONF}
+          echo "#MPP_MODE=kitty" >> ${MPPCONF}
         else
-          echo "#MODE=retro" >> ${MPPCONF}
+          echo "#MPP_MODE=retro" >> ${MPPCONF}
           if [ "${SIMPLE}" ]
           then
-            echo "MODE=simple" >> ${MPPCONF}
-            echo "#MODE=tilix" >> ${MPPCONF}
-            echo "#MODE=kitty" >> ${MPPCONF}
+            echo "MPP_MODE=simple" >> ${MPPCONF}
+            echo "#MPP_MODE=tilix" >> ${MPPCONF}
+            echo "#MPP_MODE=kitty" >> ${MPPCONF}
           else
-            echo "#MODE=simple" >> ${MPPCONF}
+            echo "#MPP_MODE=simple" >> ${MPPCONF}
             if [ "${TILIX}" ]
             then
-              echo "MODE=tilix" >> ${MPPCONF}
-              echo "#MODE=kitty" >> ${MPPCONF}
+              echo "MPP_MODE=tilix" >> ${MPPCONF}
+              echo "#MPP_MODE=kitty" >> ${MPPCONF}
             else
-              echo "#MODE=tilix" >> ${MPPCONF}
+              echo "#MPP_MODE=tilix" >> ${MPPCONF}
               if [ "${KITTY}" ]
               then
-                echo "MODE=kitty" >> ${MPPCONF}
+                echo "MPP_MODE=kitty" >> ${MPPCONF}
               else
-                echo "#MODE=kitty" >> ${MPPCONF}
+                echo "#MPP_MODE=kitty" >> ${MPPCONF}
               fi
             fi
           fi
@@ -2794,7 +2794,7 @@ have_kitty=`type -p kitty`
 
 init_vars
 AUDIO=
-COVER_ART=
+COVER_ART=1
 FULLSCREEN=
 CURRENT=
 GNOME=
@@ -2805,7 +2805,7 @@ TILIX=
 TMUX_MPC=
 USE_TMUX=
 [ -f ${MPPCONF} ] && . ${MPPCONF}
-case "${MODE}" in
+case "${MPP_MODE}" in
   console)
     CONSOLE_MODE=1
     TMUX_MPC=1

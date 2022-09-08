@@ -480,7 +480,7 @@ init_mpp_conf() {
     echo "# Play audio during asciimatics animations" >> ${MPPCONF}
     echo "AUDIO=" >> ${MPPCONF}
     echo "# Display cover art in tmux sessions" >> ${MPPCONF}
-    echo "COVER_ART=" >> ${MPPCONF}
+    echo "COVER_ART=1" >> ${MPPCONF}
     echo "# Use fullscreen display for mpcplus and mppcava" >> ${MPPCONF}
     echo "FULLSCREEN=" >> ${MPPCONF}
     echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
@@ -500,13 +500,14 @@ init_mpp_conf() {
     echo "#  Default fallback if none specified or not available is Kitty" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
     echo "#  Uncomment the preferred mode" >> ${MPPCONF}
-    echo "#MODE=console" >> ${MPPCONF}
-    echo "#MODE=current" >> ${MPPCONF}
-    echo "#MODE=gnome" >> ${MPPCONF}
-    echo "#MODE=retro" >> ${MPPCONF}
-    echo "#MODE=simple" >> ${MPPCONF}
-    echo "#MODE=tilix" >> ${MPPCONF}
-    echo "MODE=kitty" >> ${MPPCONF}
+    echo "#MPP_MODE=console" >> ${MPPCONF}
+    echo "#MPP_MODE=current" >> ${MPPCONF}
+    echo "#MPP_MODE=gnome" >> ${MPPCONF}
+    echo "#MPP_MODE=kitty" >> ${MPPCONF}
+    echo "#MPP_MODE=retro" >> ${MPPCONF}
+    echo "#MPP_MODE=simple" >> ${MPPCONF}
+    echo "#MPP_MODE=tilix" >> ${MPPCONF}
+    echo "MPP_MODE=${DEFAULT_MODE}" >> ${MPPCONF}
     echo "" >> ${MPPCONF}
     echo "## Service access" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
@@ -812,11 +813,29 @@ upgrade=1
 quiet=
 beetsdev=
 have_bliss=`type -p blissify`
+
 have_gnome=`type -p gnome-terminal`
 have_kitty=`type -p kitty`
 have_tilix=`type -p tilix`
 have_retro=`type -p cool-retro-term`
-have_xfce4=`type -p xfce4-terminal`
+have_simple=`type -p st`
+
+# If a supported terminal emulators is already present, use it as default
+DEFAULT_MODE=kitty
+[ "${have_kitty}" ] || {
+  if [ "${have_tilix}" ]
+  then
+    DEFAULT_MODE=tilix
+  else
+    if [ "${have_simple}" ]
+    then
+      DEFAULT_MODE=simple
+    else
+      [ "${have_gnome}" ] && DEFAULT_MODE=gnome
+    fi
+  fi
+}
+
 have_mopidy=`type -p mopidy`
 set_have_navi
 

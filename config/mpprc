@@ -22,7 +22,7 @@ FULLSCREEN=
 # Display mpcplus and mppcava in a tmux session
 USE_TMUX=
 
-## Terminal emulator preference
+## Terminal emulator / display mode
 #
 #  Can be one of: console, current, gnome, kitty, retro, simple, tilix
 #  Where:
@@ -36,13 +36,13 @@ USE_TMUX=
 #  Default fallback if none specified or not available is Kitty
 #
 #  Uncomment the preferred mode
-#MODE=console
-#MODE=current
-#MODE=gnome
-#MODE=retro
-#MODE=simple
-#MODE=tilix
-MODE=kitty
+#MPP_MODE=console
+#MPP_MODE=current
+#MPP_MODE=gnome
+#MPP_MODE=retro
+#MPP_MODE=simple
+#MPP_MODE=tilix
+MPP_MODE=kitty
 
 ## Service access
 #
