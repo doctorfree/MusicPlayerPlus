@@ -35,6 +35,7 @@ mppcava/m4/
 mppcava/version
 mppcava/config_file.h
 mppcava/.*
+config/mpprc-secret
 config/beets/configs/*
 config/beets/secrets.yaml
 beets/*/__pycache__/

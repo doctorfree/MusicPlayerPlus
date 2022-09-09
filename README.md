@@ -30,6 +30,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Arch Package installation](#arch-package-installation)
 1. [Post Installation Configuration](#post-installation-configuration)
     1. [Client Configuration (required)](#client-configuration-required)
+    1. [MusicPlayerPlus Configuration File](#musicplayerplus-configuration-file)
     1. [MPD Music Directory Configuration](#mpd-music-directory-configuration)
     1. [Initializing the Beets media library management system](#initializing-the-beets-media-library-management-system)
     1. [Additional metadata analysis and retrieval](#additional-metadata-analysis-and-retrieval)
@@ -530,6 +531,98 @@ The client configuration performed by `mppinit` includes the configuration
 of an MPD user service. The configuration, files, and folders used by
 this user level MPD service are stored in `~/.config/mpd/`. Examine the
 generated MPD configuration file `~/.config/mpd/mpd.conf`.
+
+### MusicPlayerPlus Configuration File
+
+MusicPlayerPlus 2.0.1 release 3 and later provides the configuration file
+`~/.config/mpprc` which serves as the primary source for MusicPlayerPlus
+user configurable settings. This configuration file is the "source of truth"
+for several settings including the music library location. Settings in
+`mpprc` are propogated throughout several other component's configurations.
+
+The settings in `mpprc` are *dynamic* and preserved across command invocations.
+The dynamic nature of this configuration file means that options specified
+on the `mpplus` command line or in the `mpplus` menu system are written back
+out to `~/.config/mpprc` so the next invocation of `mpplus` will use the
+previous invocation's options and settings as the default.
+
+The default installed `mpprc` contains:
+
+```
+## MusicPlayerPlus runtime configuration
+#
+#  After modifying any of the following settings, run the command:
+#    mppinit sync
+#  as your normal MusicPlayerPlus user
+
+## Music library location
+#
+MUSIC_DIR="~/Music"
+
+## General settings
+#
+# To enable any of these, set to 1
+# For example, to enable cover art display in tmux sessions set COVER_ART=1
+#
+# Play audio during asciimatics animations
+AUDIO=1
+# Display cover art in tmux sessions
+COVER_ART=1
+# Display mpcplus and mppcava in a tmux session
+USE_TMUX=
+
+## Terminal emulator / display mode
+#
+#  Can be one of: console, current, gnome, kitty, retro, simple, tilix
+#  Where:
+#    'console' will force a tmux session
+#    'current' will force a tmux session in the current terminal window
+#    'gnome' will use the gnome-terminal emulator if installed
+#    'kitty' will use the Kitty terminal emulator if installed
+#    'retro' will use cool-retro-term if installed
+#    'simple' will use the ST terminal emulator if installed
+#    'tilix' will use the Tilix terminal emulator if installed
+#  Default fallback if none specified or not available is Kitty
+#
+#  Uncomment the preferred mode
+#MPP_MODE=console
+#MPP_MODE=current
+#MPP_MODE=gnome
+#MPP_MODE=retro
+#MPP_MODE=simple
+#MPP_MODE=tilix
+MPP_MODE=kitty
+
+## Service access
+#
+# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'
+# If you do not have a Bandcamp account, leave blank
+BANDCAMP_USER=
+
+# Your Last.fm username, api key, and api secret
+# If you do not have a Last.fm account, leave blank
+LASTFM_USER=
+LASTFM_APIKEY=
+LASTFM_SECRET=
+
+# The Soundcloud user slug can be found by logging in to Soundcloud
+# click on the username at top right then 'Profile'. The user slug
+# is the last component of the URL when viewing your Soundcloud Profile.
+# If you do not have a Soundcloud account, leave blank
+SOUNDCLOUD_SLUG=
+
+# Your Spotify client id and client secret
+# If you do not have a Spotify account, leave blank
+SPOTIFY_CLIENT=
+SPOTIFY_SECRET=
+
+# Your YouTube api key
+# If you do not have a YouTube account, leave blank
+YOUTUBE_APIKEY=
+```
+
+After `mppinit` completes the MusicPlayerPlus initialization, edit the
+`~/.config/mpprc` configuration file and run `mppinit sync`.
 
 ### MPD Music Directory Configuration
 

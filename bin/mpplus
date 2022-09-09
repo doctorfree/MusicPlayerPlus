@@ -2371,8 +2371,7 @@ show_main_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=()
-    [ "${CONSOLE_MODE}" ] && options+=("Launch Music Player Plus")
+    options=("Launch mpcplus with Current")
     [ "${have_kitty}" ] && options+=("Launch mpcplus with Kitty")
     [ "${have_gnome}" ] && options+=("Launch mpcplus with Gnome")
     [ "${have_retro}" ] && options+=("Launch mpcplus with Retro")
@@ -2404,8 +2403,11 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Launch Music Player Plus",*|*,"Launch Music Player Plus")
+          "Launch mpcplus with Current",*|*,"Launch mpcplus with Current")
               MPCPLUS="mpcplus"
+              TMUX_MPC=1
+              USE_TMUX=1
+              CURRENT=1
               break
               ;;
           "Launch mpcplus with Kitty",*|*,"Launch mpcplus with Kitty")
@@ -2744,6 +2746,7 @@ save_config() {
   echo "# Your YouTube api key" >> ${MPPCONF}
   echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
   echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >> ${MPPCONF}
+  chmod 600 ${MPPCONF}
 }
 
 set_user_conf() {
@@ -2803,7 +2806,7 @@ have_kitty=`type -p kitty`
 
 init_vars
 AUDIO=
-COVER_ART=1
+COVER_ART=
 FULLSCREEN=
 CURRENT=
 GNOME=
@@ -2813,8 +2816,9 @@ SIMPLE=
 TILIX=
 TMUX_MPC=
 USE_TMUX=
+
+# Retrieve user preferences
 [ -f ${MPPCONF} ] && . ${MPPCONF}
-[ "${MPP_MODE}" ] && MPCPLUS_TMUX="${MPCPLUS_TMUX} -m ${MPP_MODE}"
 case "${MPP_MODE}" in
   console)
     if [ "${DISPLAY}" ]
@@ -3044,10 +3048,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       tagflag="-a"
       ;;
     A)
-      [ "${have_uebz}" ] && {
-        COVER_ART=1
-        TMUX_MPC=1
-      }
+      [ "${have_uebz}" ] && COVER_ART=1
       tagflag="-A"
       ;;
     b)
@@ -3061,6 +3062,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       TMUX_MPC=1
       USE_TMUX=1
       CURRENT=1
+      MPP_MODE=current
       GNOME=
       KITTY=
       RETRO=
@@ -3112,6 +3114,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       ;;
     e)
       SIMPLE=1
+      MPP_MODE=simple
       CURRENT=
       GNOME=
       KITTY=
@@ -3126,6 +3129,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
         printf "\n\tsudo dnf install stterm\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
+        MPP_MODE=kitty
         TILIX=
       }
       ;;
@@ -3140,6 +3144,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       ;;
     g)
       GNOME=1
+      MPP_MODE=gnome
       CURRENT=
       KITTY=
       RETRO=
@@ -3154,6 +3159,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
         printf "\n\tsudo dnf install gnome-terminal\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
+        MPP_MODE=kitty
         GNOME=
       }
       ;;
@@ -3183,6 +3189,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       ;;
     k)
       KITTY=1
+      MPP_MODE=kitty
       GNOME=
       CURRENT=
       RETRO=
@@ -3194,6 +3201,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
         echo "Proceeding with current terminal emulator"
         KITTY=
         CURRENT=1
+        MPP_MODE=current
         TMUX_MPC=1
         USE_TMUX=1
       }
@@ -3231,6 +3239,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       ;;
     r)
       RETRO=1
+      MPP_MODE=retro
       CURRENT=
       GNOME=
       KITTY=
@@ -3245,6 +3254,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
         printf "\n\tsudo dnf install cool-retro-term\n\n"
         echo "Proceeding with Kitty"
         KITTY=1
+        MPP_MODE=kitty
         RETRO=
       }
       ;;
@@ -3265,6 +3275,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
       ;;
     t)
       TILIX=1
+      MPP_MODE=tilix
       CURRENT=
       GNOME=
       KITTY=
@@ -3279,6 +3290,7 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
         printf "\n\tsudo dnf install tilix\n\n"
         echo "Proceeding with Kitty terminal emulator"
         KITTY=1
+        MPP_MODE=kitty
         TILIX=
       }
       ;;
@@ -3336,6 +3348,21 @@ while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:v:wWx:X:yYz:u" flag; 
 done
 
 impflags="${tagflag} ${writeflag}"
+
+save_config
+[ "${MPP_MODE}" ] && MPCPLUS_TMUX="${MPCPLUS_TMUX} -m ${MPP_MODE}"
+
+[ "${AUDIO}" ] && {
+  MPPSPLASH="${MPPSPLASH} -a"
+  MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
+}
+
+if [ "${COVER_ART}" ]
+then
+  TMUX_MPC=1
+else
+  MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
+fi
 
 # The -T option says use tmux, -S says do asciimatics
 # If we have both then do asciimatics in tmux
@@ -3397,7 +3424,6 @@ impflags="${tagflag} ${writeflag}"
 
 [ "${USAGE}" ] && usage
 
-save_config
 if [ "${INTERACTIVE}" ]
 then
   DO_NOT_EXIT=1

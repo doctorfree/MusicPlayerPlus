@@ -478,7 +478,7 @@ init_mpp_conf() {
     echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
     echo "# Play audio during asciimatics animations" >> ${MPPCONF}
-    echo "AUDIO=" >> ${MPPCONF}
+    echo "AUDIO=1" >> ${MPPCONF}
     echo "# Display cover art in tmux sessions" >> ${MPPCONF}
     echo "COVER_ART=1" >> ${MPPCONF}
     echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
@@ -534,11 +534,13 @@ init_mpp_conf() {
     echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
     echo "YOUTUBE_APIKEY=" >> ${MPPCONF}
   fi
+  chmod 600 ${MPPCONF}
 }
 
 check_mpp_conf() {
   cat "${MPPCONF}" | sed -e "s%\ *=\ *%=%g" > /tmp/mpprc$$
   cp /tmp/mpprc$$ "${MPPCONF}"
+  chmod 600 ${MPPCONF}
   rm -f /tmp/mpprc$$
 }
 
@@ -619,6 +621,7 @@ sync_music_dir() {
             sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" \
             > /tmp/mpp$$
           cp /tmp/mpp$$ ${MPPCONF}
+          chmod 600 ${MPPCONF}
           rm -f /tmp/mpp$$
         }
       else
