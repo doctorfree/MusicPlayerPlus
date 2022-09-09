@@ -2831,6 +2831,10 @@ case "${MPP_MODE}" in
         echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
         echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
       }
+      [ "${consolemode}" ] || {
+        # Check if this is an SSH session
+        [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && consolemode=1
+      }
       if [ "${consolemode}" ]
       then
         CONSOLE_MODE=1
@@ -2902,6 +2906,11 @@ then
     tty=$(tty)
     echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
     echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+  }
+  # Next check if this is an SSH session
+  [ "${consolemode}" ] || {
+    # Check if this is an SSH session
+    [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && consolemode=1
   }
   if [ "${consolemode}" ]
   then

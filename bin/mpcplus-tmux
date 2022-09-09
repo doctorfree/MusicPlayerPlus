@@ -121,6 +121,10 @@ then
     echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
     echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
   }
+  [ "${consolemode}" ] || {
+    # Check if this is an SSH session
+    [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && consolemode=1
+  }
   [ "${consolemode}" ] && USE_ART=
 else
   USE_ART=
