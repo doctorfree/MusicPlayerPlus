@@ -8,26 +8,26 @@
 # Optionally perform Beets initialization and metadata retrieval
 
 MPPCDIR=/usr/share/musicplayerplus
-CONFDIR=${MPPCDIR}/mpcplus
+MPCONFDIR=${MPPCDIR}/mpcplus
 SCPTDIR=${MPPCDIR}/scripts
 CCPTDIR=${MPPCDIR}/calliope
-CONF=${HOME}/.config
-MPDCONFDIR="${CONF}/mpd"
+USERCONF=${HOME}/.config
+MPDCONFDIR="${USERCONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
-MPPCONF="${CONF}/mpprc"
-BEETSCONFDIR="${CONF}/beets"
+MPPCONF="${USERCONF}/mpprc"
+BEETSCONFDIR="${USERCONF}/beets"
 BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
 BEETSGENR="${BEETSCONFDIR}/genres"
-CALIPCONFDIR="${CONF}/calliope"
+CALIPCONFDIR="${USERCONF}/calliope"
 CALIPCONF="${CALIPCONFDIR}/calliope.conf"
-KITTYCONFDIR="${CONF}/kitty"
+KITTYCONFDIR="${USERCONF}/kitty"
 KITTYCONF="${KITTYCONFDIR}/mpplus.conf"
-MOPIDCONFDIR="${CONF}/mopidy"
+MOPIDCONFDIR="${USERCONF}/mopidy"
 MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
-NAVIDCONFDIR="${CONF}/navidrome"
+NAVIDCONFDIR="${USERCONF}/navidrome"
 NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
-YTDLPCONFDIR="${CONF}/yt-dlp"
+YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="config-art.conf default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
@@ -951,19 +951,19 @@ fi
   done
 }
 
-[ -f ${CONFDIR}/config ] || {
-    echo "${CONFDIR}/config does not exist."
+[ -f ${MPCONFDIR}/config ] || {
+    echo "${MPCONFDIR}/config does not exist."
     echo "MusicPlayerPlus installation incomplete"
     exit 1
 }
-[ -f ${CONFDIR}/bindings ] || {
-    echo "${CONFDIR}/bindings does not exist."
+[ -f ${MPCONFDIR}/bindings ] || {
+    echo "${MPCONFDIR}/bindings does not exist."
     echo "MusicPlayerPlus installation incomplete"
     exit 1
 }
 
-[ -d ${CONF} ] || mkdir ${CONF}
-if [ -f ${CONF}/mpcplus/config ]
+[ -d ${USERCONF} ] || mkdir ${USERCONF}
+if [ -f ${USERCONF}/mpcplus/config ]
 then
   MPCDIR=".config/mpcplus"
   initialized=1
@@ -973,8 +973,8 @@ else
     MPCDIR=".mpcplus"
     initialized=1
   else
-    [ -d ${CONF}/mpcplus ] || mkdir -p ${CONF}/mpcplus
-    cp ${CONFDIR}/config ${CONF}/mpcplus/config
+    [ -d ${USERCONF}/mpcplus ] || mkdir -p ${USERCONF}/mpcplus
+    cp ${MPCONFDIR}/config ${USERCONF}/mpcplus/config
     MPCDIR=".config/mpcplus"
     initialized=
   fi
@@ -1819,22 +1819,22 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
 install_kitty
 
 [ "${quiet}" ] || {
-  printf "\n\tInstalling configuration files in $CONF ..."
+  printf "\n\tInstalling configuration files in $USERCONF ..."
 }
 if [ -f ${HOME}/${MPCDIR}/bindings ]
 then
-  [ "${overwrite}" ] && cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
 else
-  cp ${CONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
 fi
 
 for cfg in ${CFGS}
 do
   if [ -f ${HOME}/${MPCDIR}/${cfg} ]
   then
-    [ "${overwrite}" ] && cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    [ "${overwrite}" ] && cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
   else
-    cp ${CONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
   fi
   chmod 644 ${HOME}/${MPCDIR}/${cfg}
 done
@@ -1850,9 +1850,9 @@ do
 done
 if [ -d "${HOME}/${MPCDIR}/ueberzug" ]
 then
-  for ueb in ${CONFDIR}/ueberzug/*
+  for ueb in ${MPCONFDIR}/ueberzug/*
   do
-    [ "${ueb}" == "${CONFDIR}/ueberzug/*" ] && continue
+    [ "${ueb}" == "${MPCONFDIR}/ueberzug/*" ] && continue
     b=`basename "${ueb}"`
     if [ -d "${ueb}" ]
     then
@@ -1882,46 +1882,46 @@ then
     fi
   done
 else
-  cp -a ${CONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
+  cp -a ${MPCONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
 fi
 
-[ -d ${CONF}/mppcava ] || mkdir -p ${CONF}/mppcava
-if [ -f ${CONF}/mppcava/config ]
+[ -d ${USERCONF}/mppcava ] || mkdir -p ${USERCONF}/mppcava
+if [ -f ${USERCONF}/mppcava/config ]
 then
-  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${CONF}/mppcava/config
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
 else
-  cp ${MPPCDIR}/mppcava/config ${CONF}/mppcava/config
+  cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
 fi
-if [ -f ${CONF}/mppcava/config-tmux ]
+if [ -f ${USERCONF}/mppcava/config-tmux ]
 then
   [ "${overwrite}" ] && {
-    cp ${MPPCDIR}/mppcava/config-tmux ${CONF}/mppcava/config-tmux
+    cp ${MPPCDIR}/mppcava/config-tmux ${USERCONF}/mppcava/config-tmux
   }
 else
-  cp ${MPPCDIR}/mppcava/config-tmux ${CONF}/mppcava/config-tmux
+  cp ${MPPCDIR}/mppcava/config-tmux ${USERCONF}/mppcava/config-tmux
 fi
 
-if [ -d ${CONF}/tmuxp ]
+if [ -d ${USERCONF}/tmuxp ]
 then
   for tmc in ${MPPCDIR}/tmuxp/*
   do
     tmcbase=`basename "${tmc}"`
     if [ -d "${tmc}" ]
     then
-      [ -d "${CONF}/tmuxp/${tmcbase}" ] || {
-        cp -a "${tmc}" "${CONF}/tmuxp/${tmcbase}"
+      [ -d "${USERCONF}/tmuxp/${tmcbase}" ] || {
+        cp -a "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
       }
     else
-      if [ -f "${CONF}/tmuxp/${tmcbase}" ]
+      if [ -f "${USERCONF}/tmuxp/${tmcbase}" ]
       then
-        [ "${overwrite}" ] && cp "${tmc}" "${CONF}/tmuxp/${tmcbase}"
+        [ "${overwrite}" ] && cp "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
       else
-        cp "${tmc}" "${CONF}/tmuxp/${tmcbase}"
+        cp "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
       fi
     fi
   done
 else
-  cp -a ${MPPCDIR}/tmuxp ${CONF}/tmuxp
+  cp -a ${MPPCDIR}/tmuxp ${USERCONF}/tmuxp
 fi
 
 create_profiles
@@ -2003,9 +2003,9 @@ if [ -d ${KITTYCONFDIR} ]
 then
   if [ "${overwrite}" ]
   then
-    cp -a ${MPPCDIR}/kitty ${CONF}
+    cp -a ${MPPCDIR}/kitty ${USERCONF}
   else
-    cp -an ${MPPCDIR}/kitty ${CONF}
+    cp -an ${MPPCDIR}/kitty ${USERCONF}
   fi
 else
   cp -a ${MPPCDIR}/kitty ${KITTYCONFDIR}
@@ -2061,7 +2061,7 @@ else
   fi
 fi
 
-SYSTEMDIR="${CONF}/systemd/user"
+SYSTEMDIR="${USERCONF}/systemd/user"
 MPDSTATSD="${SYSTEMDIR}/mpdstats.service"
 MOPSTATSD="${SYSTEMDIR}/mopidy.service"
 NAVSTATSD="${SYSTEMDIR}/navidrome.service"
@@ -2112,9 +2112,9 @@ fi
 FIFS="mppcava/config-tmux mppcava/config"
 for cnf in ${FIFS}
 do
-  [ -f ${CONF}/${cnf} ] && {
-    cat ${CONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
-    cp /tmp/cnf$$ ${CONF}/${cnf}
+  [ -f ${USERCONF}/${cnf} ] && {
+    cat ${USERCONF}/${cnf} | sed -e "s#/home/USERNAME#$HOME#" > /tmp/cnf$$
+    cp /tmp/cnf$$ ${USERCONF}/${cnf}
     rm -f /tmp/cnf$$
   }
 done
@@ -2424,6 +2424,9 @@ fi
   set_music_dir
   init_mpp_conf
 }
+
+# Integrate previously set ncmpcpp user preferences into mpcplus/config
+[ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
 
 [ "${quiet}" ] || {
   printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."
