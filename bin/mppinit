@@ -1888,13 +1888,6 @@ else
   cp -a ${MPCONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
 fi
 
-cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
-echo '##### album cover art display #####
-header_visibility = no
-statusbar_visibility = no
-execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
-  >> ${USERCONF}/mpcplus/config-art.conf
-
 [ -d ${USERCONF}/mppcava ] || mkdir -p ${USERCONF}/mppcava
 if [ -f ${USERCONF}/mppcava/config ]
 then
@@ -2437,6 +2430,13 @@ fi
 
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
 [ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
+
+cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
+echo '##### album cover art display #####
+header_visibility = no
+statusbar_visibility = no
+execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
+  >> ${USERCONF}/mpcplus/config-art.conf
 
 [ "${quiet}" ] || {
   printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."

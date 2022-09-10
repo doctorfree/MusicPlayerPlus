@@ -7,7 +7,6 @@ USERCONF="${HOME}/.config"
 NCM_USER_CONF="${USERCONF}/ncmpcpp/config"
 MPC_USER_CONF="${USERCONF}/mpcplus/config"
 UEB_USER_CONF="${USERCONF}/mpcplus/ueberzug/config"
-ART_USER_CONF="${USERCONF}/mpcplus/config-art.conf"
 
 # Syncing previous user configured ncmpcpp key bindings not yet implemented
 NCM_USER_BIND="${USERCONF}/ncmpcpp/bindings"
@@ -39,7 +38,7 @@ previous_comments="## Previously configured ncmpcpp user preferences"
         mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
         [ "${mval}" == "${oval}" ] || {
           # Use the previously configured value for this option
-          for userconf in ${MPC_USER_CONF} ${UEB_USER_CONF} ${ART_USER_CONF}
+          for userconf in ${MPC_USER_CONF} ${UEB_USER_CONF}
           do
             [ -f "${userconf}" ] && {
               cat "${userconf}" | \
