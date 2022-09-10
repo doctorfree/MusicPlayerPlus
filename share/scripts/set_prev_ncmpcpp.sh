@@ -6,13 +6,20 @@
 USERCONF="${HOME}/.config"
 NCM_USER_CONF="${USERCONF}/ncmpcpp/config"
 MPC_USER_CONF="${USERCONF}/mpcplus/config"
+UEB_USER_CONF="${USERCONF}/mpcplus/ueberzug/config"
+ART_USER_CONF="${USERCONF}/mpcplus/config-art.conf"
 
 # Syncing previous user configured ncmpcpp key bindings not yet implemented
 NCM_USER_BIND="${USERCONF}/ncmpcpp/bindings"
 MPC_USER_BIND="${USERCONF}/mpcplus/bindings"
 
+# Ignore any previous ncmpcpp setting for these options
 excluded_ncm_opts=("mpd_music_dir" "visualizer_in_stereo" \
-                   "visualizer_type" "message_delay_time")
+                   "visualizer_type" "message_delay_time" \
+                   "visualizer_look" "execute_on_song_change" \
+                   "startup_screen" "startup_slave_screen" \
+                   "startup_slave_screen_focus" "locked_screen_width_part")
+# Prepend this comment to any appended previous ncmpcpp settings
 previous_comments="## Previously configured ncmpcpp user preferences"
 
 [ -f "${NCM_USER_CONF}" ] && [ -f "${MPC_USER_CONF}" ] && {
@@ -32,13 +39,19 @@ previous_comments="## Previously configured ncmpcpp user preferences"
         mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
         [ "${mval}" == "${oval}" ] || {
           # Use the previously configured value for this option
-          grep -v "^${option} " "${MPC_USER_CONF}" > /tmp/ncm$$
-          grep "${previous_comments}" /tmp/ncm$$ > /dev/null || {
-            echo "${previous_comments}" >> /tmp/ncm$$
-          }
-          echo "${ncmconf}" >> /tmp/ncm$$
-          cp /tmp/ncm$$ "${MPC_USER_CONF}"
-          rm -f /tmp/ncm$$
+          for userconf in ${MPC_USER_CONF} ${UEB_USER_CONF} ${ART_USER_CONF}
+          do
+            [ -f "${userconf}" ] && {
+              cat "${userconf}" | \
+                sed -e "s/^${option} /#${option} /" > /tmp/ncm$$
+              grep "${previous_comments}" /tmp/ncm$$ > /dev/null || {
+                echo "${previous_comments}" >> /tmp/ncm$$
+              }
+              echo "${ncmconf}" >> /tmp/ncm$$
+              cp /tmp/ncm$$ "${userconf}"
+              rm -f /tmp/ncm$$
+            }
+          done
         }
       }
     }
@@ -50,10 +63,9 @@ previous_comments="## Previously configured ncmpcpp user preferences"
   [ ${numb} -gt 0 ] && {
     if [ -f "${MPC_USER_BIND}" ]
     then
-      printf "\nIntegration of previously configured ncmpcpp bindings is not"
-      printf "yet implemented.\nA manual merge of the configured key bindings"
-      printf "in:\n\n${NCM_USER_BIND} and ${MPC_USER_BIND}"
-      printf "\n\nwill be necessary.\n"
+      printf "\n\nIntegration of previously configured ncmpcpp bindings is not"
+      printf " yet implemented.\nManually merge the configured key bindings in:"
+      printf "\n\n\t${NCM_USER_BIND}\ninto\n\t${MPC_USER_BIND}\n"
     else
       [ -d "${USERCONF}/mpcplus" ] || mkdir -p "${USERCONF}/mpcplus"
       cp "${NCM_USER_BIND}" "${MPC_USER_BIND}"

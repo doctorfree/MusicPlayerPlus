@@ -29,7 +29,7 @@ NAVIDCONFDIR="${USERCONF}/navidrome"
 NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
 YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
-CFGS="config-art.conf default_cover.png fzmp.conf"
+CFGS="default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
 EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local \
             Mopidy-Podcast Mopidy-Iris Mopidy-Podcast-iTunes \
@@ -644,6 +644,9 @@ sync_music_dir() {
       fi
       cp /tmp/mpc$$ ${HOME}/${MPCDIR}/config
       rm -f /tmp/mpc$$
+      cat ${HOME}/${MPCDIR}/ueberzug/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/ueb$$
+      cp /tmp/ueb$$ ${HOME}/${MPCDIR}/ueberzug/config
+      rm -f /tmp/ueb$$
       cat ${HOME}/${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/art$$
       cp /tmp/art$$ ${HOME}/${MPCDIR}/config-art.conf
       rm -f /tmp/art$$
@@ -1884,6 +1887,13 @@ then
 else
   cp -a ${MPCONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
 fi
+
+cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
+echo '##### album cover art display #####
+header_visibility = no
+statusbar_visibility = no
+execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
+  >> ${USERCONF}/mpcplus/config-art.conf
 
 [ -d ${USERCONF}/mppcava ] || mkdir -p ${USERCONF}/mppcava
 if [ -f ${USERCONF}/mppcava/config ]

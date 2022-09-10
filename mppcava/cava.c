@@ -210,7 +210,7 @@ Keys:\n\
         b         Cycle background color\n\
         q         Quit\n\
 \n\
-as of 0.4.0 all options are specified in config file, see in '/home/username/.config/cava/' \n";
+as of 0.4.0 all options are specified in config file, see in '/home/username/.config/mppcava/' \n";
 
     int c;
     while ((c = getopt(argc, argv, "p:vh")) != -1) {
@@ -453,7 +453,9 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
                 if (p.xaxis != NONE)
                     lines--;
 
-                init_terminal_noncurses(inAtty, p.col, p.bgcol, width, lines, p.bar_width);
+                init_terminal_noncurses(inAtty, p.color, p.bcolor, p.col, p.bgcol, p.gradient,
+                                        p.gradient_count, p.gradient_colors, width, lines,
+                                        p.bar_width);
                 height = lines * 8;
                 break;
 
@@ -551,6 +553,13 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
             debug("height: %d width: %d bars:%d bar width: %d remainder: %d\n", height, width,
                   number_of_bars, p.bar_width, remainder);
 #endif
+
+            double userEQ_keys_to_bars_ratio;
+
+            if (p.userEQ_enabled && (number_of_bars / output_channels > 0)) {
+                userEQ_keys_to_bars_ratio = (double)(((double)p.userEQ_keys) /
+                                                     ((double)(number_of_bars / output_channels)));
+            }
 
             struct cava_plan *plan =
                 cava_init(number_of_bars / output_channels, audio.rate, audio.channels, p.autosens,
@@ -769,13 +778,22 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
 
                 if (audio.channels == 2) {
                     for (int n = 0; n < number_of_bars / output_channels; n++) {
+                        if (p.userEQ_enabled)
+                            cava_out[n] *=
+                                p.userEQ[(int)floor(((double)n) * userEQ_keys_to_bars_ratio)];
                         bars_left[n] = cava_out[n];
                     }
                     for (int n = 0; n < number_of_bars / output_channels; n++) {
+                        if (p.userEQ_enabled)
+                            cava_out[n + number_of_bars / output_channels] *=
+                                p.userEQ[(int)floor(((double)n) * userEQ_keys_to_bars_ratio)];
                         bars_right[n] = cava_out[n + number_of_bars / output_channels];
                     }
                 } else {
                     for (int n = 0; n < number_of_bars; n++) {
+                        if (p.userEQ_enabled)
+                            cava_out[n] *=
+                                p.userEQ[(int)floor(((double)n) * userEQ_keys_to_bars_ratio)];
                         bars[n] = cava_out[n];
                     }
                 }
@@ -893,7 +911,7 @@ as of 0.4.0 all options are specified in config file, see in '/home/username/.co
                 case OUTPUT_NONCURSES:
                     rc = draw_terminal_noncurses(inAtty, lines, width, number_of_bars, p.bar_width,
                                                  p.bar_spacing, remainder, bars, previous_frame,
-                                                 x_axis_info);
+                                                 p.gradient, x_axis_info);
                     break;
                 case OUTPUT_RAW:
                     rc = print_raw_out(number_of_bars, fp, p.raw_format, p.bit_format,

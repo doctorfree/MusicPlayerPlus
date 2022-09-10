@@ -224,7 +224,6 @@ package() {
   cp asound.conf.tmpl ${pkgdir}/${destdir}/share/${pkgname}
   cp mpcplus/doc/config ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
   cp mpcplus/doc/bindings ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
-  cp config/config-art.conf ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
   cp config/default_cover.png ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
   cp config/fzmp.conf ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
   cp share/mpcplus-cheat-sheet.txt ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
