@@ -11,13 +11,14 @@
 
 MPC_CONF="${HOME}/.config/mpcplus/config"
 ART_CONF="${HOME}/.config/mpcplus/config-art"
+UEB_CONF="${HOME}/.config/mpcplus/ueberzug/config"
 CAV_CONF="${HOME}/.config/mppcava/config"
 CAV_TMUX="${HOME}/.config/mppcava/config-tmux"
 
 if [ "$1" == "mopidy" ]
 then
   # Modify mpcplus config with Mopidy visualizer_data_source
-  for mpcconf in ${MPC_CONF} ${ART_CONF}
+  for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF}
   do
     [ -f "${mpcconf}" ] && {
       cat "${mpcconf}" | \
@@ -44,13 +45,7 @@ else
   if [ "$1" == "mpd" ]
   then
     # Modify mpcplus config with MPD visualizer_data_source
-    [ -f "${MPC_CONF}" ] && {
-      cat "${MPC_CONF}" | sed -e "s%^visualizer_data_source = localhost:5555%#visualizer_data_source = localhost:5555%" > /tmp/viz$$
-      cp /tmp/viz$$ "${MPC_CONF}"
-      rm -f /tmp/viz$$
-    }
-    # Modify mpcplus config with MPD visualizer_data_source
-    for mpcconf in ${MPC_CONF} ${ART_CONF}
+    for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF}
     do
       [ -f "${mpcconf}" ] && {
         cat "${mpcconf}" | \

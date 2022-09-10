@@ -31,9 +31,9 @@ YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
-EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local \
-            Mopidy-Podcast Mopidy-Iris Mopidy-Podcast-iTunes \
-            Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
+EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
+            Mopidy-Iris Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD \
+            Mopidy-Scrobbler Mopidy-MusicBox-Webclient"
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
@@ -43,7 +43,13 @@ if [ -x "${SCPTDIR}/crudini.py" ]
 then
   CRUDINI="${SCPTDIR}/crudini.py"
 else
-  CRUDINI=
+  have_crudini=`type -p crudini`
+  if [ "${have_crudini}" ]
+  then
+    CRUDINI=crudini
+  else
+    CRUDINI=
+  fi
 fi
 
 IP="<ip address>"
@@ -895,6 +901,8 @@ shift $(( OPTIND - 1 ))
   usage
 }
 
+argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
+
 PYTHON=""
 POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
 PY3_SUPPORT=false
@@ -983,7 +991,7 @@ else
   fi
 fi
 
-[ "$1" == "sync" ] && {
+[ "${argument}" == "sync" ] && {
   if [ "${initialized}" ]
   then
     printf "\nSyncing MusicPlayerPlus music directory, please wait ..."
@@ -995,7 +1003,7 @@ fi
   exit 0
 }
 
-[ "$1" == "bandcamp" ] && {
+[ "${argument}" == "bandcamp" ] && {
   if [ "${initialized}" ]
   then
     printf "\nDownloading albums in your Bandcamp collections"
@@ -1062,7 +1070,7 @@ fi
   exit 0
 }
 
-[ "$1" == "soundcloud" ] && {
+[ "${argument}" == "soundcloud" ] && {
   if [ "${initialized}" ]
   then
     printf "\nDownloading favorites in your Soundcloud account\n"
@@ -1098,7 +1106,7 @@ fi
   exit 0
 }
 
-[ "$1" == "import" ] && {
+[ "${argument}" == "import" ] && {
   if [ "${initialized}" ]
   then
     set_music_dir
@@ -1174,7 +1182,7 @@ fi
   exit 0
 }
 
-[ "$1" == "metadata" ] && {
+[ "${argument}" == "metadata" ] && {
   if [ "${initialized}" ]
   then
     printf "\nPerforming Beets Media Library Metadata Retrieval"
@@ -1529,7 +1537,7 @@ remove_kitty() {
   have_kitty=
 }
 
-[ "$1" == "kitty" ] && {
+[ "${argument}" == "kitty" ] && {
   [ "${remove}" ] && {
     printf "\nRemoving Kitty terminal emulator.\n\n"
     while true
@@ -1586,7 +1594,7 @@ remove_kitty() {
   exit 0
 }
 
-[ "$1" == "navidrome" ] && {
+[ "${argument}" == "navidrome" ] && {
   [ "${remove}" ] && {
     printf "\nRemoving Navidrome service.\n\n"
     while true
@@ -1644,7 +1652,7 @@ remove_kitty() {
   exit 0
 }
 
-[ "$1" == "mopidy" ] && {
+[ "${argument}" == "mopidy" ] && {
   [ "${remove}" ] && {
     printf "\nRemoving Mopidy service.\n\n"
     while true
@@ -1702,7 +1710,7 @@ remove_kitty() {
   exit 0
 }
 
-[ "$1" == "mpd" ] && {
+[ "${argument}" == "mpd" ] && {
   if [ "${initialized}" ]
   then
     m_enabled=
@@ -1773,12 +1781,12 @@ remove_kitty() {
   exit 0
 }
 
-[ "$1" == "profiles" ] && {
+[ "${argument}" == "profiles" ] && {
   create_profiles
   exit 0
 }
 
-[ "$1" == "yams" ] && {
+[ "${argument}" == "yams" ] && {
   if [ "${initialized}" ]
   then
     mpplus -Y
@@ -1894,14 +1902,6 @@ then
   [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
 else
   cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
-fi
-if [ -f ${USERCONF}/mppcava/config-tmux ]
-then
-  [ "${overwrite}" ] && {
-    cp ${MPPCDIR}/mppcava/config-tmux ${USERCONF}/mppcava/config-tmux
-  }
-else
-  cp ${MPPCDIR}/mppcava/config-tmux ${USERCONF}/mppcava/config-tmux
 fi
 
 if [ -d ${USERCONF}/tmuxp ]
@@ -2431,12 +2431,21 @@ fi
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
 [ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
 
+# Integrate previously set cava user preferences into mppcava/config
+[ -x ${SCPTDIR}/set_prev_cava.sh ] && ${SCPTDIR}/set_prev_cava.sh
+
 cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
 echo '##### album cover art display #####
 header_visibility = no
 statusbar_visibility = no
 execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
   >> ${USERCONF}/mpcplus/config-art.conf
+
+cp ${USERCONF}/mppcava/config ${USERCONF}/mppcava/config-tmux
+cat ${USERCONF}/mppcava/config-tmux | \
+  sed -e "s/^gradient/; gradient/" > /tmp/cav$$
+cp /tmp/cav$$ ${USERCONF}/mppcava/config-tmux
+rm -f /tmp/cav$$
 
 [ "${quiet}" ] || {
   printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."
