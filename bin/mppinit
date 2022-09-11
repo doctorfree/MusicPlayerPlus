@@ -31,9 +31,8 @@ YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
-EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Local Mopidy-Podcast \
-            Mopidy-Iris Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD \
-            Mopidy-Scrobbler Mopidy-MusicBox-Webclient"
+EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
+            Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
