@@ -51,7 +51,7 @@ else
         pulseaudio-libs-devel libtool automake iniparser-devel \
         SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
         libchromaprint-devel python-devel python3-devel python3-yaml \
-        python3-six sqlite-devel pandoc zip"
+        python3-six sqlite-devel pandoc zip libmpdclient-devel"
     if [ "$1" == "-r" ]
     then
       sudo dnf -y remove ffmpeg-devel
