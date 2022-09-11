@@ -44,17 +44,31 @@ else
     PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
         pulseaudio-libs-devel libtool automake iniparser-devel \
         SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
-        ffmpeg-devel libchromaprint-devel python-devel \
-        python3-devel python3-yaml python3-six sqlite-devel pandoc zip"
+        libchromaprint-devel python-devel python3-devel python3-yaml \
+        python3-six sqlite-devel pandoc zip"
     if [ "$1" == "-r" ]
     then
       sudo dnf remove ${PKGS}
       sudo dnf remove gcc-c++
       sudo dnf groupremove "Development Tools" "Development Libraries"
     else
-      sudo dnf groupinstall "Development Tools" "Development Libraries"
-      sudo dnf install gcc-c++
-      sudo dnf install ${PKGS}
+      sudo dnf -y groupinstall "Development Tools" "Development Libraries"
+      sudo dnf -y install gcc-c++
+      sudo dnf -y install ${PKGS}
+      FEDVER=`rpm -E %fedora`
+      if [ ${FEDVER} -lt 36 ]
+      then
+        FUSION="https://download1.rpmfusion.org"
+        FREE="free/fedora"
+        NONFREE="nonfree/fedora"
+        RELRPM="rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
+        NONRPM="rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
+        sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+        sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+        sudo dnf -y install ffmpeg-devel
+      else
+        sudo dnf -y install ffmpeg-free-devel
+      fi
     fi
   fi
 fi
