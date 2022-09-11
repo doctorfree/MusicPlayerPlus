@@ -48,6 +48,7 @@ else
         python3-six sqlite-devel pandoc zip"
     if [ "$1" == "-r" ]
     then
+      sudo dnf remove ffmpeg-devel
       sudo dnf remove ${PKGS}
       sudo dnf remove gcc-c++
       sudo dnf groupremove "Development Tools" "Development Libraries"
@@ -56,19 +57,14 @@ else
       sudo dnf -y install gcc-c++
       sudo dnf -y install ${PKGS}
       FEDVER=`rpm -E %fedora`
-      if [ ${FEDVER} -lt 36 ]
-      then
-        FUSION="https://download1.rpmfusion.org"
-        FREE="free/fedora"
-        NONFREE="nonfree/fedora"
-        RELRPM="rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm"
-        NONRPM="rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm"
-        sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-        sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
-        sudo dnf -y install ffmpeg-devel
-      else
-        sudo dnf -y install ffmpeg-free-devel
-      fi
+      FUSION="https://download1.rpmfusion.org"
+      FREE="free/fedora"
+      NONFREE="nonfree/fedora"
+      RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
+      NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
+      sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+      sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+      sudo dnf -y install ffmpeg-devel
     fi
   fi
 fi

@@ -294,11 +294,6 @@ set_have_navi() {
 init_mopidy() {
   # Mopidy requires GStreamer >= 1.14.0 with Python bindings.
   # The spectrum visualizer with Mopidy requires PulseAudio
-  debian=
-  arch=
-  [ -f /etc/os-release ] && . /etc/os-release
-  [ "${ID_LIKE}" == "debian" ] && debian=1
-  [ "${ID}" == "arch" ] && arch=1
   if [ "${debian}" ]
   then
     APT=
@@ -848,6 +843,14 @@ DEFAULT_MODE=kitty
 
 have_mopidy=`type -p mopidy`
 set_have_navi
+
+arch=
+debian=
+fedora=
+[ -f /etc/os-release ] && . /etc/os-release
+[ "${ID_LIKE}" == "debian" ] && debian=1
+[ "${ID}" == "arch" ] && arch=1
+[ "${ID}" == "fedora" ] && fedora=1
 
 while getopts "abdeoqrUyu" flag; do
     case $flag in
@@ -1826,6 +1829,18 @@ remove_kitty() {
 }
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
+
+[ "${fedora}" ] && {
+  FEDVER=`rpm -E %fedora`
+  FUSION="https://download1.rpmfusion.org"
+  FREE="free/fedora"
+  NONFREE="nonfree/fedora"
+  RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
+  NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
+  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo dnf -y install ffmpeg
+}
 
 install_kitty
 
