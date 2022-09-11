@@ -41,15 +41,19 @@ else
       sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
     fi
   else
-    PKGS="alsa-lib-devel ncurses-devel fftw3-devel \
+    PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
         pulseaudio-libs-devel libtool automake iniparser-devel \
-        SDL2-devel eigen3-devel libyaml-devel clang-devel \
+        SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
         ffmpeg-devel libchromaprint-devel python-devel \
         python3-devel python3-yaml python3-six sqlite-devel pandoc zip"
     if [ "$1" == "-r" ]
     then
       sudo dnf remove ${PKGS}
+      sudo dnf remove gcc-c++
+      sudo dnf groupremove "Development Tools" "Development Libraries"
     else
+      sudo dnf groupinstall "Development Tools" "Development Libraries"
+      sudo dnf install gcc-c++
       sudo dnf install ${PKGS}
     fi
   fi
