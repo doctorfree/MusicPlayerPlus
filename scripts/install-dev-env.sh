@@ -95,7 +95,7 @@ else
         NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
         PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
           pulseaudio-libs-devel libtool automake iniparser-devel SDL2-devel \
-          eigen3-devel libyaml-devel clang-devel swig \
+          boost-devel eigen3-devel libyaml-devel clang-devel swig \
           libchromaprint-devel python3-devel python3-yaml \
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
         if [ "$1" == "-r" ]
