@@ -86,6 +86,7 @@ else
     else
       if [ "${centos}" ]
       then
+        sudo alternatives --set python /usr/bin/python3
         CENVER=`rpm -E %centos`
         FUSION="https://download1.rpmfusion.org"
         FREE="free/el"
