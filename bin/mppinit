@@ -260,7 +260,7 @@ create_profiles() {
 
 pip_install() {
   mod="$1"
-  if ${PIP} list | grep ${mod} > /dev/null
+  if ${PIP} list 2> /dev/null | grep ${mod} > /dev/null
   then
     if [ "${upgrade}" ]
     then
@@ -682,6 +682,7 @@ sync_music_dir() {
         sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
             -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
             -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
+            -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
             -e "s%^media_dir = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
       cp /tmp/mop$$ ${MOPIDCONF}
       rm -f /tmp/mop$$
@@ -2392,7 +2393,7 @@ then
   [ "${quiet}" ] || {
     printf "\n\tEnsure YAMScrobbler module is current version ..."
   }
-  if ${PIP} list | grep ${SCRB} > /dev/null
+  if ${PIP} list 2> /dev/null | grep ${SCRB} > /dev/null
   then
     # Ensure YAMScrobbler is version ${YMIN} or greater
     [ -x ${SCPTDIR}/vercomp.sh ] && {

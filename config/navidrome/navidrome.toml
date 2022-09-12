@@ -1,4 +1,4 @@
-MusicFolder	= "__HOME__/Music"
+MusicFolder = "__HOME__/Music"
 DataFolder = "/var/lib/navidrome"
 # Where to search for and import playlists from
 # A list of folders/globs separated by : Paths are relative to MusicFolder
@@ -22,50 +22,98 @@ DefaultTheme = "Spotify-ish"
 # Spotify.Secret = "your-spotify-client-secret"
 # ======================================================================
 # See https://www.navidrome.org/docs/usage/configuration-options/
-# Option in config file	        Environment variable         Description
+# Option in config file        Environment variable         Description
 # ======================================================================
-# MusicFolder	ND_MUSICFOLDER	Folder where your music library is stored. Can be read-only	"./music"
-# DataFolder	ND_DATAFOLDER	Folder to store application data (DB, cache…)	"./data"
-# ScanSchedule	ND_SCANSCHEDULE	Configure periodic scans using “cron” syntax. To disable it altogether, set it to "0"	"@every 1m"
-# LogLevel	ND_LOGLEVEL	Log level. Useful for troubleshooting. Possible values: error, warn, info, debug, trace	"info"
-# EnableLogRedacting	ND_ENABLELOGREDACTING	Whether or not sensitive information (like tokens and passwords) should be redacted (hidden) in the logs	true
-# Port	ND_PORT	HTTP port Navidrome will use	4533
-# Address	ND_ADDRESS	IP address the server will bind to	0.0.0.0 and :: (all IPs)
-# EnableTranscodingConfig*	ND_ENABLETRANSCODINGCONFIG	Enables transcoding configuration in the UI	false
-# TranscodingCacheSize	ND_TRANSCODINGCACHESIZE	Size of transcoding cache. Set to "0" to disable cache	"100MB"
-# ImageCacheSize	ND_IMAGECACHESIZE	Size of image (art work) cache. Set to "0" to disable cache	"100MB"
-# AutoImportPlaylists	ND_AUTOIMPORTPLAYLISTS	Enable/disable .m3u playlist auto-import	true
-# PlaylistsPath	ND_PLAYLISTSPATH	Where to search for and import playlists from. Can be a list of folders/globs (separated by : (or ; on Windows). Paths are relative to MusicFolder	".:**/**" (meaning MusicFolder and all its subfolders)
-# BaseUrl	ND_BASEURL	Base URL (only the path part) to configure Navidrome behind a proxy (ex: /music)	Empty
-# UILoginBackgroundUrl	ND_UILOGINBACKGROUNDURL	Change background image used in the Login page	random music image from Unsplash.com
-# UIWelcomeMessage	ND_UIWELCOMEMESSAGE	Add a welcome message to the login screen	Empty
-# GATrackingID	ND_GATRACKINGID	Send basic info to your own Google Analytics account. Must be in the format UA-XXXXXXXX	Empty (disabled)
-# DefaultTheme	ND_DEFAULTTHEME	Sets the default theme used by the UI when logging in from a new browser. This value must match one of the options in the UI	Dark
-# EnableCoverAnimation	ND_ENABLECOVERANIMATION	Controls whether the player in the UI will animate the album cover (rotation)	true
-# IgnoredArticles	ND_IGNOREDARTICLES	List of ignored articles when sorting/indexing artists	"The El La Los Las Le Les Os As O A"
-# SearchFullString	ND_SEARCHFULLSTRING	Match query strings anywhere in searchable fields, not only in word boundaries. Useful for languages where words are not space separated	false
-# RecentlyAddedByModTime	ND_RECENTLYADDEDBYMODTIME	Uses music files’ modification time when sorting by “Recently Added”. Otherwise use import time	false
-# CoverArtPriority	ND_COVERARTPRIORITY	Configure the order to look for cover art images. Use special embedded value to get embedded images from the audio files	"embedded, cover.*, folder.*, front.*"
-# CoverJpegQuality	ND_COVERJPEGQUALITY	Set JPEG quality percentage for resized cover art images	75
-# EnableDownloads	ND_ENABLEDOWNLOADS	Enable the option in the UI to download music/albums/artists/playlists from the server	true
-# SessionTimeout	ND_SESSIONTIMEOUT	How long Navidrome will wait before closing web ui idle sessions	"24h"
-# AuthRequestLimit*	ND_AUTHREQUESTLIMIT	How many login requests can be processed from a single IP during the AuthWindowLength. Set to 0 to disable the limit rater	5
-# AuthWindowLength*	ND_AUTHWINDOWLENGTH	Window Length for the authentication rate limit	"20s"
-# Scanner.Extractor	ND_SCANNER_EXTRACTOR	Select metadata extractor implementation. Options: taglib or ffmpeg	"taglib"
-# Scanner.GenreSeparators	ND_SCANNER_GENRESEPARATORS	List of separators to split genre tags	";/,"
-# LastFM.Enabled	ND_LASTFM_ENABLED	Set this to false to completely disable Last.fm integration	true
-# LastFM.ApiKey	ND_LASTFM_APIKEY	Last.fm ApiKey	Navidrome project’s shared ApiKey
-# LastFM.Secret	ND_LASTFM_SECRET	Last.fm Shared Secret	Navidrome project’s shared Secret
-# LastFM.Language	ND_LASTFM_LANGUAGE	Two letter-code for language to be used to retrieve biographies from Last.fm	"en"
-# Spotify.ID*	ND_SPOTIFY_ID	Spotify Client ID. Required if you want Artist images	Empty
-# Spotify.Secret*	ND_SPOTIFY_SECRET	Spotify Client Secret. Required if you want Artist images	Empty
-# ListenBrainz.Enabled	ND_LISTENBRAINZ_ENABLED	Set this to false to completely disable ListenBrainz integration	true
-# EnableGravatar	ND_ENABLEGRAVATAR	Use Gravatar images as the user profile image. Needs the user’s email to be filled	false
-# EnableExternalServices	ND_ENABLEEXTERNALSERVICES.	Set this to false to completely disable ALL external integrations	true
-# EnableFavourites	ND_ENABLEFAVOURITES	Enable toggling “Heart”/“Loved” for songs/albums/artists in the UI (maps to “Star”/“Starred” in Subsonic Clients)	true
-# EnableStarRating	ND_ENABLESTARRATING	Enable 5-star ratings in the UI	true
-# EnableUserEditing	ND_ENABLEUSEREDITING	Enable regular users to edit their details and change their password	true
-# PasswordEncryptionKey*	ND_PASSWORDENCRYPTIONKEY	Passphrase used to encrypt passwords in the DB. Click here for details	-
-# ReverseProxyUserHeader*	ND_REVERSEPROXYUSERHEADER	HTTP header containing user name from authenticated proxy	"Remote-User"
-# ReverseProxyWhitelist*	ND_REVERSEPROXYWHITELIST	Comma separated list of IP CIDRs which are allowed to use reverse proxy authentication, empty means “deny all”	Empty
+# MusicFolder   ND_MUSICFOLDER  Folder where your music library is stored.
+# Can be read-only    "./music"
+# DataFolder    ND_DATAFOLDER   Folder to store application data    "./data"
+# ScanSchedule  ND_SCANSCHEDULE Configure periodic scans using “cron” syntax.
+# To disable it altogether, set it to "0"    "@every 1m"
+# LogLevel      ND_LOGLEVEL     Log level. Useful for troubleshooting.
+# Possible values: error, warn, info, debug, trace    "info"
+# EnableLogRedacting  ND_ENABLELOGREDACTING  Whether or not sensitive information
+# (like tokens and passwords) should be redacted (hidden) in the logs    true
+# Port    ND_PORT    HTTP port Navidrome will use    4533
+# Address ND_ADDRESS IP address the server will bind to  0.0.0.0 and :: (all IPs)
+# EnableTranscodingConfig*  ND_ENABLETRANSCODINGCONFIG  Enables transcoding
+# configuration in the UI    false
+# TranscodingCacheSize  ND_TRANSCODINGCACHESIZE  Size of transcoding cache.
+# Set to "0" to disable cache    "100MB"
+# ImageCacheSize  ND_IMAGECACHESIZE  Size of image (art work) cache.
+# Set to "0" to disable cache    "100MB"
+# AutoImportPlaylists  ND_AUTOIMPORTPLAYLISTS  Enable/disable .m3u playlist
+# auto-import  true
+# PlaylistsPath  ND_PLAYLISTSPATH  Where to search for and import playlists from.
+# Can be a list of folders/globs (separated by : (or ; on Windows).
+# Paths are relative to MusicFolder  ".:**/**" (meaning MusicFolder and all
+# its subfolders)
+# BaseUrl  ND_BASEURL  Base URL (only the path part) to configure Navidrome
+# behind a proxy (ex: /music)    Empty
+# UILoginBackgroundUrl  ND_UILOGINBACKGROUNDURL  Change background image used
+# in the Login page  random music image from Unsplash.com
+# UIWelcomeMessage  ND_UIWELCOMEMESSAGE  Add a welcome message to the login
+# screen  Empty
+# GATrackingID  ND_GATRACKINGID  Send basic info to your own Google Analytics
+# account. Must be in the format UA-XXXXXXXX  Empty (disabled)
+# DefaultTheme  ND_DEFAULTTHEME  Sets the default theme used by the UI when
+# logging in from a new browser. This value must match one of the options in
+# the UI  Dark
+# EnableCoverAnimation  ND_ENABLECOVERANIMATION  Controls whether the player
+# in the UI will animate the album cover (rotation)  true
+# IgnoredArticles  ND_IGNOREDARTICLES  List of ignored articles when
+# sorting/indexing artists  "The El La Los Las Le Les Os As O A"
+# SearchFullString  ND_SEARCHFULLSTRING  Match query strings anywhere in
+# searchable fields, not only in word boundaries.
+# Useful for languages where words are not space separated  false
+# RecentlyAddedByModTime  ND_RECENTLYADDEDBYMODTIME  Uses music files’
+# modification time when sorting by “Recently Added”. Otherwise use import
+# time  false
+# CoverArtPriority  ND_COVERARTPRIORITY  Configure the order to look for cover 
+# art images. Use special embedded value to get embedded images from the audio
+# files  "embedded, cover.*, folder.*, front.*"
+# CoverJpegQuality  ND_COVERJPEGQUALITY  Set JPEG quality percentage for
+# resized cover art images  75
+# EnableDownloads  ND_ENABLEDOWNLOADS  Enable the option in the UI to
+# download music/albums/artists/playlists from the server  true
+# SessionTimeout  ND_SESSIONTIMEOUT  How long Navidrome will wait before
+# closing web ui idle sessions  "24h"
+# AuthRequestLimit*  ND_AUTHREQUESTLIMIT  How many login requests can be
+# processed from a single IP during the AuthWindowLength. Set to 0 to disable
+# the limit rater  5
+# AuthWindowLength*  ND_AUTHWINDOWLENGTH  Window Length for the authentication
+# rate limit  "20s"
+# Scanner.Extractor  ND_SCANNER_EXTRACTOR  Select metadata extractor
+# implementation. Options: taglib or ffmpeg  "taglib"
+# Scanner.GenreSeparators  ND_SCANNER_GENRESEPARATORS  List of separators
+# to split genre tags  ";/,"
+# LastFM.Enabled  ND_LASTFM_ENABLED  Set this to false to completely disable
+# Last.fm integration  true
+# LastFM.ApiKey  ND_LASTFM_APIKEY  Last.fm ApiKey  Navidrome project’s shared
+# ApiKey
+# LastFM.Secret  ND_LASTFM_SECRET  Last.fm Shared Secret  Navidrome project’s
+# shared Secret
+# LastFM.Language  ND_LASTFM_LANGUAGE  Two letter-code for language to be used
+# to retrieve biographies from Last.fm  "en"
+# Spotify.ID*  ND_SPOTIFY_ID  Spotify Client ID. Required if you want Artist
+# images  Empty
+# Spotify.Secret*  ND_SPOTIFY_SECRET  Spotify Client Secret. Required if you
+# want Artist images  Empty
+# ListenBrainz.Enabled  ND_LISTENBRAINZ_ENABLED  Set this to false to completely
+# disable ListenBrainz integration  true
+# EnableGravatar  ND_ENABLEGRAVATAR  Use Gravatar images as the user profile
+# image. Needs the user’s email to be filled  false
+# EnableExternalServices  ND_ENABLEEXTERNALSERVICES.  Set this to false to
+# completely disable ALL external integrations  true
+# EnableFavourites ND_ENABLEFAVOURITES Enable toggling “Heart”/“Loved” for songs,
+# albums,artists in the UI (maps to “Star”/“Starred” in Subsonic Clients) true
+# EnableStarRating  ND_ENABLESTARRATING  Enable 5-star ratings in the UI  true
+# EnableUserEditing  ND_ENABLEUSEREDITING  Enable regular users to edit their
+# details and change their password  true
+# PasswordEncryptionKey*  ND_PASSWORDENCRYPTIONKEY  Passphrase used to encrypt
+# passwords in the DB. Click here for details  -
+# ReverseProxyUserHeader*  ND_REVERSEPROXYUSERHEADER  HTTP header containing
+# user name from authenticated proxy  "Remote-User"
+# ReverseProxyWhitelist*  ND_REVERSEPROXYWHITELIST  Comma separated list of
+# IP CIDRs which are allowed to use reverse proxy authentication, empty means
+# “deny all”  Empty
 # 
