@@ -86,12 +86,8 @@ else
     else
       if [ "${centos}" ]
       then
-        CENVER=`rpm -E %centos`
-        [ ${CENVER} -lt 9 ] && {
-          sudo dnf module -y install python38
-          sudo alternatives --set python3 /usr/bin/python3.8
-        }
         sudo alternatives --set python /usr/bin/python3
+        CENVER=`rpm -E %centos`
         FUSION="https://download1.rpmfusion.org"
         FREE="free/el"
         NONFREE="nonfree/el"

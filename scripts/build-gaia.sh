@@ -72,6 +72,14 @@ arch=`uname -m`
     cp /tmp/wsc$$ wscript
     rm -f /tmp/wsc$$
 }
+# CentOS 8 has Python 3.6 and Gaia qt5 branch checks for 3.7
+[ -f /etc/os-release ] && . /etc/os-release
+[ "${ID}" == "centos" ] && {
+    cat src/bindings/wscript | \
+      sed -e "s/_python_version((3, 7))/_python_version((3, 6))/" > /tmp/wsc$$
+    cp /tmp/wsc$$ src/bindings/wscript
+    rm -f /tmp/wsc$$
+}
 
 ./waf configure ${prefix} --with-python-bindings --with-asserts
 
