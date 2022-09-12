@@ -45,6 +45,14 @@ else
       sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
     fi
   else
+    have_dnf=`type -p dnf`
+    if [ "${have_dnf}" ]
+    then
+      PINS=dnf
+    else
+      PINS=yum
+    fi
+    sudo ${PINS} makecache
     if [ "${fedora}" ]
     then
       FEDVER=`rpm -E %fedora`
@@ -60,20 +68,20 @@ else
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
-        sudo dnf -y remove ffmpeg-devel
-        sudo dnf -y remove ${PKGS}
-        sudo dnf -y remove gcc-c++
-        sudo dnf -y groupremove "Development Tools" "Development Libraries"
-        sudo dnf -y remove ${FUSION}/${NONFREE}/${NONRPM}
-        sudo dnf -y remove ${FUSION}/${FREE}/${RELRPM}
+        sudo ${PINS} -y remove ffmpeg-devel
+        sudo ${PINS} -y remove ${PKGS}
+        sudo ${PINS} -y remove gcc-c++
+        sudo ${PINS} -y groupremove "Development Tools" "Development Libraries"
+        sudo ${PINS} -y remove ${FUSION}/${NONFREE}/${NONRPM}
+        sudo ${PINS} -y remove ${FUSION}/${FREE}/${RELRPM}
       else
-        sudo dnf -y groupinstall "Development Tools" "Development Libraries"
-        sudo dnf -y install gcc-c++
-        sudo dnf -y install ${PKGS}
-        sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-        sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
-        sudo dnf -y update
-        sudo dnf -y --allowerasing install ffmpeg-devel
+        sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
+        sudo ${PINS} -y install gcc-c++
+        sudo ${PINS} -y install ${PKGS}
+        sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
+        sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
+        sudo ${PINS} -y update
+        sudo ${PINS} -y --allowerasing install ffmpeg-devel
       fi
     else
       if [ "${centos}" ]
@@ -91,22 +99,20 @@ else
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
         if [ "$1" == "-r" ]
         then
-          sudo yum -y remove ffmpeg-devel
-          sudo yum -y remove ${PKGS}
-          sudo yum -y remove gcc-c++
-          sudo yum -y groupremove "Development Tools" "Development Libraries"
-          sudo yum -y remove ${FUSION}/${NONFREE}/${NONRPM}
-          sudo yum -y remove ${FUSION}/${FREE}/${RELRPM}
+          sudo ${PINS} -y remove ffmpeg-devel
+          sudo ${PINS} -y remove ${PKGS}
+          sudo ${PINS} -y remove gcc-c++
+          sudo ${PINS} -y groupremove "Development Tools"
+          sudo ${PINS} -y remove ${FUSION}/${NONFREE}/${NONRPM}
+          sudo ${PINS} -y remove ${FUSION}/${FREE}/${RELRPM}
         else
-          sudo yum -y groupinstall "Development Tools" "Development Libraries"
-          sudo yum -y install gcc-c++
-          sudo yum -y install ${PKGS}
-          sudo yum -y install epel-release
-          sudo yum -y localinstall --nogpgcheck \
-          sudo yum -y install ${FUSION}/${FREE}/${RELRPM}
-          sudo yum -y install ${FUSION}/${NONFREE}/${NONRPM}
-          sudo yum -y update
-          sudo yum -y --allowerasing install ffmpeg-devel
+          sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
+          sudo ${PINS} -y install gcc-c++
+          sudo ${PINS} -y install ${PKGS}
+          sudo ${PINS} -y install epel-release
+          sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${FREE}/${RELRPM}
+          sudo ${PINS} -y update
+          sudo ${PINS} -y --allowerasing install ffmpeg-devel
         fi
       else
         echo "Unrecognized operating system"
