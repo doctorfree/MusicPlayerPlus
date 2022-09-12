@@ -260,7 +260,7 @@ create_profiles() {
 
 pip_install() {
   mod="$1"
-  if pip list | grep ${mod} > /dev/null
+  if ${PIP} list | grep ${mod} > /dev/null
   then
     if [ "${upgrade}" ]
     then
@@ -844,11 +844,13 @@ have_mopidy=`type -p mopidy`
 set_have_navi
 
 arch=
+centos=
 debian=
 fedora=
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
 [ "${ID}" == "arch" ] && arch=1
+[ "${ID}" == "centos" ] && centos=1
 [ "${ID}" == "fedora" ] && fedora=1
 
 while getopts "abdeoqrUyu" flag; do
@@ -1463,6 +1465,33 @@ remove_navidrome() {
   have_navi=
 }
 
+pathadd() {
+  if [ -d "$1" ] && [[ ":$PATH:" != *":$1:"* ]]; then
+    PATH="$1${PATH:+":$PATH"}"
+  fi
+}
+
+install_mpc() {
+  pathadd "${HOME}/.local/bin"
+  [ -d ${HOME}/src ] || mkdir -p ${HOME}/src
+  cd ${HOME}/src
+  [ -d mpc ] && mv mpc mpc$$
+  git clone https://github.com/MusicPlayerDaemon/mpc.git
+  cd mpc
+  have_meson=`type -p meson`
+  [ "${have_meson}" ] || ${PYTHON} -m pip install --user meson
+  have_ninja=`type -p ninja`
+  [ "${have_ninja}" ] || ${PYTHON} -m pip install --user ninja
+  meson . output
+  ninja -C output
+  [ -x output/mpc ] && sudo cp output/mpc /usr/bin/mpc
+  cd ${HOME}/src
+  [ -d mpc$$ ] && {
+    rm -rf mpc
+    mv mpc$$ mpc
+  }
+}
+
 install_kitty() {
   [ "${have_kitty}" ] || {
     [ "${quiet}" ] || {
@@ -1840,8 +1869,35 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
   sudo dnf -y --allowerasing install ffmpeg
 }
+[ "${centos}" ] && {
+  sudo alternatives --set python /usr/bin/python3
+  CENVER=`rpm -E %fedora`
+  FUSION="https://download1.rpmfusion.org"
+  FREE="free/el"
+  NONFREE="nonfree/el"
+  RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
+  NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
+  sudo dnf config-manager --set-enabled powertools
+  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo dnf -y --allowerasing install ffmpeg
+  have_mpc=`type -p mpc`
+  [ "${have_mpc}" ] || {
+    have_git=`type -p git`
+    [ "${have_git}" ] || sudo dnf -y install git
+    install_mpc
+  }
+}
 
 install_kitty
+
+pathadd "${HOME}/.fzf/bin"
+have_fzf=`type -p fzf`
+[ "${have_fzf}" ] || {
+  [ -d ${HOME}/.fzf ] && rm -rf ${HOME}/.fzf
+  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
+  ~/.fzf/install --all
+}
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
@@ -2282,8 +2338,27 @@ do
   }
 done
 
+# Pick your Pip
+PIP=
 have_pip=`type -p pip`
 if [ "${have_pip}" ]
+then
+  have_pip3=`type -p pip3`
+  if [ "${have_pip3}" ]
+  then
+    PIP=pip3
+  else
+    PIP=pip
+  fi
+else
+  have_pip3=`type -p pip3`
+  [ "${have_pip3}" ] && {
+    PIP=pip3
+    sudo alternatives --set pip /usr/bin/pip3
+  }
+fi
+
+if [ "${PIP}" ]
 then
   [ "${quiet}" ] || {
     printf "\n\tInstalling Python modules and Beets plugins ..."
@@ -2317,7 +2392,7 @@ then
   [ "${quiet}" ] || {
     printf "\n\tEnsure YAMScrobbler module is current version ..."
   }
-  if pip list | grep ${SCRB} > /dev/null
+  if ${PIP} list | grep ${SCRB} > /dev/null
   then
     # Ensure YAMScrobbler is version ${YMIN} or greater
     [ -x ${SCPTDIR}/vercomp.sh ] && {
