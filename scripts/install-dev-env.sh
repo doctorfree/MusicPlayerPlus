@@ -2,11 +2,15 @@
 #
 # install-dev-env.sh - install or remove the build dependencies
 
-debian=
 arch=
+centos=
+debian=
+fedora=
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
 [ "${ID}" == "arch" ] && arch=1
+[ "${ID}" == "centos" ] && centos=1
+[ "${ID}" == "fedora" ] && fedora=1
 [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
 
 if [ "${debian}" ]
@@ -41,33 +45,72 @@ else
       sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
     fi
   else
-    FEDVER=`rpm -E %fedora`
-    FUSION="https://download1.rpmfusion.org"
-    FREE="free/fedora"
-    NONFREE="nonfree/fedora"
-    RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
-    NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
-    PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
-        pulseaudio-libs-devel libtool automake iniparser-devel \
-        SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
-        libchromaprint-devel python-devel python3-devel python3-yaml \
-        python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
-    if [ "$1" == "-r" ]
+    if [ "${fedora}" ]
     then
-      sudo dnf -y remove ffmpeg-devel
-      sudo dnf -y remove ${PKGS}
-      sudo dnf -y remove gcc-c++
-      sudo dnf -y groupremove "Development Tools" "Development Libraries"
-      sudo dnf -y remove ${FUSION}/${NONFREE}/${NONRPM}
-      sudo dnf -y remove ${FUSION}/${FREE}/${RELRPM}
+      FEDVER=`rpm -E %fedora`
+      FUSION="https://download1.rpmfusion.org"
+      FREE="free/fedora"
+      NONFREE="nonfree/fedora"
+      RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
+      NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
+      PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
+          pulseaudio-libs-devel libtool automake iniparser-devel \
+          SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
+          libchromaprint-devel python-devel python3-devel python3-yaml \
+          python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
+      if [ "$1" == "-r" ]
+      then
+        sudo dnf -y remove ffmpeg-devel
+        sudo dnf -y remove ${PKGS}
+        sudo dnf -y remove gcc-c++
+        sudo dnf -y groupremove "Development Tools" "Development Libraries"
+        sudo dnf -y remove ${FUSION}/${NONFREE}/${NONRPM}
+        sudo dnf -y remove ${FUSION}/${FREE}/${RELRPM}
+      else
+        sudo dnf -y groupinstall "Development Tools" "Development Libraries"
+        sudo dnf -y install gcc-c++
+        sudo dnf -y install ${PKGS}
+        sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+        sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+        sudo dnf -y update
+        sudo dnf -y --allowerasing install ffmpeg-devel
+      fi
     else
-      sudo dnf -y groupinstall "Development Tools" "Development Libraries"
-      sudo dnf -y install gcc-c++
-      sudo dnf -y install ${PKGS}
-      sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-      sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
-      sudo dnf -y update
-      sudo dnf -y --allowerasing install ffmpeg-devel
+      if [ "${centos}" ]
+      then
+        CENVER=`rpm -E %centos`
+        FUSION="https://download1.rpmfusion.org"
+        FREE="free/el"
+        NONFREE="nonfree/fedora"
+        RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
+        NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
+        PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
+          pulseaudio-libs-devel libtool automake iniparser-devel \
+          SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
+          libchromaprint-devel python-devel python3-devel python3-yaml \
+          python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
+        if [ "$1" == "-r" ]
+        then
+          sudo yum -y remove ffmpeg-devel
+          sudo yum -y remove ${PKGS}
+          sudo yum -y remove gcc-c++
+          sudo yum -y groupremove "Development Tools" "Development Libraries"
+          sudo yum -y remove ${FUSION}/${NONFREE}/${NONRPM}
+          sudo yum -y remove ${FUSION}/${FREE}/${RELRPM}
+        else
+          sudo yum -y groupinstall "Development Tools" "Development Libraries"
+          sudo yum -y install gcc-c++
+          sudo yum -y install ${PKGS}
+          sudo yum -y install epel-release
+          sudo yum -y localinstall --nogpgcheck \
+          sudo yum -y install ${FUSION}/${FREE}/${RELRPM}
+          sudo yum -y install ${FUSION}/${NONFREE}/${NONRPM}
+          sudo yum -y update
+          sudo yum -y --allowerasing install ffmpeg-devel
+        fi
+      else
+        echo "Unrecognized operating system"
+      fi
     fi
   fi
 fi
