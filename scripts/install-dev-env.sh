@@ -93,8 +93,8 @@ else
         RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
         NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
         PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
-          pulseaudio-libs-devel libtool automake iniparser-devel \
-          SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
+          pulseaudio-libs-devel libtool automake iniparser-devel libSDL2 \
+          eigen3-devel libyaml-devel clang-devel swig \
           libchromaprint-devel python-devel python3-devel python3-yaml \
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
         if [ "$1" == "-r" ]
@@ -106,14 +106,15 @@ else
           sudo ${PINS} -y remove ${FUSION}/${NONFREE}/${NONRPM}
           sudo ${PINS} -y remove ${FUSION}/${FREE}/${RELRPM}
         else
-          sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
+          sudo ${PINS} -y groupinstall "Development Tools"
           sudo ${PINS} -y install gcc-c++
-          sudo ${PINS} -y install ${PKGS}
+          sudo ${PINS} -y install dnf-plugins-core
           sudo ${PINS} -y install epel-release
+          sudo ${PINS} config-manager --set-enabled powertools
+          sudo ${PINS} -y install ${PKGS}
           sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${FREE}/${RELRPM}
           sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${NONFREE}/${NONRPM}
           sudo ${PINS} -y update
-          sudo ${PINS} -y config-manager –enable PowerTools
           sudo ${PINS} -y --allowerasing install ffmpeg ffmpeg-devel
         fi
       else
