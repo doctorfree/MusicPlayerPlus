@@ -89,7 +89,7 @@ else
         CENVER=`rpm -E %centos`
         FUSION="https://download1.rpmfusion.org"
         FREE="free/el"
-        NONFREE="nonfree/fedora"
+        NONFREE="nonfree/el"
         RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
         NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
         PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
@@ -111,8 +111,10 @@ else
           sudo ${PINS} -y install ${PKGS}
           sudo ${PINS} -y install epel-release
           sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${FREE}/${RELRPM}
+          sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${NONFREE}/${NONRPM}
           sudo ${PINS} -y update
-          sudo ${PINS} -y --allowerasing install ffmpeg-devel
+          sudo ${PINS} -y config-manager –enable PowerTools
+          sudo ${PINS} -y --allowerasing install ffmpeg ffmpeg-devel
         fi
       else
         echo "Unrecognized operating system"
