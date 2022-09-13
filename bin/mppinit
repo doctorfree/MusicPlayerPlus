@@ -817,8 +817,8 @@ remove=
 upgrade=1
 quiet=
 beetsdev=
-have_bliss=`type -p blissify`
 
+have_bliss=`type -p blissify`
 have_gnome=`type -p gnome-terminal`
 have_kitty=`type -p kitty`
 have_tilix=`type -p tilix`
@@ -933,7 +933,7 @@ fi
 # This is performed in this way to avoid password prompts and subshells
 id -nG | grep -qw adm || {
   sudo usermod -aG adm ${MPP_USER}
-  exec sg adm newgrp `id -gn`
+  sg adm newgrp `id -gn`
 }
 
 # User should not be root. Prompt to proceed if root user
