@@ -1872,7 +1872,7 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
 }
 [ "${centos}" ] && {
   sudo alternatives --set python /usr/bin/python3
-  CENVER=`rpm -E %fedora`
+  CENVER=`rpm -E %centos`
   FUSION="https://download1.rpmfusion.org"
   FREE="free/el"
   NONFREE="nonfree/el"
@@ -2353,10 +2353,7 @@ then
   fi
 else
   have_pip3=`type -p pip3`
-  [ "${have_pip3}" ] && {
-    PIP=pip3
-    sudo alternatives --set pip /usr/bin/pip3
-  }
+  [ "${have_pip3}" ] && PIP=pip3
 fi
 
 if [ "${PIP}" ]
