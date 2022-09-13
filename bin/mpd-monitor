@@ -1,0 +1,14 @@
+#!/bin/bash
+
+MPD_MONITOR_DIR="/usr/share/musicplayerplus/mpd/mpd-monitor"
+
+if [ -x "${MPD_MONITOR_DIR}/mpd-monitor" ]
+then
+  cd "${MPD_MONITOR_DIR}"
+  ./mpd-monitor $*
+  exit $?
+else
+  echo "${MPD_MONITOR_DIR}/mpd-monitor does not exist or is not executable"
+  echo "Exiting"
+  exit 1
+fi
