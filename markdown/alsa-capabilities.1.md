@@ -1,18 +1,21 @@
-% ALSA_CAPABILITIES(1) alsa-capabilities v1.0
-% Ronald van Engelen
-% September 2019
-
-# NAME
+---
+title: ALSA-CAPABILITIES
+section: 1
+header: User Manual
+footer: alsa-capabilities 2.2.2
+date: December 05, 2021
+---
+## NAME
 
 alsa-capabilities - list alsa audio output interfaces and their capabilities
 
-# SYNOPSIS
+## SYNOPSIS
 
 **alsa-capabilities** [**-h**, **\--help**]
 
 **alsa-capabilities** [**-s**, **\--samplerates**] ...
 
-# DESCRIPTION
+## DESCRIPTION
 
 **alsa-capabilities** is a bash (>=4) script that lists the properties
 and capabilities of each output interface of each audio device known
@@ -20,7 +23,7 @@ by *alsa*. Besides its hardware address, eg
 **hw:x,y**, the scripts lists the device and interface names, and
 additional details.
 
-# GENERAL OPTIONS
+## GENERAL OPTIONS
 
 **-h**, **\--help**
 :   Display usage information.
@@ -28,7 +31,7 @@ additional details.
 **-s**, **\--samplerates**
 :   List the samplerates for each encoding format the interface supports.
 
-# FILTER OPTIONS
+## FILTER OPTIONS
 
 **-l** *TYPEFILTER*, **\--limit** *TYPEFILTER*
 :   Only include interfaces of type *TYPEFILTER*, which can be one of
@@ -49,7 +52,7 @@ additional details.
     eg. **hw:0,1** means the second interface (`1`) of the first
     device (`0`).
 
-# OUTPUT OPTIONS
+## OUTPUT OPTIONS
 
 **-j**, **\--json** 
 :   Prints the results as valid json data for easy parsing by web
@@ -63,7 +66,7 @@ additional details.
     **alsa-capabilities** was designed to be sourced and used by other
     programs. See README.md for more information.
 
-# CAVEATS
+## CAVEATS
 
 The scripts output is printed to *stdout*; when you want to use the
 output in pipes and such, consider using the *OUTPUT OPTIONS* above,
@@ -71,9 +74,15 @@ or use:
 
   **alsa-capabilities 2>&1** | grep ...
 
-# SEE ALSO
+## AUTHORS
 
-*README.md* **aplay (1)** **alsa-info.sh (1)**
+Written by Ronald van Engelen ronalde@lacocina.nl
+
+Modified and adapted by Ronald Record github@ronrecord.com
+
+## SEE ALSO
+
+**aplay(1)** **alsa-info(1)**
 
 For *REGEXP* rules, see: 
 <https://www.gnu.org/software/bash/manual/html_node/Pattern-Matching.html>

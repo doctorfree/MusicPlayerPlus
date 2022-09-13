@@ -807,10 +807,10 @@ function alsa_uac_endpoint() {
             break
         fi
     done<"${streamfile}"
-    [[ ${endpoint_type} ]] || 
-	    die "unable to determine UAC Endpoint type from streamfile using regexp \`${ep_re}'. 
-streamfile: \`${streamfile}'
-$(cat "${streamfile}")"
+#   [[ ${endpoint_type} ]] || 
+#    die "unable to determine UAC Endpoint type from streamfile using regexp \`${ep_re}'. 
+#streamfile: \`${streamfile}'
+#$(cat "${streamfile}")"
     echo "${endpoint_type}"
 }
 

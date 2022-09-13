@@ -1,0 +1,312 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC2102
+# shellcheck disable=SC1090
+cmd_bc="${cmd_bc:-}"
+cmd_mediainfo="${cmd_mediainfo:-}"
+cmd_ffprobe="${cmd_ffprobe:-}"
+
+DEBUG="${DEBUG:-}"
+
+declare -A file_info
+## get/set defaults for units
+samplerate_base=${samplerate_base:-1000}
+samplerate_rest=${samplerate_rest:-0}
+samplerate_unitlabel="${samplerate_unitlabel:-Hz}"
+samplerate_siunit="${samplerate_siunit:-k}"
+bitrate_base=${bitrate_base:-1000}
+bitrate_rest=${bitrate_rest:-2}
+bitrate_unitlabel="${bitrate_unitlabel:-bit/s}"
+bitrate_siunit="${bitrate_siunit:-k}"
+bitdepth_unitlabel="${bitdepth_unitlabel:-bit}"
+filesize_base=${filesize_base:-1000000}
+filesize_rest=${filesize_rest:-1}
+filesize_unitlabel="${filesize_unitlabel:-B}"
+filesize_siunit="${filesize_siunit:-M}"
+
+declare -A default_byteorder=()
+declare -A default_signedness=()
+declare -A default_bitdepth=()
+declare -A default_encoding=()
+
+## flac: all numbers are big-endian unsigned integers unless
+## otherwise specified.
+default_byteorder[flac]="big endian"
+default_signedness[flac]="unsigned"
+default_encoding[flac]="LPCM"
+## aiff: default to signed big endian
+default_byteorder[aiff]="big endian"
+default_signedness[aiff]="signed"
+default_encoding[aiff]="LPCM"
+default_byteorder[mpeg]="n/a"
+default_signedness[mpeg]="n/a"
+default_bitdepth[mpeg]="(variable)"
+default_encoding[mpeg]="PCM MPEG-stream"
+default_byteorder[dsf]="little endian"
+default_signedness[dsf]="n/a (MSB earliest)"
+default_bitdepth[dsf]="1"
+# shellcheck disable=SC2034
+default_encoding[dsf]="PDM (Direct Stream Digital)"
+
+function gfi_check_cmds() {
+    if [[ "${cmd_mediainfo}x" == "x" ]]; then
+	if cmd_mediainfo="$(type -p mediainfo)"; then
+	    debug "mediainfo found at ${cmd_mediainfo}" "$0" "${LINENO}"
+	else
+	    display_error "command mediainfo not found"
+	    return 1
+	fi
+    else
+	debug "reusing mediainfo found at ${cmd_mediainfo}"  "$0" "${LINENO}"
+    fi
+    if [[ "${cmd_ffprobe}x" == "x" ]]; then
+	if cmd_ffprobe="$(type -p ffprobe)"; then
+	    debug "ffprobe found at ${cmd_ffprobe}" "$0" "${LINENO}"
+	else
+	    display_error "command ffprobe not found"
+	    return 1
+	fi
+    else
+	debug "reusing ffprobe found at ${cmd_ffprobe}"  "$0" "${LINENO}"
+    fi
+    if [[ "${cmd_bc}x" == "x" ]]; then
+	if cmd_bc="$(type -p bc)"; then
+	    debug "bc found at ${cmd_bc}"  "$0" "${LINENO}"
+	else
+	    display_error "command bc not found"
+	fi
+    else
+	debug "reusing bc found at ${cmd_bc}"  "$0" "${LINENO}"
+    fi
+}
+
+function gfi_get_item_type() {
+    stream_re="^([^:]+)://([^/]+)/(.*)$"
+    if [[ "${file_info[path]}" =~ ${stream_re} ]]; then
+	debug "$(declare -p BASH_REMATCH)"  "$0" "${LINENO}"
+	debug "item is stream"  "$0" "${LINENO}"
+	gfi_set_file_info_field "path_type" "stream"
+	gfi_set_file_info_field "stream_protocol" "${BASH_REMATCH[1]}"
+	gfi_set_file_info_field "stream_host" "${BASH_REMATCH[2]}"
+	gfi_set_file_info_field "stream_path" "${BASH_REMATCH[3]}"
+	gfi_set_file_info_field "stream_url" "${file_info[file]}"
+    else
+	debug "item is file"  "$0" "${LINENO}"
+	gfi_set_file_info_field "path_type" "file"
+	gfi_set_file_info_field "stream_protocol" ""
+	gfi_set_file_info_field "stream_host" ""
+	gfi_set_file_info_field "stream_path" ""
+	gfi_set_file_info_field "stream_url" ""
+    fi
+    #printf "%s" "${file_info[current_type]}"
+}
+
+function gfi_set_file_info_field() {
+    field="$1"
+    value="$2"
+    file_info["${field}"]="${value}"
+    debug "file_info field \`${field}' set to \`${value}'" "$0" "${LINENO}"
+}
+
+function gfi_ret_mediainfo() {
+    ## use mediainfo to fill file_info
+    ## construct mediainfo argument list (eg 'bash_fieldname=mediainfo_fieldname')
+    filepath="$1"
+    # shellcheck disable=SC2191
+    mediainfo_fieldlist=(
+        bitdepth=BitDepth
+        bitrate=BitRate
+        bitrate_mode=BitRate_Mode
+        byteorder=Format_Settings_Endianness
+        channelcount=Channels
+        compression=Compression_Mode
+        duration=Duration
+        filesize=StreamSize
+        encoding=Format
+        framecount=FrameCount
+        samplecount=SamplingCount
+        samplerate=SamplingRate
+        signedness=Format_Settings_Sign
+    )
+    output_args=""
+    for item in "${mediainfo_fieldlist[@]}"; do
+        bash_field="${item%%=*}"
+        mediainfo_field="${item#*=}"
+        output_arg="${bash_field}=%${mediainfo_field}%\n"
+        output_args="${output_args}${output_arg}"
+    done
+    debug "*** emptying out mediainfo_raw array"
+    debug "using output_args"
+    debug "${output_args}"
+    declare -A mediainfo_raw=()
+    while read -r line; do
+	IFS="=" read -r field value <<< "${line}"
+	if [[ "${field}x" != "x" ]] ;then
+	    mediainfo_raw["${field}"]="${value}"
+	    debug "set ${field}=\`${mediainfo_raw[${field}]}'"  "$0" "${LINENO}"
+	fi
+    done< <(
+        ${cmd_mediainfo} --output="Audio;${output_args}" "${filepath}" 2>/dev/null
+	mediainfo_res="$?"
+	debug "${cmd_mediainfo}  \"${file_info[path]}\"=\`${mediainfo_res}'"  "$0" "${LINENO}"
+    )
+    debug "*** start extracting mediainfo props"  "$0" "${LINENO}"
+    filetype="${mediainfo_raw[format],,}"
+    debug "filetype=${mediainfo_raw[encoding],,}"
+    case "${filetype}" in
+	mp*)
+            filetype="mpeg" ;;
+        dsd|dsf)
+            filetype="dsf" ;;
+        ""|pcm)
+            debug "trying extension ${file_info[extension]}"
+            case "${file_info[extension]}" in
+	        mp*)
+                    filetype="mpeg" ;;
+                dsf)
+                    filetype="dsf" ;;
+                aiff)
+                    filetype="aiff" ;;
+                wav)
+                    filetype="wav" ;;
+            esac
+            ;;
+	*)
+	    debug "TODO: unhandled file format: \`${file_info[format]}'"  "$0" "${LINENO}"
+    esac
+    gfi_set_file_info_field "filetype" "${filetype}"
+    gfi_set_file_info_field "encoding" "${mediainfo_raw[encoding]}"
+    gfi_set_file_info_field "filesize" "${mediainfo_raw[filesize]}"
+    gfi_set_file_info_field "bitrate" "${mediainfo_raw[bitrate]}"    
+    if [[ "${mediainfo_raw[byteorder]}x" == "x" ]]; then
+        gfi_set_file_info_field "byteorder" "${default_byteorder[${filetype}]}"
+    else
+        mediainfo_raw[byteorder]="${mediainfo_raw[byteorder]// endian}"
+        gfi_set_file_info_field "byteorder" "${mediainfo_raw[byteorder],,} endian"
+    fi
+    gfi_set_file_info_field "channelcount" "${mediainfo_raw[channelcount]}"
+    case "${mediainfo_raw[compression],,}" in
+	lossy)
+	    compression="lossy compressed"
+	    ;;
+	lossless)
+	    compression="lossless compressed"
+	    ;;
+	"")
+	    compression="uncompressed"
+	    ;;
+	*)
+	    compression="unknown"
+	    debug "UNKNOWN file_info[compression]=\`${file_info[compression]}'"  "$0" "${LINENO}"
+    esac
+    gfi_set_file_info_field "compression" "${compression}"
+    if [[ "${mediainfo_raw[signedness]}x" == "x" ]]; then
+        gfi_set_file_info_field "signedness" "${default_signedness[${filetype}]}"
+    else
+        gfi_set_file_info_field "signedness" "${mediainfo_raw[signedness]}"
+    fi
+    if [[ "${mediainfo_raw[bitdepth]}x" == "x" ]]; then
+        gfi_set_file_info_field "bitdepth" "${default_bitdepth[${filetype}]}"
+    else
+        gfi_set_file_info_field "bitdepth" "${mediainfo_raw[bitdepth]}"
+    fi
+    ##
+    gfi_set_file_info_field "format" "${mediainfo_raw[format]}"
+    
+    gfi_set_file_info_field "samplerate" "${mediainfo_raw[samplerate]}"
+}
+
+
+function gfi_ret_streaminfo() {
+    ## use ffprobe to query a streaming source
+    stream="$1"
+    declare -A ffprobe_props=()
+    declare -A ffprobe_fieldlist=()
+    ffprobe_fieldlist[bit_rate]="bitrate"
+    ffprobe_fieldlist[bits_per_raw_sample]="bitdepth"
+    ffprobe_fieldlist[channels]="channelcount"
+    ffprobe_fieldlist[codec_long_name]="encoding"
+    ffprobe_fieldlist[codec_name]="compressionname"
+    ffprobe_fieldlist[profile]="compressionprofile"
+    ffprobe_fieldlist[sample_fmt]="byteorder"
+    ffprobe_fieldlist[sample_rate]="samplerate"
+    field_line_re="^([a-z_]+)=(.*)$"
+    while read -r line; do
+        if [[ "${line}" =~ ${field_line_re} ]]; then
+            ffprobe_field="${BASH_REMATCH[1]}"
+            value="${BASH_REMATCH[2]}"
+	    if [[ "${ffprobe_field}x" != "x" ]] ;then
+                bash_field="${ffprobe_fieldlist[${ffprobe_field}]%%=*}"
+                if [[ "${bash_field}x" == "x" ]]; then
+                    debug "skipping ffprobe_field \`${ffprobe_field}'=\`${value}': bash_field not found" "${0}" "${LINENO}"
+                else
+                    ffprobe_props[${bash_field}]="${value}"
+	            debug "set ffprobe_props ${bash_field}=\`${value}'"  "$0" "${LINENO}" 
+                fi
+	    fi
+        #else
+        #    debug "skipping line=\`${line}'"
+        fi
+    done < <(
+        ${cmd_ffprobe} -print_format default -show_streams -select_streams a "${stream}" 2>/dev/null
+	ffprobe_res="$?"
+	debug "${cmd_ffprobe}  \"${file_info[path]}\"=\`${ffprobe_res}'"  "$0" "${LINENO}"
+    )
+    debug "*** start extracting ffprobe props"  "$0" "${LINENO}"
+    filetype="stream"
+    gfi_set_file_info_field "filetype" "${filetype}"
+    if [[ "${ffprobe_props[bitdepth]}x" == "x" ]] || [[ "${ffprobe_props[bitdepth]}x" == "0x" ]]; then
+        debug "no bitdepth reported by ffprobe; using default_bitdepth[mpeg]" "$0" "${LINENO}"
+        ffprobe_props[bitdepth]="${default_bitdepth[mpeg]}"
+    fi
+    if [[ "${ffprobe_props[bitrate]}x" == "x" ]] || [[ "${ffprobe_props[bitrate]}x" == "0x" ]] || [[ "${ffprobe_props[bitrate]}x" == "N/Ax" ]]; then
+        debug "no bitrate reported by ffprobe; calculating (ffprobe_props[channelcount] * ffprobe_props[bitdepth] * ffprobe_props[samplerate] )" "$0" "${LINENO}"
+        ffprobe_props[bitrate]="$(( ffprobe_props[channelcount] * ffprobe_props[bitdepth] * ffprobe_props[samplerate]  ))"
+    fi
+    
+    for field in channelcount bitdepth byteorder encoding bitrate samplerate compressionname compressionprofile; do
+        gfi_set_file_info_field "${field}" "${ffprobe_props[${field}]}"
+    done
+}
+
+function gfi_get_file_info() {
+    debug "*** emptying out file_info array"
+    file_info=()
+    gfi_set_file_info_field "path" "$1"
+    gfi_set_file_info_field "extension" "${file_info[path]##*.}"
+    gfi_get_item_type
+    debug "file_info[path_type]==\`${file_info[path_type]}'"  "$0" "${LINENO}"
+    if [[ "${file_info[path_type]}" == "file" ]]; then
+	debug "\`${file_info[path]}' is a file"  "$0" "${LINENO}"
+	if [[ -r "${file_info[path]}" ]]; then
+	    debug "using file_info[path]=\`${file_info[path]}'"  "$0" "${LINENO}"
+            gfi_ret_mediainfo "${file_info[path]}"
+	else
+	    display_error "file \`${file_info[path]}' not accessible or non-existant."
+	    return 1
+	fi
+    else
+	debug "\`${file_info[path]}' is a stream"  "$0" "${LINENO}"
+        gfi_ret_streaminfo "${file_info[path]}"
+        #return 1
+    fi
+    if [[ ${DEBUG} ]]; then
+        declare -a results=()
+        for key in "${!file_info[@]}"; do 
+            results+=("${green}${key}${std}=${white}${file_info[${key}]}${std}")
+        done
+        printf 1>&2 "\n"
+        debug "$(printf "%s\n" "${results[@]}" | sort)"  "$0" "${LINENO}"
+    fi
+}
+
+scriptdir="${scriptdir:-$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )}"
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    source "${scriptdir}/common"
+    # shellcheck disable=SC2145
+    debug "\`${BASH_SOURCE[0]}' executed from \`${scriptdir}/${0##/*}' with args \`$@'." "${0}" "${LINENO}"
+    gfi_check_cmds && gfi_get_file_info "$@"
+else
+    debug "\`${BASH_SOURCE[0]}' sourced from \`${scriptdir}/${0##/*}'." "${0}" "${LINENO}"
+    gfi_check_cmds
+fi

@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+## 
+## helper script, part of mpd-monitor, which uses this script to
+## communicate with mpd using linux sockets and redirectors.
+##
+## See mpd-monitor, README.md and LICENSE.
+
+mpd_command="$1"	
+mpd_host="$2"
+mpd_port="$3"
+devpath="/dev/tcp/${mpd_host}/${mpd_port}"
+
+# shellcheck disable=2059
+printf 1>&2 "${BASHPID}: will query mpd on  using /dev/tcp/%s/%s and command list:\n\`%s'\n" \
+	    "${mpd_host}" "${mpd_port}" "$(printf "command_list_begin\n${mpd_command}\nclose\ncommand_list_end\n\r\n")"
+#if timeout ${max_time} bash -c "true <>${devpath}" 2>/dev/null; then
+## set up input and output file descriptors
+exec 3<>"${devpath}"
+## send mpd protocol command to stdin of subprocess which listens on file descriptor 3
+# shellcheck disable=2059
+printf "command_list_begin\n${mpd_command}\nclose\ncommand_list_end\n" >&3
+## read in stdout
+cat <&3
+## close the file descriptor
+exec 3<&-
+exec 3<&-
+

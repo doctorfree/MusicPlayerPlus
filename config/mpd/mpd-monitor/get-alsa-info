@@ -1,0 +1,332 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+## this script gets the current samplerate, output encoding and
+## bitrate from alsa alsa_hwaddr $1 on host $2 or from the localhost if
+## $2 is left empty.
+##
+## returns a newline separated list of those properties or error 2
+## when the state of that alsa_hwaddr is closed (ie it's not playing
+## anything) or 1 in case of an unexpected error.
+
+DEBUG="${DEBUG:-}"
+
+declare -A alsa_info
+
+## get/set defaults for units
+samplerate_base=${samplerate_base:-1000}
+samplerate_rest=${samplerate_rest:-0}
+samplerate_unitlabel="${samplerate_unitlabel:-Hz}"
+if (( samplerate_base == 1000000 )); then
+    samplerate_siunit="M"
+elif (( samplerate_base == 1000 )); then
+    samplerate_siunit="K"
+else
+    samplerate_siunit=""
+fi
+bitrate_base=${bitrate_base:-1000}
+bitrate_rest=${bitrate_rest:-2}
+bitrate_unitlabel="${bitrate_unitlabel:-bit/s}"
+bitrate_siunit="${bitrate_siunit:-k}"
+bitdepth_unitlabel="${bitdepth_unitlabel:-bit}"
+filesize_base=${filesize_base:-1000000}
+filesize_rest=${filesize_rest:-1}
+filesize_unitlabel="${filesize_unitlabel:-B}"
+filesize_siunit="${filesize_siunit:-M}"
+uac2_enabled="${uac2_enabled:-}"
+
+## check if we were called from another script which has already set
+## the scriptdir and thus has sourced common
+scriptdir="${scriptdir:-}"
+if [[ "${scriptdir}x" == "x" ]]; then
+    scriptdir="${scriptdir:-$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )}"
+fi
+
+
+function display_usage() {
+    # shellcheck disable=SC2086
+    msg="USAGE:
+${scriptdir}/$(basename $0) ALSADEV [ALSAINT]
+
+where ALSADEV is in the card index (like 0 or 1) and ALSADEV the index
+of its interface (defaults to 0)."
+    printf 1>&2 "%s\n" "${msg}"
+}
+
+function humanize_alsa_audiovals() {
+    ## fill humanized
+    alsa_info[h_bitdepth_value]="${alsa_info[bitdepth]}"
+    alsa_info[h_bitdepth_unitlabel]="${bitdepth_unitlabel}"
+    alsa_info[h_bitrate_unitlabel]="${bitrate_siunit}${bitrate_unitlabel}"
+    alsa_info[h_filesize_unitlabel]="${filesize_siunit}${filesize_unitlabel}"
+    alsa_info[h_samplerate_unitlabel]="${samplerate_siunit}${samplerate_unitlabel}"
+    debug "$(declare -p bitdepth_unitlabel bitrate_base bitrate_rest)" "$0" "${LINENO}"
+    if (( ( alsa_info[samplerate] / samplerate_base * samplerate_base ) < alsa_info[samplerate] )); then
+	debug "setting decimal scale to 1"  "$0" "${LINENO}"
+	samplerate_rest=1
+    fi
+    # shellcheck disable=SC2102,SC2313
+    read -r alsa_info[h_samplerate_value] < <(
+	humanize_number \
+	    "${samplerate_base}" \
+	    "${samplerate_rest}" \
+	    "${alsa_info[samplerate]}"
+    )
+    debug "h_samplerate_value=\`${alsa_info[h_samplerate_value]}', h_samplerate_unitlabel=\`${alsa_info[h_samplerate_unitlabel]}'"  "$0" "${LINENO}"
+    ## check if bitrate scale should be upped
+    if (( alsa_info[bitrate] > ( 1000 * bitrate_base ) )); then
+	bitrate_base=$(( 1000 * bitrate_base ))
+	bitrate_rest=2
+	bitrate_siunit=M
+    fi
+    # shellcheck disable=SC2102,SC2313
+    read -r alsa_info[h_bitrate_value] < <(
+	humanize_number \
+	    "${bitrate_base}" \
+	    "${bitrate_rest}" \
+	    "${alsa_info[bitrate]}"
+    )
+    debug "h_bitrate_value=\`${alsa_info[h_bitrate_value]}', h_bitrate_unitlabel=\`${alsa_info[h_bitrate_unitlabel]}'"  "$0" "${LINENO}"
+
+    ## byte order
+    case "${alsa_info[pcm_byteorder]}" in
+	## least significant byte in the lowest address (rest in order
+	## in the consequtive bytes).
+	LE) alsa_info[h_pcm_byteorder]="little endian" ;;
+	## most significant byte in the lowest address (rest in order
+	## in the consequtive bytes).
+	BE) alsa_info[h_pcm_byteorder]="big endian" ;;
+	*) debug "unepected value alsa_info[pcm_byteorder]=\`${alsa_info[pcm_byteorder]}'"  "$0" "${LINENO}"
+    esac
+    ## signedness
+    case "${alsa_info[signedness]}" in
+	S) alsa_info[h_signedness]="signed" ;;
+	U) alsa_info[h_signedness]="unsigned" ;;
+	*) debug "unepected value alsa_info[signedness]=\`${alsa_info[signedness]}'"  "$0" "${LINENO}"
+    esac
+
+}
+
+
+function get_stream_props() {
+    unset streamprops
+    declare -A streamprops
+    re="^[[:space:]]*([^=]+)[[:space:]]=[[:space:]](.*)$"
+    counter=0
+    declare -a streamlines=()
+    while read -r line; do
+	streamlines+=("${line}")
+    done<"${alsa_info[stream_file]}"
+    ## get general fields for card
+    startline=4
+    for streamline in "${streamlines[@]:${startline}:5}"; do
+	((counter++))
+	if [[ "${streamline}" =~ ${re} ]]; then
+	    fieldname="${BASH_REMATCH[1]// /}"
+	    streamprops[${fieldname,,}]="${BASH_REMATCH[2]}"
+	    alsa_info[stream_${fieldname,,}]="${streamprops[${fieldname,,}]}"
+	fi
+    done
+    ## get props for active altset @ interface
+    startline="$(( startline + counter ))"
+    counter=0
+    ## get counter for right interface
+    for streamline in "${streamlines[@]:${startline}}"; do
+	((counter++))
+	interface_re="^[[:space:]]*Interface[[:space:]]+${streamprops[interface]}$"
+	if [[ "${streamline}" =~ ${interface_re} ]]; then
+	    break
+	fi
+    done
+    ## get props for active altset
+    startline=$(( startline + counter + 1 ))
+    counter=0
+    altset_re="^[[:space:]]*([^:]+):[[:space:]](.*)$"
+    for streamline in "${streamlines[@]:${startline}}"; do
+	((counter++))
+	if [[ "${streamline}" =~ ${altset_re} ]]; then
+	    fieldname="${BASH_REMATCH[1]// /}"
+	    alsa_info[altset_${fieldname,,}]="${BASH_REMATCH[2]}"
+	fi
+    done
+
+    playback_status_re="^Status:[[:space:]]+(.*)$"
+    altset_re="^Altset[[:space:]]([0-9]+)$"
+    alsa_info[cardname_long]="${streamlines[0]}"
+    debug "alsa_info[cardname_long]=\`${alsa_info[cardname_long]}'"  "$0" "${LINENO}"
+    if [[ "${streamlines[3]}" =~ ${playback_status_re} ]]; then 
+    	alsa_info[playback_status]="${BASH_REMATCH[1],,}"
+    	debug "alsa_info[playback_status]=\`${alsa_info[playback_status]}'"  "$0" "${LINENO}"
+    	if [[ "${alsa_info[playback_status]}" != "running" ]]; then
+    	    debug "not running"  "$0" "${LINENO}"
+    	    return 1
+    	fi
+    fi
+    if [[ ${DEBUG} ]]; then
+	for fieldname in "${!alsa_info[@]}"; do
+	    printf 1>&2 'alsa_info[%s]="%s"\n' \
+			"${fieldname}" \
+			"${alsa_info[${fieldname}]}"
+	done | sort
+    fi
+}
+
+function get_hw_params_props() {
+    declare -A alsa_hw_params
+    ## fill alsa_hw_params array from file 
+    while read -r line; do
+	case "${line}" in
+	    "")
+		continue
+		;;
+	    closed)
+		debug "alsa on host ${mpd_host:-localhost} is not playing ('closed')."  "$0" "${LINENO}"
+		return 2
+		;;
+	    *)
+		IFS=":" read -r field value <<< "${line}"
+		if [[ "${field}x" != "x" ]]; then
+		    alsa_hw_params["${field}"]="${value# *}"
+		else
+		    debug "empty field for line =\`${line}'."  "$0" "${LINENO}"
+		fi
+	esac
+    done<"${alsa_info[hw_params_file]}"
+    alsa_info[samplerate]="${alsa_hw_params[rate]%% *}"
+    if (( alsa_info[samplerate] < 1 )); then
+	display_error "error: invalid samplerate (\`${alsa_info[samplerate]}')."
+	return 1
+    fi
+    alsa_info[channelcount]="${alsa_hw_params[channels]}"
+    if (( ! alsa_info[channelcount] > 0 )); then
+	display_error "error: invalid channelcount (\`${alsa_info[channelcount]}').\n"
+	return 1
+    fi
+    encoding="${alsa_hw_params[format]}"
+    if [[ "${encoding}x" == "x" ]]; then
+	display_error "error: invalid encoding (\`${encoding}').\n"
+	return 1
+    fi
+    encoding_re="([SU])([0-9]+).([LB]E)"
+    if [[ "${encoding}" =~ ${encoding_re} ]]; then
+	alsa_info[signedness]="${BASH_REMATCH[1]}"
+	alsa_info[bitdepth]="${BASH_REMATCH[2]}"
+	alsa_info[pcm_byteorder]="${BASH_REMATCH[3]}"
+    else
+	display_error "could not extract bitdpeth from encoding (\`${encoding}')."
+	return 1
+    fi
+    alsa_info[bitrate]=$(( alsa_info[samplerate] * alsa_info[bitdepth] * alsa_info[channelcount]  ))
+}
+
+
+function set_alsa_info() {
+    ## returns 2 on error (wrong address / file names)
+    ## returns 1 on stopped
+    ## TODO: get state=stopped
+    debug "using alsa_info[hw_address]=\`${alsa_info[hw_address]}')"  "$0" "${LINENO}"
+    int_dev="${alsa_info[hw_address]#hw:*}"
+    alsa_info[hw_device_nr]="${int_dev%,*}"
+    alsa_info[hw_interface_nr]="${int_dev#*,}"
+    debug "hw_device_nr=\`${alsa_info[hw_device_nr]}', hw_interface_nr=\`${alsa_info[hw_interface_nr]}'"  "$0" "${LINENO}"
+    alsa_info[hw_params_file]="/proc/asound/card${alsa_info[hw_device_nr]}/pcm${alsa_info[hw_interface_nr]}p/sub0/hw_params"
+    if [[ ! -f "${alsa_info[hw_params_file]}" ]]; then
+    	display_error "hw_params file \`${alsa_info[hw_params_file]}' not found."
+    	return 2
+    fi
+    debug "hw_params_file=\`${alsa_info[hw_params_file]}'"  "$0" "${LINENO}"
+    alsa_info[stream_file]="${alsa_info[hw_params_file]}"
+    if [[ ! -f "${alsa_info[stream_file]}" ]]; then
+    	display_error "stream file \`${alsa_info[stream_file]}' not found."
+    	return 2
+    fi
+    debug "stream_file=\`${alsa_info[stream_file]}'"  "$0" "${LINENO}"
+    get_hw_params_props || return 1
+    ## done with hw_params; get stream props
+    get_stream_props
+    #humanize_alsa_audiovals
+    if try_uac2; then
+	debug "alsa is using an UAC2 interface"  "$0" "${LINENO}"
+	uac2_enabled="true"
+    else
+	debug "try_uac2 failed: alsa is not using an UAC2 interface"  "$0" "${LINENO}"
+	uac2_enabled=""
+    fi
+    for key in "${!alsa_info[@]}"; do
+	debug "$(printf "alsa_info[%s]=\`%s'\n" "${key}" "${alsa_info[${key}]}")"  "$0" "${LINENO}"
+    done
+
+}
+
+function try_uac2() {
+    ## UAC2 info
+    ## a. samplerate
+    ## b. bitdepth
+    ## c. channels
+    ## d. bits per sample frame   = b * c
+    ## e. bytes per sample frame  = d / 8
+    ## f. ms per packet           = uac: 1, uac2: 0,125 
+    ## g. packets per ms          = 1 / f
+    ## h. sample frames per ms    = a * ( f / 1000 )
+    ## i. rounded sample frames per ms = roundup(h)
+    ## j. bytes per packet uac1   = i * e 
+    ## k. bytes per packet uac2   = if ( h <> i); then k; else k + e)
+    ## l. PACKETSIZE ALSA
+    bits_per_sampleframe=$(( alsa_info[bitdepth] * alsa_info[channelcount]  ))
+    alsa_info[bytes_per_sampleframe]=$(( bits_per_sampleframe / 8 ))
+    debug "bytes_per_sampleframe=\`${alsa_info[bytes_per_sampleframe]}'"  "$0" "${LINENO}"
+    ## uac2: '250 us' / uac1: '1 ms'
+    datapacketinterval_unit="${alsa_info[altset_datapacketinterval]//[0-9[:space:]]/}"
+    datapacketinterval_value="${alsa_info[altset_datapacketinterval]%% *}"
+    debug "datapacketinterval_value=\`${datapacketinterval_value}', unit=\`${datapacketinterval_unit}'"  "$0" "${LINENO}"
+    case "${datapacketinterval_unit}" in
+	us)
+	    alsa_info[uac_class]="uac2"
+	    datapacketinterval_ms="$(echo "scale=4; ${datapacketinterval_value} / 1000" | bc)"
+	    debug "datapacketinterval_ms=\`${datapacketinterval_ms}'"  "$0" "${LINENO}"
+	    #datapacketinterval_ms=0.125
+            # shellcheck disable=SC2046
+	    alsa_info[uac_usbdatapackets_per_ms]="$(LANG=C numfmt --format=%.0f $(echo "scale=4; 1 / ${datapacketinterval_ms}" | bc))"
+	    debug "uac_usbdatapackets_per_ms=\`${alsa_info[uac_usbdatapackets_per_ms]}'"  "$0" "${LINENO}"
+	    #alsa_info[uac_usbdatapackets_per_ms]=8
+	    sampleframes_per_ms_raw="$(echo "scale=6; ${alsa_info[samplerate]} * (${datapacketinterval_ms}/1000)" | bc)"
+	    debug "sampleframes_per_ms_raw=\`${sampleframes_per_ms_raw}'"  "$0" "${LINENO}"
+	    alsa_info[uac_sampleframes_per_ms]=$(LANG=C numfmt --format=%.0f --round=up  "${sampleframes_per_ms_raw}")
+	    debug "uac_sampleframes_per_ms=\`${alsa_info[uac_sampleframes_per_ms]}'"  "$0" "${LINENO}"
+	    bytes_per_usbdatapacket_raw=$(( alsa_info[uac_sampleframes_per_ms] * alsa_info[bytes_per_sampleframe] ))
+	    debug "sampleframes_per_ms_raw=\`${sampleframes_per_ms_raw}' == alsa_info[uac_sampleframes_per_ms]=\`${alsa_info[uac_sampleframes_per_ms]}.0000'"  "$0" "${LINENO}"
+	    if [[ "${sampleframes_per_ms_raw}" == "${alsa_info[uac_sampleframes_per_ms]}.0000" ]]; then
+		alsa_info[uac_bytes_per_usbdatapacket]="${bytes_per_usbdatapacket_raw}"
+	    else
+	    	alsa_info[uac_bytes_per_usbdatapacket]=$(( bytes_per_usbdatapacket_raw + alsa_info[bytes_per_sampleframe] ))
+	    fi
+	    #alsa_info[uac_usbdatapackets_per_ms]=
+	    ;;
+	ms)
+	    ## TODO
+	    datapacketinterval_ms=1
+	    alsa_info[uac_usbdatapackets_per_ms]=1
+            # shellcheck disable=SC2034
+	    sampleframes_per_ms="$(echo "scale=3; ${alsa_info[samplerate]} * (${datapacketinterval_ms}/1000)" | bc)"
+	    alsa_info[class]="uac1"
+	    ;;
+	*)
+	    alsa_info[class]="?"
+	    debug "unexpected value datapacketinterval_unit=\`${datapacketinterval_unit}'"  "$0" "${LINENO}"
+	    return 1
+    esac
+    debug "done"  "$0" "${LINENO}"
+
+}
+
+
+if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
+    alsa_info[hw_address]="hw:$1,$2"
+    if source "${scriptdir}/common"; then
+        # shellcheck disable=SC2086
+	printf 1>&2 "%s sourced %s\n" "${scriptdir}/$(basename $0)" "${scriptdir}/common"
+    fi
+    debug "alsa_info[hw_address]=\`${alsa_info[hw_address]}'"  "$0" "${LINENO}"
+    set_alsa_info
+else
+    debug "\`${BASH_SOURCE[0]}' sourced from \`${scriptdir}/${0##/*}'."  "$0" "${LINENO}"
+fi

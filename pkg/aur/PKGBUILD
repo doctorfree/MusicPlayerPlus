@@ -220,6 +220,7 @@ package() {
   cp bliss-analyze/ChangeLog ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
   cp bliss-analyze/LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
   cp bliss-analyze/README.md ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
+  cp -a share/alsa-capabilities ${pkgdir}/${destdir}/share/doc/${pkgname}/alsa-capabilities
 
   cp asound.conf.tmpl ${pkgdir}/${destdir}/share/${pkgname}
   cp mpcplus/doc/config ${pkgdir}/${destdir}/share/${pkgname}/mpcplus

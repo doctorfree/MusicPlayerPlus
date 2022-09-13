@@ -1,0 +1,276 @@
+#!/usr/bin/env bash
+# shellcheck disable=SC1090
+##
+##  mpd-monitor
+##    Copyright (C) 2019  Ronald van Engelen
+##
+##    This program is free software: you can redistribute it and/or
+##    modify it under the terms of the GNU General Public License as
+##    published by the Free Software Foundation, either version 3 of
+##    the License, or (at your option) any later version.
+##
+##    This program is distributed in the hope that it will be useful,
+##    but WITHOUT ANY WARRANTY; without even the implied warranty of
+##    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+##    General Public License for more details.
+##
+##    You should have received a copy of the GNU General Public
+##    License along with this program.  If not, see
+##    <http://www.gnu.org/licenses/>.
+##
+##  Description: wrapper script for the get-{file,mpd,alsa}-info
+##  scripts, each of which retrieves audio properties of a file (or
+##  stream), mpd, and alsa, and stores that in associative bash
+##  arrays, hardcoded to: alsa_info, mpd_streaminfo, file_info.
+##  Each of those arrays will be filled with at least the following
+##  fields: samplerate (int in Hz), bitdepth (int), channelcount
+##  (int), bitrate (int in bit/s). Each of them may set custom fields.
+##
+##  This (wrapper) script is started once and uses mpd idle to start
+##  listening for messages from the mpd server. Depending on the type
+##  of message, one or more audio properties may be updated and stored
+##  in the arrays.
+##
+##  See:
+##  - README.md
+##  - https://gitlab.com/ronalde/mpd-monitor/
+## 
+DEBUG="${DEBUG:-}"
+
+## variables uses by the sourced helper scripts, get-alsa-info,
+## get-mpd-info, and get-file-info.
+##
+# shellcheck disable=SC2034
+music_directory=""
+mpd_host="${mpd_host:-}"
+mpd_port="${mpd_port:-}"
+ssh_user="${ssh_user:-}"
+ssh_conn="${ssh_conn:-}"
+ssh_conn=""
+# shellcheck disable=SC2034
+mpdconf_file=""
+scriptdir="$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )"
+# shellcheck disable=SC2034
+declare -A alsa_info=()
+declare -A file_info=()
+# shellcheck disable=SC2034
+declare -A mpd_info=()
+declare -A mpd_streaminfo=()
+## set defaults for units;
+## get-alsa-info could alter bitrate scale, base and siunit
+## get-file-info could alter filesize scale, base and siunit
+# shellcheck disable=SC2034
+samplerate_base=1000
+# shellcheck disable=SC2034
+samplerate_rest=0
+# shellcheck disable=SC2034
+samplerate_unitlabel="kHz"
+# shellcheck disable=SC2034
+samplerate_siunit="k"
+# shellcheck disable=SC2034
+bitrate_base=1000
+# shellcheck disable=SC2034
+bitrate_rest=2
+# shellcheck disable=SC2034
+bitrate_unitlabel="bit/s"
+# shellcheck disable=SC2034
+bitrate_siunit="k"
+# shellcheck disable=SC2034
+bitdepth_unitlabel="bit"
+# shellcheck disable=SC2034
+filesize_base=1000000
+# shellcheck disable=SC2034
+filesize_rest=1
+# shellcheck disable=SC2034
+filesize_unitlabel="bytes"
+# shellcheck disable=SC2034
+filesize_siunit="M"
+
+if source "${scriptdir}/common"; then
+    # shellcheck disable=SC2086
+    [[ ${DEBUG} ]] && \
+	printf 1>&2 "%s sourced %s\n" "${scriptdir}/$(basename $0)" "${scriptdir}/common"
+fi
+
+
+function display_usage() {
+    msg="USAGE:
+$0
+
+      TODO: add information for remote usage (though ssh) and
+            implement command line arguments (arg_terse etc.)
+"
+    printf 1>&2 "%s\n" "${msg}"
+}
+
+
+function init_info() {
+    mpdmonitor_state=""
+    
+    set_alsa_info
+    res_alsa_info="$?"
+    #printf 1>&2 "${FUNCNAME[0]}: res_alsa_info=\`${res_alsa_info}'\n"
+    case "${res_alsa_info}" in
+	0)
+	    #printf 1>&2 "${FUNCNAME[0]}: set_alsa_info success\n"
+	    gmi_set_mpd_info
+	    res_mpd_info="$?"
+	    #printf 1>&2 "${FUNCNAME[0]}: res_mpd_info=\`${res_mpd_info}'\n"
+	    case "${res_mpd_info}" in
+		0)
+		    ## mpd is playing (running and playing)"
+		    mpdmonitor_state=0
+		    ;;
+		1)
+		    debug "mpd service is running; mpd is not playing"  "${0}" "${LINENO}"
+		    mpdmonitor_state=1
+		    ;;
+		2)
+		    debug "mpd service is not running"  "${0}" "${LINENO}"
+		    mpdmonitor_state=2
+		    ;;
+		3)
+		    debug "mpd service in limbo (not running/not stopped)"  "${0}" "${LINENO}"
+		    mpdmonitor_state=3
+		    ;;
+		*)
+		    debug "mpd service: unexpected mpd error"  "${0}" "${LINENO}"
+		    mpdmonitor_state=10
+	    esac
+	    ;;
+	1)
+	    debug "mpd not running or playing: alsa not playing"  "${0}" "${LINENO}"
+	    mpdmonitor_state=4
+	    ;;
+	2)
+	    debug "mpd not running or playing: alsa error"  "${0}" "${LINENO}"
+	    mpdmonitor_state=11
+	    ;;
+	*)
+	    debug "mpd not running or playing: unexpected alsa error"  "${0}" "${LINENO}"
+	    mpdmonitor_state=12
+    esac
+    #### START mpd is playing
+    #printf 1>&2 "${FUNCNAME[0]}: mpd_info[status]=\`${mpd_info[status]}'\n"
+    #return "${mpdmonitor_state}"
+    ## TODO
+    case "${mpdmonitor_state}" in
+	0)
+	    ## update file info
+	    gfi_get_file_info "${mpd_streaminfo[current_path]}"
+	    res_file_info="$?"
+	    case "${res_file_info}" in
+		0)
+		    debug "set_file_info returned success"  "${0}" "${LINENO}"
+		    on_terminal_default
+		    ;;
+		*)
+		    debug "set_file_info returned error \`res_file_info'"  "${0}" "${LINENO}"
+	    esac
+	    ;;
+	1)
+	    debug "alsa is playing / mpd not"  "${0}" "${LINENO}"
+	    unset_mpd_and_file_info
+	    on_terminal_default
+	    return 1
+	    ;;
+        4)
+	    unset_mpd_and_file_info
+	    on_terminal_default
+	    return 1
+            ;;            
+	*)
+	    return 2
+    esac
+
+}
+
+function unset_mpd_and_file_info() {
+    ## mpd has stopped playing: clear mpd_streaminfo and file_info fields
+    for fieldname in album artist bitdepth bitrate channelcount composer current_path current_type duration elapsed file h_bitdepth_value h_bitrate_value h_samplerate_value musicdirectory_protocol musicdirectory_host samplerate stream_host stream_protocol stream_url title track; do
+	mpd_streaminfo[${fieldname}]=""
+	debug "cleared mpd_streaminfo[${fieldname}]"  "${0}" "${LINENO}"
+# shellcheck disable=SC2034
+	file_info[${fieldname}]=""
+	debug "cleared file_info[${fieldname}]"  "${0}" "${LINENO}"
+    done
+
+}
+
+function update_onidle() {
+    # shellcheck disable=SC2154
+    if set_alsa_info "${alsa_dev}" "${alsa_int}" "${ssh_conn}"; then
+	if gmi_set_mpd_streaminfo; then
+	    on_terminal_default
+	fi
+    else
+	return 1
+    fi
+}
+
+
+## single shot
+for script in get-alsa-info get-mpd-info get-file-info output-terminal; do
+    if [[ ! -f "${scriptdir}/${script}" ]]; then
+	display_error "error: script \`${script}' not found in \`${scriptdir}'.\n" 
+	return 1
+    else
+	if source "${scriptdir}/${script}"; then
+	    [[ ${DEBUG} ]] && \
+		printf 1>&2 "%s sourced %s\n" "${0}" "${scriptdir}/${script}"
+	else
+	    return 1
+	fi
+    fi
+done
+
+## set alsa hwaddress and mpd music_directory
+gmi_prep_mpd_env || exit 1
+
+## immediately get current alsa info
+update_interval="${update_interval:-}"
+single_shot="${single_shot:-}"
+
+if init_info; then
+    #mpd_current_file="${mpd_streaminfo[file]}"
+    if [[ "${single_shot}x" != "x" ]] ; then
+	debug "running in single-shot mode" "${0}" "${LINENO}"
+	#init_info
+    else
+	if [[ "${update_interval}x" == "x" ]]; then
+	    ## default (non-disturbing) mode; waits for updates from mpd
+	    debug "running in default (non-disturbing) mode; waits for updates from mpd"  "${0}" "${LINENO}"
+	    ## runcounter makes sure we run only once per mpd player state change
+	    idle_counter=0
+	    #has_run=1
+	    #player_counter=0
+	    #playlist_counter=0
+            # shellcheck disable=SC2034
+	    while read -r line; do
+		((idle_counter++))
+		init_info
+	    done< <(mpc -h "${mpd_host}" -p "${mpd_port}" idleloop)
+	else
+	    debug "running in disturbing mode; waits for updates from mpd"  "${0}" "${LINENO}"
+	    #exec mpc -h "${mpd_host}" -p "${mpd_port}" idleloop 1>&2 2>/dev/null &
+	    while :; do
+		update_onidle
+		exec "${scriptdir}/cmpc-idle" "idle" "${mpd_host}" "${mpd_port}" &
+		cmpc_idleloop_pid=$!
+		## trap an exit of mpc idleloop
+                # shellcheck disable=SC2064
+		trap "kill ${cmpc_idleloop_pid} 2>/dev/null" EXIT
+		## run update as long as mpc_idleloop did not exit 
+		while kill -0 ${cmpc_idleloop_pid} 2>/dev/null; do
+		    ((counter++))
+		    echo "***** $counter: cmpc_idleloop_pid=${cmpc_idleloop_pid}" 1>&2
+		    sleep "${update_interval}"
+		    init_info
+		done
+		trap - EXIT
+	    done
+	fi
+    fi
+else
+    printf 1>&2 "could not init\n"
+fi

@@ -1,0 +1,587 @@
+#!/usr/bin/env bash
+## use the information stored in the info_... arrays to display the
+## information on the terminal.
+
+arg_terse="${arg_terse:-}"
+arg_mand="${arg_mand:-}"
+arg_verbose="${arg_verbose:-}"
+arg_non_human="${arg_non_human:-}"
+
+## colors (assigned in common)
+bold="${bold:-$(tput bold)}"
+dim="${dim:-$(tput dim)}"
+std="${std:-$(tput sgr0)}"
+red="${red:-$(tput setaf 1)}"
+green="${green:-$(tput setaf 2)}"
+yellow="${yellow:-$(tput setaf 3)}"
+blue="${blue:-$(tput setaf 4)}"
+white="${white:-$(tput setaf 7)}"
+
+## labels
+unitlabel_filesize="byte"
+siunit_filesize=""
+## samplerate
+rowlabel_samplerate="samplerate"
+unitlabel_samplerate="Hz"
+unitlabel_samplerate="samples per second"
+description_samplerate=""
+## bitrate
+rowlabel_bitrate="bitrate"
+siunit_bitrate=""
+unitlabel_bitrate="bits per second"
+description_bitrate=""
+## bitdepth
+rowlabel_bitdepth="bitdepth"
+unitlabel_bitdepth="bits per sample"
+description_bitdepth=""
+rowlabel_channelcount="channelcount"
+unitlabel_channelcount="channels"
+description_channelcount=""
+
+## get/set defaults for units
+uac2_enabled="${uac2_enabled:-}"
+
+# shellcheck disable=SC2154
+alsa_info_samplerate_color="${green}"
+mpd_streaminfo_samplerate_color="${green}"
+file_info_samplerate_color="${green}"
+
+usb_packets_per_ms_unitlabel="data packets/ms"
+bytes_per_usbpacket_unitlabel="bytes/data packet"
+audioframes_per_usbpacket_unitlabel="audio frames/data packet"
+bytes_per_audioframe_label="bytes/audio frame"
+
+## bitperfect
+source_bp_value=""
+source_distorted=""
+mpd_distorted=""
+mpd_bp_value=""
+alsa_distorted=""
+alsa_bp_value=""
+
+## headers
+file_info_path=""
+mpd_streaminfo_current_path=""
+mpd_streaminfo_title=""
+mpd_streaminfo_artist=""
+packing_val=""
+msg_encoding=""
+
+## file (source)
+file_info_path_type=""
+file_info_compression=""
+file_info_extension=""
+file_info_filesize=""
+siunit_filesize=""
+file_info_samplerate=""
+file_info_bitrate_rawvalue=""
+file_info_bitdepth=""
+file_info_channelcount=""
+file_info_encoding=""
+file_info_signedness=""
+file_info_byteorder=""
+## mpd (stream)
+mpd_streaminfo_samplerate=""
+mpd_streaminfo_bitrate_rawvalue=""
+mpd_streaminfo_bitdepth=""
+mpd_streaminfo_channelcount=""
+## alsa (output)
+alsa_info_samplerate=""
+alsa_info_bitrate_rawvalue=""
+alsa_info_bitdepth=""
+alsa_info_channelcount=""
+## uac
+alsa_info_uac_usbdatapackets_per_ms=""
+alsa_info_uac_bytes_per_usbdatapacket=""
+alsa_info_uac_sampleframes_per_ms=""
+alsa_info_bytes_per_sampleframe=""
+
+siunit_bitrate=""
+file_info_bitrate=""
+mpd_streaminfo_bitrate=""
+alsa_info_bitrate=""
+
+function center_screen() {
+    # currenlty unused
+    termwidth="$(tput cols)"
+    padding="$(printf '%0.1s' ={1..500})"
+    printf '%*.*s %s %*.*s\n' \
+	   0 \
+	   "$(((termwidth-2-${#1})/2))" \
+	   "$padding" "$1" \
+	   0 \
+	   "$(((termwidth-1-${#1})/2))" \
+	   "$padding"
+}
+
+function to_si() {
+    raw_value="$1"
+    siunit="${2:-}"
+    value=0
+    case "${siunit}" in
+        "")
+            if (( raw_value > 10 * 1000 * 1000 * 1000 )); then
+                ## > 10GB
+                value=$(( raw_value / ( 1000 * 1000 * 1000 ) ))
+                siunit="G"
+            elif (( raw_value > 10 * 1000 * 1000 )); then
+                ## > 10MB
+                value=$(( raw_value / ( 1000 * 1000 ) ))
+                siunit="M"
+            elif (( raw_value > 10 * 1000 )); then
+                ## > 10KB
+                value=$(( raw_value / 1000 ))
+                siunit="K"
+            else
+                value=${raw_value}
+                siunit=""
+            fi
+            ;;
+        K)
+            value=$(( raw_value / 1000 ))
+            siunit="K"
+            ;;
+        M)
+            value=$(( raw_value / 1000000 ))
+            siunit="M"
+            ;;
+        G)
+            value=$(( raw_value / 1000000000 ))
+            siunit="G"
+            ;;
+        *)
+            debug "unknown siunit=\`${siunit}'" "$0" "${LINENO}"
+            siunit=""
+    esac
+    printf "%s %s" "${value}" "${siunit}"
+}
+
+function siunit_of_smallest() {
+    numbers=("$1" "$2" "$3")
+    read -ra sorted < <(sort <<< "${numbers[*]}")
+    read -r value siunit  < <(to_si "${sorted[0]}" )
+    printf "%s" "${siunit}"
+}
+
+function terminal_print_detail_row() {
+    title="$1"
+    value1="$2"
+    color1="$3"
+    value2="$4"
+    color2="$5"
+    value3="$6"
+    color3="$7"
+    label="$8"
+    description="$9"
+
+    # shellcheck disable=2154
+    printf "%19s${color1}%11s${std}${color2}%11s${std}${color3}%11s${std}   %s %s\n" \
+	   "${title} " \
+	   "${value1}" \
+	   "${value2}" \
+	   "${value3}" \
+	   "${label}" \
+	   "${description}"
+
+}
+
+function terminal_print_details() {
+    ## TODO: determine colors
+    ## samplerate colors
+    # shellcheck disable=2154
+    source_title="SOURCE"
+    mpd_title="STREAMER"
+    alsa_title="OUTPUT"
+    source_distorted=""
+    mpd_distorted=""
+    alsa_distorted=""
+    source_bp_value=""
+    mpd_bp_value=""
+    alsa_bp_value=""
+    alsa_info_samplerate_color="${std}"
+    mpd_streaminfo_samplerate_color="${std}"
+    file_info_samplerate_color="${std}"
+    mpd_streaminfo_bitdepth_color="${std}"
+    file_info_bitdepth_color="${std}"
+    alsa_info_bitdepth_color="${std}"
+    mpd_streaminfo_channelcount_color="${std}"
+    file_info_channelcount_color="${std}"
+    alsa_info_channelcount_color="${std}"
+    mpd_streaminfo_samplerate_color="${std}"
+    file_info_samplerate_color="${std}"
+    alsa_info_samplerate_color="${std}"
+    if [[ "${mpd_streaminfo_samplerate}x" != "x" ]]; then
+        alsa_info_samplerate_color="${green}"
+        mpd_streaminfo_samplerate_color="${green}"
+        file_info_samplerate_color="${green}"
+        if (( mpd_streaminfo_samplerate < file_info_samplerate )); then
+            # shellcheck disable=2154
+            mpd_distorted=true
+            mpd_streaminfo_samplerate_color="${red}"
+            alsa_distorted=true
+            alsa_info_samplerate_color="${yellow}"
+        else
+            if (( alsa_info_samplerate < mpd_streaminfo_samplerate )); then
+                alsa_info_samplerate_color="${red}"
+            fi
+        fi
+        ## bitdepth colors
+        file_info_bitdepth_color="${green}"
+        mpd_streaminfo_bitdepth_color="${green}"
+        alsa_info_bitdepth_color="${green}"
+        if [[ ! "${file_info_bitdepth}" =~ [0-9]+ ]]; then
+            file_info_bitdepth_color="${red}"
+            source_distorted=true
+            mpd_distorted=true
+            mpd_streaminfo_bitdepth_color="${yellow}"
+            alsa_distorted=true
+            alsa_info_bitdepth_color="${yellow}"
+        else
+            if (( mpd_streaminfo_bitdepth < file_info_bitdepth )); then
+                mpd_distorted=true
+                mpd_streaminfo_bitdepth_color="${red}"
+                alsa_distorted=true
+                alsa_info_bitdepth_color="${yellow}"
+            else
+                if (( alsa_info_bitdepth < mpd_streaminfo_bitdepth )); then
+                    alsa_info_bitdepth_color="${red}"
+                    alsa_distorted=true
+                fi
+            fi
+        fi
+        file_info_channelcount_color="${green}"
+        mpd_streaminfo_channelcount_color="${green}"
+        alsa_info_channelcount_color="${green}"
+        if (( mpd_streaminfo_channelcount < file_info_channelcount )); then
+            mpd_streaminfo_channelcount_color="${red}"
+            mpd_distorted=true
+            alsa_info_channelcount_color="${yellow}"
+            alsa_distorted=true
+        else
+            if (( alsa_info_channelcount < mpd_streaminfo_channelcount )); then
+                alsa_info_channelcount_color="${red}"
+                alsa_distorted=true
+            fi
+        fi
+        if [[ "${source_distorted}x" == "x" ]]; then
+            source_bp_value="yes"
+            source_bp_color="${green}"
+        else
+            #source_title="SOURCE✗"
+            source_bp_value="no"
+            source_bp_color="${red}"
+            mpd_distorted=true
+            alsa_distorted=true
+        fi
+        if [[ "${mpd_distorted}x" == "x" ]]; then
+            mpd_bp_value="yes"
+            mpd_bp_color="${green}"
+        else
+            mpd_bp_value="no"
+            mpd_bp_color="${red}"
+            alsa_distorted=true
+        fi
+        if [[ "${alsa_distorted}x" == "x" ]]; then
+            alsa_bp_value="yes"
+            alsa_bp_color="${green}"
+        else
+            alsa_bp_value="no"
+            alsa_bp_color="${red}"
+        fi
+    fi
+    
+    # shellcheck disable=2154
+    terminal_print_detail_row \
+	" " \
+	"${alsa_title}" \
+	"${blue}" \
+	"${mpd_title}" \
+	"${blue}" \
+	"${source_title}" \
+	"${blue}" \
+	" " \
+	" "
+    terminal_print_detail_row \
+	"${rowlabel_samplerate}:" \
+	"${alsa_info_samplerate}" \
+	"${alsa_info_samplerate_color}" \
+	"${mpd_streaminfo_samplerate}" \
+	"${mpd_streaminfo_samplerate_color}" \
+	"${file_info_samplerate}" \
+	"${file_info_samplerate_color}" \
+	"${unitlabel_samplerate}" \
+	"${description_samplerate}" 
+    terminal_print_detail_row \
+	"${rowlabel_bitdepth}:" \
+	"${alsa_info_bitdepth}" \
+	"${alsa_info_bitdepth_color}" \
+	"${mpd_streaminfo_bitdepth}" \
+	"${mpd_streaminfo_bitdepth_color}" \
+	"${file_info_bitdepth}" \
+	"${file_info_bitdepth_color}" \
+	"${unitlabel_bitdepth}" \
+	"${description_bitdepth}"
+    ## channelcount
+    terminal_print_detail_row \
+	"${rowlabel_channelcount}:" \
+	"${alsa_info_channelcount}" \
+	"${alsa_info_channelcount_color}" \
+	"${mpd_streaminfo_channelcount}" \
+	"${mpd_streaminfo_channelcount_color}" \
+	"${file_info_channelcount}" \
+	"${file_info_channelcount_color}" \
+	"${unitlabel_channelcount}" \
+	"${description_channelcount}" 
+    terminal_print_detail_row \
+	"bitperfect:" \
+	"${alsa_bp_value}" \
+	"${alsa_bp_color}" \
+	"${mpd_bp_value}" \
+	"${mpd_bp_color}" \
+	"${source_bp_value}" \
+	"${source_bp_color}" \
+	" " \
+	" "
+    ## bitrate
+    # shellcheck disable=SC2154
+    terminal_print_detail_row \
+	"${rowlabel_bitrate}:" \
+	"${alsa_info_bitrate}" \
+	"${alsa_info_bitrate_color}" \
+	"${mpd_streaminfo_bitrate}" \
+	"${mpd_streaminfo_bitrate_color}" \
+	"${file_info_bitrate}" \
+	"${file_info_bitrate_color}" \
+	"${siunit_bitrate}${unitlabel_bitrate}" \
+	"${description_bitrate}" 
+
+}
+
+function terminal_print_usb() {
+    #data interval:     8                      usb packets/ms 
+    #data size:         8                      bytes per usb packet
+    #frame rate:       12                      audio frames per usb packet
+    #frame size:        8                      bytes per audio frame
+    # shellcheck disable=2154
+    terminal_print_detail_row \
+	"usb data interval:" \
+	"${alsa_info_uac_usbdatapackets_per_ms}" \
+	"${white}" \
+	"" \
+	"" \
+	"" \
+	"" \
+	"${usb_packets_per_ms_unitlabel}" \
+	""
+    terminal_print_detail_row \
+	"usb data size:" \
+	"${alsa_info_uac_bytes_per_usbdatapacket}" \
+	"${white}" \
+	"" \
+	"" \
+	"" \
+	"" \
+	"${bytes_per_usbpacket_unitlabel}" \
+	""
+    terminal_print_detail_row \
+	"audio frame rate:" \
+	"${alsa_info_uac_sampleframes_per_ms}" \
+	"${white}" \
+	"" \
+	"" \
+	"" \
+	"" \
+	"${audioframes_per_usbpacket_unitlabel}" \
+	""
+    terminal_print_detail_row \
+	"audio frame size:" \
+	"${alsa_info_bytes_per_sampleframe}" \
+	"${white}" \
+	"" \
+	"" \
+	"" \
+	"" \
+	"${bytes_per_audioframe_label}" \
+	""
+}
+
+function terminal_print_header_line() {
+    label="$1"
+    value="$2"
+    v_c="${3:-${std}}"
+    # shellcheck disable=2154
+    l_c="${dim}"
+    printf "${l_c}%19s${std}${v_c}%s${std}\n" \
+	   "${label}"  \
+	   "${value}"
+
+}
+
+function terminal_print_header_file() {
+    # shellcheck disable=SC2154
+    
+    if [[ "${mpd_info[status]}" != "playing" ]] || [[ "${mpd_streaminfo_samplerate}x" == "x" ]]; then
+	terminal_print_header_line "playing: "  \
+				   "(mpd is not playing)"
+	printf "%19s\n" \
+	       " " 
+	terminal_print_header_line "file: " \
+				   "(n/a)"
+	terminal_print_header_line "source: " \
+				   "(n/a)"
+	terminal_print_header_line "packing: " \
+				   "(n/a))"
+	terminal_print_header_line "encoding: " \
+				   "(n/a)"
+    else
+        debug "mpd_info[status]=\`${mpd_info[status]}'" "$0" "${LINENO}"
+        debug "$(declare -p mpd_info)" "$0" "${LINENO}"
+        debug "$(declare -p mpd_streaminfo)" "$0" "${LINENO}"
+        # shellcheck disable=SC2154
+        if [[ "${file_info_compression}" =~ lossy ]]; then
+ 	    packing_val="${file_info_filesize} ${siunit_filesize}${unitlabel_filesize} ${red}${file_info_compression}${std} ${file_info_extension^^} file"
+        else
+            packing_val="${file_info_filesize} ${siunit_filesize}${unitlabel_filesize} ${file_info_compression} ${file_info_extension^^} file"
+        fi
+        if [[ "${file_info_signedness}" == "n/a" ]]; then
+	    msg_encoding="${file_info_channelcount} channel ${file_info_encoding}"
+        else
+	    msg_encoding="${file_info_channelcount} channel ${file_info_signedness} ${file_info_byteorder} ${file_info_encoding}"
+        fi
+        # shellcheck disable=2154
+        terminal_print_header_line "playing: "  \
+			           "${mpd_streaminfo_title}" \
+			           "${white}${bold}"
+        terminal_print_header_line " " \
+			           "${mpd_streaminfo_artist}" \
+			           "${white}${bold}"
+        terminal_print_header_line "file: " \
+			           "${file_info_path##*/}" 
+        terminal_print_header_line "source: " \
+			           "${mpd_streaminfo_current_path%/*}"
+        terminal_print_header_line "packing: " \
+			           "${packing_val}"
+        terminal_print_header_line "encoding: " \
+			           "${msg_encoding}"
+    fi
+}
+
+function terminal_print_header_stream() {
+    #printf 1>&2 "TODO\n"
+    if [[ "${mpd_info[status]}" != "playing" ]]; then
+	terminal_print_header_line "playing: "  \
+				   "(mpd is not playing)"
+	printf "%19s\n" \
+	       " " 
+	terminal_print_header_line "file: " \
+				   "(n/a)"
+	terminal_print_header_line "source: " \
+				   "(n/a)"
+	terminal_print_header_line "packing: " \
+				   "(n/a))"
+	terminal_print_header_line "encoding: " \
+				   "(n/a)"
+    else
+        debug "mpd_info[status]=\`${mpd_info[status]}'" "$0" "${LINENO}"
+        packing_val="stream"
+	if [[ "${file_info_signedness}" == "n/a" ]]; then
+	    msg_encoding="${file_info_channelcount} channel ${file_info_encoding}"
+	else
+	    msg_encoding="${file_info_channelcount} channel ${file_info_signedness} ${file_info_byteorder} ${file_info_encoding}"
+	fi
+        # shellcheck disable=2154
+	terminal_print_header_line "playing: "  \
+				   "${mpd_streaminfo_title}" \
+				   "${white}${bold}"
+	terminal_print_header_line " " \
+				   "${mpd_streaminfo_artist}" \
+				   "${white}${bold}"
+	terminal_print_header_line "file: " \
+				   "${file_info_path##*/}" 
+	terminal_print_header_line "source: " \
+				   "${mpd_streaminfo_current_path%/*}"
+	terminal_print_header_line "packing: " \
+				   "${packing_val}"
+	terminal_print_header_line "encoding: " \
+				   "${msg_encoding}"
+    fi
+}
+
+
+function terminal_eval_args() {
+    ## fill variables to be displayed
+    
+    ## file (source)
+    ## headers
+    # shellcheck disable=SC2154
+    mpd_streaminfo_title="${mpd_streaminfo[title]}"
+    # shellcheck disable=SC2154
+    file_info_path="${file_info[path]}"
+    mpd_streaminfo_current_path="${mpd_streaminfo[current_path]}"
+    mpd_streaminfo_artist="${mpd_streaminfo[artist]}"
+    file_info_path_type="${file_info[path_type]}"
+    ## file
+    file_info_compression="${file_info[compression]}"
+    file_info_extension="${file_info[extension]}"
+    file_info_signedness="${file_info[signedness]}"
+    debug "$(to_si "${file_info[filesize]}")" "common" "${LINENO}"
+    read -r file_info_filesize siunit_filesize < <(to_si "${file_info[filesize]}")
+    file_info_samplerate="${file_info[samplerate]}"
+    file_info_bitrate_rawvalue="${file_info[bitrate]}"
+    file_info_bitdepth="${file_info[bitdepth]}"
+    file_info_channelcount="${file_info[channelcount]}"
+    file_info_encoding="${file_info[encoding]}"
+    file_info_byteorder="${file_info[byteorder]}"
+    ## mpd (stream)
+    mpd_streaminfo_samplerate="${mpd_streaminfo[samplerate]}"
+    mpd_streaminfo_bitrate_rawvalue="${mpd_streaminfo[bitrate]}"
+    mpd_streaminfo_bitdepth="${mpd_streaminfo[bitdepth]}"
+    mpd_streaminfo_channelcount="${mpd_streaminfo[channelcount]}"
+    ## alsa (output)
+    # shellcheck disable=SC2154
+    alsa_info_samplerate="${alsa_info[samplerate]}"
+    alsa_info_bitrate_rawvalue="${alsa_info[bitrate]}"
+    alsa_info_bitdepth="${alsa_info[bitdepth]}"
+    alsa_info_channelcount="${alsa_info[channelcount]}"
+    ## uac
+    alsa_info_uac_usbdatapackets_per_ms="${alsa_info[uac_usbdatapackets_per_ms]}"
+    alsa_info_uac_bytes_per_usbdatapacket="${alsa_info[uac_bytes_per_usbdatapacket]}"
+    alsa_info_uac_sampleframes_per_ms="${alsa_info[uac_sampleframes_per_ms]}"
+    alsa_info_bytes_per_sampleframe="${alsa_info[bytes_per_sampleframe]}"
+    read -r siunit_bitrate < <(
+        siunit_of_smallest "${file_info_bitrate_rawvalue}" "${mpd_streaminfo_bitrate_rawvalue}" "${alsa_info_bitrate_rawvalue}"
+    )
+    read -r file_info_bitrate siunit_bitrate < <(
+        to_si "${file_info_bitrate_rawvalue}" "${siunit_bitrate}"
+    ) 
+    read -r mpd_streaminfo_bitrate siunit_bitrate < <(
+        to_si "${mpd_streaminfo_bitrate_rawvalue}" "${siunit_bitrate}"
+    ) 
+    read -r alsa_info_bitrate siunit_bitrate < <(
+        to_si "${alsa_info_bitrate_rawvalue}" "${siunit_bitrate}"
+    ) 
+    
+}
+
+function on_terminal_default() {
+    #clear_values
+    debug "about to evaluate arguments" "common" "${LINENO}"
+    terminal_eval_args
+    debug "done evaluating arguments" "common" "${LINENO}"
+    clear
+    #center_screen " mpd-monitor "
+    if [[ "${arg_terse}x" == "x" ]]; then
+        # shellcheck disable=2154
+	if [[ "${file_info_path_type}" == "stream" ]]; then
+	    terminal_print_header_stream
+	else
+	    terminal_print_header_file
+	fi
+    fi
+    terminal_print_details
+    if [[ "${arg_terse}x" == "x" ]] && [[ "${uac2_enabled}x" != "x" ]]; then
+	debug "uac2_enabled=\`${uac2_enabled}'" "$0" "${LINENO}"
+	terminal_print_usb
+    fi
+}
+

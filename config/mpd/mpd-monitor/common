@@ -1,0 +1,247 @@
+#!/usr/bin/env bash
+
+## output formatting
+## using multiple tput calls is way too expensive (0.003 per call)
+bold="$(tput bold)"
+dim="$(tput dim)"
+std="$(tput sgr0)"
+red="$(tput setaf 1)"
+green="$(tput setaf 2)"
+# shellcheck disable=SC2034
+yellow="$(tput setaf 3)"
+blue="$(tput setaf 4)"
+white="$(tput setaf 7)"
+
+#setab #1 \E[4#1m	set background color #1 (0-7)
+#setaf #1 \E[3#1m	set text color #1 (0-7)
+## backgrounds
+# red='\e[31m'
+# green='\e[32m'
+# yellow='\e[33m'
+# blue='\e[34m'
+# white='\e[37m'
+
+# bold='\e[1m'
+# dim='\e[2m'
+# rev='\e[7m'
+# std='\e(B\e[m'
+
+scriptdir="${scriptdir:-}"
+if [[ "${scriptdir}x" != "x" ]]; then
+    scriptdir="${scriptdir:-$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 && pwd )}"
+fi
+
+function die() {
+    printf "error: %s\n" "$@" 1>&2
+    exit 1
+}
+
+function debug() {
+    if [[ ${DEBUG} ]]; then
+        msg_debug="$1"
+        msg_scriptname="${2:-common}"
+        msg_lineno="${3:-0}"
+	printf -v msg_start "${dim}[D:${std}${green}%14s${std}:${blue}%24s${std} ${dim}%04d]${std}" \
+               "$(basename "${msg_scriptname}")" \
+               "${FUNCNAME[1]}" \
+               "${msg_lineno}" 
+	printf 1>&2 "%s: ${white}%s${std}\n" \
+		    "${msg_start}" \
+                    "${msg_debug}"
+    fi
+}
+
+function display_error() {
+    printf 1>&2 "${red}${bold}Error in %s${std}: ${white}%s${std}\n\n" \
+		"${FUNCNAME[1]}" "$@"
+    return 1
+}
+
+function display_inform() {
+    printf 1>&2 "${green}${bold}NOTICE${std}: ${white}%s${std}\n\n" \
+		"$@"
+    return 1
+}
+
+function ret_samplerate_rest() {
+    ## bash can't do floats
+    ## strip decimals and divider
+    samplerate="${1%%.*}"
+    debug "[$(printf %04d ${LINENO})]using samplerate=\`${samplerate}'"
+    ## see if it divisible by 44100
+    if (( ( samplerate  / 44100 * 44100 )  == samplerate )); then
+        debug "[$(printf %04d ${LINENO})]samplerate can be divided by 44100"
+	printf "%s" 1
+    else
+        debug "[$(printf %04d ${LINENO})]samplerate can't be divided by 44100"
+	printf "%s" 0
+    fi
+}
+
+function humanize_number() {
+    base="$1"
+    scale="$2"
+    number="$3"
+    debug "[$(printf %04d ${LINENO})]scale=${scale}; ${number} / ${base}" "common" "${LINENO}"
+    echo "scale=${scale}; ${number} / ${base}" | bc
+}
+
+
+function audio_source_isstream() {
+    ## checks if source_uri ($1) is an audio stream, as opposed to a
+    ## file in which case it sets `file_info[stream_protocol]' and
+    ## returns true, or sets the `is_file' field and returns an error
+    ## if it's a file.
+    ##
+    ## mpd verbose log
+    ## (datetime) : playlist: play 0:"http://icecast.omroep.nl/radio1-bb-aac"
+    ## (datetime) : curl: icy-metaint=16000J
+    ## (datetime) : decoder_thread: probing plugin faad
+    ## (datetime) : audio_format=48000:16:2, seekable=false
+    ##
+    source_uri="$1"
+    stream_protocol=""
+    stream_re="^([a-z]+):/"
+    # shellcheck disable=2154
+    if [[ "${audio_uri}" =~ ${stream_re} ]]; then
+	file_info[stream_protocol]="${BASH_REMATCH[1]}"
+	debug "[$(printf %04d ${LINENO})]\`${audio_uri}' is a \`${stream_protocol}'-stream (not a file)"
+    else
+	debug "[$(printf %04d ${LINENO})]\`${audio_uri}' is file (not a stream)"
+    fi
+}
+
+function audio_source_iscompressed() {
+    ## checks if source_uri ($1) is compressed, as opposed to
+    ## uncompressed or raw, in which case it sets
+    ## `file_info[compression]', returns true and checks if the
+    ## compression is lossless or lossy, or it sets the
+    ## `is_uncompressed' field to true and returns an error.
+    ##
+    ## soxi (Sample Encoding)
+    ##  wave/aiff: xx-bit Signed Integer PCM
+    ##  flac:      xx-bit FLAC
+    ##  mp3:       MPEG audio (layer I, II or III)
+    ##  ogg/ogv:   Vorbis
+    ## Geen handler voor dsf/dsd, mp4
+    ## ffprobe ("Stream #0:0(und): Audio:")
+    ##  mp4: aac (LC) (mp4a / 0x6134706D),  32000 Hz, stereo, fltp,   187 kb/s (default)
+    ##  dsf: dsd_lsbf_planar,              352800 Hz,    5.1, fltp, 16934 kb/s
+    ##
+    source_uri="$1"
+    uncompressed_extensions_re="^(.*)\.(aif|rif|wav)$"
+    ## try soxi's sampleencoding entry, otherwise use extension
+    filetype="${file_info[filetype]}"
+    debug "[$(printf %04d ${LINENO})]using file_info[filetype]=\`${file_info[filetype]}'"
+    if [[ "${filetype}x" == "x" ]]; then
+	## use extension of file
+	## TODO: compressed streams
+	filetype="${source_uri##*.}"
+    fi
+    debug "[$(printf %04d ${LINENO})]filetype=${filetype}"
+    if [[ "${filetype,,}" =~ ${uncompressed_extensions_re} ]]; then
+	debug "[$(printf %04d ${LINENO})]not compressed"
+        # shellcheck disable=2154
+	file_info[lossycompression]=""
+    	return 1
+    else
+        # shellcheck disable=2154
+	file_info[compression]="${filetype}"
+	debug "[$(printf %04d ${LINENO})]compressed: ${filetype}"
+	audio_source_islossy "${source_uri}"
+    fi
+
+}
+
+function audio_source_islossy() {
+    ## checks if source_uri ($1) is a lossy compressed audio file or
+    ## stream, as opposed to uncompressed or lossless, in which case
+    ## it sets `file_info[lossycompression]' and returns true, or sets
+    ## the `is_file' field and returns an error.
+    ##
+    ## mpd verbose log
+    ## (datetime) : player: played "aangeschaft/Various Artists - Capitol Rare: Funky Notes From the West Coast/05 Gene Harris - As.mp3"
+    ## (datetime) : playlist: queue song 1:"aangeschaft/Various Artists - Capitol Rare: Funky Notes From the West Coast/02 Caldera - Sky Islands.mp3"
+    ## (datetime) : alsa_output: opened hw:0,0 type=HW
+    ## (datetime) : alsa_output: buffer: size=24..131072 time=250..1365334
+    ## (datetime) : alsa_output: period: size=12..65536 time=125..682667
+    ## (datetime) : alsa_output: default period_time = buffer_time/4 = 500000/4 = 125000
+    ## (datetime) : alsa_output: format=S32_LE (Signed 32 bit Little Endian)
+    ## (datetime) : alsa_output: buffer_size=48000 period_size=12000
+    ## (datetime) : output: opened "Pink Faun USB 32/384 USB receiv - USB Audio" (alsa) audio_format=96000:32:2
+    ## (datetime) : output: converting in=96000:24:2 -> f=96000:24:2 -> out=96000:32:2
+
+    ##
+    nonlossy_re="(flac|aif|rif|wav)"
+    lossy_field="${file_info[filetype]}"
+    debug "[$(printf %04d ${LINENO})]lossy_field (file_info[filetype])=\`${lossy_field}'\n"
+    if [[ "${lossy_field}x" == "x" ]]; then
+	## use extension of file
+	## TODO: compressed streams
+	lossy_field="${file_info[file_path]##*.}"
+    debug "[$(printf %04d ${LINENO})]lossy_field (file_info[file_path])=\`${lossy_field}'\n"
+    fi
+
+    if [[ "${lossy_field,,}" =~ ${nonlossy_re} ]]; then
+	debug "[$(printf %04d ${LINENO})]compression is not lossy"
+	file_info[lossycompression]=""
+    	return 1
+    else
+	file_info[lossycompression]="true"
+	debug "[$(printf %04d ${LINENO})]compression is lossy"
+    fi
+    #printf 1>&2 "FILEQ=${FILEQ}\n"
+
+}
+
+#function DUMMY_audio_calc_perfectness() {
+#    value="$1"
+#    type="$2"
+#    q=0
+#    qrange_samplerate=(44100 )
+#    qrange_bitdepth=(8 16 24 32)
+#    printf "%x" q
+#}
+
+function audio_fill_qrange_samplerate() {
+    ## too simple ;)
+    ## for  n in 1 2 4 6; do
+    ##	for f in 44100 48000; do
+    ##	   qrange_samplerate+=( "$(( n * f ))" )
+    ##	done
+    ## done
+    
+    ## construct static list of sample rates based on ground clock frequencies
+    video_clockfreq=24576000
+    audio_clockfreq=22579200
+    ##  - video standard: 24.576  (mHz) * 1000000 / 512 = 48000Hz
+    ##  - audio standard: 22.5792 (mHz) * 1000000 / 512 = 44100Hz
+    base_fs_video=$(( video_clockfreq / 512 ))
+    base_fs_audio=$(( audio_clockfreq / 512 ))
+    max_fs_n=8
+    n=${max_fs_n}
+    while (( n >= 1 )); do
+	qrange_samplerate+=(
+	    "$(( base_fs_video * n ))"
+	    "$(( base_fs_audio * n ))"
+	)
+        n=$(( n / 2 ))
+    done 
+}
+
+function run_func() {
+    ## run an internal function named $2 with args on a remote host $1
+    ## through ssh.
+    ## (it uses declare -f to first print the function in the remote
+    ##  bash session and then executes it)
+    ssh_conn="$1"
+    shift
+    func="$1"
+    shift
+    # shellcheck disable=SC2124
+    args="$@"
+    debug "[$(printf %04d ${LINENO})]$(declare -p ssh_conn func args)"
+    # shellcheck disable=SC2086
+    ssh "${ssh_conn}" -- \
+	"$(declare -f ${func}); ${func} ${args}"
+}
