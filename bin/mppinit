@@ -682,7 +682,7 @@ sync_music_dir() {
         sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
             -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
             -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
-            -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
+            -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" \
             -e "s%^media_dir = .*%media_dir = ${mpd_music}%" > /tmp/mop$$
       cp /tmp/mop$$ ${MOPIDCONF}
       rm -f /tmp/mop$$
