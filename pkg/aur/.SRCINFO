@@ -14,6 +14,7 @@ pkgbase = musicplayerplus
 	makedepends = qt5-tools
 	makedepends = zip
 	depends = util-linux
+	depends = bc
 	depends = boost-libs
 	depends = coreutils
 	depends = jq

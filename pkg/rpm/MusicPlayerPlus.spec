@@ -3,9 +3,9 @@ Version:    %{_version}
 Release:    %{_release}%{?dist}
 BuildArch:  x86_64
 %if 0%{?centos} > 0
-Requires: alsa-utils, boost, coreutils, flac, jq, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tmux, inotify-tools, figlet, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr
+Requires: alsa-utils, bc, boost, coreutils, flac, jq, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tmux, inotify-tools, figlet, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr
 %else
-Requires: alsa-utils, boost, coreutils, flac, jq, libcurl, libmpdclient, ncurses, readline, taglib, mediainfo, mpd, tmux, inotify-tools, figlet, fzf, mpc, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr
+Requires: alsa-utils, bc, boost, coreutils, flac, jq, libcurl, libmpdclient, ncurses, readline, taglib, mediainfo, mpd, tmux, inotify-tools, figlet, fzf, mpc, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr
 %endif
 URL:        https://github.com/doctorfree/MusicPlayerPlus
 Vendor:     Doctorwhen's Bodacious Laboratory
