@@ -1135,8 +1135,7 @@ fi
 
 
 ## source own helper script if found
-ALSA_CAPABILITIES_FILE="helpers/alsa-capabilities"
-ALSA_CAPABILITIES_SCRIPT="${SCRIPT_DIR}/${ALSA_CAPABILITIES_FILE}"
+ALSA_CAPABILITIES_SCRIPT="/usr/bin/alsa-capabilities"
 
 if [[ -f "${ALSA_CAPABILITIES_SCRIPT}" ]]; then 
     [[ ! -z ${DEBUG} ]] && \

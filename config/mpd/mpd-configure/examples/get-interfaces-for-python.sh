@@ -39,10 +39,7 @@ function fetch_alsa_hwaddresses() {
 
 ### program start
 
-## store the current directory 
-SCRIPT_DIR=$(dirname $0)
-ALSA_CAPABILITIES_FILE="alsa-capabilities"
-ALSA_CAPABILITIES_SCRIPT="${SCRIPT_DIR}/../${ALSA_CAPABILITIES_FILE}"
+ALSA_CAPABILITIES_SCRIPT="/usr/bin/alsa-capabilities"
 
 [[ -f "${ALSA_CAPABILITIES_SCRIPT}" ]] && \
     source "${ALSA_CAPABILITIES_SCRIPT}" || \

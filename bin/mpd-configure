@@ -4,6 +4,21 @@ MPD_CONFIGURE_DIR="/usr/share/musicplayerplus/mpd/mpd-configure"
 
 if [ -x "${MPD_CONFIGURE_DIR}/mpd-configure" ]
 then
+  # Some environment variables can be provided on the command line
+  # Pass any of these along to the actual script
+  [ "${CONF_MPD_CONFFILE}" ] && export CONF_MPD_CONFFILE
+  [ "${CONF_MPD_MUSICDIR}" ] && export CONF_MPD_MUSICDIR
+  [ "${DEBUG}" ] && export DEBUG
+  [ "${INCLUDE_COMMENTS}" ] && export INCLUDE_COMMENTS
+  [ "${LIMIT_INTERFACE_TYPE}" ] && export LIMIT_INTERFACE_TYPE
+  [ "${LIMIT_INTERFACE_FILTER}" ] && export LIMIT_INTERFACE_FILTER
+  [ "${OPT_DISABLE_PULSEAUDIO}" ] && export OPT_DISABLE_PULSEAUDIO
+  [ "${OPT_STOP_PULSEAUDIO}" ] && export OPT_STOP_PULSEAUDIO
+  [ "${CONF_MPD_MUSICDIR}" ] && export CONF_MPD_MUSICDIR
+  [ "${CONF_MPD_HOMEDIR}" ] && export CONF_MPD_HOMEDIR
+  [ "${CONF_MPD_NETWORK_BINDTOADDRESS}" ] && export CONF_MPD_NETWORK_BINDTOADDRESS
+  [ "${CONF_MPD_NETWORK_PORT}" ] && export CONF_MPD_NETWORK_PORT
+  [ "${CONF_MPD_DATABASEPROXYHOST}" ] && export CONF_MPD_DATABASEPROXYHOST
   cd "${MPD_CONFIGURE_DIR}"
   ./mpd-configure $*
   exit $?
