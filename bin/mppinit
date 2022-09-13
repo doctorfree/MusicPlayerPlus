@@ -577,6 +577,43 @@ set_music_dir() {
   }
 }
 
+# TODO: Preserve any user customizations to system /etc/mpd.conf
+#sync_sys_mpd_conf() {
+#  [ -f /etc/mpd.conf ] && {
+#    grep -v ^# /etc/mpd.conf | grep -v -e '^[[:space:]]*$' | while read mpdconf
+#    do
+#      option=`echo "${mpdconf}" | awk -F '=' ' { print $1 } '`
+#      option=`echo ${option} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+#      [[ " ${excluded_ncm_opts[*]} " =~ " ${option} " ]] && continue
+#      [ "${option}" ] && {
+#        oval=`echo "${mpdconf}" | awk -F '=' ' { print $2 } '`
+#        oval=`echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+#        [ "${oval}" ] && {
+#          mval=`grep "^${option} " "${MPC_USER_CONF}" | \
+#                awk -F '=' ' { print $2 } '`
+#          mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+#          [ "${mval}" == "${oval}" ] || {
+#            # Use the previously configured value for this option
+#            for userconf in ${MPC_USER_CONF} ${UEB_USER_CONF}
+#            do
+#              [ -f "${userconf}" ] && {
+#                cat "${userconf}" | \
+#                  sed -e "s/^${option} /#${option} /" > /tmp/ncm$$
+#                grep "${previous_comments}" /tmp/ncm$$ > /dev/null || {
+#                  echo "${previous_comments}" >> /tmp/ncm$$
+#                }
+#                echo "${mpdconf}" >> /tmp/ncm$$
+#                cp /tmp/ncm$$ "${userconf}"
+#                rm -f /tmp/ncm$$
+#              }
+#            done
+#          }
+#        }
+#      }
+#    done
+#  }
+#}
+
 sync_music_dir() {
   set_music_dir
   if [ "${mpd_music}" ]
@@ -740,21 +777,34 @@ sync_music_dir() {
       }
     }
 
+# TODO
+#   senable=
+#   sactive=
     # Disable and stop any system-wide MPD service
     systemctl is-enabled --quiet mpd.service
     [ $? -eq 0 ] && {
+#     senable=1
       sudo systemctl disable --quiet mpd.service
       sudo systemctl --user --global disable mpd.service
     }
     systemctl is-enabled --quiet mpd.socket
     [ $? -eq 0 ] && {
+#     senable=1
       sudo systemctl disable --quiet mpd.socket
       sudo systemctl --user --global disable mpd.socket
     }
     systemctl is-active --quiet mpd.service
-    [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.service
+    [ $? -eq 0 ] && {
+#     sactive=1
+      sudo systemctl stop --quiet mpd.service
+    }
     systemctl is-active --quiet mpd.socket
-    [ $? -eq 0 ] && sudo systemctl stop --quiet mpd.socket
+    [ $? -eq 0 ] && {
+#     sactive=1
+      sudo systemctl stop --quiet mpd.socket
+    }
+# TODO
+#   [ "${sactive}" ] || [ "${senable}" ] && sync_sys_mpd_conf
 
     systemctl --user daemon-reload --quiet
     # Enable and activate the MPD user service
@@ -1881,7 +1931,7 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   sudo dnf config-manager --set-enabled powertools
   sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
   sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
-  sudo dnf -y --allowerasing install ffmpeg
+  sudo dnf -y --allowerasing install ffmpeg mediainfo
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
     have_git=`type -p git`
