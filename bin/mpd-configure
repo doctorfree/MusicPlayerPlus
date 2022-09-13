@@ -1,0 +1,14 @@
+#!/bin/bash
+
+MPD_CONFIGURE_DIR="/usr/share/musicplayerplus/mpd/mpd-configure"
+
+if [ -x "${MPD_CONFIGURE_DIR}/mpd-configure" ]
+then
+  cd "${MPD_CONFIGURE_DIR}"
+  ./mpd-configure $*
+  exit $?
+else
+  echo "${MPD_CONFIGURE_DIR}/mpd-configure does not exist or is not executable"
+  echo "Exiting"
+  exit 1
+fi
