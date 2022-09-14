@@ -555,87 +555,89 @@ def_key "alt-c"
   run_external_command "/usr/bin/mppcover"
 def_key "alt-f"
   run_external_command "/usr/bin/mppfzmp"
+def_key "alt-m"
+  run_external_command "/usr/bin/mpd-monitor -q -T"
 def_key "alt-r"
   run_external_command "/usr/bin/raise_cava"
 #
 # set_term_trans only works with XFCE4 terminal emulator
 #
-def_key "alt-1"
-  run_external_command "/usr/bin/set_term_trans 0.1"
-def_key "alt-2"
-  run_external_command "/usr/bin/set_term_trans 0.2"
-def_key "alt-3"
-  run_external_command "/usr/bin/set_term_trans 0.3"
-def_key "alt-4"
-  run_external_command "/usr/bin/set_term_trans 0.4"
-def_key "alt-5"
-  run_external_command "/usr/bin/set_term_trans 0.5"
-def_key "alt-6"
-  run_external_command "/usr/bin/set_term_trans 0.6"
-def_key "alt-7"
-  run_external_command "/usr/bin/set_term_trans 0.7"
-def_key "alt-8"
-  run_external_command "/usr/bin/set_term_trans 0.8"
-def_key "alt-9"
-  run_external_command "/usr/bin/set_term_trans 0.9"
-def_key "alt-0"
-  run_external_command "/usr/bin/set_term_trans 1.0"
-#
-# Convenience bindings
-#
-def_key "j"
-    scroll_down
-def_key "k"
-    scroll_up
-def_key "d"
-    page_down
-def_key "u"
-    page_up
-def_key "ctrl-f"
-    page_down
-def_key "ctrl-b"
-    page_up
-def_key "n"
-    next
-def_key "P"
-    previous
-def_key "space"
-    next
-def_key "backspace"
-    previous
-def_key "h"
-    jump_to_parent_directory
-def_key "h"
-    previous_column
-def_key "l"
-    enter_directory
-def_key "l"
-    play_item
-def_key "l"
-    next_column
-def_key "l"
-    run_action
-def_key "ctrl-a"
-    add_item_to_playlist
-def_key "J"
-    select_item
-def_key "K"
-    select_item
-def_key "ctrl-e"
-    move_end
-def_key "t"
-    move_home
-def_key "down"
-    scroll_down
-def_key "up"
-    scroll_up
-def_key "shift-up"
-    move_selected_items_up
-def_key "N"
-    move_sort_order_down
-def_key "shift-down"
-    move_selected_items_down
-def_key "*"
-    toggle_visualization_type
-def_key "C"
-    toggle_playing_song_centering
+# def_key "alt-1"
+#   run_external_command "/usr/bin/set_term_trans 0.1"
+# def_key "alt-2"
+#   run_external_command "/usr/bin/set_term_trans 0.2"
+# def_key "alt-3"
+#   run_external_command "/usr/bin/set_term_trans 0.3"
+# def_key "alt-4"
+#   run_external_command "/usr/bin/set_term_trans 0.4"
+# def_key "alt-5"
+#   run_external_command "/usr/bin/set_term_trans 0.5"
+# def_key "alt-6"
+#   run_external_command "/usr/bin/set_term_trans 0.6"
+# def_key "alt-7"
+#   run_external_command "/usr/bin/set_term_trans 0.7"
+# def_key "alt-8"
+#   run_external_command "/usr/bin/set_term_trans 0.8"
+# def_key "alt-9"
+#   run_external_command "/usr/bin/set_term_trans 0.9"
+# def_key "alt-0"
+#   run_external_command "/usr/bin/set_term_trans 1.0"
+# #
+# # Convenience bindings
+# #
+# def_key "j"
+#     scroll_down
+# def_key "k"
+#     scroll_up
+# def_key "d"
+#     page_down
+# def_key "u"
+#     page_up
+# def_key "ctrl-f"
+#     page_down
+# def_key "ctrl-b"
+#     page_up
+# def_key "n"
+#     next
+# def_key "P"
+#     previous
+# def_key "space"
+#     next
+# def_key "backspace"
+#     previous
+# def_key "h"
+#     jump_to_parent_directory
+# def_key "h"
+#     previous_column
+# def_key "l"
+#     enter_directory
+# def_key "l"
+#     play_item
+# def_key "l"
+#     next_column
+# def_key "l"
+#     run_action
+# def_key "ctrl-a"
+#     add_item_to_playlist
+# def_key "J"
+#     select_item
+# def_key "K"
+#     select_item
+# def_key "ctrl-e"
+#     move_end
+# def_key "t"
+#     move_home
+# def_key "down"
+#     scroll_down
+# def_key "up"
+#     scroll_up
+# def_key "shift-up"
+#     move_selected_items_up
+# def_key "N"
+#     move_sort_order_down
+# def_key "shift-down"
+#     move_selected_items_down
+# def_key "*"
+#     toggle_visualization_type
+# def_key "C"
+#     toggle_playing_song_centering

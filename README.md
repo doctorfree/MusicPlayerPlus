@@ -1612,7 +1612,7 @@ Options:
   -q [ --quiet ]                        suppress logs and excess output
 ```
 
-The mpcplus MPD client has an extensive set of key bindings that allow
+The mpcplus MPD client has a customized set of key bindings that allow
 quick and easy control of MPD, searches, lyrics display, client navigation,
 and much more via the keyboard. View the
 [**mpcpluskeys man page**](markdown/mpcpluskeys.1.md) with the command
@@ -1779,35 +1779,8 @@ command. Mpcplus custom key bindings are defined in
 
 -   `[ Alt-c ]` - Display album cover art for currently playing song
 -   `[ Alt-f ]` - Open the fuzzy finder to search/select media
+-   `[ Alt-m ]` - Open the MPD monitor in a terminal window
 -   `[ Alt-r ]` - Raise/lower the spectrum visualizer window
--   `[ Ctrl-a ]` - Add item to playlist
--   `[ Ctrl-b ]` - Page up
--   `[ Ctrl-f ]` - Page down
--   `[ Ctrl-e ]` - Move to end
--   `[ Shift-up ]` - Move selected items up
--   `[ Shift-down ]` - Move selected items down
--   `[ j ]` - Scroll down
--   `[ k ]` - Scroll up
--   `[ down ]` - Scroll down
--   `[ up ]` - Scroll up
--   `[ d ]` - Page down
--   `[ u ]` - Page up
--   `[ n ]` - Next
--   `[ P ]` - Previous
--   `[ space ]` - Next
--   `[ backspace ]` - Previous
--   `[ h ]` - Jump to parent directory
--   `[ h ]` - Previous column
--   `[ l ]` - Enter directory
--   `[ l ]` - Play item
--   `[ l ]` - Next column
--   `[ l ]` - Run action
--   `[ J ]` - Select item
--   `[ K ]` - Select item
--   `[ t ]` - Move home
--   `[ N ]` - Move sort order down
--   `[ C ]` - Toggle playing song centering
--   `[ * ]` - Toggle visualization type
 
 #### Tmux session exit issues
 

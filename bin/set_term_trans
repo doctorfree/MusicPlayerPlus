@@ -1,10 +1,12 @@
 #!/bin/bash
 #
-# set_term_trans - set the XFCE4 terminal window transparency
+# set_term_trans - set the terminal window transparency
 #
 # Run with no arguments to get the current transparency setting
 # Run with a numeric argument between 0.0 and 1.0 to set the transparency
 # Run with an argument of "more" or "less" to increase or decrease transparency
+#
+# TODO: currently only works with XFCE4. Add support for Gnome, Kitty, & Tilix
 
 RC="${HOME}/.config/xfce4/terminal/terminalrc"
 BD="BackgroundDarkness"

@@ -809,11 +809,16 @@ sync_music_dir() {
     systemctl --user daemon-reload --quiet
     # Enable and activate the MPD user service
     systemctl --user is-active --quiet mpd.service
-    [ $? -eq 0 ] || systemctl --user start --quiet mpd.service
+    if [ $? -eq 0 ]
+    then
+      systemctl --user restart --quiet mpd.service
+    else
+      systemctl --user start --quiet mpd.service
+    fi
     systemctl --user is-enabled --quiet mpd.service
     [ $? -eq 0 ] || systemctl --user enable --quiet mpd.service
     have_mpc=`type -p mpc`
-    [ "${have_mpc}" ] && mpc update --quiet
+    [ "${have_mpc}" ] && mpc update --quiet &
 
     # Enable and activate the MPDstats user service
     systemctl --user is-active --quiet mpdstats.service

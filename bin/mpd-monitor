@@ -5,11 +5,27 @@ MTITLE="MusicPlayerPlus MPD Monitor"
 CONSOLE_MODE=
 MPPRC="${HOME}/.config/mpprc"
 MPP_MODE=
+QUIET=
+USE_TERMINAL=
 
 have_kitty=`type -p kitty`
 have_gnome=`type -p gnome-terminal`
 have_tilix=`type -p tilix`
 have_simple=`type -p st`
+
+usage() {
+  printf "\nUsage: mpd-monitor [-c] [-g] [-k] [-q] [-s] [-t] [-T] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-c indicates use console mode"
+  printf "\n\t-g indicates use Gnome terminal emulator"
+  printf "\n\t-k indicates use Kitty terminal emulator"
+  printf "\n\t-q indicates quiet mode"
+  printf "\n\t-s indicates use Simple terminal emulator"
+  printf "\n\t-t indicates use Tilix terminal emulator"
+  printf "\n\t-T indicates use a terminal emulator, no console mode"
+  printf "\n\t-u displays this usage message and exits\n"
+  exit 1
+}
 
 pick_terminal() {
   [ -f "${MPPRC}" ] && . "${MPPRC}"
@@ -94,7 +110,17 @@ show_term() {
              -f "Monospace:size=18" \
              ${COMMAND} 2> /dev/null &
         else
-          ${COMMAND}
+          if [ "${USE_TERMINAL}" ]
+          then
+            [ "${QUIET}" ] || {
+              echo "-T argument indicates use terminal window but no supported"
+              echo "terminal emulator available. Supported terminal emulators"
+              echo "are: Gnome, Kitty, Simple, and Tilix."
+              echo "Install a supported terminal emulator or remove -T option."
+            }
+          else
+            ${COMMAND}
+          fi
         fi
       fi
     fi
@@ -125,11 +151,64 @@ else
   CONSOLE_MODE=1
 fi
 
+while getopts "cgkqstTu" flag; do
+    case $flag in
+        c)
+            CONSOLE_MODE=1
+            ;;
+        g)
+            [ "${have_gnome}" ] && {
+              GNOME=1
+              KITTY=
+              SIMPLE=
+              TILIX=
+            }
+            ;;
+        k)
+            [ "${have_kitty}" ] && {
+              GNOME=
+              KITTY=1
+              SIMPLE=
+              TILIX=
+            }
+            ;;
+        q)
+            QUIET=1
+            ;;
+        s)
+            [ "${have_simple}" ] && {
+              GNOME=
+              KITTY=
+              SIMPLE=1
+              TILIX=
+            }
+            ;;
+        t)
+            [ "${have_tilix}" ] && {
+              GNOME=
+              KITTY=
+              SIMPLE=
+              TILIX=1
+            }
+            ;;
+        T)
+            USE_TERMINAL=1
+            CONSOLE_MODE=
+            ;;
+        u)
+            usage
+            ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
 if [ -x "${MPD_MONITOR_DIR}/mpd-monitor" ]
 then
   current=`mpc current`
   [ "${current}" ] || {
-    echo "No audio currently being played via MPD"
+    [ "${QUIET}" ] || {
+      echo "No audio currently being played via MPD"
+    }
     exit 0
   }
   cd "${MPD_MONITOR_DIR}"
@@ -142,7 +221,9 @@ then
   fi
   exit $?
 else
-  echo "${MPD_MONITOR_DIR}/mpd-monitor does not exist or is not executable"
-  echo "Exiting"
+  [ "${QUIET}" ] || {
+    echo "${MPD_MONITOR_DIR}/mpd-monitor does not exist or is not executable"
+    echo "Exiting"
+  }
   exit 1
 fi
