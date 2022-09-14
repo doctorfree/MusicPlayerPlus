@@ -42,15 +42,15 @@ function gmi_query_mpd() {
     # shellcheck disable=SC2059
     debug "will query mpd on /dev/tcp/${mpd_host}/${mpd_port} using command list:\`command_list_begin\n${mpd_command}\nclose\ncommand_list_end'" "$0" "${LINENO}"
     if timeout ${max_time} bash -c "true <>${devpath}" 2>/dev/null; then
-	exec 3<>"${devpath}"
+    exec 3<>"${devpath}"
         # shellcheck disable=SC2059
-	printf "command_list_begin\n${mpd_command}\nclose\ncommand_list_end\n" >&3
-	cat <&3
-	exec 3<&-
-	exec 3<&-
+    printf "command_list_begin\n${mpd_command}\nclose\ncommand_list_end\n" >&3
+    cat <&3
+    exec 3<&-
+    exec 3<&-
     else
-	printf "timeout"
-	return 1
+    printf "timeout"
+    return 1
     fi
 }
 
@@ -61,19 +61,19 @@ function gmi_mpd_streamtype() {
     ## currentsong path to path of each mount)
     stream_re="^([^:]+)://([^/]+)/(.*)$"
     if [[ "${mpd_streaminfo[file]}" =~ ${stream_re} ]]; then
-	#debug "$(declare -p BASH_REMATCH)"  "$0" "${LINENO}"
-	mpd_streaminfo[current_type]="stream"
-	mpd_streaminfo[stream_protocol]="${BASH_REMATCH[1]}"
-	mpd_streaminfo[stream_host]="${BASH_REMATCH[2]}"
-	mpd_streaminfo[current_relpath]="${BASH_REMATCH[3]}"
-	mpd_streaminfo[current_path]="${mpd_streaminfo[file]}"
-	mpd_streaminfo[stream_url]="${mpd_streaminfo[file]}"
+    #debug "$(declare -p BASH_REMATCH)"  "$0" "${LINENO}"
+    mpd_streaminfo[current_type]="stream"
+    mpd_streaminfo[stream_protocol]="${BASH_REMATCH[1]}"
+    mpd_streaminfo[stream_host]="${BASH_REMATCH[2]}"
+    mpd_streaminfo[current_relpath]="${BASH_REMATCH[3]}"
+    mpd_streaminfo[current_path]="${mpd_streaminfo[file]}"
+    mpd_streaminfo[stream_url]="${mpd_streaminfo[file]}"
     else
-	mpd_streaminfo[current_type]="file"
-	mpd_streaminfo[stream_protocol]=""
-	mpd_streaminfo[stream_host]=""
-	mpd_streaminfo[current_path]="${mpd_info[musicdirectory_relpath]}/${mpd_streaminfo[file]}"
-	mpd_streaminfo[stream_url]=""
+    mpd_streaminfo[current_type]="file"
+    mpd_streaminfo[stream_protocol]=""
+    mpd_streaminfo[stream_host]=""
+    mpd_streaminfo[current_path]="${mpd_info[musicdirectory_relpath]}/${mpd_streaminfo[file]}"
+    mpd_streaminfo[stream_url]=""
     fi
 }
 
@@ -89,57 +89,57 @@ function gmi_set_mpd_info() {
     declare -A mpd_status_vals
     mpd_status_vals[state]=""
     while read -r line; do
-	#debug "${line}"  "$0" "${LINENO}"
-	case "${line}" in
- 	    "timeout")
-		## no connection
-		if systemctl --user status mpd.service; then
-		    display_error "communication with mpd service on \`${mpd_host}:${mpd_port}' timed out, but systemctl reports the service unit is running"
-		    mpd_status_vals[state]="timeout"
-		    break
-		else
-		    mpd_status_vals[state]="noservice"
-		    debug "error: mpd service unit is not running on \`${mpd_host}:${mpd_port}'"  "$0" "${LINENO}"
-		    break
-		fi
-		;;
-	    *)
+    #debug "${line}"  "$0" "${LINENO}"
+    case "${line}" in
+         "timeout")
+        ## no connection
+        if systemctl --user status mpd.service; then
+            display_error "communication with mpd service on \`${mpd_host}:${mpd_port}' timed out, but systemctl reports the service unit is running"
+            mpd_status_vals[state]="timeout"
+            break
+        else
+            mpd_status_vals[state]="noservice"
+            debug "error: mpd service unit is not running on \`${mpd_host}:${mpd_port}'"  "$0" "${LINENO}"
+            break
+        fi
+        ;;
+        *)
                 ## fill mpd_status_vals array
-		field_raw="${line%% *}"
-		field="${field_raw//:/}"
-		value="${line//${field}: /}"
-		mpd_status_vals["${field,,}"]="${value}"
-		debug "setting mpd_status_vals[${field,,}]=\`${mpd_status_vals[${field,,}]}'"  "$0" "${LINENO}"
-	esac
+        field_raw="${line%% *}"
+        field="${field_raw//:/}"
+        value="${line//${field}: /}"
+        mpd_status_vals["${field,,}"]="${value}"
+        debug "setting mpd_status_vals[${field,,}]=\`${mpd_status_vals[${field,,}]}'"  "$0" "${LINENO}"
+    esac
     done< <(gmi_query_mpd "status\ncurrentsong")
     ## determine mpd state
     #mpd_info=()
     case "${mpd_status_vals[state]}" in
-	play)
-	    ## mpd is playing
-	    mpd_info[status]="playing"
-	    ;;
-	stop)
-	    ## mpd is stopped
-	    mpd_info[status]="stopped"
-	    return 1
-	    ;;
-	pause)
-	    ## mpd is paused
-	    mpd_info[status]="paused"
-	    return 1
-	    ;;
-	timeout|noservice)
-	    mpd_info[status]="noservice"
-	    return 2
-	    ;;
-	*)
-	    debug "mpd_status_vals[state]=\`${mpd_status_vals[state]}'"  "$0" "${LINENO}"
-	    printf 1>&2 "BUG: mpd on %s:%s is currently in an unexpected state: \`%s'.\n" \
-			"${mpd_host}" \
+    play)
+        ## mpd is playing
+        mpd_info[status]="playing"
+        ;;
+    stop)
+        ## mpd is stopped
+        mpd_info[status]="stopped"
+        return 1
+        ;;
+    pause)
+        ## mpd is paused
+        mpd_info[status]="paused"
+        return 1
+        ;;
+    timeout|noservice)
+        mpd_info[status]="noservice"
+        return 2
+        ;;
+    *)
+        debug "mpd_status_vals[state]=\`${mpd_status_vals[state]}'"  "$0" "${LINENO}"
+        printf 1>&2 "BUG: mpd on %s:%s is currently in an unexpected state: \`%s'.\n" \
+            "${mpd_host}" \
                         "${mpd_port}" \
                         "${mpd_status_vals[state]}"
-	    return 3
+        return 3
     esac
     
     ## store the double colon separated values of the
@@ -165,7 +165,7 @@ function gmi_set_mpd_info() {
     debug "mpd_status_vals[bitrate]=\`${mpd_status_vals[bitrate]}'" "$0" "${LINENO}"
     if [[ "${mpd_status_vals[bitrate]}x" == "x" ]] || [[ "${mpd_status_vals[bitrate]}x" == "0x" ]]; then
         debug "mpd did not report bitrate; calculate it (${mpd_streaminfo[bitdepth]} * ${mpd_streaminfo[samplerate]} * ${mpd_streaminfo[channelcount]}"  "$0" "${LINENO}"
-	mpd_streaminfo[bitrate]=$(( mpd_streaminfo[channelcount] * mpd_streaminfo[bitdepth] * mpd_streaminfo[samplerate] ))
+    mpd_streaminfo[bitrate]=$(( mpd_streaminfo[channelcount] * mpd_streaminfo[bitdepth] * mpd_streaminfo[samplerate] ))
     else
         debug "mpd did report bitrate; calculate it (${mpd_status_vals[bitrate]} * 1000)"  "$0" "${LINENO}"     
         mpd_streaminfo[bitrate]="$(( mpd_status_vals[bitrate] * 1000 ))"
@@ -174,7 +174,7 @@ function gmi_set_mpd_info() {
     ## start processing currentsong
     #for fieldname in "${!mpd_status_vals}"; do
     for fieldname in file duration elapsed album artist composer title track; do
-	mpd_streaminfo[${fieldname}]="${mpd_status_vals[${fieldname}]}"
+    mpd_streaminfo[${fieldname}]="${mpd_status_vals[${fieldname}]}"
     done
     gmi_mpd_streamtype
     if [[ ${DEBUG} ]]; then
@@ -191,28 +191,28 @@ function gmi_set_mpd_conffile() {
 #   default_re="[[:space:]]*MPDCONF[[:space:]]*=[[:space:]]*(.*)"
 #   if [[ -f "${default_path}" ]]; then
 #   while read -r line; do
-#	    if [[ "${line}" =~ ${default_re} ]]; then
-#		mpdconf_file="${BASH_REMATCH[1]}"
-#		if [[ ! -f "${mpdconf_file}" ]]; then
-#		    debug "not using mpdconf_file=\`${mpdconf_file}'; does not exist(?!)."  "$0" "${LINENO}"
-#		    ## give up?
-#		    break
-#		else
-#		    debug "using mpd.conf=\`${mpdconf_file}' found in \`${default_path}'."  "$0" "${LINENO}"
-#		    return
-#		fi
-#	    fi
-#	done<"${default_path}"
+#        if [[ "${line}" =~ ${default_re} ]]; then
+#        mpdconf_file="${BASH_REMATCH[1]}"
+#        if [[ ! -f "${mpdconf_file}" ]]; then
+#            debug "not using mpdconf_file=\`${mpdconf_file}'; does not exist(?!)."  "$0" "${LINENO}"
+#            ## give up?
+#            break
+#        else
+#            debug "using mpd.conf=\`${mpdconf_file}' found in \`${default_path}'."  "$0" "${LINENO}"
+#            return
+#        fi
+#        fi
+#    done<"${default_path}"
 #   fi
     XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-${HOME}/.config}"
     for mpdconf_file in "${XDG_CONFIG_HOME}/mpd/mpd.conf" \
-			"${HOME}/.mpdconf" \
-			"${HOME}/.mpd/mpd.conf" \
-			"/etc/mpd.conf"; do
-	if [[ -f "${mpdconf_file}" ]]; then
-	    debug "using (non-default) mpdconf_file=\`${mpdconf_file}'."  "$0" "${LINENO}"
-	    return
-	fi
+            "${HOME}/.mpdconf" \
+            "${HOME}/.mpd/mpd.conf" \
+            "/etc/mpd.conf"; do
+    if [[ -f "${mpdconf_file}" ]]; then
+        debug "using (non-default) mpdconf_file=\`${mpdconf_file}'."  "$0" "${LINENO}"
+        return
+    fi
     done
     return 1
 }
@@ -224,80 +224,80 @@ function gmi_get_musicdirectory_relpath() {
     music_share=""
     music_mountdir=""
     while read -r line; do
-	if [[ "${line}" =~ ${musicdirectory_relpath_re} ]]; then
-	    musicdirectory_relpath="${BASH_REMATCH[1]}"
-	    debug "musicdirectory_relpath=\`${musicdirectory_relpath}' (before protocol check)"  "$0" "${LINENO}"
-	    break
-	fi
+    if [[ "${line}" =~ ${musicdirectory_relpath_re} ]]; then
+        musicdirectory_relpath="${BASH_REMATCH[1]}"
+        debug "musicdirectory_relpath=\`${musicdirectory_relpath}' (before protocol check)"  "$0" "${LINENO}"
+        break
+    fi
     done<"${mpdconf_file}"
     if [[ "${musicdirectory_relpath}x" == "x" ]]; then
-	debug "no musicdirectory_relpath found in \`${mpdconf_file}'"  "$0" "${LINENO}"
-	return 1
+    debug "no musicdirectory_relpath found in \`${mpdconf_file}'"  "$0" "${LINENO}"
+    return 1
     else
     musicdirectory_relpath="${musicdirectory_relpath/#\~/$HOME}"
-	debug "using musicdirectory_relpath \`${musicdirectory_relpath}' found in \`${mpdconf_file}'"  "$0" "${LINENO}"
+    debug "using musicdirectory_relpath \`${musicdirectory_relpath}' found in \`${mpdconf_file}'"  "$0" "${LINENO}"
     fi
     smb_nfs_re="^([smbnfs]+)://([^/]+)/(.*)$"
     if [[ "${musicdirectory_relpath}" =~ ${smb_nfs_re} ]]; then
-	musicdirectory_protocol="${BASH_REMATCH[1]}"
-	musicdirectory_host="${BASH_REMATCH[2]}"
-	musicdirectory_relpath="/${BASH_REMATCH[3]}"
-	debug "musicdirectory_protocol=\`${musicdirectory_protocol}' / musicdirectory_host=\`${musicdirectory_host}' / musicdirectory_relpath=\`${musicdirectory_relpath}'" "$0" "${LINENO}"
+    musicdirectory_protocol="${BASH_REMATCH[1]}"
+    musicdirectory_host="${BASH_REMATCH[2]}"
+    musicdirectory_relpath="/${BASH_REMATCH[3]}"
+    debug "musicdirectory_protocol=\`${musicdirectory_protocol}' / musicdirectory_host=\`${musicdirectory_host}' / musicdirectory_relpath=\`${musicdirectory_relpath}'" "$0" "${LINENO}"
     fi
     if [[ "${musicdirectory_protocol}x" != "x" ]]; then
-	## mpd uses internal cifs or nfs library (and not a fstab or systemd defined local mount point)
-	## ${musicdirectory_relpath} is the name of the share
-	debug "trying to access ${musicdirectory_protocol} share \`${musicdirectory_relpath}' on host \`${musicdirectory_host}'"  "$0" "${LINENO}"
-	mount_re="^(${musicdirectory_host}):(${musicdirectory_relpath})[[:space:]]+([^[:space:]]+)[[:space:]]+${musicdirectory_protocol}.*$"
-	debug "$(declare -p mount_re)" "$0" "${LINENO}"
-	while read -r line; do
-	    if [[ "${line}" =~ ${mount_re} ]]; then
-		#debug "$(declare -p line)" "$0" "${LINENO}"
-		music_mountdir="${BASH_REMATCH[3]}"
-		music_share="${BASH_REMATCH[2]}"
-		debug "share \`${music_share}' should be mounted at \`${music_mountdir}' found according to /etc/fstab" "$0" "${LINENO}"
-		break
-	    fi
-	done < /etc/fstab
-	if [[ "${music_mountdir}x" == "x" ]]; then
-	    debug "could not get mountdir for \`${musicdirectory_protocol}' share \`${musicdirectory_relpath}' on host \`${musicdirectory_host}' from fstab" "$0" "${LINENO}"
-	    #return 1
-	    # TODO: first check for manual mount, else try manual mount?
+    ## mpd uses internal cifs or nfs library (and not a fstab or systemd defined local mount point)
+    ## ${musicdirectory_relpath} is the name of the share
+    debug "trying to access ${musicdirectory_protocol} share \`${musicdirectory_relpath}' on host \`${musicdirectory_host}'"  "$0" "${LINENO}"
+    mount_re="^(${musicdirectory_host}):(${musicdirectory_relpath})[[:space:]]+([^[:space:]]+)[[:space:]]+${musicdirectory_protocol}.*$"
+    debug "$(declare -p mount_re)" "$0" "${LINENO}"
+    while read -r line; do
+        if [[ "${line}" =~ ${mount_re} ]]; then
+        #debug "$(declare -p line)" "$0" "${LINENO}"
+        music_mountdir="${BASH_REMATCH[3]}"
+        music_share="${BASH_REMATCH[2]}"
+        debug "share \`${music_share}' should be mounted at \`${music_mountdir}' found according to /etc/fstab" "$0" "${LINENO}"
+        break
+        fi
+    done < /etc/fstab
+    if [[ "${music_mountdir}x" == "x" ]]; then
+        debug "could not get mountdir for \`${musicdirectory_protocol}' share \`${musicdirectory_relpath}' on host \`${musicdirectory_host}' from fstab" "$0" "${LINENO}"
+        #return 1
+        # TODO: first check for manual mount, else try manual mount?
             # shellcheck disable=SC2162
-	    read -a manual_mount < <(mount | grep "${musicdirectory_host}:${musicdirectory_relpath}")
-	    if (( ${#manual_mount[@]} > 2 )); then
-		music_mountdir="${manual_mount[2]}"
-		debug "${musicdirectory_protocol} share \`${musicdirectory_host}:${musicdirectory_relpath}' is however mounted on \`${music_mountdir}'" "$0" "${LINENO}"
-	    else
-		case "${musicdirectory_protocol}" in
-		    nfs*)
-			temp_mountdir=$(mktemp -d "/tmp/${app_name}_tempmounts.XXXXX")
-			debug "trying to mount \`${musicdirectory_host}:${musicdirectory_relpath}' on \`${temp_mountdir}'" "$0" "${LINENO}"
-			if mount "${musicdirectory_host}:${musicdirectory_relpath}" "${temp_mountdir}"; then
-			    music_mountdir="${temp_mountdir}"
-			else
-			    debug "error mounting \`${musicdirectory_host}:${musicdirectory_relpath}' on \`${temp_mountdir}'" "$0" "${LINENO}"
-			    return 1
-			fi
-			;;
-		    cifs|smb)
-			debug "TODO: smb/cifs mount"  "$0" "${LINENO}"
-			return 1
-			;;
-		esac
-	    fi
-	else
-	    musicdirectory_relpath="${music_mountdir}"
-	fi
+        read -a manual_mount < <(mount | grep "${musicdirectory_host}:${musicdirectory_relpath}")
+        if (( ${#manual_mount[@]} > 2 )); then
+        music_mountdir="${manual_mount[2]}"
+        debug "${musicdirectory_protocol} share \`${musicdirectory_host}:${musicdirectory_relpath}' is however mounted on \`${music_mountdir}'" "$0" "${LINENO}"
+        else
+        case "${musicdirectory_protocol}" in
+            nfs*)
+            temp_mountdir=$(mktemp -d "/tmp/${app_name}_tempmounts.XXXXX")
+            debug "trying to mount \`${musicdirectory_host}:${musicdirectory_relpath}' on \`${temp_mountdir}'" "$0" "${LINENO}"
+            if mount "${musicdirectory_host}:${musicdirectory_relpath}" "${temp_mountdir}"; then
+                music_mountdir="${temp_mountdir}"
+            else
+                debug "error mounting \`${musicdirectory_host}:${musicdirectory_relpath}' on \`${temp_mountdir}'" "$0" "${LINENO}"
+                return 1
+            fi
+            ;;
+            cifs|smb)
+            debug "TODO: smb/cifs mount"  "$0" "${LINENO}"
+            return 1
+            ;;
+        esac
+        fi
+    else
+        musicdirectory_relpath="${music_mountdir}"
+    fi
     fi
     if [[ -d "${musicdirectory_relpath}" ]]; then
-	mpd_info[musicdirectory_relpath]="${musicdirectory_relpath}"
-	mpd_info[musicdirectory_protocol]="${musicdirectory_protocol}"
-	mpd_info[musicdirectory_host]="${musicdirectory_host}"
-	debug "using mpd_info[musicdirectory_relpath]=\`${mpd_info[musicdirectory_relpath]}', mpd_info[musicdirectory_protocol]=\`${mpd_info[musicdirectory_protocol]}', mpd_info[musicdirectory_host]=\`${mpd_info[musicdirectory_host]}'"  "$0" "${LINENO}"
+    mpd_info[musicdirectory_relpath]="${musicdirectory_relpath}"
+    mpd_info[musicdirectory_protocol]="${musicdirectory_protocol}"
+    mpd_info[musicdirectory_host]="${musicdirectory_host}"
+    debug "using mpd_info[musicdirectory_relpath]=\`${mpd_info[musicdirectory_relpath]}', mpd_info[musicdirectory_protocol]=\`${mpd_info[musicdirectory_protocol]}', mpd_info[musicdirectory_host]=\`${mpd_info[musicdirectory_host]}'"  "$0" "${LINENO}"
     else
-	debug "non-existing musicdirectory_relpath=\`${musicdirectory_relpath}' specified in \`${mpdconf_file}'"  "$0" "${LINENO}"
-	return 1
+    debug "non-existing musicdirectory_relpath=\`${musicdirectory_relpath}' specified in \`${mpdconf_file}'"  "$0" "${LINENO}"
+    return 1
     fi
 }
 
@@ -309,18 +309,18 @@ function gmi_set_alsa_hwaddr() {
     device_re='^[[:space:]]*device[[:space:]]+"hw:([^,]+)[,]*([^"]*)".*$'
     num_re="^[0-9]+$"
     while read -r line; do
-	if [[ "${check_device}x" == "x" ]]; then
-	    if [[ "${line}" =~ ${start_audio_output_re} ]]; then
-		check_device=true
-		continue
-	    elif [[ "${line}" =~ ${end_audio_output_re} ]]; then
-		debug "no device found in audio_output"  "$0" "${LINENO}"
-		return 1
-	    fi
-	elif  [[ "${line}" =~ ${device_re} ]]; then
+    if [[ "${check_device}x" == "x" ]]; then
+        if [[ "${line}" =~ ${start_audio_output_re} ]]; then
+        check_device=true
+        continue
+        elif [[ "${line}" =~ ${end_audio_output_re} ]]; then
+        debug "no device found in audio_output"  "$0" "${LINENO}"
+        return 1
+        fi
+    elif  [[ "${line}" =~ ${device_re} ]]; then
             debug "$(declare -p line)" "$0" "${LINENO}"
-	    alsa_info[hw_device_nr]="${BASH_REMATCH[1]}"
-	    alsa_info[hw_interface_nr]="${BASH_REMATCH[2]}"
+        alsa_info[hw_device_nr]="${BASH_REMATCH[1]}"
+        alsa_info[hw_interface_nr]="${BASH_REMATCH[2]}"
             debug "using alsa_info[hw_device_nr]=\`${alsa_info[hw_device_nr]}'"  "$0" "${LINENO}"
             if [[ ! "${alsa_info[hw_device_nr]}" =~ ${num_re} ]]; then
                 debug "device id (${alsa_info[hw_device_nr]}) is non-numerical" "$0" "${LINENO}"
@@ -334,19 +334,35 @@ function gmi_set_alsa_hwaddr() {
             fi
             debug "using alsa_info[hw_interface_nr]=\`${alsa_info[hw_interface_nr]}'"  "$0" "${LINENO}"
             ## append interface number if specified
-	    if [[ "${alsa_info[hw_interface_nr]}x" == "x" ]]; then
-		alsa_info[hw_address]="hw:${alsa_info[hw_device_nr]}"
-	    else
-		alsa_info[hw_address]="hw:${alsa_info[hw_device_nr]},${alsa_info[hw_interface_nr]}"
-	    fi
-	    debug "alsa_info[hw_device_nr]=\`${alsa_info[hw_device_nr]}' / alsa_info[hw_interface_nr]=\`${alsa_info[hw_interface_nr]}' / alsa_info[hw_address]=\`${alsa_info[hw_address]}'"  "$0" "${LINENO}"
-	    return
-	fi
+        if [[ "${alsa_info[hw_interface_nr]}x" == "x" ]]; then
+        alsa_info[hw_address]="hw:${alsa_info[hw_device_nr]}"
+        else
+        alsa_info[hw_address]="hw:${alsa_info[hw_device_nr]},${alsa_info[hw_interface_nr]}"
+        fi
+        debug "alsa_info[hw_device_nr]=\`${alsa_info[hw_device_nr]}' / alsa_info[hw_interface_nr]=\`${alsa_info[hw_interface_nr]}' / alsa_info[hw_address]=\`${alsa_info[hw_address]}'"  "$0" "${LINENO}"
+        return
+    fi
     done<"${mpdconf_file}"
     debug "alsa hw:x,y style output not found in ${mpdconf_file}"  "$0" "${LINENO}"
-	# If not set in mpd.conf then use hw:0,0
-	# TODO: query for this somehow
-	alsa_info[hw_address]="hw:0,0"
+    have_addr=
+    for pcminfo in /proc/asound/*/pcm*/info
+    do
+        [ "${pcminfo}" == "/proc/asound/*/pcm*/info" ] && continue
+        grep stream: "${pcminfo}" | grep -i playback > /dev/null || continue
+        cardnum=`grep ^card: "${pcminfo}" | awk -F ':' ' { print $2 } '`
+        cardnum=`echo ${cardnum} | \
+            sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+        devinum=`grep ^device: "${pcminfo}" | awk -F ':' ' { print $2 } '`
+        devinum=`echo ${devinum} | \
+            sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+        [ "${cardnum}" ] && [ "${devinum}" ] && {
+            alsa_info[hw_address]="hw:${cardnum},${devinum}"
+            have_addr=1
+            break
+        }
+    done
+    # If not set in mpd.conf and cannot determine then use hw:0,0
+    [ "${have_addr}" ] || alsa_info[hw_address]="hw:0,0"
     return
 }
 
@@ -363,15 +379,15 @@ scriptdir="${scriptdir:-$(cd "$(dirname "${BASH_SOURCE[0]}")" >/dev/null 2>&1 &&
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
     if source "${scriptdir}/common"; then
         # shellcheck disable=2086
-	[[ ${DEBUG} ]] && \
-	    debug "\`${scriptdir}/$(basename $0)' sourced \`${scriptdir}/common'"  "$0" "${LINENO}"
+    [[ ${DEBUG} ]] && \
+        debug "\`${scriptdir}/$(basename $0)' sourced \`${scriptdir}/common'"  "$0" "${LINENO}"
     fi
     gmi_set_mpd_info "$@"
 else
     if [[ ! -f debug ]]; then
-	if source "${scriptdir}/common"; then
-	    debug  "${scriptdir}/common is sourced\n"  "$0" "${LINENO}"
-	fi
+    if source "${scriptdir}/common"; then
+        debug  "${scriptdir}/common is sourced\n"  "$0" "${LINENO}"
+    fi
     fi
     debug "\`${BASH_SOURCE[0]}' sourced from \`${scriptdir}/${0##/*}'."
 fi

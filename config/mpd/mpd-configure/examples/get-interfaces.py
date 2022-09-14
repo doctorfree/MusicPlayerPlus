@@ -2,7 +2,7 @@
 
 ## sample python 3.x script to use alsa-capabilities from within python.
 ## needs `./get-interfaces-for-python.sh` which in turn sources
-## `../alsa-capabilities.
+## `/usr/bin/alsa-capabilities.
 ##
 ## start it with:
 ## python get-interfaces.py

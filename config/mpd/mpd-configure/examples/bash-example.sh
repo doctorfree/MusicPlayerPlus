@@ -8,8 +8,8 @@ HWADDRESS="${1:-hw:0,0}"
 ## store the monitorfile 
 declare -a ALSA_AIF_MONITORFILES=()
 
-if [[ -f alsa-capabilities ]]; then
-    source alsa-capabilities
+if [[ -f /usr/bin/alsa-capabilities ]]; then
+    source /usr/bin/alsa-capabilities
 elif [[ -f ../alsa-capabilities ]]; then 
     source ../alsa-capabilities
 elif [[ -f $(pwd)/alsa-capabilities ]]; then 

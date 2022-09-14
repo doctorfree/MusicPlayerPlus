@@ -1044,17 +1044,7 @@ function fetch_alsa_interfaces() {
     fi
 }
 
-
-function main() {
-    ## main function; see display_usageinfo()
-    ## check if needed commands are available
-    type -p aplay 2>/dev/null 1>&2 || \
-	die "${APP_NAME_AC} cannot continue without aplay 
-(part of the \`alsa-utils' package on most distributions.)"
-    ## if TESTFILE is specified use it instead of `aplay -l'
-    [[ -f ${TESTFILE} ]] && CMD_APLAYL="cat '${TESTFILE}'"
-    analyze_command_line "$@"
-    set_colors
+function return_alsa_interface() {
     fetch_alsa_interfaces
     ## exit with error if no matching output line was found
     ## for backwards compatibility
@@ -1067,6 +1057,19 @@ function main() {
     ALSA_AIF_UACCLASSES=("${ALSA_UACTYPES[@]}")
     ALSA_AIF_FORMATS=("${ALSA_FORMATS[@]}")
     ALSA_AIF_DISPLAYTITLES=()
+}
+
+function main() {
+    ## main function; see display_usageinfo()
+    ## check if needed commands are available
+    type -p aplay 2>/dev/null 1>&2 || \
+	die "${APP_NAME_AC} cannot continue without aplay 
+(part of the \`alsa-utils' package on most distributions.)"
+    ## if TESTFILE is specified use it instead of `aplay -l'
+    [[ -f ${TESTFILE} ]] && CMD_APLAYL="cat '${TESTFILE}'"
+    analyze_command_line "$@"
+    set_colors
+    return_alsa_interface
     ## return success if interfaces are found
     return 0
 }
@@ -1214,7 +1217,6 @@ trap cleanup EXIT
 ## own shell call function `main'
 if [[ "${BASH_SOURCE[0]:-}" != "${0}" ]]; then
     OPT_SOURCED=true
-    printf 1>&2 "%s sourced.\n" "${0}"
 else
     main "$@"
 fi

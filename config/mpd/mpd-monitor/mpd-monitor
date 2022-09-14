@@ -271,6 +271,4 @@ if init_info; then
 	    done
 	fi
     fi
-else
-    printf 1>&2 "could not init\n"
 fi

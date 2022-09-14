@@ -1,11 +1,145 @@
 #!/bin/bash
 
 MPD_MONITOR_DIR="/usr/share/musicplayerplus/mpd/mpd-monitor"
+MTITLE="MusicPlayerPlus MPD Monitor"
+CONSOLE_MODE=
+MPPRC="${HOME}/.config/mpprc"
+MPP_MODE=
+
+have_kitty=`type -p kitty`
+have_gnome=`type -p gnome-terminal`
+have_tilix=`type -p tilix`
+have_simple=`type -p st`
+
+pick_terminal() {
+  [ -f "${MPPRC}" ] && . "${MPPRC}"
+  [ "${MPP_MODE}" ] && {
+    case "${MPP_MODE}" in
+      kitty)
+        [ "${have_kitty}" ] && {
+          KITTY=1
+          return 0
+        }
+        ;;
+      gnome)
+        [ "${have_gnome}" ] && {
+          GNOME=1
+          return 0
+        }
+        ;;
+      simple)
+        [ "${have_simple}" ] && {
+          SIMPLE=1
+          return 0
+        }
+        ;;
+      tilix)
+        [ "${have_tilix}" ] && {
+          TILIX=1
+          return 0
+        }
+        ;;
+      *)
+        break
+        ;;
+    esac
+  }
+  if [ "${have_kitty}" ]
+  then
+    KITTY=1
+  else
+    if [ "${have_gnome}" ]
+    then
+      GNOME=1
+    else
+      if [ "${have_tilix}" ]
+      then
+        TILIX=1
+      else
+        if [ "${have_simple}" ]
+        then
+          SIMPLE=1
+        else
+          return 1
+        fi
+      fi
+    fi
+  fi
+  return 0
+}
+
+show_term() {
+  if [ "${KITTY}" ]
+  then
+    kitty --title="${MTITLE}" \
+          --start-as normal \
+          --override font_size=18 \
+          ${COMMAND} 2> /dev/null &
+  else
+    if [ "${TILIX}" ]
+    then
+      tilix --title="${MTITLE}" \
+            --profile=MusicPlayer \
+            --command="${COMMAND}" 2> /dev/null &
+    else
+      if [ "${GNOME}" ]
+      then
+        gnome-terminal --title="${MTITLE}" \
+              --profile=MusicPlayer \
+              -- ${COMMAND} &
+      else
+        if [ "${SIMPLE}" ]
+        then
+          st -t "${MTITLE}" \
+             -f "Monospace:size=18" \
+             ${COMMAND} 2> /dev/null &
+        else
+          ${COMMAND}
+        fi
+      fi
+    fi
+  fi
+}
+
+if [ "${DISPLAY}" ]
+then
+  consolemode=
+  # Check if on a console screen
+  have_tty=`type -p tty`
+  [ "${have_tty}" ] && {
+    tty=$(tty)
+    echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
+    echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+  }
+  [ "${consolemode}" ] || {
+    # Check if this is an SSH session
+    [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && consolemode=1
+  }
+  if [ "${consolemode}" ]
+  then
+    CONSOLE_MODE=1
+  else
+    pick_terminal || CONSOLE_MODE=1
+  fi
+else
+  CONSOLE_MODE=1
+fi
 
 if [ -x "${MPD_MONITOR_DIR}/mpd-monitor" ]
 then
+  current=`mpc current`
+  [ "${current}" ] || {
+    echo "No audio currently being played via MPD"
+    exit 0
+  }
   cd "${MPD_MONITOR_DIR}"
-  ./mpd-monitor $*
+  if [ "${CONSOLE_MODE}" ]
+  then
+    ./mpd-monitor $*
+  else
+    COMMAND="./mpd-monitor $*"
+    show_term
+  fi
   exit $?
 else
   echo "${MPD_MONITOR_DIR}/mpd-monitor does not exist or is not executable"
