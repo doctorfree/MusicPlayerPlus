@@ -577,7 +577,18 @@ set_music_dir() {
   }
 }
 
-# TODO: Preserve any user customizations to system /etc/mpd.conf
+# TODO: Preserve all user customizations to system /etc/mpd.conf
+#
+# Only preserving these commonly customized configuration options
+# until a more comprehensive method is devised:
+#
+# pid_file - The file where MPD stores its process ID
+# db_file - The music database
+# state_file - MPD's current state is noted here
+# playlist_directory - The directory where playlists are saved into
+# music_directory - The directory that MPD scans for music
+# sticker_file - The sticker database
+#
 #sync_sys_mpd_conf() {
 #  [ -f /etc/mpd.conf ] && {
 #    grep -v ^# /etc/mpd.conf | grep -v -e '^[[:space:]]*$' | while read mpdconf

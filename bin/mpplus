@@ -782,7 +782,6 @@ make_it_so() {
     if systemctl --user is-active navidrome.service >/dev/null 2>&1
     then
       DO_NOT_EXIT=1
-      clear
       show_main_menu
     else
       printf "\n\nRequired MPD"
@@ -797,7 +796,6 @@ make_it_so() {
       printf "\nRe-run 'mpplus' to start the MPD client and visualizer.\n\n"
       read -p "Press Enter to continue to MusicPlayerPlus menus " yn
       DO_NOT_EXIT=1
-      clear
       show_main_menu
     fi
   }
@@ -1230,7 +1228,6 @@ do_service_action() {
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
-        have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
         # Reconfigure mpcplus/mppcava with MPD visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
@@ -1281,7 +1278,6 @@ do_service_action() {
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
-        have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
         # Reconfigure mpcplus/mppcava with MPD visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mpd
@@ -1296,7 +1292,6 @@ do_service_action() {
       }
       [ "${service}" == "mpd.service" ] && {
         # Update the MPD library database
-        have_mpc=`type -p mpc`
         [ "${have_mpc}" ] && mpc update --quiet > /dev/null 2>&1 &
       }
       ;;
@@ -1383,9 +1378,12 @@ show_help_menu() {
     options+=("Bandcamp Download Man Page")
     options+=("Soundcloud Download Man Page")
     options+=("Fzmp Man Page")
+    options+=("Listyt Man Page")
     options+=("Mpcplus-tmux Man Page")
     options+=("Mpcplus Man Page")
     options+=("Mpcpluskeys Man Page")
+    options+=("Mpd-configure Man Page")
+    options+=("Mpd-monitor Man Page")
     options+=("Mppcava Man Page")
     options+=("Mppinit Man Page")
     options+=("Mppjulia Man Page")
@@ -1408,6 +1406,8 @@ show_help_menu() {
     do
       case "$opt,$REPLY" in
         "Done"*,*|*,"Done"*|"done"*,*|*,"done"*|"Back"*,*|*,"Back"*|"back"*,*|*,"back"*)
+          clear
+          printf "\n"
           break 2
           ;;
         "MusicPlayerPlus README",*|*,"MusicPlayerPlus README")
@@ -1472,6 +1472,10 @@ show_help_menu() {
           man fzmp
           break
           ;;
+        "Listyt"*,*|*,"Listyt"*)
+          man listyt
+          break
+          ;;
         "Mpcplus-tmux"*,*|*,"Mpcplus-tmux"*)
           man mpcplus-tmux
           break
@@ -1482,6 +1486,14 @@ show_help_menu() {
           ;;
         "Mpcpluskeys"*,*|*,"Mpcpluskeys"*)
           man mpcpluskeys
+          break
+          ;;
+        "Mpd-configure"*,*|*,"Mpd-configure"*)
+          man mpd-configure
+          break
+          ;;
+        "Mpd-monitor"*,*|*,"Mpd-monitor"*)
+          man mpd-monitor
           break
           ;;
         "Mppcava"*,*|*,"Mppcava"*)
@@ -1593,8 +1605,10 @@ show_downloads_menu() {
               break
               ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
-              printf "Returning\n\n"
+              clear
+              printf "\n"
               init_vars
+              show_main_menu
               break 2
               ;;
           "Download Album"*,*|*,"Download Album"*)
@@ -1643,9 +1657,165 @@ show_downloads_menu() {
   done
 }
 
+show_system_status() {
+  systemctl --user is-active mpd.service >/dev/null 2>&1 && \
+    m_active="active" || m_active="inactive"
+  systemctl --user is-enabled mpd.service >/dev/null 2>&1 && \
+    m_enabled="enabled" || m_enabled="disabled"
+  systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && \
+    p_active="active" || p_active="inactive"
+  systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && \
+    p_enabled="enabled" || p_enabled="disabled"
+  systemctl --user is-active mpdstats.service >/dev/null 2>&1 && \
+    s_active="active" || s_active="inactive"
+  systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && \
+    s_enabled="enabled" || s_enabled="disabled"
+  systemctl --user is-active webplugin.service >/dev/null 2>&1 && \
+    w_active="active" || w_active="inactive"
+  systemctl --user is-enabled webplugin.service >/dev/null 2>&1 && \
+    w_enabled="enabled" || w_enabled="disabled"
+  systemctl --user is-active yams.service >/dev/null 2>&1 && \
+    y_active="active" || y_active="inactive"
+  systemctl --user is-enabled yams.service >/dev/null 2>&1 && \
+    y_enabled="enabled" || y_enabled="disabled"
+  systemctl --user is-active mopidy.service >/dev/null 2>&1 && \
+    z_active="active" || z_active="inactive"
+  systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && \
+    z_enabled="enabled" || z_enabled="disabled"
+  systemctl --user is-active navidrome.service >/dev/null 2>&1 && \
+    n_active="active" || n_active="inactive"
+  systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && \
+    n_enabled="enabled" || n_enabled="disabled"
+  if [ "${have_navi}" ]
+  then
+    n_inst="installed"
+  else
+    n_inst="not installed"
+  fi
+  if [ "${have_mopidy}" ]
+  then
+    z_inst="installed"
+  else
+    z_inst="not installed"
+  fi
+  [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
+    printf "\nMusic Player Daemon service is ${m_enabled} and ${m_active}"
+  }
+  [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
+    printf "\nPulseAudio service is ${p_enabled} and ${p_active}"
+  }
+  [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
+    printf "\nBeets MPD Stats service is ${s_enabled} and ${s_active}"
+  }
+  [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
+    printf "\nBeets Web service is ${w_enabled} and ${w_active}"
+  }
+  [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
+    printf "\nLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
+  }
+  [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
+    printf "\nMopidy Server is ${z_inst}, ${z_enabled} and ${z_active}"
+  }
+  [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
+    printf "\nNavidrome Server is ${n_inst}, ${n_enabled} and ${n_active}"
+  }
+  printf "\n"
+}
+
+show_logs_menu() {
+  have_alsa=`type -p alsa-info`
+  while true
+  do
+    show_system_status
+    FIG_TEXT="Service Logs Menu"
+    if [ "${use_figlet}" ]
+    then
+      select_font small
+      show_figlet
+    else
+      show_menu_title "${FIG_TEXT}"
+    fi
+    PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
+    options=()
+    [ "${have_alsa}" ] && options+=("ALSA Sound System Info")
+    [ "${s_active}" == "active" ] && options+=("View Beets MPD Stats Log")
+    [ "${w_active}" == "active" ] && options+=("View Beets Web Service Log")
+    [ "${m_active}" == "active" ] && options+=("View Music Player Daemon Log")
+    [ "${z_active}" == "active" ] && options+=("View Mopidy Server Log")
+    [ "${n_active}" == "active" ] && options+=("View Navidrome Server Log")
+    [ "${p_active}" == "active" ] && options+=("View PulseAudio Server Log")
+    [ "${y_active}" == "active" ] && options+=("View Last.FM Scrobbler Log")
+    options+=("Manage Music Services")
+    options+=("Main menu" "Quit")
+    select opt in "${options[@]}"
+    do
+      case "$opt,$REPLY" in
+          "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+              clear
+              printf "\n"
+              show_help_menu
+              break
+              ;;
+          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+              clear
+              printf "\n"
+              init_vars
+              show_main_menu
+              break 2
+              ;;
+          "ALSA Sound System Info",*|*,"ALSA Sound System Info")
+              alsa-info --stdout | less
+              break
+              ;;
+          "View Beets MPD Stats Log",*|*,"View Beets MPD Stats Log")
+              journalctl --user-unit=mpdstats.service --since yesterday
+              break
+              ;;
+          "View Beets Web Service Log",*|*,"View Beets Web Service Log")
+              journalctl --user-unit=webplugin.service --since yesterday
+              break
+              ;;
+          "View Music Player Daemon Log",*|*,"View Music Player Daemon Log")
+              journalctl --user-unit=mpd.service --since yesterday
+              break
+              ;;
+          "View Mopidy Server Log",*|*,"View Mopidy Server Log")
+              journalctl --user-unit=mopidy.service --since yesterday
+              break
+              ;;
+          "View Navidrome Server Log",*|*,"View Navidrome Server Log")
+              journalctl --user-unit=navidrome.service --since yesterday
+              break
+              ;;
+          "View PulseAudio Server Log",*|*,"View PulseAudio Server Log")
+              journalctl --user-unit=pulseaudio.service --since yesterday
+              break
+              ;;
+          "View Last.FM Scrobbler Log",*|*,"View Last.FM Scrobbler Log")
+              journalctl --user-unit=yams.service --since yesterday
+              break
+              ;;
+          "Manage Music Services"*,*|*,"Manage Music Services"*)
+              clear
+              printf "\n"
+              show_services_menu
+              break
+              ;;
+          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+              printf "\nExiting\n"
+              exit 0
+              ;;
+      esac
+      REPLY=
+    done
+  done
+  init_vars
+}
+
 show_services_menu() {
   while true
   do
+    show_system_status
     FIG_TEXT="Services Menu"
     if [ "${use_figlet}" ]
     then
@@ -1654,40 +1824,6 @@ show_services_menu() {
     else
       show_menu_title "${FIG_TEXT}"
     fi
-    systemctl --user is-active mpd.service >/dev/null 2>&1 && m_active="active" || m_active="inactive"
-    systemctl --user is-enabled mpd.service >/dev/null 2>&1 && m_enabled="enabled" || m_enabled="disabled"
-    systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && p_active="active" || p_active="inactive"
-    systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && p_enabled="enabled" || p_enabled="disabled"
-    systemctl --user is-active mpdstats.service >/dev/null 2>&1 && s_active="active" || s_active="inactive"
-    systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && s_enabled="enabled" || s_enabled="disabled"
-    systemctl --user is-active webplugin.service >/dev/null 2>&1 && w_active="active" || w_active="inactive"
-    systemctl --user is-enabled webplugin.service >/dev/null 2>&1 && w_enabled="enabled" || w_enabled="disabled"
-    systemctl --user is-active yams.service >/dev/null 2>&1 && y_active="active" || y_active="inactive"
-    systemctl --user is-enabled yams.service >/dev/null 2>&1 && y_enabled="enabled" || y_enabled="disabled"
-    systemctl --user is-active mopidy.service >/dev/null 2>&1 && z_active="active" || z_active="inactive"
-    systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && z_enabled="enabled" || z_enabled="disabled"
-    systemctl --user is-active navidrome.service >/dev/null 2>&1 && n_active="active" || n_active="inactive"
-    systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && n_enabled="enabled" || n_enabled="disabled"
-    if [ "${have_navi}" ]
-    then
-      n_inst="installed"
-    else
-      n_inst="not installed"
-    fi
-    if [ "${have_mopidy}" ]
-    then
-      z_inst="installed"
-    else
-      z_inst="not installed"
-    fi
-    printf "\nCurrent status of MusicPlayerPlus Services:"
-    printf "\n\tMusic Player Daemon service is ${m_enabled} and ${m_active}"
-    printf "\n\tPulseAudio service is ${p_enabled} and ${p_active}"
-    printf "\n\tBeets MPD Stats service is ${s_enabled} and ${s_active}"
-    printf "\n\tBeets Web service is ${w_enabled} and ${w_active}"
-    printf "\n\tLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
-    printf "\n\tMopidy Server is ${z_inst}, ${z_enabled} and ${z_active}"
-    printf "\n\tNavidrome Server is ${n_inst}, ${n_enabled} and ${n_active}\n\n"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound System")
     [ "${have_mopidy}" ] || options+=("Install Mopidy Server")
@@ -1791,14 +1927,35 @@ show_services_menu() {
     else
       options+=("Start Last.FM Scrobbler")
     fi
-    options+=("Status of Music Player Daemon")
-    options+=("Status of Beets MPD Stats")
-    options+=("Status of Beets Web Service")
-    [ "${have_mopidy}" ] && options+=("Status of Mopidy Server")
-    [ "${have_navi}" ] && options+=("Status of Navidrome Server")
-    options+=("Status of PulseAudio")
-    options+=("Status of Last.FM Scrobbler")
+    [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
+      options+=("Status of Music Player Daemon")
+    }
+    [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
+      options+=("Status of Beets MPD Stats")
+    }
+    [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
+      options+=("Status of Beets Web Service")
+    }
+    [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
+      [ "${have_mopidy}" ] && options+=("Status of Mopidy Server")
+    }
+    [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
+      [ "${have_navi}" ] && options+=("Status of Navidrome Server")
+    }
+    [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
+      options+=("Status of PulseAudio")
+    }
+    [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
+      options+=("Status of Last.FM Scrobbler")
+    }
     options+=("Stop All Active Services")
+    [ "${z_active}" == "active" ] && [ "${have_mopidy}" ] && {
+      options+=("Update/scan Mopidy music library")
+    }
+    [ "${m_active}" == "active" ] && [ "${have_mpc}" ] && {
+      options+=("Update/scan MPD music library")
+    }
+    options+=("View Music Service Logs")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -1810,8 +1967,10 @@ show_services_menu() {
               break
               ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
-              printf "Returning\n\n"
+              clear
+              printf "\n"
               init_vars
+              show_main_menu
               break 2
               ;;
           "Configure ALSA Sound System",*|*,"Configure ALSA Sound System")
@@ -2101,6 +2260,20 @@ show_services_menu() {
               mpp_service stop ALL
               break
               ;;
+          "Update/scan Mopidy"*,*|*,"Update/scan Mopidy"*)
+              mopidy local scan > /dev/null 2>&1 &
+              break
+              ;;
+          "Update/scan MPD"*,*|*,"Update/scan MPD"*)
+              mpc update --quiet &
+              break
+              ;;
+          "View Music Service Log"*,*|*,"View Music Service Log"*)
+              clear
+              printf "\n"
+              show_logs_menu
+              break
+              ;;
           "Quit",*|*,"Quit"|"quit",*|*,"quit")
               printf "\nExiting\n"
               exit 0
@@ -2142,8 +2315,10 @@ show_fzmp_menu() {
               break
               ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
-              printf "Returning\n\n"
+              clear
+              printf "\n"
               init_vars
+              show_main_menu
               break 2
               ;;
           "Search artist/album with fzf",*|*,"Search artist/album with fzf")
@@ -2226,8 +2401,10 @@ show_ascii_menu() {
               break
               ;;
           "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
-              printf "Returning\n\n"
+              clear
+              printf "\n"
               init_vars
+              show_main_menu
               break 2
               ;;
           "Julia Set ASCIImatics Animation",*|*,"Julia Set ASCIImatics Animation")
@@ -2357,6 +2534,8 @@ select_music_dir() {
 }
 
 show_main_menu() {
+  clear
+  printf "\n"
   while true
   do
     if [ "${FULLSCREEN}" ]
@@ -2394,7 +2573,7 @@ show_main_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Launch mpcplus with Current")
+    options=("Launch mpcplus in Current")
     [ "${have_kitty}" ] && options+=("Launch mpcplus with Kitty")
     [ "${have_gnome}" ] && options+=("Launch mpcplus with Gnome")
     [ "${have_retro}" ] && options+=("Launch mpcplus with Retro")
@@ -2410,6 +2589,7 @@ show_main_menu() {
     options+=("AcousticBrainz Info Retrieval")
     options+=("Manage Music Downloads")
     options+=("Manage Music Services")
+    options+=("View Music Service Logs")
     [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
     options+=("Select Music Directory")
     [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
@@ -2426,7 +2606,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Launch mpcplus with Current",*|*,"Launch mpcplus with Current")
+          "Launch mpcplus in Current",*|*,"Launch mpcplus in Current")
               MPCPLUS="mpcplus"
               TMUX_MPC=1
               USE_TMUX=1
@@ -2463,21 +2643,36 @@ show_main_menu() {
               break
               ;;
           "ASCIImatics Animations",*|*,"ASCIImatics Animations")
+              clear
+              printf "\n"
               show_ascii_menu
               skip_it_so=1
               break
               ;;
           "Manage Music Downloads"*,*|*,"Manage Music Downloads"*)
+              clear
+              printf "\n"
               show_downloads_menu
               skip_it_so=1
               break
               ;;
           "Manage Music Services"*,*|*,"Manage Music Services"*)
+              clear
+              printf "\n"
               show_services_menu
               skip_it_so=1
               break
               ;;
+          "View Music Service Log"*,*|*,"View Music Service Log"*)
+              clear
+              printf "\n"
+              show_logs_menu
+              skip_it_so=1
+              break
+              ;;
           "List"*,*|*,"List"*)
+              clear
+              printf "\n"
               show_fzmp_menu
               skip_it_so=1
               break
@@ -3044,6 +3239,7 @@ fi
 have_uebz=`type -p ueberzug`
 have_dmenu=`type -p dmenu`
 have_fzf=`type -p fzf`
+have_mpc=`type -p mpc`
 have_mopidy=`type -p mopidy`
 have_nema=`type -p asciinema`
 have_figlet=`type -p figlet`
@@ -3460,7 +3656,6 @@ if [ "${INTERACTIVE}" ]
 then
   DO_NOT_EXIT=1
   trap 'set_user_conf' SIGINT SIGTERM SIGHUP EXIT
-  clear
   show_main_menu
 else
   if [ "${FZMPOPT}" ]
