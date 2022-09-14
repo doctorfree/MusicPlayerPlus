@@ -215,20 +215,19 @@ center_window() {
     then
       vhit=${height}
       yoff=$((s_hit - height))
-      echo "vhit = $vhit" >> /tmp/kit$$
-      echo "yoff = $yoff" >> /tmp/kit$$
     else
-      toff=$((s_hit - position))
-      [ "${KITTY}" ] || [ "${SIMPLE}" ] && toff=$((toff - 150))
-      yoff=$((toff - height))
-      echo "toff = $toff" >> /tmp/kit$$
-      echo "yoff = $yoff" >> /tmp/kit$$
-      [ ${toff} -lt 0 ] && {
-        height=${toff}
+      if [ "${position}" == "top" ]
+      then
         yoff=0
-        echo "height = $height" >> /tmp/kit$$
-        echo "yoff = $yoff" >> /tmp/kit$$
-      }
+      else
+        toff=$((s_hit - position))
+        [ "${KITTY}" ] || [ "${SIMPLE}" ] && toff=$((toff - 150))
+        yoff=$((toff - height))
+        [ ${toff} -lt 0 ] && {
+          height=${toff}
+          yoff=0
+        }
+      fi
     fi
     mvarg="${grav},${xoff},${yoff},${width},${height}"
     wmctrl -i -r "${winid}" -b "remove,fullscreen,maximized_vert"
@@ -1002,6 +1001,19 @@ make_it_so() {
   }
   # End visualizer startup section
 
+  # TODO: handle other graphical mpd clients
+  [ "${MPCPLUS}" == "cantata" ] && {
+    COVER_ART=
+    CURRENT=
+    FULLSCREEN=
+    GNOME=
+    KITTY=
+    RETRO=
+    SIMPLE=
+    TILIX=
+    TMUX_MPC=
+    USE_TMUX=
+  }
   # Fullscreen ASCIImatics Animations
   [ "${SPLASH}" ] && FULLSCREEN=1
 
@@ -1144,7 +1156,18 @@ make_it_so() {
                   [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
                 }
               else
-                ${MPCOMM}
+                ${MPCOMM} &
+                # TODO: handle other graphical mpd clients
+                [ "${MPCOMM}" == "cantata" ] && [ "${USE_EWMH}" ] && {
+                  sleep 1
+                  can_win=`wmctrl -l -G -x | grep cantata.cantata | \
+                    grep "Cantata"`
+                  [ "${can_win}" ] || {
+                    can_win=`wmctrl -l -G -x | grep cantata.cantata | \
+                      grep -i "cantata"`
+                  }
+                  [ "${can_win}" ] && center_window "${can_win}" "top"
+                }
               fi
             fi
           fi
