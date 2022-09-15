@@ -2091,7 +2091,13 @@ show_services_menu() {
               break
               ;;
           "Status of Music Player Daemon",*|*,"Status of Music Player Daemon")
-              mpp_service status mpd
+              if [ "${have_mpc}" ]
+              then
+                { mpc stats && \
+                  mpp_service status mpd; } | less
+              else
+                mpp_service status mpd
+              fi
               break
               ;;
           "Enable PulseAudio",*|*,"Enable PulseAudio")

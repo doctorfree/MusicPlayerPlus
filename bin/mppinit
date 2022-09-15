@@ -38,6 +38,9 @@ BOLD=$(tput bold)
 NORM=$(tput sgr0)
 MPP_USER=$(id -un)
 
+mud="music_directory"
+pld="playlist_directory"
+
 if [ -x "${SCPTDIR}/crudini.py" ]
 then
   CRUDINI="${SCPTDIR}/crudini.py"
@@ -560,8 +563,8 @@ set_music_dir() {
   [ "${mpd_music}" ] || {
     # If not set in $MPPCONF then look in MPD config
     [ -f "${MPDCONF}" ] && {
-      mpd_music=`grep ^music_directory ${MPDCONF}`
-      [ "${mpd_music}" ] || mpd_music=`grep \#music_directory ${MPDCONF}`
+      mpd_music=`grep ^${mud} ${MPDCONF}`
+      [ "${mpd_music}" ] || mpd_music=`grep \#${mud} ${MPDCONF}`
       mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
       # Need to expand the tilda to $HOME
       exp_music="${mpd_music/#\~/$HOME}"
@@ -579,51 +582,109 @@ set_music_dir() {
 
 # TODO: Preserve all user customizations to system /etc/mpd.conf
 #
-# Only preserving these commonly customized configuration options
-# until a more comprehensive method is devised:
+# Currently only preserving customized 'music_directory' configuration
+# option until a more comprehensive method is devised
 #
-# pid_file - The file where MPD stores its process ID
-# db_file - The music database
-# state_file - MPD's current state is noted here
-# playlist_directory - The directory where playlists are saved into
-# music_directory - The directory that MPD scans for music
-# sticker_file - The sticker database
-#
-#sync_sys_mpd_conf() {
-#  [ -f /etc/mpd.conf ] && {
-#    grep -v ^# /etc/mpd.conf | grep -v -e '^[[:space:]]*$' | while read mpdconf
-#    do
-#      option=`echo "${mpdconf}" | awk -F '=' ' { print $1 } '`
-#      option=`echo ${option} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
-#      [[ " ${excluded_ncm_opts[*]} " =~ " ${option} " ]] && continue
-#      [ "${option}" ] && {
-#        oval=`echo "${mpdconf}" | awk -F '=' ' { print $2 } '`
-#        oval=`echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
-#        [ "${oval}" ] && {
-#          mval=`grep "^${option} " "${MPC_USER_CONF}" | \
-#                awk -F '=' ' { print $2 } '`
-#          mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
-#          [ "${mval}" == "${oval}" ] || {
-#            # Use the previously configured value for this option
-#            for userconf in ${MPC_USER_CONF} ${UEB_USER_CONF}
-#            do
-#              [ -f "${userconf}" ] && {
-#                cat "${userconf}" | \
-#                  sed -e "s/^${option} /#${option} /" > /tmp/ncm$$
-#                grep "${previous_comments}" /tmp/ncm$$ > /dev/null || {
-#                  echo "${previous_comments}" >> /tmp/ncm$$
-#                }
-#                echo "${mpdconf}" >> /tmp/ncm$$
-#                cp /tmp/ncm$$ "${userconf}"
-#                rm -f /tmp/ncm$$
-#              }
-#            done
-#          }
-#        }
-#      }
-#    done
-#  }
-#}
+sync_sys_mpd_conf() {
+  [ -f /etc/mpd.conf ] && {
+    grep -v ^# /etc/mpd.conf | grep -v -e '^[[:space:]]*$' > /tmp/mpdconf$$
+    mpdconf=`grep ${mud} /tmp/mpdconf$$`
+    [ "${mpdconf}" ] && {
+      oval=`echo "${mpdconf}" | awk ' { print $2 } ' | tr -d '"'`
+      oval=`echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+      [ "${oval}" ] && {
+        mval=`grep "^${mud}" "${MPDCONF}" | awk ' { print $2 } '`
+        mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+        mval=`echo ${mval} | tr -d '"'`
+        [ "${mval}" == "${oval}" ] || {
+          # Use the previously configured value for this option
+          # Force the playlist directory to be in $music_directory/Playlists
+          playdir="${oval}/Playlists"
+          cat "${MPDCONF}" | \
+            sed -e "s%^${mud}.*%${mud}                     \"${oval}\"%" \
+                -e "s%^${pld}.*%${pld}                  \"${playdir}\"%" \
+                > /tmp/mpd$$
+          cp /tmp/mpd$$ "${MPDCONF}"
+          rm -f /tmp/mpd$$
+          [ -f "${MPPCONF}" ] || init_mpp_conf
+          # Sync music_directory in $HOME/.config/mpprc
+          exp_music="${oval/#\~/$HOME}"
+          mpp_currm=`grep ^MUSIC_DIR ${MPPCONF}`
+          mpp_currm=`echo ${mpp_currm} | \
+            awk -F '=' ' { print $2 } ' | sed -e "s/\"//g"`
+          [ "${exp_music}" == "${mpp_currm}" ] || {
+            cat ${MPPCONF} | \
+              sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${exp_music}\"%" > /tmp/mpp$$
+            cp /tmp/mpp$$ ${MPPCONF}
+            chmod 600 ${MPPCONF}
+            rm -f /tmp/mpp$$
+          }
+        }
+      }
+    }
+    # Copy pre-existing MPD playlists to new playlist directory
+    mpdconf=`grep ${pld} /tmp/mpdconf$$`
+    [ "${mpdconf}" ] && {
+      oval=`echo "${mpdconf}" | awk ' { print $2 } ' | tr -d '"'`
+      oval=`echo ${oval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+      [ "${oval}" ] && {
+        mval=`grep "^${pld}" "${MPDCONF}" | awk ' { print $2 } '`
+        mval=`echo ${mval} | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//'`
+        mval=`echo ${mval} | tr -d '"'`
+        mval="${mval/#\~/$HOME}"
+        oval="${oval/#\~/$HOME}"
+        [ "${mval}" == "${oval}" ] || {
+          [ -d "${mval}" ] || mkdir -p "${mval}"
+          for playlist in "${oval}"/*
+          do
+            [ "${playlist}" == "${oval}/*" ] && continue
+            playbase=`basename "${playlist}"`
+            if [ -d "${playlist}" ]
+            then
+              [ -d "${mval}/${playbase}" ] || {
+                cp -a "${playlist}" "${mval}/${playbase}"
+              }
+            else
+              [ -f "${mval}/${playbase}" ] || {
+                cp "${playlist}" "${mval}/${playbase}"
+              }
+            fi
+          done
+        }
+      }
+    }
+    rm -f /tmp/mpdconf$$
+  }
+}
+
+disable_sys_mpd() {
+  senable=
+  sactive=
+  # Disable and stop any system-wide MPD service
+  systemctl is-enabled --quiet mpd.service
+  [ $? -eq 0 ] && {
+    senable=1
+    sudo systemctl disable --quiet mpd.service
+    sudo systemctl --user --global disable mpd.service
+  }
+  systemctl is-enabled --quiet mpd.socket
+  [ $? -eq 0 ] && {
+    senable=1
+    sudo systemctl disable --quiet mpd.socket
+    sudo systemctl --user --global disable mpd.socket
+  }
+  systemctl is-active --quiet mpd.service
+  [ $? -eq 0 ] && {
+    sactive=1
+    sudo systemctl stop --quiet mpd.service
+  }
+  systemctl is-active --quiet mpd.socket
+  [ $? -eq 0 ] && {
+    sactive=1
+    sudo systemctl stop --quiet mpd.socket
+  }
+  [ "${sactive}" ] || [ "${senable}" ] && sync_sys_mpd_conf
+}
 
 sync_music_dir() {
   set_music_dir
@@ -634,11 +695,12 @@ sync_music_dir() {
     # Create playlists directory if it does not exist
     [ -d "${exp_music}/Playlists" ] || mkdir -p "${exp_music}/Playlists"
     # Sync playlist_directory in mpd.conf
-    mpd_play=`grep ^playlist_directory ${MPDCONF}`
+    mpd_play=`grep ^${pld} ${MPDCONF}`
     mpd_play=`echo ${mpd_play} | awk ' { print $2 } ' | sed -e "s/\"//g"`
     [ "${mpd_music}/Playlists" == "${mpd_play}" ] || {
+      playdir="${mpd_music}/Playlists"
       cat ${MPDCONF} | \
-        sed -e "s%^playlist_directory .*%playlist_directory \"${mpd_music}/Playlists\"%" \
+        sed -e "s%^${pld} .*%${pld}                  \"${playdir}\"%" \
         > /tmp/mpd$$
       cp /tmp/mpd$$ ${MPDCONF}
       rm -f /tmp/mpd$$
@@ -646,12 +708,12 @@ sync_music_dir() {
     [ "${set_mpd_conf}" ] && {
       [ -f "${MPDCONF}" ] && {
         # Sync music_directory in mpd.conf
-        mpd_currm=`grep ^music_directory ${MPDCONF}`
-        [ "${mpd_currm}" ] || mpd_currm=`grep \#music_directory ${MPDCONF}`
+        mpd_currm=`grep ^${mud} ${MPDCONF}`
+        [ "${mpd_currm}" ] || mpd_currm=`grep \#${mud} ${MPDCONF}`
         mpd_currm=`echo ${mpd_currm} | awk ' { print $2 } ' | sed -e "s/\"//g"`
         [ "${mpd_music}" == "${mpd_currm}" ] || {
           cat ${MPDCONF} | \
-            sed -e "s%^music_directory .*%music_directory \"${mpd_music}\"%" \
+            sed -e "s%^${mud} .*%${mud}                     \"${mpd_music}\"%" \
             > /tmp/mpd$$
           cp /tmp/mpd$$ ${MPDCONF}
           rm -f /tmp/mpd$$
@@ -787,35 +849,6 @@ sync_music_dir() {
         }
       }
     }
-
-# TODO
-#   senable=
-#   sactive=
-    # Disable and stop any system-wide MPD service
-    systemctl is-enabled --quiet mpd.service
-    [ $? -eq 0 ] && {
-#     senable=1
-      sudo systemctl disable --quiet mpd.service
-      sudo systemctl --user --global disable mpd.service
-    }
-    systemctl is-enabled --quiet mpd.socket
-    [ $? -eq 0 ] && {
-#     senable=1
-      sudo systemctl disable --quiet mpd.socket
-      sudo systemctl --user --global disable mpd.socket
-    }
-    systemctl is-active --quiet mpd.service
-    [ $? -eq 0 ] && {
-#     sactive=1
-      sudo systemctl stop --quiet mpd.service
-    }
-    systemctl is-active --quiet mpd.socket
-    [ $? -eq 0 ] && {
-#     sactive=1
-      sudo systemctl stop --quiet mpd.socket
-    }
-# TODO
-#   [ "${sactive}" ] || [ "${senable}" ] && sync_sys_mpd_conf
 
     systemctl --user daemon-reload --quiet
     # Enable and activate the MPD user service
@@ -2599,6 +2632,8 @@ cat ${USERCONF}/mppcava/config-tmux | \
   sed -e "s/^gradient/; gradient/" > /tmp/cav$$
 cp /tmp/cav$$ ${USERCONF}/mppcava/config-tmux
 rm -f /tmp/cav$$
+
+disable_sys_mpd
 
 [ "${quiet}" ] || {
   printf "\n\tSyncing MusicPlayerPlus configuration across all configs ..."
