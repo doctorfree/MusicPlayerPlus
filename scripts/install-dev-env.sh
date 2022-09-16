@@ -88,6 +88,13 @@ else
         sudo ${PINS} -y install ${PKGS}
         sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
         sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
+        sudo ${PINS} -y install dnf-plugins-core
+        sudo ${PINS} config-manager --set-enabled rpmfusion-free
+        sudo ${PINS} config-manager --set-enabled rpmfusion-free-updates
+        sudo ${PINS} config-manager --set-enabled rpmfusion-nonfree-updates
+        sudo ${PINS} config-manager --set-enabled rpmfusion-nonfree
+        sudo ${PINS} config-manager --set-enabled rpmfusion-nonfree-nvidia-driver
+        sudo ${PINS} config-manager --set-enabled rpmfusion-nonfree-steam
         sudo ${PINS} -y update
         sudo ${PINS} -y --allowerasing install compat-ffmpeg4 \
                                                compat-ffmpeg4-devel
