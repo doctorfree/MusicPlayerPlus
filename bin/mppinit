@@ -892,9 +892,9 @@ function check_py_version
 }
 
 enable_rpm_fusion() {
-  sudo dnf -y install dnf-plugins-core
-  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo dnf --assumeyes --quiet install dnf-plugins-core
+  sudo dnf --assumeyes --quiet install ${FUSION}/${FREE}/${RELRPM}
+  sudo dnf --assumeyes --quiet install ${FUSION}/${NONFREE}/${NONRPM}
   sudo dnf config-manager --set-enabled rpmfusion-free
   sudo dnf config-manager --set-enabled rpmfusion-free-updates
   sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates
@@ -1980,8 +1980,8 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
   enable_rpm_fusion
-  sudo dnf -y install libmpdclient mpd mplayer
-  sudo dnf -y --allowerasing install compat-ffmpeg4
+  sudo dnf --assumeyes --quiet install libmpdclient mpd mplayer
+  sudo dnf --assumeyes --quiet --allowerasing install compat-ffmpeg4
 }
 [ "${centos}" ] && {
   sudo alternatives --set python /usr/bin/python3
@@ -1993,11 +1993,11 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
   enable_rpm_fusion
   sudo dnf config-manager --set-enabled powertools
-  sudo dnf -y --allowerasing install ffmpeg mediainfo
+  sudo dnf --assumeyes --quiet --allowerasing install ffmpeg mediainfo
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
     have_git=`type -p git`
-    [ "${have_git}" ] || sudo dnf -y install git
+    [ "${have_git}" ] || sudo dnf --assumeyes --quiet install git
     install_mpc
   }
 }
