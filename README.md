@@ -18,6 +18,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 ## Table of contents
 
 1. [Overview](#overview)
+    1. [Requirements](#requirements)
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
     1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Quickstart](#quickstart)
@@ -133,6 +134,40 @@ of complex music library tools that can be integrated and managed in a fairly
 simple to understand and administer fashion. We wish to make the difficult easy.
 Also, to make some cool looking powerful stuff happen from the command-line
 in a character-based environment.
+
+### Requirements
+
+MusicPlayerPlus is compiled and packaged for installation on:
+
+- Arch Linux (x86_64)
+- CentOS Linux (x86_64)
+- Fedora Linux (x86_64)
+- Raspberry Pi OS (armhf)
+- Ubuntu Linux (amd64)
+
+Memory and storage requirements depend upon the size of the music library.
+
+With a moderate sized music library, the Music Player Daemon can exceed a
+2GB memory capacity. Therefore, 4GB or more of memory is recommended.
+
+Storage should be sized to adequately host what will likely be a growing
+music library. Plan ahead and leave your library room to grow. A few hundred
+Gigabytes of storage might suffice for some music libraries but a Terabyte
+or more will provide room to grow. Testing is performed on systems with
+4GB RAM and 2TB storage using a 600GB music library.
+
+Essentia metadata extraction, Blissify similarity analysis, and transcoding
+all consume significant CPU resources. Testing has been performed on systems
+with the following CPU resources:
+
+- 8 x Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz
+- 2 x Intel(R) Celeron(R) CPU G1840 @ 2.80GHz
+- 4 x ARMv7 Processor rev 3 (v7l)
+
+All of these processors were able to handle significant loads. However,
+import, metadata extraction, and transcoding are all much quicker on the
+8 x Intel(R) Core(TM) i7-7700K CPU @ 4.20GHz system. Although not necessary,
+these infrequent operations consume much less time on a more powerful CPU.
 
 ### MusicPlayerPlus Commands
 
@@ -419,7 +454,9 @@ MusicPlayerPlus has been tested successfully on the following platforms:
     - `MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst`
 - **Ubuntu Linux 20.04**
     - `MusicPlayerPlus_<version>-<release>.amd64.deb`
-- **Fedora Linux 35**
+- **Fedora Linux 36**
+    - `MusicPlayerPlus_<version>-<release>.x86_64.rpm`
+- **CentOS Linux 8**
     - `MusicPlayerPlus_<version>-<release>.x86_64.rpm`
 - **Raspbian Linux 11**
     - `MusicPlayerPlus_<version>-<release>.armhf.deb`

@@ -1739,13 +1739,27 @@ show_logs_menu() {
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${have_alsa}" ] && options+=("ALSA Sound System Info")
-    [ "${s_active}" == "active" ] && options+=("View Beets MPD Stats Log")
-    [ "${w_active}" == "active" ] && options+=("View Beets Web Service Log")
-    [ "${m_active}" == "active" ] && options+=("View Music Player Daemon Log")
-    [ "${z_active}" == "active" ] && options+=("View Mopidy Server Log")
-    [ "${n_active}" == "active" ] && options+=("View Navidrome Server Log")
-    [ "${p_active}" == "active" ] && options+=("View PulseAudio Server Log")
-    [ "${y_active}" == "active" ] && options+=("View Last.FM Scrobbler Log")
+    [ "${s_active}" == "active" ] || [ "${s_enabled}" == "enabled" ] && {
+      options+=("View Beets MPD Stats Log")
+    }
+    [ "${w_active}" == "active" ] || [ "${w_enabled}" == "enabled" ] && {
+      options+=("View Beets Web Service Log")
+    }
+    [ "${m_active}" == "active" ] || [ "${m_enabled}" == "enabled" ] && {
+      options+=("View Music Player Daemon Log")
+    }
+    [ "${z_active}" == "active" ] || [ "${z_enabled}" == "enabled" ] && {
+      options+=("View Mopidy Server Log")
+    }
+    [ "${n_active}" == "active" ] || [ "${n_enabled}" == "enabled" ] && {
+      options+=("View Navidrome Server Log")
+    }
+    [ "${p_active}" == "active" ] || [ "${p_enabled}" == "enabled" ] && {
+      options+=("View PulseAudio Server Log")
+    }
+    [ "${y_active}" == "active" ] || [ "${y_enabled}" == "enabled" ] && {
+      options+=("View Last.FM Scrobbler Log")
+    }
     options+=("Manage Music Services")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
