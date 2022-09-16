@@ -68,7 +68,7 @@ else
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
-        sudo ${PINS} -y remove ffmpeg-devel
+        sudo ${PINS} -y remove ffmpeg ffmpeg-devel
         sudo ${PINS} -y remove ${PKGS}
         sudo ${PINS} -y remove gcc-c++
         sudo ${PINS} -y groupremove "Development Tools" "Development Libraries"
@@ -81,7 +81,7 @@ else
         sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
         sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
         sudo ${PINS} -y update
-        sudo ${PINS} -y --allowerasing install ffmpeg-devel
+        sudo ${PINS} -y --allowerasing install ffmpeg ffmpeg-devel
       fi
     else
       if [ "${centos}" ]

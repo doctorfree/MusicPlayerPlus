@@ -246,7 +246,7 @@ have_rpm=`type -p rpmbuild`
   have_yum=`type -p yum`
   if [ "${have_yum}" ]
   then
-    ${SUDO} yum install rpm-build
+    ${SUDO} yum -y install rpm-build
   else
     ${SUDO} apt-get update
     export DEBIAN_FRONTEND=noninteractive
