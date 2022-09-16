@@ -1969,6 +1969,7 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
   sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
   sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo dnf -y install libmpdclient mpd mplayer
   sudo dnf -y --allowerasing install compat-ffmpeg4
 }
 [ "${centos}" ] && {

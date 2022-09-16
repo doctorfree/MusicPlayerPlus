@@ -75,6 +75,13 @@ else
         sudo ${PINS} -y groupremove "Development Tools" "Development Libraries"
         sudo ${PINS} -y remove ${FUSION}/${NONFREE}/${NONRPM}
         sudo ${PINS} -y remove ${FUSION}/${FREE}/${RELRPM}
+        sudo ${PINS} -y install dnf-plugins-core
+        sudo ${PINS} config-manager --set-disabled rpmfusion-free
+        sudo ${PINS} config-manager --set-disabled rpmfusion-free-updates
+        sudo ${PINS} config-manager --set-disabled rpmfusion-nonfree-updates
+        sudo ${PINS} config-manager --set-disabled rpmfusion-nonfree
+        sudo ${PINS} config-manager --set-disabled rpmfusion-nonfree-nvidia-driver
+        sudo ${PINS} config-manager --set-disabled rpmfusion-nonfree-steam
       else
         sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
         sudo ${PINS} -y install gcc-c++
