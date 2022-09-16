@@ -86,6 +86,15 @@ filesize_unitlabel="bytes"
 # shellcheck disable=SC2034
 filesize_siunit="M"
 
+cleanup() {
+  tput cnorm
+  exit 0
+}
+trap 'cleanup' SIGINT SIGTERM
+
+# Invisible cursor
+tput civis -- invisible
+
 if source "${scriptdir}/common"; then
     # shellcheck disable=SC2086
     [[ ${DEBUG} ]] && \

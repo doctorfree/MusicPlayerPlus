@@ -90,17 +90,20 @@ show_term() {
     kitty --title="${MTITLE}" \
           --start-as normal \
           --override font_size=18 \
+          --override initial_window_height=16c \
           ${COMMAND} 2> /dev/null &
   else
     if [ "${TILIX}" ]
     then
       tilix --title="${MTITLE}" \
+            --geometry=80x16 \
             --profile=MusicPlayer \
             --command="${COMMAND}" 2> /dev/null &
     else
       if [ "${GNOME}" ]
       then
         gnome-terminal --title="${MTITLE}" \
+              --geometry=80x16 \
               --profile=MusicPlayer \
               -- ${COMMAND} &
       else
@@ -108,6 +111,7 @@ show_term() {
         then
           st -t "${MTITLE}" \
              -f "Monospace:size=18" \
+              -g "80x16" \
              ${COMMAND} 2> /dev/null &
         else
           if [ "${USE_TERMINAL}" ]

@@ -30,7 +30,7 @@ NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
 YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="default_cover.png fzmp.conf"
-SCPS="album_cover.sh cover_obs.sh mpcplus-art.sh mppsplash-dual.sh"
+SCPS="album_cover.sh cover_obs.sh mppsplash-dual.sh"
 EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
             Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
@@ -902,6 +902,8 @@ init_warn() {
 visit_wiki() {
   printf "\nVisit the MusicPlayerPlus Wiki at:"
   printf "\n\t${BOLD}https://github.com/doctorfree/MusicPlayerPlus/wiki${NORM}\n"
+  printf "\nBuy Doctorfree a cup of coffee at:"
+  printf "\n\t${BOLD}https://github.com/sponsors/doctorfree${NORM}\n"
 }
 
 # Clear the Bash cache so we know for sure if something is installed

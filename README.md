@@ -158,6 +158,8 @@ MusicPlayerPlus adds the following commands to your system:
 * **bliss-analyze** : Acoustic analysis of audio files
 * **blissify** : Create MPD playlists using song similarity
 * **essentia_streaming_extractor_music** : Analyze and extract acoustic characteristics
+* **mpd-configure** : Create an MPD configuration file optimized for bit perfect playback
+* **mpd-monitor** : Display info on currently playing MPD song
 
 The `bliss-analyze` and `blissify` commands are currently not available on
 Raspberry Pi installations due to lack of support for that architecture in
@@ -1419,6 +1421,8 @@ e.g. `mpplus -u`.
 - [**mpcpluskeys**](markdown/mpcpluskeys.1.md) : Cheat sheet for `mpcplus` MPD client navigation
 - [**mppsplash-tmux**](markdown/mppsplash-tmux.1.md) : MusicPlayerPlus asciimatics animations in a tmux session
 - [**mppsplash**](markdown/mppsplash.1.md) : MusicPlayerPlus asciimatics animations
+- [**mpd-configure**](markdown/mpd-configure.1.md) : MPD configuration generator
+- [**mpd-monitor**](markdown/mpd-monitor.1.md) : Display info on currently playing MPD song
 - [**beet**](markdown/beet.1.md) : Beets media library management command-line interface
 - [**beetsconfig**](markdown/beetsconfig.5.md) : Beets media library management configuration
 - [**bandcamp-dl**](markdown/bandcamp-dl.1.md) : Download Bandcamp collections
@@ -1511,7 +1515,7 @@ Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
 	[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status] [-p]
-	[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
+	[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-uU]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
@@ -1528,6 +1532,7 @@ MPCplus/Visualizer options:
 	-k indicates use kitty terminal emulator
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
+	-U indicates use tmuxp to create tmux sessions
 	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
 ASCIImatics animation options:
 	-a indicates play audio during ASCIImatics display

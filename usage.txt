@@ -4,7 +4,7 @@ Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
 	[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]
 	[-M alsaconf|enable|disable|restart|start|stop|status] [-p]
-	[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
+	[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-uU]
 	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
 	-A indicates display album cover art (implies tmux session)
@@ -21,6 +21,7 @@ MPCplus/Visualizer options:
 	-k indicates use kitty terminal emulator
 	-r indicates use retro terminal emulator
 	-t indicates use tilix terminal emulator
+	-U indicates use tmuxp to create tmux sessions
 	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
 ASCIImatics animation options:
 	-a indicates play audio during ASCIImatics display

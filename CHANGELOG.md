@@ -2,8 +2,17 @@
 
 All notable changes to this project will be documented in this file.
 
-## MusicPlayerPlus-2.0.1r2 (2022-08-20)
+## MusicPlayerPlus-2.0.1r3 (2022-09-20)
+* Add CentOS Linux build and packaging support
+* Improved Arch Linux support
+* Improved album cover art download and display
+* Preserve existing user configurations where appropriate
+* Add view service logs menu to mpplus
+* Add `mpd-monitor` and `mpd-configure` commands and man pages
+* Integrate `RoonCommandLine`, `MirrorCommand`, and `Asciiville` menus
+* Bug fixes
 
+## MusicPlayerPlus-2.0.1r2 (2022-08-20)
 * Add Arch Linux build and packaging support
 * Add support for Mopidy and Mopidy administration
 * Add support for Navidrome and Navidrome administration

@@ -6,37 +6,21 @@ export SESSION=musicplayerplus
 
 if [ -f ${HOME}/.config/mpcplus/config ]
 then
-  MPCDIR=".config/mpcplus"
+  MPCDIR="${HOME}/.config/mpcplus"
 else
   if [ -f ${HOME}/.mpcplus/config ]
   then
-    MPCDIR=".mpcplus"
+    MPCDIR="${HOME}/.mpcplus"
   else
     mppinit
-    MPCDIR=".config/mpcplus"
+    MPCDIR="${HOME}/.config/mpcplus"
   fi
 fi
-
-USE_TMUXP=1
-have_tmuxp=`type -p tmuxp`
-[ "${have_tmuxp}" ] || {
-  if [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ]
-  then
-    USE_TMUXP=
-  else
-    echo ""
-    echo "ERROR: Could not find 'tmuxp' in PATH."
-    echo "To use 'tmuxp', install with 'python -m pip install tmuxp'"
-    echo "or verify it is in your execution PATH."
-    echo ""
-    exit 1
-  fi
-}
 
 usage() {
   printf "\nUsage: mpcplus-tmux [-a] [-A] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
-  printf "\n\t-a indicates display album cover art using original method"
+  printf "\n\t-a indicates display album cover art using tmuxp"
   printf "\n\t-A indicates disable display of album cover art"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
@@ -62,6 +46,20 @@ usage() {
   exit 1
 }
 
+start_tmux_session() {
+  tmux new-session -d -x "$(tput cols)" -y "$(tput lines)" -s ${SESSION}
+  tmux set -g status off
+  tmux send-keys "stty -echo" C-m
+  tmux send-keys "tput civis -- invisible" C-m
+  tmux send-keys "export PS1=''" C-m
+  tmux send-keys "clear" C-m
+  tmux send-keys "${MPPCOMM}; exit" C-m
+  tmux split-window -v -p ${V_HEIGHT}
+  tmux send-keys "${VIZCOMM}; exit" C-m
+  tmux select-pane -t 1
+  tmux a #
+}
+
 MPP_ENV_MODE=unknown
 USE_GRAD=1
 USE_ART=1
@@ -69,16 +67,14 @@ ALT_ART=1
 PYART=
 RECORD=
 USAGE=
-ART_SCRIPT="${HOME}/${MPCDIR}/mpcplus-art.sh"
-ALT_SCRIPT="${HOME}/${MPCDIR}/ueberzug/mpcplus-ueberzug"
+V_HEIGHT=30
+ALT_SCRIPT="${MPCDIR}/ueberzug/mpcplus-ueberzug"
 ARGS="$*"
 while getopts "aAgm:p:ru" flag; do
     case $flag in
         a)
-          [ -x "${ART_SCRIPT}" ] && {
-            USE_TMUXP=
-            ALT_ART=
-          }
+          USE_TMUXP=1
+          ALT_ART=1
           ;;
         A)
             USE_ART=
@@ -92,9 +88,6 @@ while getopts "aAgm:p:ru" flag; do
           ;;
         p)
           PYART=${OPTARG}
-          [ "${PYART}" == "rocks" ] || [ "${PYART}" == "mpprocks" ] && {
-            [ -x ${HOME}/${MPCDIR}/mpcplus-art.sh ] && USE_TMUXP=
-          }
           ;;
         r)
           have_nema=`type -p asciinema`
@@ -106,6 +99,9 @@ while getopts "aAgm:p:ru" flag; do
     esac
 done
 shift $(( OPTIND - 1 ))
+
+have_tmuxp=`type -p tmuxp`
+[ "${have_tmuxp}" ] || USE_TMUXP=
 
 [ "${USAGE}" ] && usage
 
@@ -130,23 +126,12 @@ else
   USE_ART=
 fi
 
-[ "${USE_TMUXP}" ] || {
-  ${HOME}/${MPCDIR}/mpcplus-art.sh ${ARGS}
-  exit 0
-}
-
-sleep 1
 numrows=`tput lines`
 MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
 
 if [ "${USE_ART}" ]
 then
-  if [ "${ALT_ART}" ]
-  then
-    MPPCOMM="${ALT_SCRIPT}"
-  else
-    MPPCOMM="${ART_SCRIPT}"
-  fi
+  MPPCOMM="${ALT_SCRIPT}"
 else
   MPPCOMM="mpcplus"
 fi
@@ -160,12 +145,19 @@ fi
   have_pyart=`type -p mpp${PYART}`
   [ "${have_pyart}" ] && {
     VIZCOMM="mpp${PYART}"
+    V_HEIGHT=50
     MAIN_PANE_HEIGHT=$((${numrows} / 2))
   }
 }
 export MAIN_PANE_HEIGHT MPPCOMM VIZCOMM
 
-tmuxp load mpcplus-env
+sleep 1
+if [ "${USE_TMUXP}" ]
+then
+  tmuxp load mpcplus-env
+else
+  start_tmux_session
+fi
 
 [ "${RECORD}" ] && {
   tmux d

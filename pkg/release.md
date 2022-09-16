@@ -7,8 +7,9 @@ This major new release of MusicPlayerPlus adds support for many new features and
 * Support for the [Navidrome Streaming Music Server](https://www.navidrome.org/)
 * Several supported Operating System platforms:
     * Arch Linux build and packaging support (NEW)
+    * CentOS Linux build and packaging support (NEW)
     * Debian format packaging (tested on Ubuntu 20.04 and Raspbian bullseye)
-    * RPM format packaging (tested on Fedora 35)
+    * RPM format packaging (tested on Fedora 35, CentOS 8)
 * Support for Kitty as default terminal emualator
     * Custom Kitty configuration, themes, and sessions
 * Support for YAMS Last.fm scrobbler activation
@@ -16,7 +17,11 @@ This major new release of MusicPlayerPlus adds support for many new features and
 * Automated download of Bandcamp collections
 * Automated download of YouTube playlist audio
 * Automated download of audio from many other sites
+* Preserve existing user configurations where appropriate
+* Add `mpd-monitor` and `mpd-configure` commands and man pages
+* Integrate `RoonCommandLine`, `MirrorCommand`, and `Asciiville` menus
 * Many more improvements and features (See [Changelog](#changelog) below)
+
 
 ## Installation
 
@@ -25,33 +30,42 @@ Download the [latest Debian, Arch, or RPM package format release](https://github
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-2.amd64.deb
+sudo apt install ./MusicPlayerPlus_2.0.1-3.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-2.armhf.deb
+sudo apt install ./MusicPlayerPlus_2.0.1-3.armhf.deb
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./MusicPlayerPlus_2.0.1-2-x86_64.pkg.tar.zst
+sudo pacman -U ./MusicPlayerPlus_2.0.1-3-x86_64.pkg.tar.zst
 ```
 
-Install the package on RPM based systems by executing the command:
+Install the package on RPM based systems by executing one of the
+following commands.
+
+On Fedora Linux:
 
 ```bash
-sudo yum localinstall ./MusicPlayerPlus_2.0.1-2.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_2.0.1-3.fc36.x86_64.rpm
+```
+
+On CentOS Linux:
+
+```bash
+sudo yum localinstall ./MusicPlayerPlus_2.0.1-3.el8.x86_64.rpm
 ```
 
 ### PKGBUILD Installation
 
-To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be built from sources using the Arch PKGBUILD files provided in `MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be built from sources using the Arch PKGBUILD files provided in `MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
 
 ```
-tar xzf MusicPlayerPlus-pkgbuild-2.0.1-2.tar.gz
+tar xzf MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz
 cd musicplayerplus
 makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
@@ -120,6 +134,7 @@ sudo pacman -Rs musicplayerplus
 Changes in version 2.0.1 release 2 include:
 
 * Arch Linux build and packaging support
+* CentOS Linux build and packaging support
 * Integration of the Beets media library management system
 * Add support for Mopidy and Mopidy administration
 * Add support for Navidrome and Navidrome administration
@@ -154,5 +169,10 @@ Changes in version 2.0.1 release 2 include:
 * Messages in mppinit tailored to which acoustic analysis is performed
 * Remove dependencies on gnome-terminal and tilix
 * Add dependency on wmctrl and xrandr, remove dependency on dconf
+* Improved album cover art download and display
+* Preserve existing user configurations where appropriate
+* Add view service logs menu to mpplus
+* Add mpd-monitor and mpd-configure commands and man pages
+* Integrate RoonCommandLine, MirrorCommand, and Asciiville menus
 
 See [CHANGELOG.md](https://github.com/doctorfree/MusicPlayerPlus/blob/master/CHANGELOG.md) for a full list of changes in every MusicPlayerPlus release
