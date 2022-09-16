@@ -891,6 +891,18 @@ function check_py_version
   ! [ "$(echo $python_version | head -c 1 )" -lt "3" ]
 }
 
+enable_rpm_fusion() {
+  sudo dnf -y install dnf-plugins-core
+  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
+  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo dnf config-manager --set-enabled rpmfusion-free
+  sudo dnf config-manager --set-enabled rpmfusion-free-updates
+  sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates
+  sudo dnf config-manager --set-enabled rpmfusion-nonfree
+  sudo dnf config-manager --set-enabled rpmfusion-nonfree-nvidia-driver
+  sudo dnf config-manager --set-enabled rpmfusion-nonfree-steam
+}
+
 init_warn() {
   printf "\nMusicPlayerPlus is not yet initialized."
   printf "\nInitialize with ${BOLD}mppinit${NORM} prior to running "
@@ -1967,8 +1979,7 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONFREE="nonfree/fedora"
   RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
-  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
+  enable_rpm_fusion
   sudo dnf -y install libmpdclient mpd mplayer
   sudo dnf -y --allowerasing install compat-ffmpeg4
 }
@@ -1980,9 +1991,8 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONFREE="nonfree/el"
   RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
+  enable_rpm_fusion
   sudo dnf config-manager --set-enabled powertools
-  sudo dnf -y install ${FUSION}/${FREE}/${RELRPM}
-  sudo dnf -y install ${FUSION}/${NONFREE}/${NONRPM}
   sudo dnf -y --allowerasing install ffmpeg mediainfo
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
