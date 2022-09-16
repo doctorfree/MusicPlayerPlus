@@ -62,12 +62,13 @@ else
       RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
       NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
       PKGS="alsa-lib-devel ncurses-devel fftw3-devel qt5-qtbase-devel \
-          pulseaudio-libs-devel libtool automake iniparser-devel \
+          pulseaudio-libs-devel libtool automake iniparser-devel llvm-devel \
           SDL2-devel eigen3-devel libyaml-devel clang-devel swig \
           libchromaprint-devel python-devel python3-devel python3-yaml \
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
+        sudo ${PINS} -y remove libva-intel-driver
         sudo ${PINS} -y remove ffmpeg ffmpeg-devel
         sudo ${PINS} -y remove ${PKGS}
         sudo ${PINS} -y remove gcc-c++
@@ -81,7 +82,11 @@ else
         sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
         sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
         sudo ${PINS} -y update
-        sudo ${PINS} -y --allowerasing install ffmpeg ffmpeg-devel
+        sudo ${PINS} -y --allowerasing install libva-intel-driver \
+                                               ffmpeg ffmpeg-devel \
+        sudo ${PINS} -y groupupdate multimedia \
+          --setop="install_weak_deps=False" \
+          --exclude=PackageKit-gstreamer-plugin
       fi
     else
       if [ "${centos}" ]
