@@ -68,8 +68,7 @@ else
           python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel"
       if [ "$1" == "-r" ]
       then
-        sudo ${PINS} -y remove libva-intel-driver
-        sudo ${PINS} -y remove ffmpeg ffmpeg-devel
+        sudo ${PINS} -y remove compat-ffmpeg-devel compat-ffmpeg
         sudo ${PINS} -y remove ${PKGS}
         sudo ${PINS} -y remove gcc-c++
         sudo ${PINS} -y groupremove "Development Tools" "Development Libraries"
@@ -82,11 +81,7 @@ else
         sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
         sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
         sudo ${PINS} -y update
-        sudo ${PINS} -y --allowerasing install libva-intel-driver \
-                                               ffmpeg ffmpeg-devel \
-        sudo ${PINS} -y groupupdate multimedia \
-          --setop="install_weak_deps=False" \
-          --exclude=PackageKit-gstreamer-plugin
+        sudo ${PINS} -y --allowerasing install compat-ffmpeg compat-ffmpeg-devel
       fi
     else
       if [ "${centos}" ]
