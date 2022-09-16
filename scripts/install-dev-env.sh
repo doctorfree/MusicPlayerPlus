@@ -147,13 +147,15 @@ fi
   have_cargo=`type -p cargo`
   if [ "$1" == "-r" ]
   then
-    [ "${have_cargo}" ] && rustup self uninstall
+    [ "${have_cargo}" ] && rustup self uninstall -y
   else
     [ "${have_cargo}" ] || {
       [ -f ~/.cargo/env ] && source ~/.cargo/env
       have_cargo=`type -p cargo`
       [ "${have_cargo}" ] || {
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rst$$
+          sh /tmp/rst$$ -y
+          rm -f /tmp/rst$$
           [ -f ~/.cargo/env ] && source ~/.cargo/env
       }
       have_cargo=`type -p cargo`
