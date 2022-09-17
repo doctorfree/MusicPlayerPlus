@@ -893,14 +893,15 @@ function check_py_version
 
 enable_rpm_fusion() {
   sudo dnf --assumeyes --quiet install dnf-plugins-core
+  sudo dnf --assumeyes --quiet update
   sudo dnf --assumeyes --quiet install ${FUSION}/${FREE}/${RELRPM}
   sudo dnf --assumeyes --quiet install ${FUSION}/${NONFREE}/${NONRPM}
-  sudo dnf config-manager --set-enabled rpmfusion-free
+  [ "${fedora}" ] && {
+    sudo dnf config-manager --set-enabled rpmfusion-free
+    sudo dnf config-manager --set-enabled rpmfusion-nonfree
+  }
   sudo dnf config-manager --set-enabled rpmfusion-free-updates
   sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates
-  sudo dnf config-manager --set-enabled rpmfusion-nonfree
-  sudo dnf config-manager --set-enabled rpmfusion-nonfree-nvidia-driver
-  sudo dnf config-manager --set-enabled rpmfusion-nonfree-steam
 }
 
 init_warn() {
@@ -961,10 +962,29 @@ arch=
 centos=
 debian=
 fedora=
+needpower=
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
 [ "${ID}" == "arch" ] && arch=1
-[ "${ID}" == "centos" ] && centos=1
+[ "${ID}" == "centos" ] && {
+  # CentOS is a Mess
+  centos=1
+  [ "${VERSION_ID}" == "8" ] && {
+    if [ "${NAME}" == "CentOS Stream" ]
+    then
+      needpower="powertools"
+    else
+      needpower="PowerTools"
+    fi
+  }
+  [ "${VERSION_ID}" == "9" ] && needpower="crb"
+  if [ "${NAME}" == "CentOS Stream" ]
+  then
+    EPEL="epel-release epel-next-release"
+  else
+    EPEL="epel-release"
+  fi
+}
 [ "${ID}" == "fedora" ] && fedora=1
 
 while getopts "abdeoqrUyu" flag; do
@@ -1991,8 +2011,9 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONFREE="nonfree/el"
   RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
+  sudo dnf --assumeyes --quiet install ${EPEL}
+  [ "${needpower}" ] && sudo dnf config-manager --set-enabled ${needpower}
   enable_rpm_fusion
-  sudo dnf config-manager --set-enabled powertools
   sudo dnf --assumeyes --quiet --allowerasing install ffmpeg mediainfo
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
