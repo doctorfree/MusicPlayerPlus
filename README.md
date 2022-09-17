@@ -1240,19 +1240,21 @@ Sublime on a variety of Linux distributions.
 
 Supported terminal emulators in MusicPlayerPlus include `kitty`, `tilix`,
 `gnome-terminal`, `st`, and `cool-retro-term`. Kitty is the default terminal
-emulator used by MusicPlayerPlus. An alternate terminal emulator can be
-specified on the `mpplus` command line:
+emulator used by MusicPlayerPlus except on Raspberry Pi OS where `st` is used
+as the default. An alternate terminal emulator can be specified on the
+`mpplus` command line:
 
 ```
 mpplus -c ... # indicates use the current terminal and a tmux session
 mpplus -e ... # indicates use the simple terminal emulator (st)
 mpplus -g ... # indicates use the gnome terminal emulator
+mpplus -k ... # indicates use the kitty terminal emulator
 mpplus -r ... # indicates use the cool-retro-term terminal emulator
 mpplus -t ... # indicates use the tilix terminal emulator
 ```
 
 If an alternate terminal emulator is not specified on the command line
-then Kitty will be used unless console mode is detected. Console mode
+then the default will be used unless console mode is detected. Console mode
 is used when no DISPLAY can be opened (e.g. running on a console, running
 over SSH without a display, running on a headless server). In console mode
 MusicPlayerPlus utilizes `tmux` sessions to display the character-based music
@@ -1264,14 +1266,11 @@ terminal emulators rely on a profile from which they draw much of
 their configuration. Profiles are used in MusicPlayerPlus to provide
 an enhanced visual presentation.
 
-**[Note:]** Use of the Gnome, Simple, and Tilix terminal emulators is an
-optional additional feature supported by MusicPlayerPlus. Gnome-terminal,
-Simple terminal, and Tilix are not installed by MusicPlayerPlus. The default
-terminal emulator used by MusicPlayerPlus is Kitty, installed by `mppinit`.
-
 In order to use the Gnome, Simple, or Tilix terminal emulators they must be
-installed manually. If you wish to use the Gnome, Simple, or Tilix terminal
-emulators, then use your system's package manager to install them prior to
+installed manually (except on Raspberry Pi OS where the Simple terminal
+emulator is installed if no supported terminal emulator is found).
+If you wish to use the Gnome, Simple, or Tilix terminal emulators,
+then use your system's package manager to install them prior to
 initializing MusicPlayerPlus with the `mppinit` command. If either or both
 of Gnome or Tilix terminal emulators are installed after MusicPlayerPlus
 initialization with `mppinit` then run `mppinit profiles` after installing
@@ -2105,6 +2104,26 @@ https://wiki.archlinux.org/title/Music_Player_Daemon/Tips_and_tricks#Control_MPD
 - [![MusicPlayerPlus Demo](https://i.imgur.com/ZntE1sH.jpg)](https://www.youtube.com/watch?v=y2yaHm04ELM "MusicPlayerPlus Demo")
 
 ## Building MusicPlayerPlus from source
+
+MusicPlayerPlus can be compiled, packaged, and installed from the source code
+repository. This should be done as a normal user with `sudo` privileges:
+
+```
+# Retrieve the source code from the repository
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
+# Enter the MusicPlayerPlus source directory
+cd MusicPlayerPlus
+# Install the necessary build environment
+scripts/install-dev-env.sh
+# Install Gaia
+./build -i gaia
+# Compile the MusicPlayerPlus components and create an installation package
+./mkpkg
+# Install MusicPlayerPlus and its dependencies
+./Install
+```
+
+These steps are detailed below.
 
 ### Clone MusicPlayerPlus repository
 
