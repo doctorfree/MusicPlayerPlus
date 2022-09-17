@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp | import | kitty | metadata | mopidy | mpd | navidrome | soundcloud | sync | yams]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -73,7 +73,7 @@ MusicPlayerPlus configuration across all configuration files.
 : indicates use Essentia to analyze audio information
 
 **-l music_dir**
-: specifies the location of the music library (default: $HOME/Music/)
+: specifies the location of the music library
 
 **-o**
 : indicates overwrite any pre-existing configuration
