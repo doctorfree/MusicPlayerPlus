@@ -298,28 +298,13 @@ init_mopidy() {
   # The spectrum visualizer with Mopidy requires PulseAudio
   if [ "${debian}" ]
   then
-    APT=
-    have_apt=`type -p apt`
-    if [ "${have_apt}" ]
-    then
-      APT=apt
-    else
-      have_aptget=`type -p apt-get`
-      if [ "${have_aptget}" ]
-      then
-        APT=apt-get
-      else
-        echo "Could not locate apt or apt-get."
-        echo "Skipping GStreamer installation."
-      fi
-    fi
     [ "${APT}" ] && {
       sudo ${APT} install pulseaudio python3-gst-1.0 \
                           gir1.2-gstreamer-1.0 \
                           gir1.2-gst-plugins-base-1.0 \
                           gstreamer1.0-plugins-good \
                           gstreamer1.0-plugins-ugly \
-                          gstreamer1.0-tools -y
+                          gstreamer1.0-tools
     }
   else
     if [ "${arch}" ]
@@ -330,25 +315,10 @@ init_mopidy() {
                                           pulseaudio \
                                           pulseaudio-alsa
     else
-      DNF=
-      have_dnf=`type -p dnf`
-      if [ "${have_dnf}" ]
-      then
-        DNF=dnf
-      else
-        have_yum=`type -p yum`
-        if [ "${have_yum}" ]
-        then
-          DNF=yum
-        else
-          echo "Could not locate dnf or yum."
-          echo "Skipping GStreamer installation."
-        fi
-      fi
       [ "${DNF}" ] && {
-        sudo ${DNF} install -y pulseaudio python3-gstreamer1 \
-                               gstreamer1-plugins-good \
-                               gstreamer1-plugins-ugly-free
+        sudo ${DNF} install pulseaudio python3-gstreamer1 \
+                            gstreamer1-plugins-good \
+                            gstreamer1-plugins-ugly-free
       }
     fi
   fi
@@ -892,16 +862,16 @@ function check_py_version
 }
 
 enable_rpm_fusion() {
-  sudo dnf --assumeyes --quiet install dnf-plugins-core
-  sudo dnf --assumeyes --quiet update
-  sudo dnf --assumeyes --quiet install ${FUSION}/${FREE}/${RELRPM}
-  sudo dnf --assumeyes --quiet install ${FUSION}/${NONFREE}/${NONRPM}
+  sudo ${DNF} install dnf-plugins-core
+  sudo ${DNF} update
+  sudo ${DNF} install ${FUSION}/${FREE}/${RELRPM}
+  sudo ${DNF} install ${FUSION}/${NONFREE}/${NONRPM}
   [ "${fedora}" ] && {
-    sudo dnf config-manager --set-enabled rpmfusion-free
-    sudo dnf config-manager --set-enabled rpmfusion-nonfree
+    sudo ${DNF} config-manager --set-enabled rpmfusion-free
+    sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree
   }
-  sudo dnf config-manager --set-enabled rpmfusion-free-updates
-  sudo dnf config-manager --set-enabled rpmfusion-nonfree-updates
+  sudo ${DNF} config-manager --set-enabled rpmfusion-free-updates
+  sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree-updates
 }
 
 init_warn() {
@@ -942,13 +912,13 @@ have_simple=`type -p st`
 # If a supported terminal emulators is already present, use it as default
 DEFAULT_MODE=kitty
 [ "${have_kitty}" ] || {
-  if [ "${have_tilix}" ]
+  if [ "${have_simple}" ]
   then
-    DEFAULT_MODE=tilix
+    DEFAULT_MODE=simple
   else
-    if [ "${have_simple}" ]
+    if [ "${have_tilix}" ]
     then
-      DEFAULT_MODE=simple
+      DEFAULT_MODE=tilix
     else
       [ "${have_gnome}" ] && DEFAULT_MODE=gnome
     fi
@@ -959,12 +929,30 @@ have_mopidy=`type -p mopidy`
 set_have_navi
 
 arch=
+mach=`uname -m`
 centos=
 debian=
 fedora=
 needpower=
+APT=
+DNF=
 [ -f /etc/os-release ] && . /etc/os-release
-[ "${ID_LIKE}" == "debian" ] && debian=1
+[ "${ID_LIKE}" == "debian" ] && {
+  debian=1
+  have_apt=`type -p apt`
+  if [ "${have_apt}" ]
+  then
+    APT="apt -q -y"
+  else
+    have_aptget=`type -p apt-get`
+    if [ "${have_aptget}" ]
+    then
+      APT="apt-get -q -y"
+    else
+      echo "Could not locate apt or apt-get."
+    fi
+  fi
+}
 [ "${ID}" == "arch" ] && arch=1
 [ "${ID}" == "centos" ] && {
   # CentOS is a Mess
@@ -986,6 +974,22 @@ needpower=
   fi
 }
 [ "${ID}" == "fedora" ] && fedora=1
+
+[ "${centos}" ] || [ "${fedora}" ] && {
+  have_dnf=`type -p dnf`
+  if [ "${have_dnf}" ]
+  then
+    DNF="dnf --assumeyes --quiet"
+  else
+    have_yum=`type -p yum`
+    if [ "${have_yum}" ]
+    then
+      DNF="yum --assumeyes --quiet"
+    else
+      echo "Could not locate dnf or yum."
+    fi
+  fi
+}
 
 while getopts "abdeoqrUyu" flag; do
     case $flag in
@@ -1484,7 +1488,6 @@ init_navidrome() {
   user=`id -u`
   group=`id -g`
   navivar="/var/lib/navidrome"
-  arch=`uname -m`
 
   if [ -x /opt/navidrome/navidrome ]
   then
@@ -1500,7 +1503,7 @@ init_navidrome() {
       echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
       echo "and re-run the 'mppinit navidrome' command."
     else
-      wget -q https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${arch}.tar.gz -O ${navivar}/Navidrome.tar.gz
+      wget -q https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz -O ${navivar}/Navidrome.tar.gz
     fi
 
     if [ -f "${navivar}/Navidrome.tar.gz" ]
@@ -1513,7 +1516,7 @@ init_navidrome() {
       echo "Could not locate ${navivar}/Navidrome.tar.gz"
       echo ""
       echo "Visit https://github.com/navidrome/navidrome/releases/download/"
-      echo "and locate the latest Navidrome release for this platform (${arch})."
+      echo "and locate the latest Navidrome release for this platform (${mach})."
       echo ""
       echo "Download the Navidrome release 'tar.gz' and move it to:"
       echo "    ${navivar}/Navidrome.tar.gz"
@@ -1623,6 +1626,31 @@ install_mpc() {
   [ -d mpc$$ ] && {
     rm -rf mpc
     mv mpc$$ mpc
+  }
+}
+
+# If none of Gnome, Tilix, or Simple terminal emulators are installed
+# then install the Simple terminal emulator
+install_terminal() {
+  [ "${have_gnome}" ] || [ "${have_tilix}" ] || [ "${have_simple}" ] || {
+    if [ "${debian}" ]
+    then
+      [ "${APT}" ] && {
+        sudo ${APT} install stterm
+        DEFAULT_MODE=simple
+      }
+    else
+      if [ "${arch}" ]
+      then
+        sudo pacman -S --needed --noconfirm stterm
+        DEFAULT_MODE=simple
+      else
+        [ "${DNF}" ] && {
+          sudo ${DNF} install stterm
+          DEFAULT_MODE=simple
+        }
+      fi
+    fi
   }
 }
 
@@ -2000,8 +2028,8 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
   enable_rpm_fusion
-  sudo dnf --assumeyes --quiet install libmpdclient mpd mplayer
-  sudo dnf --assumeyes --quiet --allowerasing install compat-ffmpeg4
+  sudo ${DNF} install libmpdclient mpd mplayer
+  sudo ${DNF} --allowerasing install compat-ffmpeg4
 }
 [ "${centos}" ] && {
   sudo alternatives --set python /usr/bin/python3
@@ -2011,19 +2039,28 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   NONFREE="nonfree/el"
   RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
-  sudo dnf --assumeyes --quiet install ${EPEL}
-  [ "${needpower}" ] && sudo dnf config-manager --set-enabled ${needpower}
+  sudo ${DNF} install ${EPEL}
+  [ "${needpower}" ] && sudo ${DNF} config-manager --set-enabled ${needpower}
   enable_rpm_fusion
-  sudo dnf --assumeyes --quiet --allowerasing install ffmpeg mediainfo
+  sudo ${DNF} --allowerasing install ffmpeg mediainfo
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
     have_git=`type -p git`
-    [ "${have_git}" ] || sudo dnf --assumeyes --quiet install git
+    [ "${have_git}" ] || sudo ${DNF} install git
     install_mpc
   }
 }
 
-install_kitty
+# Kitty only installs on select architectures
+# In particular, Kitty is not supported on a Raspberry Pi armv7*
+case "$(mach)" in
+    x86_64|aarch64*|armv8*|i386|i686)
+      install_kitty
+      ;;
+    *)
+      install_terminal
+      ;;
+esac
 
 pathadd "${HOME}/.fzf/bin"
 have_fzf=`type -p fzf`
