@@ -2052,7 +2052,10 @@ done
     }
   }
 }
+
+empty_music=
 [ "${MUSIC_DIRECTORY}" ] || {
+  empty_music=1
   if [ -d ${HOME}/Music ]
   then
     MUSIC_DIRECTORY="${HOME}/Music"
@@ -2065,29 +2068,11 @@ done
     fi
   fi
   printf "\n\n${BOLD}Default music library locations appear empty${NORM}"
-  printf "\nMusicPlayerPlus initialization can continue with an empty library."
+  printf "\nMusicPlayerPlus initialization will continue with an empty library."
   printf "\nThe music library can be populated later or, if your music library"
   printf "\nis in a custom location, simply edit $HOME/.config/mpprc"
   printf "\nafter initialization completes and run 'mppinit sync'.\n"
   printf "\n${MUSIC_DIRECTORY} will be used as the default library location.\n"
-  printf "\nAnswer 'y' to continue initialization, 'n' to exit.\n\n"
-  while true
-  do
-    read -p "Do you wish to continue initialization with an empty library ? (y/n) " yn
-    case $yn in
-      [Yy]* )
-        break
-        ;;
-      [Nn]* )
-        printf "\nPopulate ${MUSIC_DIRECTORY} with digital audio files"
-        printf "\nand re-run the 'mppinit' command."
-        printf "\nExiting.\n\n"
-        exit 0
-        ;;
-      * ) echo "Please answer yes or no."
-        ;;
-    esac
-  done
 }
 
 upd_mpprc=
@@ -2793,8 +2778,11 @@ sync_music_dir
 
 printf " done.\n"
 
-printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}\n"
-printf "\nMusic library location set to ${BOLD}${mpd_music}${NORM} in:"
+printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}"
+[ "${empty_music}" ] && {
+  printf "\n\t${BOLD}Note:${NORM} Configured music library location is empty"
+}
+printf "\n\nMusic library location set to ${BOLD}${mpd_music}${NORM} in:"
 printf "\n\t${MPPCONF}"
 printf "\nModify ${MPPCONF} 'MUSIC_DIR' to change this."
 printf "\nIf 'MUSIC_DIR' is modified, run '${BOLD}mppinit sync${NORM}'\n"
