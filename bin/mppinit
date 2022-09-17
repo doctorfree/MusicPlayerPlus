@@ -862,8 +862,6 @@ function check_py_version
 }
 
 enable_rpm_fusion() {
-  sudo ${DNF} install dnf-plugins-core
-  sudo ${DNF} update
   sudo ${DNF} install ${FUSION}/${FREE}/${RELRPM}
   sudo ${DNF} install ${FUSION}/${NONFREE}/${NONRPM}
   [ "${fedora}" ] && {
@@ -872,6 +870,7 @@ enable_rpm_fusion() {
   }
   sudo ${DNF} config-manager --set-enabled rpmfusion-free-updates
   sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree-updates
+  sudo ${DNF} update
 }
 
 init_warn() {
