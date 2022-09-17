@@ -59,8 +59,8 @@ mpd_music="~/Music"
 exp_music="${HOME}/Music"
 
 usage() {
-  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] "
-  printf "[bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|"
+  printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r]"
+  printf " [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|"
   printf "soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
@@ -68,6 +68,7 @@ usage() {
   printf "\n\t'-d' install latest Beets development branch rather than"
   printf "\n\t\tthe latest stable release (for testing purposes)"
   printf "\n\t'-e' use Essentia for Beets acoustic audio analysis (default)"
+  printf "\n\t'-l music_dir' specifies the location of the music library"
   printf "\n\t'-o' indicates overwrite any pre-existing configuration"
   printf "\n\t'-q' indicates quiet execution, no status messages"
   printf "\n\t'-r' indicates remove service"
@@ -990,7 +991,8 @@ DNF=
   fi
 }
 
-while getopts "abdeoqrUyu" flag; do
+MUSIC_DIRECTORY=
+while getopts "abdel:oqrUyu" flag; do
     case $flag in
         a)
             acbrainz=1
@@ -1013,6 +1015,9 @@ while getopts "abdeoqrUyu" flag; do
         e)
             essentia=1
             acbrainz=
+            ;;
+        l)
+            MUSIC_DIRECTORY="${OPTARG}
             ;;
         o)
             overwrite=1
@@ -2024,17 +2029,30 @@ remove_kitty() {
 printf "\nInitializing MusicPlayerPlus, please wait ..."
 
 # Check if default music library location is empty
-MUSIC_DIRECTORY=
-for msub in Music music
-do
-  for mdir in ${HOME}/${msub}/*
+empty_music=1
+if [ "${MUSIC_DIRECTORY}" ]
+then
+  for mdir in ${MUSIC_DIRECTORY}/*
   do
-    [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
-    [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
-    MUSIC_DIRECTORY="${HOME}/${msub}"
-    break 2
+    [ "${mdir}" == "${MUSIC_DIRECTORY}/*" ] && continue
+    [ "${mdir}" == "${MUSIC_DIRECTORY}/Playlists" ] && continue
+    empty_music=
+    break
   done
-done
+else
+  for msub in Music music
+  do
+    for mdir in ${HOME}/${msub}/*
+    do
+      [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
+      [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
+      MUSIC_DIRECTORY="${HOME}/${msub}"
+      empty_music=
+      break 2
+    done
+  done
+fi
+
 [ "${MUSIC_DIRECTORY}" ] || {
   [ -f ${USERCONF}/user-dirs.dirs ] && {
     # Try XDG_MUSIC_DIR
@@ -2053,7 +2071,6 @@ done
   }
 }
 
-empty_music=
 [ "${MUSIC_DIRECTORY}" ] || {
   empty_music=1
   if [ -d ${HOME}/Music ]
