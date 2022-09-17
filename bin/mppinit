@@ -1017,7 +1017,7 @@ while getopts "abdel:oqrUyu" flag; do
             acbrainz=
             ;;
         l)
-            MUSIC_DIRECTORY="${OPTARG}
+            MUSIC_DIRECTORY="${OPTARG}"
             ;;
         o)
             overwrite=1
