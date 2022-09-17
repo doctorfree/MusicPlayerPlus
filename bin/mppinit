@@ -2023,6 +2023,76 @@ remove_kitty() {
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
 
+# Check if default music library location is empty
+MUSIC_DIRECTORY=
+for msub in Music music
+do
+  for mdir in ${HOME}/${msub}/*
+  do
+    [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
+    [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
+    MUSIC_DIRECTORY="${HOME}/${msub}"
+    break 2
+  done
+done
+[ "${MUSIC_DIRECTORY}" ] || {
+  [ -f ${USERCONF}/user-dirs.dirs ] && {
+    # Try XDG_MUSIC_DIR
+    have_xdg=`type -p xdg-user-dir`
+    [ "${have_xdg}" ] && {
+      xdgm=`xdg-user-dir MUSIC`
+      [ "${xdgm}" ] && {
+        for mdir in ${xdgm}/*
+        do
+          [ "${mdir}" == "${xdgm}/*" ] && continue
+          [ "${mdir}" == "${xdgm}/Playlists" ] && continue
+          MUSIC_DIRECTORY="${xdgm}"
+        done
+      }
+    }
+  }
+}
+[ "${MUSIC_DIRECTORY}" ] || {
+  if [ -d ${HOME}/Music ]
+  then
+    MUSIC_DIRECTORY="${HOME}/Music"
+  else
+    if [ -d ${HOME}/music ]
+    then
+      MUSIC_DIRECTORY="${HOME}/music"
+    else
+      MUSIC_DIRECTORY="${HOME}/Music"
+    fi
+  fi
+  printf "\n\n${BOLD}Default music library locations appear empty${NORM}"
+  printf "\nMusicPlayerPlus initialization can continue with an empty library."
+  printf "\nThe music library can be populated later or, if your music library"
+  printf "\nis in a custom location, simply edit $HOME/.config/mpprc"
+  printf "\nafter initialization completes and run 'mppinit sync'.\n"
+  printf "\n${MUSIC_DIRECTORY} will be used as the default library location.\n"
+  printf "\nAnswer 'y' to continue initialization, 'n' to exit.\n\n"
+  while true
+  do
+    read -p "Do you wish to continue initialization with an empty library ? (y/n) " yn
+    case $yn in
+      [Yy]* )
+        break
+        ;;
+      [Nn]* )
+        printf "\nPopulate ${MUSIC_DIRECTORY} with digital audio files"
+        printf "\nand re-run the 'mppinit' command."
+        printf "\nExiting.\n\n"
+        exit 0
+        ;;
+      * ) echo "Please answer yes or no."
+        ;;
+    esac
+  done
+}
+
+upd_mpprc=
+[ "${MUSIC_DIRECTORY}" == "${HOME}/Music" ] || upd_mpprc=1
+
 [ "${fedora}" ] && {
   FEDVER=`rpm -E %fedora`
   FUSION="https://download1.rpmfusion.org"
@@ -2686,6 +2756,13 @@ fi
 [ -f ${MPPCONF} ] || {
   set_music_dir
   init_mpp_conf
+}
+[ "${upd_mpprc}" ] && [ "${MUSIC_DIRECTORY}" ] && {
+  cat ${MPPCONF} | \
+    sed -e "s%^MUSIC_DIR=.*%MUSIC_DIR=\"${MUSIC_DIRECTORY}\"%" > /tmp/mpp$$
+  cp /tmp/mpp$$ ${MPPCONF}
+  chmod 600 ${MPPCONF}
+  rm -f /tmp/mpp$$
 }
 
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
