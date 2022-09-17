@@ -1066,10 +1066,14 @@ then
 fi
 
 # User needs to be in group adm for some systemctl actions
-# This is performed in this way to avoid password prompts and subshells
 id -nG | grep -qw adm || {
   sudo usermod -aG adm ${MPP_USER}
-  sg adm newgrp `id -gn`
+  printf "\n\n${BOLD}***logout and login required***${NORM}"
+  printf "\n\tUser ${MPP_USER} has been added to group adm."
+  printf "\n\tThis is necessary from some systemctl actions."
+  printf "\n\tIn order for this change to take effect, it is necessary to login."
+  printf "\n\tPlease logout, login as user ${MPP_USER}, and re-run 'mppinit'.\n"
+  exit 1
 }
 
 # User should not be root. Prompt to proceed if root user
