@@ -1068,11 +1068,11 @@ fi
 # User needs to be in group adm for some systemctl actions
 id -nG | grep -qw adm || {
   sudo usermod -aG adm ${MPP_USER}
-  printf "\n\n${BOLD}***logout and login required***${NORM}"
+  printf "\n${BOLD}***logout and login required***${NORM}"
   printf "\n\tUser ${MPP_USER} has been added to group adm."
   printf "\n\tThis is necessary from some systemctl actions."
   printf "\n\tIn order for this change to take effect, it is necessary to login."
-  printf "\n\tPlease logout, login as user ${MPP_USER}, and re-run 'mppinit'.\n"
+  printf "\n\tPlease logout, login as user ${MPP_USER}, and re-run 'mppinit'.\n\n"
   exit 1
 }
 
@@ -2056,7 +2056,7 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
 
 # Kitty only installs on select architectures
 # In particular, Kitty is not supported on a Raspberry Pi armv7*
-case "$(mach)" in
+case "${mach}" in
     x86_64|aarch64*|armv8*|i386|i686)
       install_kitty
       ;;
