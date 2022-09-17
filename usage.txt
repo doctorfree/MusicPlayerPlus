@@ -82,13 +82,14 @@ General options:
 
 =============================================================================
 
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
 	'-d' install latest Beets development branch rather than
 		the latest stable release (for testing purposes)
 	'-e' use Essentia for Beets acoustic audio analysis (default)
+	'-l music_dir' specifies the location of the music library
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
 	'-r' indicates remove service
@@ -110,7 +111,6 @@ Where:
 	'soundcloud' downloads all favorites in your Soundcloud account
 	'sync' synchronizes MusicPlayerPlus configuration across configs
 	'yams' activates the YAMS Last.fm scrobbler service
-
 
 'mppinit' must be run as the MusicPlayerPlus user, not root.
 'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',

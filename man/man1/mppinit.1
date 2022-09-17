@@ -21,13 +21,18 @@
 mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
-\f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u]
+\f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U]
+[-y] [-u]
 [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
 MusicPlayerPlus configuration files in \f[V]$HOME/.config/\f[R] and
 installs required Python modules if not already installed.
+Some effort is made to identify the music library location (default:
+$HOME/Music/).
+The music library location can be specified on the command line with
+\f[V]mppinit -l /path/to/library\f[R].
 .PP
 Invoked with the \f[V]bandcamp\f[R] argument, \f[I]mppinit bandcamp\f[R]
 downloads the albums in your Bandcamp collections.
@@ -95,6 +100,9 @@ stable release (for testing purposes)
 .TP
 \f[B]-e\f[R]
 indicates use Essentia to analyze audio information
+.TP
+\f[B]-l music_dir\f[R]
+specifies the location of the music library (default: $HOME/Music/)
 .TP
 \f[B]-o\f[R]
 indicates overwrite any pre-existing configuration

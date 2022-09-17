@@ -226,6 +226,8 @@ Additional detail and info can be found in the
     * Recommended structure of the music library is `artist/album/songs`
 * Install the latest Arch, Debian, or RPM format installation package from the [MusicPlayerPlus Releases](https://github.com/doctorfree/MusicPlayerPlus/releases) page
 * Run the `mppinit` command as your normal user
+    * Searches `$HOME/Music` and `$HOME/music` for music library location
+    * The music library location can be specified with `mppinit -l /path/to/library`
 
 ### Optional additional setup steps
 
@@ -388,8 +390,8 @@ section below.
 To summarize, a MusicPlayer quickstart can be accomplished by:
 
 * Install the latest Arch, Debian, or RPM format installation package
-* Run the `mppinit` command as your normal user
-* If the music library is not located at `$HOME/Music`:
+* Run `mppinit` or `mppinit -l /path/to/library` as your normal user
+* If the music library location was not properly detected:
     * Configure `MUSIC_DIR` by editing `~/.config/mpprc`
     * Run the command `mppinit sync`
 * Optionally:
@@ -1507,13 +1509,14 @@ provide a brief summary of the command line options.
 The `mppinit` performs one-time initializations:
 
 ```
-Usage: mppinit [-a] [-b] [-d] [-e] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
 	'-d' install latest Beets development branch rather than
 		the latest stable release (for testing purposes)
 	'-e' use Essentia for Beets acoustic audio analysis (default)
+	'-l music_dir' specifies the location of the music library
 	'-o' indicates overwrite any pre-existing configuration
 	'-q' indicates quiet execution, no status messages
 	'-r' indicates remove service
@@ -1535,7 +1538,6 @@ Where:
 	'soundcloud' downloads all favorites in your Soundcloud account
 	'sync' synchronizes MusicPlayerPlus configuration across configs
 	'yams' activates the YAMS Last.fm scrobbler service
-
 
 'mppinit' must be run as the MusicPlayerPlus user, not root.
 'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',
