@@ -2115,7 +2115,7 @@ repository. This should be done as a normal user with `sudo` privileges:
 git clone https://github.com/doctorfree/MusicPlayerPlus.git
 # Enter the MusicPlayerPlus source directory
 cd MusicPlayerPlus
-# Install the necessary build environment
+# Install the necessary build environment (not necessary on Arch Linux)
 scripts/install-dev-env.sh
 # Install Gaia
 ./build -i gaia
