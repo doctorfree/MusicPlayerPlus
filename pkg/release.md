@@ -20,6 +20,9 @@ This major new release of MusicPlayerPlus adds support for many new features and
 * Preserve existing user configurations where appropriate
 * Add `mpd-monitor` and `mpd-configure` commands and man pages
 * Integrate `RoonCommandLine`, `MirrorCommand`, and `Asciiville` menus
+* Add `-l music_dir` option to `mppinit`
+    * To initialize a custom music library location in one step:
+    * `mppinit -l /path/to/library`
 * Many more improvements and features (See [Changelog](#changelog) below)
 
 

@@ -10,6 +10,9 @@ All notable changes to this project will be documented in this file.
 * Add view service logs menu to mpplus
 * Add `mpd-monitor` and `mpd-configure` commands and man pages
 * Integrate `RoonCommandLine`, `MirrorCommand`, and `Asciiville` menus
+* Add `-l music_dir` option to `mppinit`
+    * To initialize a custom music library location in one step:
+    * `mppinit -l /path/to/library`
 * Bug fixes
 
 ## MusicPlayerPlus-2.0.1r2 (2022-08-20)

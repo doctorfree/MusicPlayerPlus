@@ -38,7 +38,7 @@ done
 shift $(( OPTIND - 1 ))
 
 [ "$CLEAN" ] && ./clean
-[ "$PACKAGE" ] && scripts/mkdeb.sh
+[ "$PACKAGE" ] && ./mkpkg
 
 ANNO="MusicPlayerPlus Version ${VERSION} Release ${RELEASE}"
 gittag v${VERSION}r${RELEASE} ${ANNO}
