@@ -15,7 +15,7 @@ else
   else
     VERSION=2.0.1
     RELEASE=3
-    PACKAGE=2
+    PACKAGE=1
   fi
 fi
 

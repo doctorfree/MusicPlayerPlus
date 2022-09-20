@@ -6,6 +6,24 @@
 # Setup default tmux configuration for this user
 # Install required pip modules if not already installed
 # Optionally perform Beets initialization and metadata retrieval
+#
+# TODO: Split some components out into separate projects and install from
+# a URL if that component is needed for the specified initialization mode
+#
+# Debian:
+# -------
+# TEMP_DEB="$(mktemp)"
+# wget --quiet -O "${TEMP_DEB}" 'http://path.to/my.deb'
+# sudo dpkg -i "${TEMP_DEB}"
+# rm -f "${TEMP_DEB}"
+# 
+# RPM:
+# ----
+# sudo rpm -ivh https://someurl/somepackage.rpm
+# 
+# Pacman:
+# -------
+# sudo pacman -U https://example.com/pkgname.pkg.tar.zst
 
 MPPCDIR=/usr/share/musicplayerplus
 MPCONFDIR=${MPPCDIR}/mpcplus

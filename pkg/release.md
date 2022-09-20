@@ -48,8 +48,7 @@ Install the package on Arch Linux based systems by executing the command:
 sudo pacman -U ./MusicPlayerPlus_2.0.1-3-x86_64.pkg.tar.zst
 ```
 
-Install the package on RPM based systems by executing one of the
-following commands.
+Install the package on RPM based systems by executing one of the following commands.
 
 On Fedora Linux:
 
@@ -75,25 +74,13 @@ makepkg --force --log --cleanbuild --noconfirm --syncdeps
 
 **[Note:]** The full MusicPlayerPlus build from sources can be time consuming. Use a pre-built package if one is available for your platform.
 
-To create an installable package from the latest development sources rather
-than the stable release packages, clone the MusicPlayerPlus repository and
-use the `mkpkg` script to create a package for your platform:
-
-```
-git clone https://github.com/doctorfree/MusicPlayerPlus.git
-cd MusicPlayerPlus
-./mkpkg
-```
-
-The `mkpkg` script detects the platform and creates an installable package in the package format native to that platform. After successfully building the MusicPlayerPlus components, the resulting installable package will be found in the `./releases/<version>/` directory.
-
 ## Configuration
 
 Execute the `mppinit` command (Required).
 
-Edit `~/.config/mpd/mpd.conf` and set the `music_directory`.
+If the music library is located somewhere other than `$HOME/Music` or `$HOME/music` then rather than `mppinit`, execute the command `mppinit -l /path/to/library`.
 
-If you change the `music_directory` setting in `~/.config/mpd/mpd.conf` then run `mppinit sync`.
+If the `mppinit` MusicPlayerPlus initialization did not correctly detect the music library location then edit `~/.config/mpprc`, set the `MUSIC_DIR` correctly, and run `mppinit sync`.
 
 To enable the Beets media library management system (Optional):
 
@@ -131,6 +118,27 @@ Removal of the package on Arch Linux based systems can be accomplished by issuin
 ```bash
 sudo pacman -Rs musicplayerplus
 ```
+
+## Building MusicPlayerPlus from source
+
+MusicPlayerPlus can be compiled, packaged, and installed from the source code repository. This should be done as a normal user with `sudo` privileges:
+
+```
+# Retrieve the source code from the repository
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
+# Enter the MusicPlayerPlus source directory
+cd MusicPlayerPlus
+# Install the necessary build environment (not necessary on Arch Linux)
+scripts/install-dev-env.sh
+# Install Gaia
+./build -i gaia
+# Compile the MusicPlayerPlus components and create an installation package
+./mkpkg
+# Install MusicPlayerPlus and its dependencies
+./Install
+```
+
+The `mkpkg` script detects the platform and creates an installable package in the package format native to that platform. After successfully building the MusicPlayerPlus components, the resulting installable package will be found in the `./releases/<version>/` directory.
 
 ## Changelog
 
