@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+#
+# mppqa - select and add songs to MPD queue
+#       use tab to select songs and enter to add them to the queue
+# from: https://github.com/codesoap/mpq
+
+have_fzf=`type -p fzf`
+[ "${have_fzf}" ] || {
+	echo "The mppqa command requires but cannot find fzf. Exiting."
+    exit 1
+}
+
+alias mpc='mpc -f "%file%\t[%artist% - ][%album% [#[##%track%#] ]- ][%title%|%file%]"'
+songs=$(mpc listall | sort -V)
+printf '%s\n' "$songs" \
+| awk -F'\t' '{print $2}' \
+| fzf --no-sort --reverse -m \
+| while read selection
+do
+	printf '%s\n' "$songs" | awk -F'\t' "\$2==\"$selection\" {print \$1; exit}"
+done | mpc add

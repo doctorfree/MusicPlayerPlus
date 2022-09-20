@@ -1,0 +1,58 @@
+set columns=artist originalyear year album discshort trackshort title length
+set sort=track disc album date originaldate albumartistsort
+set nonextafteraction
+
+set scrolloff=4
+
+set libraryroot=/home/USERNAME/Music/
+
+set topbar=%ifcursong%%time_elapsed% %playstate% %time% (%progresspercentage%%%)%endif%\t%ifcursong%%artist%%endif%\tVol: %volume%%%  Mode: %muteshort%%consumeshort%%repeatshort%%randomshort%%singleshort%\n%listsize%\t%ifcursong%%album% (%originalyear% -> %year%)%endif%\tQ: %livequeuesize%\n\t%ifcursong%==> %title% <==%endif%
+
+set xtermtitle=%playstate%%ifcursong% %artist% – %title%%endif%
+
+colour title grey
+colour current white blue
+colour cursor black brightgrey
+colour selection white green
+colour topbar.fields.artist brown
+colour topbar.fields.title white
+colour topbar.fields.date green
+colour topbar.fields.originaldate green
+colour topbar.fields.year green
+colour topbar.fields.originalyear green
+colour fields.date green
+colour fields.originaldate green
+colour fields.year green
+colour fields.originalyear green
+colour topbar.time_elapsed brightmagenta
+
+set mouse
+
+bind G move-end
+bind g move-home
+bind } next-of albumartist
+bind { prev-of albumartist
+bind ] next-of album
+bind [ prev-of album
+bind ^G info
+bind d remove
+bind D clear
+bind h seek -3
+bind l seek 3
+bind H seek -10
+bind L seek 10
+bind ^N next
+bind ^P prev
+bind c goto-current
+bind - toggle-select
+bind ^F move-pgdn
+bind ^B move-pgup
+bind + volume +3
+bind = volume -3
+bind ? help
+bind f filter
+bind F clear-filters
+
+bind y ! echo "#" | xsel
+bind ^T ! transcribe "#"
+bind ^W ! lyrics | less

@@ -2446,7 +2446,7 @@ fi
 [ "${quiet}" ] || {
   printf "\n\tSetting HOME in configuration files ..."
 }
-FIFS="mppcava/config-tmux mppcava/config"
+FIFS="mppcava/config-tmux mppcava/config pms/rc"
 for cnf in ${FIFS}
 do
   [ -f ${USERCONF}/${cnf} ] && {

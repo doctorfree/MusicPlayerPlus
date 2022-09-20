@@ -1,0 +1,19 @@
+#!/usr/bin/env sh
+#
+# mppqs - find recommendations for the last heard song and add them to the queue
+
+have_fzf=`type -p fzf`
+[ "${have_fzf}" ] || {
+	echo "The mppqs command requires but cannot find fzf. Exiting."
+    exit 1
+}
+have_songmem=`type -p songmem`
+[ "${have_songmem}" ] || {
+	echo "The mppqs command requires but cannot find songmem. Exiting."
+    exit 1
+}
+
+selection=$(songmem --suggestions "$(songmem | head -n1)" | fzf)
+artist="$(printf '%s' "$selection" | awk -F ' - ' '{print $1}')"
+title="$(printf '%s' "$selection" | awk '{i=index($0, " - "); print substr($0, i+3)}')"
+mpc findadd artist "$artist" title "$title"
