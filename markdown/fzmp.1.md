@@ -6,7 +6,7 @@ footer: fzmp 1.0.0
 date: March 24, 2022
 ---
 ## NAME
-fzmp - performs one-time initialization of mpcplus configuration files
+fzmp - list and search songs in the MPD music library using the `fzf` fuzzy finder
 
 ## SYNOPSIS
 **fzmp** [OPTIONS]
