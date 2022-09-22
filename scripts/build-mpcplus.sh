@@ -95,7 +95,10 @@ prefix="--prefix=/usr"
 [ "${CONFIGURE_ONLY}" ] && exit 0
 
 make
-make -C extras
+
+WERR="-Wextra -Wshadow -Werror -Wno-error=deprecated-declarations"
+CXXFLAGS="-O2 -march=native -pipe -std=c++0x ${WERR}"
+make CXXFLAGS="${CXXFLAGS}" -C extras
 
 if [ "${INSTALL}" ]
 then
