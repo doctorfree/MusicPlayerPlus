@@ -2046,51 +2046,7 @@ remove_kitty() {
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
 
-# Check if default music library location is empty
-empty_music=1
-if [ "${MUSIC_DIRECTORY}" ]
-then
-  for mdir in ${MUSIC_DIRECTORY}/*
-  do
-    [ "${mdir}" == "${MUSIC_DIRECTORY}/*" ] && continue
-    [ "${mdir}" == "${MUSIC_DIRECTORY}/Playlists" ] && continue
-    empty_music=
-    break
-  done
-else
-  for msub in Music music
-  do
-    for mdir in ${HOME}/${msub}/*
-    do
-      [ "${mdir}" == "${HOME}/${msub}/*" ] && continue
-      [ "${mdir}" == "${HOME}/${msub}/Playlists" ] && continue
-      MUSIC_DIRECTORY="${HOME}/${msub}"
-      empty_music=
-      break 2
-    done
-  done
-fi
-
 [ "${MUSIC_DIRECTORY}" ] || {
-  [ -f ${USERCONF}/user-dirs.dirs ] && {
-    # Try XDG_MUSIC_DIR
-    have_xdg=`type -p xdg-user-dir`
-    [ "${have_xdg}" ] && {
-      xdgm=`xdg-user-dir MUSIC`
-      [ "${xdgm}" ] && {
-        for mdir in ${xdgm}/*
-        do
-          [ "${mdir}" == "${xdgm}/*" ] && continue
-          [ "${mdir}" == "${xdgm}/Playlists" ] && continue
-          MUSIC_DIRECTORY="${xdgm}"
-        done
-      }
-    }
-  }
-}
-
-[ "${MUSIC_DIRECTORY}" ] || {
-  empty_music=1
   if [ -d ${HOME}/Music ]
   then
     MUSIC_DIRECTORY="${HOME}/Music"
@@ -2102,12 +2058,6 @@ fi
       MUSIC_DIRECTORY="${HOME}/Music"
     fi
   fi
-  printf "\n\n${BOLD}Default music library locations appear empty${NORM}"
-  printf "\nMusicPlayerPlus initialization will continue with an empty library."
-  printf "\nThe music library can be populated later or, if your music library"
-  printf "\nis in a custom location, simply edit $HOME/.config/mpprc"
-  printf "\nafter initialization completes and run 'mppinit sync'.\n"
-  printf "\n${MUSIC_DIRECTORY} will be used as the default library location.\n"
 }
 
 upd_mpprc=
