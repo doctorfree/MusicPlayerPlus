@@ -22,12 +22,12 @@ then
         libiniparser-dev libyaml-dev swig python3-dev pkg-config \
         libncurses-dev libasound2-dev libreadline-dev libpulse-dev \
         libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
-        libavfilter-dev libavdevice-dev libsqlite3-dev pandoc zip"
+        libavfilter-dev libavdevice-dev libsqlite3-dev"
   if [ "$1" == "-r" ]
   then
     sudo apt remove ${PKGS}
   else
-    sudo apt install ${PKGS}
+    sudo apt install ${PKGS} pandoc zip
   fi
 else
   if [ "${arch}" ]
@@ -35,14 +35,12 @@ else
     PKGS="base-devel eigen fftw clang ffmpeg4.4 libsamplerate taglib \
           chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
           alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
-          qt5-tools python python-numpy python-six pandoc sndio zip cargo"
-    RUN_PKGS="mpd inotify-tools figlet cool-retro-term \
-          fzf mpc python-pip mplayer dconf"
+          qt5-tools python python-numpy python-six sndio cargo"
     if [ "$1" == "-r" ]
     then
-      sudo pacman -Rs ${RUN_PKGS}
+      sudo pacman -Rs ${PKGS}
     else
-      sudo pacman -S --needed ${PKGS} ${RUN_PKGS}
+      sudo pacman -S --needed ${PKGS} pandoc zip
     fi
   else
     have_dnf=`type -p dnf`
@@ -65,7 +63,7 @@ else
             pulseaudio-libs-devel libtool automake iniparser-devel \
             llvm-devel SDL2-devel eigen3-devel libyaml-devel clang-devel \
             swig libchromaprint-devel python-devel python3-devel \
-            python3-yaml python3-six sqlite-devel pandoc zip \
+            python3-yaml python3-six sqlite-devel \
             libmpdclient-devel taglib-devel libsamplerate-devel"
       if [ "$1" == "-r" ]
       then
@@ -85,7 +83,7 @@ else
       else
         sudo ${PINS} -y groupinstall "Development Tools" "Development Libraries"
         sudo ${PINS} -y install gcc-c++
-        sudo ${PINS} -y install ${PKGS}
+        sudo ${PINS} -y install ${PKGS} pandoc zip
         sudo ${PINS} -y install ${FUSION}/${FREE}/${RELRPM}
         sudo ${PINS} -y install ${FUSION}/${NONFREE}/${NONRPM}
         sudo ${PINS} -y install dnf-plugins-core
@@ -113,7 +111,7 @@ else
           pulseaudio-libs-devel libtool automake iniparser-devel SDL2-devel \
           libcurl-devel boost-devel eigen3-devel libyaml-devel clang-devel \
           swig readline-devel libchromaprint-devel python3-devel python3-yaml \
-          python3-six sqlite-devel pandoc zip libmpdclient-devel taglib-devel \
+          python3-six sqlite-devel libmpdclient-devel taglib-devel \
           libsamplerate-devel python3-numpy"
         if [ "$1" == "-r" ]
         then
@@ -129,7 +127,7 @@ else
           sudo ${PINS} -y install dnf-plugins-core
           sudo ${PINS} -y install epel-release
           sudo ${PINS} config-manager --set-enabled powertools
-          sudo ${PINS} -y install ${PKGS}
+          sudo ${PINS} -y install ${PKGS} pandoc zip
           sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${FREE}/${RELRPM}
           sudo ${PINS} -y localinstall --nogpgcheck ${FUSION}/${NONFREE}/${NONRPM}
           sudo ${PINS} -y update
