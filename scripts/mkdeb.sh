@@ -132,14 +132,14 @@ Provides: mpd-client
 Suggests: desktop-file-utils
 Homepage: https://github.com/doctorfree/MusicPlayerPlus
 Description: Music Player Plus
- Music server, player, and services management system
+ Music server, player, and services management system" > ${OUT_DIR}/DEBIAN/control
 
 chmod 644 ${OUT_DIR}/DEBIAN/control
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}/mpcplus" \
-           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}" \
+           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/doc/${PKG}/blissify" \
            "${DESTDIR}/share/doc/${PKG}/bliss-analyze"
 do

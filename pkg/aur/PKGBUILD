@@ -150,8 +150,8 @@ package() {
   destdir=usr
   for dir in "${destdir}" "${destdir}/share" "${destdir}/share/man" \
     "${destdir}/share/applications" "${destdir}/share/doc" \
-    "${destdir}/share/doc/${pkgname}" "${destdir}/share/${pkgname}/mpcplus" \
-    "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}" \
+    "${destdir}/share/doc/${pkgname}" "${destdir}/share/${pkgname}" \
+    "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}/mpcplus" \
     "${destdir}/share/licenses" \
     "${destdir}/share/licenses/${pkgname}" \
     "${destdir}/share/doc/${pkgname}/blissify" \

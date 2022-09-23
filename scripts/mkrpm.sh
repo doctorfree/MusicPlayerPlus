@@ -106,8 +106,8 @@ mkdir ${OUT_DIR}
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}/mpcplus" \
-           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}" \
+           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/doc/${PKG}/blissify" \
            "${DESTDIR}/share/doc/${PKG}/bliss-analyze"
 do
