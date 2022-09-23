@@ -1,3 +1,0 @@
-?package(musicplayerplus):needs="text" section="Applications/Sound" \
-  title="musicplayerplus" longtitle="NCurses Music Player Plus" \
-  command="/usr/bin/mpcplus" hints="Player"

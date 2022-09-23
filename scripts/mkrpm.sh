@@ -33,25 +33,6 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 
 cd "${SRC}/${SRC_NAME}"
 
-# Build mpcplus
-if [ -x scripts/build-mpcplus.sh ]
-then
-  scripts/build-mpcplus.sh -v
-else
-  cd mpcplus
-  make clean
-  make distclean
-  [ -x ./configure ] || ./autogen.sh > /dev/null
-  ./configure --prefix=/usr \
-              --enable-outputs \
-              --enable-clock \
-              --enable-visualizer \
-              --with-fftw \
-              --with-taglib > configure$$.out
-  make > make$$.out
-  cd ..
-fi
-
 # Build mppcava
 if [ -x scripts/build-mppcava.sh ]
 then
@@ -125,9 +106,8 @@ mkdir ${OUT_DIR}
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
-           "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/doc/${PKG}/blissify" \
            "${DESTDIR}/share/doc/${PKG}/bliss-analyze"
 do
@@ -141,9 +121,6 @@ do
 done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
-${SUDO} cp mpcplus/extras/artist_to_albumartist \
-           ${OUT_DIR}/${DESTDIR}/bin/artist_to_albumartist
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 ${SUDO} cp blissify/target/release/blissify ${OUT_DIR}/${DESTDIR}/bin
@@ -172,11 +149,6 @@ ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} pandoc -f gfm README.md | ${SUDO} tee ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README.html > /dev/null
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
-${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-
 ${SUDO} cp blissify/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 ${SUDO} cp blissify/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 
@@ -186,12 +158,8 @@ ${SUDO} cp bliss-analyze/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/bliss-
 ${SUDO} cp -a share/alsa-capabilities ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/alsa-capabilities
 
 ${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 ${SUDO} cp -a share/svm_models ${OUT_DIR}/${DESTDIR}/share/${PKG}/svm_models

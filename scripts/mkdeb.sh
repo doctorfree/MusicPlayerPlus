@@ -46,25 +46,6 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 
 cd "${SRC}/${SRC_NAME}"
 
-# Build mpcplus
-if [ -x scripts/build-mpcplus.sh ]
-then
-  scripts/build-mpcplus.sh -v
-else
-  cd mpcplus
-  make clean
-  make distclean
-  [ -x ./configure ] || ./autogen.sh > /dev/null
-  ./configure --prefix=/usr \
-              --enable-outputs \
-              --enable-clock \
-              --enable-visualizer \
-              --with-fftw \
-              --with-taglib > configure$$.out
-  make > make$$.out
-  cd ..
-fi
-
 # Build mppcava
 if [ -x scripts/build-mppcava.sh ]
 then
@@ -147,35 +128,18 @@ Depends: alsa-utils, bc, coreutils, flac, jq, libboost-all-dev (>= 1.71.0), libc
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 199000
 Build-Depends: debhelper (>= 11)
-Provides: mpcplus-completion, mpd-client
+Provides: mpd-client
 Suggests: desktop-file-utils
 Homepage: https://github.com/doctorfree/MusicPlayerPlus
 Description: Music Player Plus
- ncurses-based client for the Music Player Daemon (MPD)
- mpcplus is almost an exact clone of ncmpc which is a text-mode client
- for MPD, the Music Player Daemon. It provides a keyboard oriented and
- consistent interface to MPD and contains some new features ncmpc
- doesn't have. It's also been rewritten from scratch in C++.
- .
- New features include:
-  - tag editor;
-  - playlists editor;
-  - easy to use search screen;
-  - media library screen;
-  - lyrics screen;
-  - possibility of going to any position in currently playing track
-    without rewinding/fastforwarding;
-  - multi colored main window (if you want);
-  - songs can be added to playlist more than once;
-  - a lot of minor useful functions." > ${OUT_DIR}/DEBIAN/control
+ Music server, player, and services management system
 
 chmod 644 ${OUT_DIR}/DEBIAN/control
 
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
-           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/doc/${PKG}/mpcplus" \
+           "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}" \
-           "${DESTDIR}/share/${PKG}/mpcplus" \
            "${DESTDIR}/share/doc/${PKG}/blissify" \
            "${DESTDIR}/share/doc/${PKG}/bliss-analyze"
 do
@@ -189,9 +153,6 @@ do
 done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp mpcplus/src/mpcplus ${OUT_DIR}/${DESTDIR}/bin/mpcplus
-${SUDO} cp mpcplus/extras/artist_to_albumartist \
-           ${OUT_DIR}/${DESTDIR}/bin/artist_to_albumartist
 ${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
 ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 [ -f blissify/target/release/blissify ] && {
@@ -224,11 +185,6 @@ ${SUDO} cp README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
 ${SUDO} pandoc -f gfm README.md | ${SUDO} tee ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/README.html > /dev/null
 ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
-${SUDO} cp mpcplus/AUTHORS ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/COPYING ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-${SUDO} cp mpcplus/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/mpcplus
-
 ${SUDO} cp blissify/CHANGELOG.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 ${SUDO} cp blissify/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/blissify
 
@@ -238,12 +194,8 @@ ${SUDO} cp bliss-analyze/README.md ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/bliss-
 ${SUDO} cp -a share/alsa-capabilities ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/alsa-capabilities
 
 ${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}
-${SUDO} cp mpcplus/doc/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp mpcplus/doc/bindings ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp share/mpcplus-cheat-sheet.txt ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
-${SUDO} cp share/mpcplus-cheat-sheet.md ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 ${SUDO} cp -a share/svm_models ${OUT_DIR}/${DESTDIR}/share/${PKG}/svm_models
