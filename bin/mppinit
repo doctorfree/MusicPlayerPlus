@@ -1548,7 +1548,7 @@ init_navidrome() {
       echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
       echo "and re-run the 'mppinit navidrome' command."
     else
-      wget -q https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz -O ${navivar}/Navidrome.tar.gz
+      wget --quiet https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz -O ${navivar}/Navidrome.tar.gz
     fi
 
     if [ -f "${navivar}/Navidrome.tar.gz" ]
