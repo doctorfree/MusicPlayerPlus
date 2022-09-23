@@ -7,23 +7,6 @@
 # Install required pip modules if not already installed
 # Optionally perform Beets initialization and metadata retrieval
 #
-# TODO: Split some components out into separate projects and install from
-# a URL if that component is needed for the specified initialization mode
-#
-# Debian:
-# -------
-# TEMP_DEB="$(mktemp)"
-# wget --quiet -O "${TEMP_DEB}" 'http://path.to/my.deb'
-# sudo dpkg -i "${TEMP_DEB}"
-# rm -f "${TEMP_DEB}"
-# 
-# RPM:
-# ----
-# sudo rpm -ivh https://someurl/somepackage.rpm
-# 
-# Pacman:
-# -------
-# sudo pacman -U https://example.com/pkgname.pkg.tar.zst
 
 MPPCDIR=/usr/share/musicplayerplus
 MPCONFDIR=${MPPCDIR}/mpcplus
@@ -947,16 +930,55 @@ have_mopidy=`type -p mopidy`
 set_have_navi
 
 arch=
-mach=`uname -m`
 centos=
 debian=
 fedora=
 needpower=
+mach=`uname -m`
 APT=
 DNF=
-[ -f /etc/os-release ] && . /etc/os-release
-[ "${ID_LIKE}" == "debian" ] && {
-  debian=1
+if [ -f /etc/os-release ]
+then
+  . /etc/os-release
+  [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "arch" ] && arch=1
+  [ "${ID}" == "centos" ] && centos=1
+  [ "${ID}" == "fedora" ] && fedora=1
+else
+  if [ -f /etc/arch-release ]
+  then
+    arch=1
+  else
+    case "${mach}" in
+      arm*)
+        debian=1
+        ;;
+      x86*)
+        if uname -v | grep -i ubuntu > /dev/null
+        then
+          debian=1
+        else
+          if [ -f /etc/fedora-release ]
+          then
+            fedora=1
+          else
+            if [ -f /etc/centos-release ]
+            then
+              centos=1
+            else
+              echo "Unknown operating system distribution"
+            fi
+          fi
+        fi
+        ;;
+      *)
+        echo "Unknown machine architecture"
+        ;;
+    esac
+  fi
+fi
+
+[ "${debian}" ] && {
   have_apt=`type -p apt`
   if [ "${have_apt}" ]
   then
@@ -971,10 +993,8 @@ DNF=
     fi
   fi
 }
-[ "${ID}" == "arch" ] && arch=1
-[ "${ID}" == "centos" ] && {
+[ "${centos}" ] && {
   # CentOS is a Mess
-  centos=1
   [ "${VERSION_ID}" == "8" ] && {
     if [ "${NAME}" == "CentOS Stream" ]
     then
@@ -991,7 +1011,6 @@ DNF=
     EPEL="epel-release"
   fi
 }
-[ "${ID}" == "fedora" ] && fedora=1
 
 [ "${centos}" ] || [ "${fedora}" ] && {
   have_dnf=`type -p dnf`
@@ -1073,19 +1092,19 @@ PY3_SUPPORT=false
 
 for i in "${POTENTIAL_BINARIES[@]}"
 do
-	PYTHON="$i"
+    PYTHON="$i"
 
-	if  $(check_py_version ${PYTHON}) ;
-	then
-		PY3_SUPPORT=true
-		break
-	fi
+    if  $(check_py_version ${PYTHON}) ;
+    then
+        PY3_SUPPORT=true
+        break
+    fi
 done
 
 if [ ! ${PY3_SUPPORT} ]
 then
-	echo "[ERROR] Could not find python3 binary, please add it to your \$PATH before continuing"
-	exit
+    echo "[ERROR] Could not find python3 binary, please add it to your \$PATH before continuing"
+    exit
 fi
 
 # User needs to be in group adm for some systemctl actions
@@ -2045,6 +2064,70 @@ remove_kitty() {
 }
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
+
+# Install mpcplus if not already present
+[ -x /usr/bin/mpcplus ] || {
+  OWNER=doctorfree
+  PROJECT=mpcplus
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+
+  # TODO: Make this a function and install multiple external components
+  DL_URL=
+  if [ "${arch}" ]
+  then
+    DL_URL=$(curl --silent "${API_URL}" | \
+             jq --raw-output '.assets | .[].browser_download_url' | \
+             grep "\.pkg\.tar\.zst")
+  else
+    if [ "${centos}" ]
+    then
+      DL_URL=$(curl --silent "${API_URL}" | \
+               jq --raw-output '.assets | .[].browser_download_url' | \
+               grep "\.el.*x86_64\.rpm")
+    else
+      if [ "${fedora}" ]
+      then
+        DL_URL=$(curl --silent "${API_URL}" | \
+                 jq --raw-output '.assets | .[].browser_download_url' | \
+                 grep "\.fc.*x86_64\.rpm")
+      else
+        if [ "${debian}" ]
+        then
+          if [ "${mach}" == "x86_64" ]
+          then
+            DL_URL=$(curl --silent "${API_URL}" | \
+                     jq --raw-output '.assets | .[].browser_download_url' | \
+                     grep "\.amd64\.deb")
+          else
+            DL_URL=$(curl --silent "${API_URL}" | \
+                     jq --raw-output '.assets | .[].browser_download_url' | \
+                     grep "\.arm.*\.deb")
+          fi
+        else
+          printf "\n\tNo 'mpcplus' release asset found for this platform ..."
+        fi
+      fi
+    fi
+  fi
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tAttempting to install the 'mpcplus' MPD client ..."
+    if [ "${debian}" ]
+    then
+      TEMP_DEB="$(mktemp)"
+      wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+      sudo dpkg -i "${TEMP_DEB}"
+      rm -f "${TEMP_DEB}"
+    else
+      if [ "${centos}" ] || [ "${fedora}" ]
+      then
+        sudo rpm --quiet --install ${DL_URL}
+      else
+        [ "${arch}" ] && sudo pacman -U ${DL_URL}
+      fi
+    fi
+  }
+}
 
 [ "${MUSIC_DIRECTORY}" ] || {
   if [ -d ${HOME}/Music ]
