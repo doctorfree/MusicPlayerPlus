@@ -9,10 +9,13 @@
 #
 
 MPPCDIR=/usr/share/musicplayerplus
-MPCONFDIR=${MPPCDIR}/mpcplus
+MPCONFDIR=/usr/share/mpcplus
+OPCONFDIR=${MPPCDIR}/mpcplus
 SCPTDIR=${MPPCDIR}/scripts
+MCPTDIR=${MPCONFDIR}/scripts
 CCPTDIR=${MPPCDIR}/calliope
 USERCONF=${HOME}/.config
+MPCDIR=${USERCONF}/mpcplus
 MPDCONFDIR="${USERCONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 MPPCONF="${USERCONF}/mpprc"
@@ -41,6 +44,10 @@ MPP_USER=$(id -un)
 
 mud="music_directory"
 pld="playlist_directory"
+senable=
+sactive=
+uenable=
+uactive=
 
 if [ -x "${SCPTDIR}/crudini.py" ]
 then
@@ -630,31 +637,25 @@ sync_sys_mpd_conf() {
 }
 
 disable_sys_mpd() {
-  senable=
-  sactive=
   # Disable and stop any system-wide MPD service
-  systemctl is-enabled --quiet mpd.service
-  [ $? -eq 0 ] && {
-    senable=1
-    sudo systemctl disable --quiet mpd.service
-    sudo systemctl --user --global disable mpd.service
+  [ "${senable}" ] && {
+    sudo systemctl --quiet disable mpd.service > /dev/null 2>&1
+    sudo systemctl --quiet disable mpd.socket > /dev/null 2>&1
   }
-  systemctl is-enabled --quiet mpd.socket
-  [ $? -eq 0 ] && {
-    senable=1
-    sudo systemctl disable --quiet mpd.socket
-    sudo systemctl --user --global disable mpd.socket
+  [ "${sactive}" ] && {
+    sudo systemctl --quiet stop mpd.service > /dev/null 2>&1
+    sudo systemctl --quiet stop mpd.socket > /dev/null 2>&1
   }
-  systemctl is-active --quiet mpd.service
-  [ $? -eq 0 ] && {
-    sactive=1
-    sudo systemctl stop --quiet mpd.service
-  }
-  systemctl is-active --quiet mpd.socket
-  [ $? -eq 0 ] && {
-    sactive=1
-    sudo systemctl stop --quiet mpd.socket
-  }
+# [ "${uenable}" ] && {
+#   sudo systemctl --user --quiet disable mpd.service > /dev/null 2>&1
+#   sudo systemctl --user --global disable mpd.service > /dev/null 2>&1
+#   sudo systemctl --user --global disable mpd.socket > /dev/null 2>&1
+# }
+# [ "${uactive}" ] && {
+#   sudo systemctl --user --quiet stop mpd.service > /dev/null 2>&1
+#   sudo systemctl --user --global stop mpd.service > /dev/null 2>&1
+#   sudo systemctl --user --global stop mpd.socket > /dev/null 2>&1
+# }
   [ "${sactive}" ] || [ "${senable}" ] && sync_sys_mpd_conf
 }
 
@@ -711,26 +712,26 @@ sync_music_dir() {
       fi
     }
     mpc_custom=1
-    mpc_music=`grep ^mpd_music_dir ${HOME}/${MPCDIR}/config`
+    mpc_music=`grep ^mpd_music_dir ${MPCDIR}/config`
     [ "${mpc_music}" ] || {
-      mpc_music=`grep \#mpd_music_dir ${HOME}/${MPCDIR}/config`
+      mpc_music=`grep \#mpd_music_dir ${MPCDIR}/config`
       mpc_custom=
     }
     mpc_music=`echo ${mpc_music} | awk ' { print $3 } '`
     [ "${mpd_music}" == "${mpc_music}" ] || {
       if [ "${mpc_custom}" ]
       then
-        cat ${HOME}/${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
+        cat ${MPCDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
       else
-        cat ${HOME}/${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
+        cat ${MPCDIR}/config | sed -e "s%#mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/mpc$$
       fi
-      cp /tmp/mpc$$ ${HOME}/${MPCDIR}/config
+      cp /tmp/mpc$$ ${MPCDIR}/config
       rm -f /tmp/mpc$$
-      cat ${HOME}/${MPCDIR}/ueberzug/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/ueb$$
-      cp /tmp/ueb$$ ${HOME}/${MPCDIR}/ueberzug/config
+      cat ${MPCDIR}/ueberzug/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/ueb$$
+      cp /tmp/ueb$$ ${MPCDIR}/ueberzug/config
       rm -f /tmp/ueb$$
-      cat ${HOME}/${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/art$$
-      cp /tmp/art$$ ${HOME}/${MPCDIR}/config-art.conf
+      cat ${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/art$$
+      cp /tmp/art$$ ${MPCDIR}/config-art.conf
       rm -f /tmp/art$$
     }
     bts_custom=1
@@ -852,6 +853,28 @@ sync_music_dir() {
     echo "Could not detect any music_directory setting in ${MPDCONF}"
     echo "Manual configuration of ${MPPCONF} or ${MPDCONF} required"
   fi
+}
+
+get_mpd_status() {
+  # First check system-wide MPD service
+  systemctl is-enabled --quiet mpd.service > /dev/null 2>&1
+  [ $? -eq 0 ] && senable=1
+  systemctl is-enabled --quiet mpd.socket > /dev/null 2>&1
+  [ $? -eq 0 ] && senable=1
+  systemctl is-active --quiet mpd.service > /dev/null 2>&1
+  [ $? -eq 0 ] && sactive=1
+  systemctl is-active --quiet mpd.socket > /dev/null 2>&1
+  [ $? -eq 0 ] && sactive=1
+  # Next check user MPD service
+  systemctl --user is-enabled --quiet mpd.service > /dev/null 2>&1
+  [ $? -eq 0 ] && uenable=1
+  systemctl --user is-enabled --quiet mpd.socket > /dev/null 2>&1
+  [ $? -eq 0 ] && uenable=1
+  systemctl --user is-active --quiet mpd.service > /dev/null 2>&1
+  [ $? -eq 0 ] && uactive=1
+  systemctl --user is-active --quiet mpd.socket > /dev/null 2>&1
+  [ $? -eq 0 ] && uactive=1
+  [ "${uactive}" ] || [ "${uenable}" ] && use_usr_mpd=1
 }
 
 function check_py_version
@@ -1149,33 +1172,15 @@ fi
   done
 }
 
-[ -f ${MPCONFDIR}/config ] || {
-    echo "${MPCONFDIR}/config does not exist."
-    echo "MusicPlayerPlus installation incomplete"
-    exit 1
-}
-[ -f ${MPCONFDIR}/bindings ] || {
-    echo "${MPCONFDIR}/bindings does not exist."
-    echo "MusicPlayerPlus installation incomplete"
-    exit 1
-}
+get_mpd_status
+set_music_dir
 
 [ -d ${USERCONF} ] || mkdir ${USERCONF}
-if [ -f ${USERCONF}/mpcplus/config ]
+if [ -f ${USERCONF}/mppcava/config ]
 then
-  MPCDIR=".config/mpcplus"
   initialized=1
 else
-  if [ -f ${HOME}/.mpcplus/config ]
-  then
-    MPCDIR=".mpcplus"
-    initialized=1
-  else
-    [ -d ${USERCONF}/mpcplus ] || mkdir -p ${USERCONF}/mpcplus
-    cp ${MPCONFDIR}/config ${USERCONF}/mpcplus/config
-    MPCDIR=".config/mpcplus"
-    initialized=
-  fi
+  initialized=
 fi
 
 [ "${argument}" == "sync" ] && {
@@ -2199,68 +2204,68 @@ have_fzf=`type -p fzf`
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
 }
-if [ -f ${HOME}/${MPCDIR}/bindings ]
+if [ -f ${MPCDIR}/bindings ]
 then
-  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 else
-  cp ${MPCONFDIR}/bindings ${HOME}/${MPCDIR}/bindings
+  cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 fi
 
 for cfg in ${CFGS}
 do
-  if [ -f ${HOME}/${MPCDIR}/${cfg} ]
+  if [ -f ${MPCDIR}/${cfg} ]
   then
-    [ "${overwrite}" ] && cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    [ "${overwrite}" ] && cp ${OPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
   else
-    cp ${MPCONFDIR}/${cfg} ${HOME}/${MPCDIR}/${cfg}
+    cp ${OPCONFDIR}/${cfg} ${MPCDIR}/${cfg}
   fi
-  chmod 644 ${HOME}/${MPCDIR}/${cfg}
+  chmod 644 ${MPCDIR}/${cfg}
 done
 for scp in ${SCPS}
 do
-  if [ -f ${HOME}/${MPCDIR}/${scp} ]
+  if [ -f ${MPCDIR}/${scp} ]
   then
-    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+    [ "${overwrite}" ] && cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
   else
-    cp ${SCPTDIR}/${scp} ${HOME}/${MPCDIR}/${scp}
+    cp ${SCPTDIR}/${scp} ${MPCDIR}/${scp}
   fi
-  chmod 755 ${HOME}/${MPCDIR}/${scp}
+  chmod 755 ${MPCDIR}/${scp}
 done
-if [ -d "${HOME}/${MPCDIR}/ueberzug" ]
+if [ -d "${MPCDIR}/ueberzug" ]
 then
-  for ueb in ${MPCONFDIR}/ueberzug/*
+  for ueb in ${OPCONFDIR}/ueberzug/*
   do
-    [ "${ueb}" == "${MPCONFDIR}/ueberzug/*" ] && continue
+    [ "${ueb}" == "${OPCONFDIR}/ueberzug/*" ] && continue
     b=`basename "${ueb}"`
     if [ -d "${ueb}" ]
     then
-      if [ -d ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      if [ -d ${MPCDIR}/ueberzug/${b} ]
       then
         for img in "${ueb}"/*
         do
           [ "${img}" == "${ueb}/*" ] && continue
           i=`basename "${img}"`
-          if [ -f ${HOME}/${MPCDIR}/ueberzug/${b}/${i} ]
+          if [ -f ${MPCDIR}/ueberzug/${b}/${i} ]
           then
-            [ "${overwrite}" ] && cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+            [ "${overwrite}" ] && cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
           else
-            cp ${img} ${HOME}/${MPCDIR}/ueberzug/${b}/${i}
+            cp ${img} ${MPCDIR}/ueberzug/${b}/${i}
           fi
         done
       else
-        cp -a "${ueb}" ${HOME}/${MPCDIR}/ueberzug/${b}
+        cp -a "${ueb}" ${MPCDIR}/ueberzug/${b}
       fi
     else
-      if [ -f ${HOME}/${MPCDIR}/ueberzug/${b} ]
+      if [ -f ${MPCDIR}/ueberzug/${b} ]
       then
-        [ "${overwrite}" ] && cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+        [ "${overwrite}" ] && cp ${ueb} ${MPCDIR}/ueberzug/${b}
       else
-        cp ${ueb} ${HOME}/${MPCDIR}/ueberzug/${b}
+        cp ${ueb} ${MPCDIR}/ueberzug/${b}
       fi
     fi
   done
 else
-  cp -a ${MPCONFDIR}/ueberzug ${HOME}/${MPCDIR}/ueberzug
+  cp -a ${OPCONFDIR}/ueberzug ${MPCDIR}/ueberzug
 fi
 
 [ -d ${USERCONF}/mppcava ] || mkdir -p ${USERCONF}/mppcava
@@ -2819,7 +2824,7 @@ fi
 }
 
 # Integrate previously set ncmpcpp user preferences into mpcplus/config
-[ -x ${SCPTDIR}/set_prev_ncmpcpp.sh ] && ${SCPTDIR}/set_prev_ncmpcpp.sh
+[ -x ${MCPTDIR}/set_prev_ncmpcpp.sh ] && ${MCPTDIR}/set_prev_ncmpcpp.sh
 
 # Integrate previously set cava user preferences into mppcava/config
 [ -x ${SCPTDIR}/set_prev_cava.sh ] && ${SCPTDIR}/set_prev_cava.sh
