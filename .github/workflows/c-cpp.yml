@@ -3,7 +3,7 @@ name: C/C++ CI
 on:
   push:
     paths:
-      - 'mpcplus/**'
+      - 'mppcava/**'
 
 jobs:
   build:
@@ -17,13 +17,13 @@ jobs:
     - name: upgrade
       run: sudo apt upgrade -y
     - name: install
-      run: sudo apt install libboost-all-dev libncurses-dev libfftw3-dev libtinfo-dev libreadline-dev libcurl4-openssl-dev libtag1-dev libmpdclient-dev -y
+      run: sudo apt install build-essentials libtool automake iniparser libncurses-dev libfftw3-dev -y
     - name: autogen
       run: ./autogen.sh
-      working-directory: ./mpcplus
+      working-directory: ./mppcava
     - name: configure
-      run: ./configure --prefix=/usr --enable-outputs --enable-clock --enable-visualizer --with-fftw --with-taglib
-      working-directory: ./mpcplus
+      run: ./configure --prefix=/usr
+      working-directory: ./mppcava
     - name: make
       run: make
-      working-directory: ./mpcplus
+      working-directory: ./mppcava
