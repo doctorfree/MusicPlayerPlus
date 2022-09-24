@@ -17,6 +17,7 @@ pkgbase = musicplayerplus
 	depends = bc
 	depends = boost-libs
 	depends = coreutils
+	depends = curl
 	depends = flac
 	depends = jq
 	depends = libcurl-compat

@@ -935,6 +935,13 @@ have_kitty=`type -p kitty`
 have_tilix=`type -p tilix`
 have_retro=`type -p cool-retro-term`
 have_simple=`type -p st`
+have_apt=`type -p apt`
+have_aptget=`type -p apt-get`
+have_curl=`type -p curl`
+have_jq=`type -p jq`
+have_wget=`type -p wget`
+have_dnf=`type -p dnf`
+have_yum=`type -p yum`
 
 # If a supported terminal emulators is already present, use it as default
 DEFAULT_MODE=kitty
@@ -960,10 +967,6 @@ centos=
 debian=
 fedora=
 needpower=
-have_apt=`type -p apt`
-have_aptget=`type -p apt-get`
-have_dnf=`type -p dnf`
-have_yum=`type -p yum`
 mach=`uname -m`
 APT=
 DNF=
@@ -1562,9 +1565,15 @@ init_navidrome() {
       echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
       echo "and re-run the 'mppinit navidrome' command."
     else
+      [ "${have_wget}" ] || {
+        install_package wget
+        have_wget=`type -p wget`
+      }
       NAVI_URL="https://github.com/navidrome/navidrome/releases/download"
       NAVI_NAM="v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz"
-      wget --quiet -O ${navivar}/Navidrome.tar.gz ${NAVI_URL}/${NAVI_NAM}
+      [ "${have_wget}" ] && {
+        wget --quiet -O ${navivar}/Navidrome.tar.gz ${NAVI_URL}/${NAVI_NAM}
+      }
     fi
 
     if [ -f "${navivar}/Navidrome.tar.gz" ]
@@ -1715,13 +1724,33 @@ install_terminal() {
   }
 }
 
+install_package() {
+  if [ "${debian}" ]
+  then
+    [ "${APT}" ] && sudo ${APT} install $1
+  else
+    if [ "${centos}" ] || [ "${fedora}" ]
+    then
+      [ "${DNF}" ] && sudo ${DNF} install $1
+    else
+      [ "${arch}" ] && sudo pacman -U $1
+    fi
+  fi
+} 
+
 install_kitty() {
   [ "${have_kitty}" ] || {
     [ "${quiet}" ] || {
       printf "\n\tInstalling Kitty terminal emulator ..."
     }
-    curl --silent --location \
-      https://sw.kovidgoyal.net/kitty/installer.sh > /tmp/kitty-$$.sh
+    [ "${have_curl}" ] || {
+      install_package curl
+      have_curl=`type -p curl`
+    }
+    [ "${have_curl}" ] && {
+      curl --silent --location \
+        https://sw.kovidgoyal.net/kitty/installer.sh > /tmp/kitty-$$.sh
+    }
     if [ -f /tmp/kitty-$$.sh ]
     then
       have_stow=`type -p stow`
@@ -2088,52 +2117,68 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
 
   # TODO: Make this a function and install multiple external components
+  [ "${have_curl}" ] || {
+    install_package curl
+    have_curl=`type -p curl`
+  }
+  [ "${have_jq}" ] || {
+    install_package jq
+    have_jq=`type -p jq`
+  }
   DL_URL=
-  if [ "${arch}" ]
-  then
-    DL_URL=$(curl --silent "${API_URL}" | \
-             jq --raw-output '.assets | .[]?.browser_download_url' | \
-             grep "\.pkg\.tar\.zst")
-  else
-    if [ "${centos}" ]
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    if [ "${arch}" ]
     then
       DL_URL=$(curl --silent "${API_URL}" | \
                jq --raw-output '.assets | .[]?.browser_download_url' | \
-               grep "\.el.*x86_64\.rpm")
+               grep "\.pkg\.tar\.zst")
     else
-      if [ "${fedora}" ]
+      if [ "${centos}" ]
       then
         DL_URL=$(curl --silent "${API_URL}" | \
                  jq --raw-output '.assets | .[]?.browser_download_url' | \
-                 grep "\.fc.*x86_64\.rpm")
+                 grep "\.el.*x86_64\.rpm")
       else
-        if [ "${debian}" ]
+        if [ "${fedora}" ]
         then
-          if [ "${mach}" == "x86_64" ]
-          then
-            DL_URL=$(curl --silent "${API_URL}" | \
-                     jq --raw-output '.assets | .[]?.browser_download_url' | \
-                     grep "\.amd64\.deb")
-          else
-            DL_URL=$(curl --silent "${API_URL}" | \
-                     jq --raw-output '.assets | .[]?.browser_download_url' | \
-                     grep "\.arm.*\.deb")
-          fi
+          DL_URL=$(curl --silent "${API_URL}" | \
+                   jq --raw-output '.assets | .[]?.browser_download_url' | \
+                   grep "\.fc.*x86_64\.rpm")
         else
-          printf "\n\tNo 'mpcplus' release asset found for this platform ..."
+          if [ "${debian}" ]
+          then
+            if [ "${mach}" == "x86_64" ]
+            then
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "\.amd64\.deb")
+            else
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "\.arm.*\.deb")
+            fi
+          else
+            printf "\n\tNo 'mpcplus' release asset found for this platform ..."
+          fi
         fi
       fi
     fi
-  fi
+  }
 
   [ "${DL_URL}" ] && {
     printf "\n\tAttempting to install the 'mpcplus' MPD client ..."
     if [ "${debian}" ]
     then
-      TEMP_DEB="$(mktemp)"
-      wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
-      [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
-      rm -f "${TEMP_DEB}"
+      [ "${have_wget}" ] || {
+        install_package wget
+        have_wget=`type -p wget`
+      }
+      [ "${have_wget}" ] && {
+        TEMP_DEB="$(mktemp)"
+        wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+        [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
+        rm -f "${TEMP_DEB}"
+      }
     else
       if [ "${centos}" ] || [ "${fedora}" ]
       then

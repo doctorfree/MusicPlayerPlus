@@ -16,7 +16,7 @@ rm -rf test/models
 rm -rf utils/__pycache__
 cd ..
 
-for proj in mpcplus mppcava
+for proj in mppcava
 do
   cd ${proj}
   [ -f Makefile ] && {
@@ -58,5 +58,5 @@ do
   cd ..
 done
 
-rm -f mppcava/version mpcplus/config.h
+rm -f mppcava/version
 [ -d mppcava/m4 ] && rmdir mppcava/m4
