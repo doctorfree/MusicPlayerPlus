@@ -960,13 +960,17 @@ centos=
 debian=
 fedora=
 needpower=
+have_apt=`type -p apt`
+have_aptget=`type -p apt-get`
+have_dnf=`type -p dnf`
+have_yum=`type -p yum`
 mach=`uname -m`
 APT=
 DNF=
 if [ -f /etc/os-release ]
 then
   . /etc/os-release
-  [ "${ID_LIKE}" == "debian" ] && debian=1
+  [ "${ID}" == "debian" ] || [ "${ID_LIKE}" == "debian" ] && debian=1
   [ "${ID}" == "arch" ] && arch=1
   [ "${ID}" == "centos" ] && centos=1
   [ "${ID}" == "fedora" ] && fedora=1
@@ -980,7 +984,7 @@ else
         debian=1
         ;;
       x86*)
-        if uname -v | grep -i ubuntu > /dev/null
+        if [ "${have_apt}" ]
         then
           debian=1
         else
@@ -992,7 +996,13 @@ else
             then
               centos=1
             else
-              echo "Unknown operating system distribution"
+              if [ "${have_dnf}" ] || [ "${have_yum}" ]
+              then
+                # Use Fedora RPM for all other rpm based systems
+                fedora=1
+              else
+                echo "Unknown operating system distribution"
+              fi
             fi
           fi
         fi
@@ -1005,12 +1015,10 @@ else
 fi
 
 [ "${debian}" ] && {
-  have_apt=`type -p apt`
   if [ "${have_apt}" ]
   then
     APT="apt -q -y"
   else
-    have_aptget=`type -p apt-get`
     if [ "${have_aptget}" ]
     then
       APT="apt-get -q -y"
@@ -1039,12 +1047,10 @@ fi
 }
 
 [ "${centos}" ] || [ "${fedora}" ] && {
-  have_dnf=`type -p dnf`
   if [ "${have_dnf}" ]
   then
     DNF="dnf --assumeyes --quiet"
   else
-    have_yum=`type -p yum`
     if [ "${have_yum}" ]
     then
       DNF="yum --assumeyes --quiet"
@@ -1556,7 +1562,9 @@ init_navidrome() {
       echo "To re-download Navidrome, remove ${navivar}/Navidrome.tar.gz"
       echo "and re-run the 'mppinit navidrome' command."
     else
-      wget --quiet https://github.com/navidrome/navidrome/releases/download/v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz -O ${navivar}/Navidrome.tar.gz
+      NAVI_URL="https://github.com/navidrome/navidrome/releases/download"
+      NAVI_NAM="v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz"
+      wget --quiet -O ${navivar}/Navidrome.tar.gz ${NAVI_URL}/${NAVI_NAM}
     fi
 
     if [ -f "${navivar}/Navidrome.tar.gz" ]
@@ -2084,19 +2092,19 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   if [ "${arch}" ]
   then
     DL_URL=$(curl --silent "${API_URL}" | \
-             jq --raw-output '.assets | .[].browser_download_url' | \
+             jq --raw-output '.assets | .[]?.browser_download_url' | \
              grep "\.pkg\.tar\.zst")
   else
     if [ "${centos}" ]
     then
       DL_URL=$(curl --silent "${API_URL}" | \
-               jq --raw-output '.assets | .[].browser_download_url' | \
+               jq --raw-output '.assets | .[]?.browser_download_url' | \
                grep "\.el.*x86_64\.rpm")
     else
       if [ "${fedora}" ]
       then
         DL_URL=$(curl --silent "${API_URL}" | \
-                 jq --raw-output '.assets | .[].browser_download_url' | \
+                 jq --raw-output '.assets | .[]?.browser_download_url' | \
                  grep "\.fc.*x86_64\.rpm")
       else
         if [ "${debian}" ]
@@ -2104,11 +2112,11 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
           if [ "${mach}" == "x86_64" ]
           then
             DL_URL=$(curl --silent "${API_URL}" | \
-                     jq --raw-output '.assets | .[].browser_download_url' | \
+                     jq --raw-output '.assets | .[]?.browser_download_url' | \
                      grep "\.amd64\.deb")
           else
             DL_URL=$(curl --silent "${API_URL}" | \
-                     jq --raw-output '.assets | .[].browser_download_url' | \
+                     jq --raw-output '.assets | .[]?.browser_download_url' | \
                      grep "\.arm.*\.deb")
           fi
         else
