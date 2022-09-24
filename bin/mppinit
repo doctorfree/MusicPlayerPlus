@@ -2,7 +2,8 @@
 #
 # mppinit - initialize MusicPlayerPlus
 #
-# Copy and configure default configuration files in $HOME/.config/mpcplus/
+# Install external package dependencies (e.g. mpcplus)
+# Copy and configure default configuration files in $HOME/.config/
 # Setup default tmux configuration for this user
 # Install required pip modules if not already installed
 # Optionally perform Beets initialization and metadata retrieval
@@ -887,15 +888,17 @@ function check_py_version
 }
 
 enable_rpm_fusion() {
-  sudo ${DNF} install ${FUSION}/${FREE}/${RELRPM}
-  sudo ${DNF} install ${FUSION}/${NONFREE}/${NONRPM}
-  [ "${fedora}" ] && {
-    sudo ${DNF} config-manager --set-enabled rpmfusion-free
-    sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree
+  [ "${DNF}" ] && {
+    sudo ${DNF} install ${FUSION}/${FREE}/${RELRPM}
+    sudo ${DNF} install ${FUSION}/${NONFREE}/${NONRPM}
+    [ "${fedora}" ] && {
+      sudo ${DNF} config-manager --set-enabled rpmfusion-free
+      sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree
+    }
+    sudo ${DNF} config-manager --set-enabled rpmfusion-free-updates
+    sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree-updates
+    sudo ${DNF} update
   }
-  sudo ${DNF} config-manager --set-enabled rpmfusion-free-updates
-  sudo ${DNF} config-manager --set-enabled rpmfusion-nonfree-updates
-  sudo ${DNF} update
 }
 
 init_warn() {
@@ -2121,12 +2124,12 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
     then
       TEMP_DEB="$(mktemp)"
       wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
-      sudo dpkg -i "${TEMP_DEB}"
+      [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
       rm -f "${TEMP_DEB}"
     else
       if [ "${centos}" ] || [ "${fedora}" ]
       then
-        sudo rpm --quiet --install ${DL_URL}
+        [ "${DNF}" ] && sudo ${DNF} install ${DL_URL}
       else
         [ "${arch}" ] && sudo pacman -U ${DL_URL}
       fi
@@ -2159,8 +2162,10 @@ upd_mpprc=
   RELRPM="rpmfusion-free-release-${FEDVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${FEDVER}.noarch.rpm"
   enable_rpm_fusion
-  sudo ${DNF} install libmpdclient mpd mplayer
-  sudo ${DNF} --allowerasing install compat-ffmpeg4
+  [ "${DNF}" ] && {
+    sudo ${DNF} install libmpdclient mpd mplayer
+    sudo ${DNF} --allowerasing install compat-ffmpeg4
+  }
 }
 [ "${centos}" ] && {
   sudo alternatives --set python /usr/bin/python3
@@ -2170,14 +2175,18 @@ upd_mpprc=
   NONFREE="nonfree/el"
   RELRPM="rpmfusion-free-release-${CENVER}.noarch.rpm"
   NONRPM="rpmfusion-nonfree-release-${CENVER}.noarch.rpm"
-  sudo ${DNF} install ${EPEL}
-  [ "${needpower}" ] && sudo ${DNF} config-manager --set-enabled ${needpower}
-  enable_rpm_fusion
-  sudo ${DNF} --allowerasing install ffmpeg mediainfo
+  [ "${DNF}" ] && {
+    sudo ${DNF} install ${EPEL}
+    [ "${needpower}" ] && sudo ${DNF} config-manager --set-enabled ${needpower}
+    enable_rpm_fusion
+    sudo ${DNF} --allowerasing install ffmpeg mediainfo
+  }
   have_mpc=`type -p mpc`
   [ "${have_mpc}" ] || {
     have_git=`type -p git`
-    [ "${have_git}" ] || sudo ${DNF} install git
+    [ "${have_git}" ] || {
+      [ "${DNF}" ] && sudo ${DNF} install git
+    }
     install_mpc
   }
 }
@@ -2204,6 +2213,14 @@ have_fzf=`type -p fzf`
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
 }
+
+[ -d ${MPCDIR} ] || mkdir -p ${MPCDIR}
+if [ -f ${MPCDIR}/config ]
+then
+  [ "${overwrite}" ] && cp ${MPCONFDIR}/config ${MPCDIR}/config
+else
+  cp ${MPCONFDIR}/config ${MPCDIR}/config
+fi
 if [ -f ${MPCDIR}/bindings ]
 then
   [ "${overwrite}" ] && cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
