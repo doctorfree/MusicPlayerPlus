@@ -87,22 +87,6 @@ def _draw_left_status(
     screen.cursor.bg = 0
     return end
 
-
-def _get_dnd_status():
-    result = subprocess.run("echo ''", shell=True, capture_output=True)
-    status = ""
-
-    if result.stderr:
-        raise subprocess.CalledProcessError(
-            returncode=result.returncode, cmd=result.args, stderr=result.stderr
-        )
-
-    if result.stdout:
-        status = result.stdout.decode("utf-8").strip()
-
-    return status
-
-
 # more handy kitty tab_bar things:
 # REF: https://github.com/kovidgoyal/kitty/discussions/4447#discussioncomment-2183440
 def _draw_right_status(screen: Screen, is_last: bool) -> int:
@@ -111,17 +95,11 @@ def _draw_right_status(screen: Screen, is_last: bool) -> int:
 
     draw_attributed_string(Formatter.reset, screen)
 
-    clock = datetime.now().strftime("%H:%M")
-    utc = datetime.now(timezone.utc).strftime(" (UTC %H:%M)")
-    dnd = _get_dnd_status()
+    clock = datetime.now().strftime("%I:%M %p")
 
     cells = []
-    if dnd != "":
-        cells.append((dnd_color, dnd))
-        cells.append((sep_color, " ⋮ "))
 
     cells.append((clock_color, clock))
-    cells.append((utc_color, utc))
 
     right_status_length = RIGHT_MARGIN
     for cell in cells:
