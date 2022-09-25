@@ -2464,6 +2464,7 @@ else
   cp -a ${MPPCDIR}/kitty ${KITTYCONFDIR}
 fi
 [ -f ${KITTYCONFDIR}/kitty.conf ] || cp ${KITTYCONF} ${KITTYCONFDIR}/kitty.conf
+[ -f ${KITTYCONFDIR}/tab.conf ] || cp ${MPPCDIR}/kitty/tab.conf ${KITTYCONFDIR}/tab.conf
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling Mopidy configuration in ${MOPIDCONFDIR} ..."
