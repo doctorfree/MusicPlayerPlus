@@ -32,6 +32,7 @@ dnd_color = as_rgb(0x465258)
 sep_color = as_rgb(0x999F93)
 utc_color = as_rgb(color_as_int(Color(113, 115, 116)))
 
+
 def calc_draw_spaces(*args) -> int:
     length = 0
     for i in args:
@@ -62,7 +63,9 @@ def _draw_left_status(
     max_title_length: int,
     index: int,
     is_last: bool,
+    extra_data: ExtraData,
 ) -> int:
+    # print(extra_data)
     if draw_data.leading_spaces:
         screen.draw(" " * draw_data.leading_spaces)
 
@@ -140,6 +143,7 @@ def _draw_right_status(screen: Screen, is_last: bool) -> int:
 
     return screen.cursor.x
 
+
 def draw_tab(
     draw_data: DrawData,
     screen: Screen,
@@ -148,6 +152,7 @@ def draw_tab(
     max_title_length: int,
     index: int,
     is_last: bool,
+    extra_data: ExtraData,
 ) -> int:
 
     _draw_icon(screen, index)
@@ -159,6 +164,7 @@ def draw_tab(
         max_title_length,
         index,
         is_last,
+        extra_data,
     )
     _draw_right_status(
         screen,
