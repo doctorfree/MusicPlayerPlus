@@ -26,29 +26,6 @@ prepare() {
     cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
     cd ..
   done
-  [ -f /usr/include/gaia2/gaia.h ] && [ -f /usr/lib/libgaia2.a ] || {
-    # Need to install Gaia, an Essentia build dependency
-    PROJ=gaia
-    prefix="--prefix=/usr"
-
-    [ -d ${PROJ} ] && rm -rf ${PROJ}
-    git clone https://github.com/MTG/gaia.git
-
-    cd ${PROJ}
-    git switch qt5
-
-    # Prior to configure, determine SSE2 support and set CXXFLAGS
-    grep sse2 /proc/cpuinfo > /dev/null || {
-      # Remove -msse2 from CXXFLAGS
-      cat wscript | sed -e "s/'-O2', '-msse2'/'-O2'/" > /tmp/wsc$$
-      cp /tmp/wsc$$ wscript
-      rm -f /tmp/wsc$$
-    }
-
-    ./waf configure ${prefix} --with-python-bindings --with-asserts
-    ./waf
-    sudo ./waf install
-  }
 }
 
 build() {
@@ -104,26 +81,6 @@ build() {
       cd ..
     }
   fi
-
-  # Build essentia
-  if [ -x scripts/build-essentia.sh ]
-  then
-    scripts/build-essentia.sh
-  else
-    cd essentia
-    PKGPATH=`pkg-config --variable pc_path pkg-config`
-    [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
-      PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
-    }
-    export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
-    python3 waf configure --prefix=/usr \
-                          --build-static \
-                          --with-python \
-                          --with-gaia \
-                          --with-example=streaming_extractor_music
-    python3 waf
-    cd ..
-  fi
 }
 
 package() {
@@ -155,8 +112,6 @@ package() {
   [ -f bliss-analyze/target/release/bliss-analyze ] && {
     cp bliss-analyze/target/release/bliss-analyze ${pkgdir}/${destdir}/bin
   }
-  cp essentia/build/src/examples/essentia_streaming_extractor_music \
-           ${pkgdir}/${destdir}/bin
 
   cp *.desktop "${pkgdir}/${destdir}/share/applications"
   cp copyright ${pkgdir}/${destdir}/share/doc/${pkgname}

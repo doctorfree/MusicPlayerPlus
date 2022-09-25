@@ -11,8 +11,7 @@ usage() {
     printf "\n\t-p prefix specifies installation prefix (default /usr)"
     printf "\n\t-u displays this usage message and exits\n"
     printf "\n'project' can be one or more of:"
-    printf "\n\t'blissify', 'bliss-analyze', 'essentia',"
-    printf "\n\t'gaia', 'mppcava', and 'mpcplus'\n"
+    printf "\n\t'blissify', 'bliss-analyze', and 'mppcava'\n"
     exit 1
 }
 

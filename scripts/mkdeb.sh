@@ -100,17 +100,6 @@ else
   }
 fi
 
-# Build essentia
-if [ -x scripts/build-essentia.sh ]
-then
-  scripts/build-essentia.sh
-else
-  cd essentia
-  python3 waf configure --prefix=/usr --build-static --with-python --with-examples
-  python3 waf
-  cd ..
-fi
-
 ${SUDO} rm -rf dist
 mkdir dist
 
@@ -161,19 +150,6 @@ ${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 [ -f bliss-analyze/target/release/bliss-analyze ] && {
   ${SUDO} cp bliss-analyze/target/release/bliss-analyze ${OUT_DIR}/${DESTDIR}/bin
 }
-${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music \
-           ${OUT_DIR}/${DESTDIR}/bin
-#${SUDO} cp essentia/build/src/examples/essentia_streaming_extractor_music_svm \
-#           ${OUT_DIR}/${DESTDIR}/bin
-# Install essentia
-# if [ -x scripts/build-essentia.sh ]
-# then
-#   ${SUDO} scripts/build-essentia.sh -i -d "${SRC}/${SRC_NAME}/${OUT_DIR}"
-# else
-#   cd essentia
-#   ${SUDO} python3 waf install --destdir="${SRC}/${SRC_NAME}/${OUT_DIR}"
-#   cd ..
-# fi
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}

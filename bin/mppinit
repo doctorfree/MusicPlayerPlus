@@ -878,6 +878,80 @@ get_mpd_status() {
   [ "${uactive}" ] || [ "${uenable}" ] && use_usr_mpd=1
 }
 
+install_external_package() {
+  [ "${have_curl}" ] || {
+    install_package curl
+    have_curl=`type -p curl`
+  }
+  [ "${have_jq}" ] || {
+    install_package jq
+    have_jq=`type -p jq`
+  }
+  DL_URL=
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    if [ "${arch}" ]
+    then
+      DL_URL=$(curl --silent "${API_URL}" | \
+               jq --raw-output '.assets | .[]?.browser_download_url' | \
+               grep "\.pkg\.tar\.zst")
+    else
+      if [ "${centos}" ]
+      then
+        DL_URL=$(curl --silent "${API_URL}" | \
+                 jq --raw-output '.assets | .[]?.browser_download_url' | \
+                 grep "\.el.*x86_64\.rpm")
+      else
+        if [ "${fedora}" ]
+        then
+          DL_URL=$(curl --silent "${API_URL}" | \
+                   jq --raw-output '.assets | .[]?.browser_download_url' | \
+                   grep "\.fc.*x86_64\.rpm")
+        else
+          if [ "${debian}" ]
+          then
+            if [ "${mach}" == "x86_64" ]
+            then
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "\.amd64\.deb")
+            else
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "\.arm.*\.deb")
+            fi
+          else
+            printf "\n\tNo ${PROJECT} release asset found for this platform ..."
+          fi
+        fi
+      fi
+    fi
+  }
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tAttempting to install ${PROJECT} ..."
+    if [ "${debian}" ]
+    then
+      [ "${have_wget}" ] || {
+        install_package wget
+        have_wget=`type -p wget`
+      }
+      [ "${have_wget}" ] && {
+        TEMP_DEB="$(mktemp)"
+        wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+        [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
+        rm -f "${TEMP_DEB}"
+      }
+    else
+      if [ "${centos}" ] || [ "${fedora}" ]
+      then
+        [ "${DNF}" ] && sudo ${DNF} install ${DL_URL}
+      else
+        [ "${arch}" ] && sudo pacman -U ${DL_URL}
+      fi
+    fi
+  }
+}
+
 function check_py_version
 {
   # Full version number e.g. 2.7.1
@@ -2115,79 +2189,13 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   OWNER=doctorfree
   PROJECT=mpcplus
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
-
-  # TODO: Make this a function and install multiple external components
-  [ "${have_curl}" ] || {
-    install_package curl
-    have_curl=`type -p curl`
-  }
-  [ "${have_jq}" ] || {
-    install_package jq
-    have_jq=`type -p jq`
-  }
-  DL_URL=
-  [ "${have_curl}" ] && [ "${have_jq}" ] && {
-    if [ "${arch}" ]
-    then
-      DL_URL=$(curl --silent "${API_URL}" | \
-               jq --raw-output '.assets | .[]?.browser_download_url' | \
-               grep "\.pkg\.tar\.zst")
-    else
-      if [ "${centos}" ]
-      then
-        DL_URL=$(curl --silent "${API_URL}" | \
-                 jq --raw-output '.assets | .[]?.browser_download_url' | \
-                 grep "\.el.*x86_64\.rpm")
-      else
-        if [ "${fedora}" ]
-        then
-          DL_URL=$(curl --silent "${API_URL}" | \
-                   jq --raw-output '.assets | .[]?.browser_download_url' | \
-                   grep "\.fc.*x86_64\.rpm")
-        else
-          if [ "${debian}" ]
-          then
-            if [ "${mach}" == "x86_64" ]
-            then
-              DL_URL=$(curl --silent "${API_URL}" | \
-                       jq --raw-output '.assets | .[]?.browser_download_url' | \
-                       grep "\.amd64\.deb")
-            else
-              DL_URL=$(curl --silent "${API_URL}" | \
-                       jq --raw-output '.assets | .[]?.browser_download_url' | \
-                       grep "\.arm.*\.deb")
-            fi
-          else
-            printf "\n\tNo 'mpcplus' release asset found for this platform ..."
-          fi
-        fi
-      fi
-    fi
-  }
-
-  [ "${DL_URL}" ] && {
-    printf "\n\tAttempting to install the 'mpcplus' MPD client ..."
-    if [ "${debian}" ]
-    then
-      [ "${have_wget}" ] || {
-        install_package wget
-        have_wget=`type -p wget`
-      }
-      [ "${have_wget}" ] && {
-        TEMP_DEB="$(mktemp)"
-        wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
-        [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
-        rm -f "${TEMP_DEB}"
-      }
-    else
-      if [ "${centos}" ] || [ "${fedora}" ]
-      then
-        [ "${DNF}" ] && sudo ${DNF} install ${DL_URL}
-      else
-        [ "${arch}" ] && sudo pacman -U ${DL_URL}
-      fi
-    fi
-  }
+  install_external_package
+}
+[ -x /usr/bin/essentia_streaming_extractor_music ] || {
+  OWNER=doctorfree
+  PROJECT=mpplus-essentia
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  install_external_package
 }
 
 [ "${MUSIC_DIRECTORY}" ] || {

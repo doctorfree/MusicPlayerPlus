@@ -20,7 +20,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
 1. [Overview](#overview)
     1. [Requirements](#requirements)
     1. [MusicPlayerPlus Commands](#musicplayerplus-commands)
-    1. [Main mpcplus MPD client features](#main-mpcplus-mpd-client-features)
 1. [Quickstart](#quickstart)
     1. [Quickstart summary](#quickstart-summary)
     1. [Full Tilt Boogie](#full-tilt-boogie)
@@ -110,8 +109,9 @@ The `mpplus` command can be used to invoke:
 Integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon
-* [mpcplus](mpcplus/README.md), character-based Music Player Plus MPD client
+* [mpcplus](https://github.com/doctorfree/mpcplus/README.md), character-based MPD client
 * [beets](https://beets.io/), media library management system
+* [essentia](https://github.com/doctorfree/mpplus-essentia/README.md), acoustic metadata analysis and extraction
 * [mopidy](https://mopidy.com/), music server with cool extensions
 * [navidrome](https://www.navidrome.org/), self-hosted music server and streamer
 * [yams](https://github.com/Berulacks/yams/), MPD scrobbler for Last.fm
@@ -202,20 +202,6 @@ the `ffmpeg` library.
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
-
-### Main mpcplus MPD client features
-
-* tag editor
-* playlist editor
-* easy to use search engine
-* media library
-* integration with external spectrum visualizer
-* ability to fetch song lyrics from a variety of sources
-* ability to fetch artist info from last.fm
-* new display mode
-* alternative user interface
-* ability to browse and add files from outside of MPD music directory
-* cute trick to add album cover art in character display using tmux
 
 ## Quickstart
 
@@ -559,14 +545,13 @@ be configured by editing the MusicPlayerPlus configuration file
 
 ### Client Configuration (required)
 
-Initialize the `mpcplus` client configuration by executing the command:
+Initialize the MusicPlayerPlus configuration by executing the command:
 
 ```
 mppinit
 ```
 
-Examine the generated `mpcplus` configuration in `~/.config/mpcplus/config`
-and `~/.config/mpcplus/bindings` and make any desired changes.
+Examine the generated configuration in `~/.config/mpprc` and make any desired changes.
 
 The client configuration performed by `mppinit` includes the configuration
 of an MPD user service. The configuration, files, and folders used by
@@ -1439,7 +1424,7 @@ e.g. `mpplus -u`.
 - [**config/README.md**](config/README.md) - Overview and details of the MusicPlayerPlus configuration
 
 ### README for mpcplus MPD client
-- [**mpcplus/README.md**](mpcplus/README.md) - Introduction to the mpcplus MPD client
+- [**mpcplus/README.md**](https://github.com/doctorfree/mpcplus/README.md) - Introduction to the mpcplus MPD client
 
 ### README for tmuxp configs
 - [**config/tmuxp/README.md**](config/tmuxp/README.md) - How to invoke the MusicPlayerPlus provided `tmuxp` session configurations
@@ -2117,8 +2102,6 @@ git clone https://github.com/doctorfree/MusicPlayerPlus.git
 cd MusicPlayerPlus
 # Install the necessary build environment (not necessary on Arch Linux)
 scripts/install-dev-env.sh
-# Install Gaia
-./build -i gaia
 # Compile the MusicPlayerPlus components and create an installation package
 ./mkpkg
 # Install MusicPlayerPlus and its dependencies
@@ -2206,14 +2189,6 @@ sudo pacman -S --needed base-devel eigen fftw clang ffmpeg4.4 libsamplerate \
 **[Note:]** The MusicPlayerPlus `PKGBUILD` on Arch Linux defines build
 dependencies and these will be automatically installed when performing
 a `makepkg` build. It is not necessary to pre-install these packages.
-
-#### Install Gaia
-
-It is necessary to build and install Gaia from source:
-
-```
-./build -i gaia
-```
 
 ### Install packaging dependencies
 
@@ -2329,27 +2304,21 @@ package, and test MusicPlayerPlus components. These include:
 
 Utilities and applications built from source in MusicPlayerPlus include:
 
-- essentia audio analysis and extraction
-- gaia audio similarity and classification library
-- mpcplus character based MPD client
 - mppcava character based spectrum visualizer
 
 The build scripts in the `scripts/` directory of the MusicPlayerPlus
-repository can be used to compile bliss-analyze, blissify, essentia,
-gaia, mpcplus, and mppcava. These are:
+repository can be used to compile bliss-analyze, blissify, and mppcava.
+These are:
 
 - scripts/build-bliss-analyze.sh
 - scripts/build-blissify.sh
-- scripts/build-essentia.sh
-- scripts/build-gaia.sh
-- scripts/build-mpcplus.sh
 - scripts/build-mppcava.sh
 
 Invoke the appropriate build script for the utility you wish to compile.
-For example, to compile the MPD client `mpcplus` from source, run the command:
+For example, to compile the `mppcava` spectrum visualizer from source, run the command:
 
 ```
-./scripts/build-mpcplus.sh
+./scripts/build-mppcava.sh
 ```
 
 On Debian (e.g. Ubuntu), PKGBUILD (e.g. Arch) and RPM (e.g. Fedora) based
