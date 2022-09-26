@@ -106,6 +106,12 @@ The `mpplus` command can be used to invoke:
 * One of several asciimatics animations optionally accompanied by audio
 * A fuzzy listing and searching of the audio library using `fzf`
 
+**[Note:]** Typical use of `mpplus` as a music player and spectrum visualizer
+will invoke a `tmux` session to display the MPD client, spectrum visualizer, and
+album cover art all in a single terminal window. MusicPlayerPlus configures
+`tmux` with a custom key binding to exit tmux sessions. To exit an `mpplus`
+tmux session, the `Alt-x` key binding can be used.
+
 Integration is provided for:
 
 * [mpd](https://www.musicpd.org/), the Music Player Daemon

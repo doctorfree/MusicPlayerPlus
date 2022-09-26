@@ -937,17 +937,17 @@ install_external_package() {
       }
       [ "${have_wget}" ] && {
         TEMP_DEB="$(mktemp --suffix=.deb)"
-        wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+        wget --quiet -O "${TEMP_DEB}" "${DL_URL}" > /dev/null 2>&1
         chmod 644 "${TEMP_DEB}"
-        [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
+        [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}" > /dev/null 2>&1
         rm -f "${TEMP_DEB}"
       }
     else
       if [ "${centos}" ] || [ "${fedora}" ]
       then
-        [ "${DNF}" ] && sudo ${DNF} install ${DL_URL}
+        [ "${DNF}" ] && sudo ${DNF} install ${DL_URL} > /dev/null 2>&1
       else
-        [ "${arch}" ] && sudo pacman -U ${DL_URL}
+        [ "${arch}" ] && sudo pacman -U --noconfirm ${DL_URL} > /dev/null 2>&1
       fi
     fi
   }
@@ -1802,13 +1802,13 @@ install_terminal() {
 install_package() {
   if [ "${debian}" ]
   then
-    [ "${APT}" ] && sudo ${APT} install $1
+    [ "${APT}" ] && sudo ${APT} install $1 > /dev/null 2>&1
   else
     if [ "${centos}" ] || [ "${fedora}" ]
     then
-      [ "${DNF}" ] && sudo ${DNF} install $1
+      [ "${DNF}" ] && sudo ${DNF} install $1 > /dev/null 2>&1
     else
-      [ "${arch}" ] && sudo pacman -U $1
+      [ "${arch}" ] && sudo pacman -U --noconfirm $1 > /dev/null 2>&1
     fi
   fi
 } 
