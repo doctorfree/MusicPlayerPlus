@@ -822,6 +822,7 @@ make_it_so() {
               --override font_size=8 \
               --override background_opacity=1.0 \
               --override hide_window_decorations=yes \
+              --override tab_bar_min_tabs=2 \
               ${VISUALIZER} 2> /dev/null &
       else
         if [ "${TILIX}" ]
@@ -928,6 +929,7 @@ make_it_so() {
               --override font_size=8 \
               --override initial_window_width=240c \
               --override initial_window_height=12c \
+              --override tab_bar_min_tabs=2 \
               --single-instance \
               ${VISUALIZER} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
@@ -1052,6 +1054,7 @@ make_it_so() {
                 --start-as fullscreen \
                 --override font_size=18 \
                 --override background_opacity=0.7 \
+                --override tab_bar_min_tabs=2 \
                 ${MPCOMM} 2> /dev/null &
         else
           if [ "${TILIX}" ]
@@ -1090,6 +1093,7 @@ make_it_so() {
                 --override font_size=18 \
                 --override initial_window_width=120c \
                 --override initial_window_height=28c \
+                --override tab_bar_min_tabs=2 \
                 ${MPCOMM} 2> /dev/null &
           [ "${USE_EWMH}" ] && {
             sleep 1

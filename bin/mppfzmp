@@ -134,7 +134,7 @@ esac
 
 if [ "${KITTY}" ]
 then
-  kitty --title="${MTITLE}" ${MPCOMM} 2> /dev/null
+  kitty --title="${MTITLE}" --override tab_bar_min_tabs=2 ${MPCOMM} 2> /dev/null
 else
   if [ "${TILIX}" ]
   then

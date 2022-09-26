@@ -91,6 +91,7 @@ show_term() {
           --start-as normal \
           --override font_size=18 \
           --override initial_window_height=16c \
+          --override tab_bar_min_tabs=2 \
           ${COMMAND} 2> /dev/null &
   else
     if [ "${TILIX}" ]
