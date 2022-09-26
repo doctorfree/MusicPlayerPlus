@@ -436,24 +436,24 @@ xtractor:
       highlevel:
         compute: 1
         svm_models:
-          - /usr/share/musicplayerplus/svm_models/danceability.history
-          - /usr/share/musicplayerplus/svm_models/gender.history
-#         - /usr/share/musicplayerplus/svm_models/genre_dortmund.history
-#         - /usr/share/musicplayerplus/svm_models/genre_electronic.history
-#         - /usr/share/musicplayerplus/svm_models/genre_tzanetakis.history
-          - /usr/share/musicplayerplus/svm_models/genre_rosamerica.history
-          - /usr/share/musicplayerplus/svm_models/ismir04_rhythm.history
-          - /usr/share/musicplayerplus/svm_models/mood_acoustic.history
-          - /usr/share/musicplayerplus/svm_models/mood_aggressive.history
-          - /usr/share/musicplayerplus/svm_models/mood_electronic.history
-          - /usr/share/musicplayerplus/svm_models/mood_happy.history
-          - /usr/share/musicplayerplus/svm_models/mood_party.history
-          - /usr/share/musicplayerplus/svm_models/mood_relaxed.history
-          - /usr/share/musicplayerplus/svm_models/mood_sad.history
-          - /usr/share/musicplayerplus/svm_models/moods_mirex.history
-          - /usr/share/musicplayerplus/svm_models/timbre.history
-          - /usr/share/musicplayerplus/svm_models/tonal_atonal.history
-          - /usr/share/musicplayerplus/svm_models/voice_instrumental.history
+          - /usr/share/mpplus-essentia/svm_models/danceability.history
+          - /usr/share/mpplus-essentia/svm_models/gender.history
+#         - /usr/share/mpplus-essentia/svm_models/genre_dortmund.history
+#         - /usr/share/mpplus-essentia/svm_models/genre_electronic.history
+#         - /usr/share/mpplus-essentia/svm_models/genre_tzanetakis.history
+          - /usr/share/mpplus-essentia/svm_models/genre_rosamerica.history
+          - /usr/share/mpplus-essentia/svm_models/ismir04_rhythm.history
+          - /usr/share/mpplus-essentia/svm_models/mood_acoustic.history
+          - /usr/share/mpplus-essentia/svm_models/mood_aggressive.history
+          - /usr/share/mpplus-essentia/svm_models/mood_electronic.history
+          - /usr/share/mpplus-essentia/svm_models/mood_happy.history
+          - /usr/share/mpplus-essentia/svm_models/mood_party.history
+          - /usr/share/mpplus-essentia/svm_models/mood_relaxed.history
+          - /usr/share/mpplus-essentia/svm_models/mood_sad.history
+          - /usr/share/mpplus-essentia/svm_models/moods_mirex.history
+          - /usr/share/mpplus-essentia/svm_models/timbre.history
+          - /usr/share/mpplus-essentia/svm_models/tonal_atonal.history
+          - /usr/share/mpplus-essentia/svm_models/voice_instrumental.history
 #
 # MusicPlayerPlus custom xtractor targets configuration
 #

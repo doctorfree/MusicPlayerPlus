@@ -137,7 +137,6 @@ package() {
   cp config/fzmp.conf ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
 
   cp -a share/scripts ${pkgdir}/${destdir}/share/${pkgname}/scripts
-  cp -a share/svm_models ${pkgdir}/${destdir}/share/${pkgname}/svm_models
   cp -a share/calliope ${pkgdir}/${destdir}/share/${pkgname}/calliope
 
   cp config/xterm-24bit.src ${pkgdir}/${destdir}/share/${pkgname}
