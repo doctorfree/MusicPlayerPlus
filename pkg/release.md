@@ -2,6 +2,7 @@
 
 This major new release of MusicPlayerPlus adds support for many new features and components including:
 
+* Modular installation and configuration of supporting components
 * Integration of the [Beets media library management system](https://beets.io/)
 * Support for the [Mopidy Music Server](https://mopidy.com/) and extensions
 * Support for the [Navidrome Streaming Music Server](https://www.navidrome.org/)
@@ -33,19 +34,19 @@ Download the [latest Debian, Arch, or RPM package format release](https://github
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-3.amd64.deb
+sudo apt install ./MusicPlayerPlus_3.0.0-1.amd64.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_2.0.1-3.armhf.deb
+sudo apt install ./MusicPlayerPlus_3.0.0-1.armhf.deb
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./MusicPlayerPlus_2.0.1-3-x86_64.pkg.tar.zst
+sudo pacman -U ./MusicPlayerPlus_3.0.0-1-x86_64.pkg.tar.zst
 ```
 
 Install the package on RPM based systems by executing one of the following commands.
@@ -53,21 +54,21 @@ Install the package on RPM based systems by executing one of the following comma
 On Fedora Linux:
 
 ```bash
-sudo yum localinstall ./MusicPlayerPlus_2.0.1-3.fc36.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_3.0.0-1.fc36.x86_64.rpm
 ```
 
 On CentOS Linux:
 
 ```bash
-sudo yum localinstall ./MusicPlayerPlus_2.0.1-3.el8.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_3.0.0-1.el8.x86_64.rpm
 ```
 
 ### PKGBUILD Installation
 
-To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be built from sources using the Arch PKGBUILD files provided in `MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be built from sources using the Arch PKGBUILD files provided in `MusicPlayerPlus-pkgbuild-3.0.0-1.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.0-1.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
 
 ```
-tar xzf MusicPlayerPlus-pkgbuild-2.0.1-3.tar.gz
+tar xzf MusicPlayerPlus-pkgbuild-3.0.0-1.tar.gz
 cd musicplayerplus
 makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
@@ -142,8 +143,9 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 ## Changelog
 
-Changes in version 2.0.1 release 2 include:
+Changes in version 3.0.0 release 1 include:
 
+* Modular installation and configuration of supporting components
 * Arch Linux build and packaging support
 * CentOS Linux build and packaging support
 * Integration of the Beets media library management system

@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.0r1 (2022-10-01)
+* Modular installation and configuration of supporting components
+
 ## MusicPlayerPlus-2.0.1r3 (2022-09-20)
 * Add CentOS Linux build and packaging support
 * Improved Arch Linux support
