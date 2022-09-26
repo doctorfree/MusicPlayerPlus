@@ -936,8 +936,9 @@ install_external_package() {
         have_wget=`type -p wget`
       }
       [ "${have_wget}" ] && {
-        TEMP_DEB="$(mktemp)"
+        TEMP_DEB="$(mktemp --suffix=.deb)"
         wget --quiet -O "${TEMP_DEB}" "${DL_URL}"
+        chmod 644 "${TEMP_DEB}"
         [ "${APT}" ] && sudo ${APT} install "${TEMP_DEB}"
         rm -f "${TEMP_DEB}"
       }
