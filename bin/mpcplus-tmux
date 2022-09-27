@@ -23,6 +23,7 @@ usage() {
   printf "\n\t-a indicates display album cover art using tmuxp"
   printf "\n\t-A indicates disable display of album cover art"
   printf "\n\t-c client specifies an MPD client to run in the client pane"
+  printf "\n\t\tAlbum cover art display is only supported for mpcplus and ncmpcpp"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
@@ -64,7 +65,6 @@ start_tmux_session() {
 MPP_ENV_MODE=unknown
 USE_GRAD=1
 USE_ART=1
-ALT_ART=1
 PYART=
 RECORD=
 USAGE=
@@ -77,15 +77,18 @@ while getopts "aAc:gm:p:ru" flag; do
     case $flag in
         a)
           USE_TMUXP=1
-          ALT_ART=1
           ;;
         A)
             USE_ART=
-            ALT_ART=
           ;;
         c)
           CLIENT_COMM=${OPTARG}
           USE_MPCPLUS=
+          client_name=`echo "${CLIENT_COMM}" | awk ' { print $1 } '`
+          client_name=`basename ${client_name}`
+          [ "${client_name}" == "mpcplus" ] || [ "${client_name}" == "ncmpcpp" ] || {
+            USE_ART=
+          }
           ;;
         g)
           USE_GRAD=
