@@ -22,10 +22,10 @@ mpcplus-tmux - runs mpcplus, a visualizer, and displays album art in a
 tmux session
 .SS SYNOPSIS
 .PP
-\f[B]mpcplus-tmux\f[R] [-a] [-A] [-f] [-g] [-p script] [-r] [-u]
+\f[B]mpcplus-tmux\f[R] [-a] [-A] [-c client] [-g] [-p script] [-r] [-u]
 .PP
-\f[B]NOTE:\f[R] \f[V]mpcplus-tmux\f[R] can be run by invoking
-\f[V]mpplus [-a] [-g] [-p script] [-R]\f[R]
+\f[B]NOTE:\f[R] \f[V]mpcplus-tmux\f[R] is typically run automatically by
+\f[V]mpplus\f[R] when \f[V]tmux\f[R] is used
 .SS DESCRIPTION
 .PP
 The \f[I]mpcplus-tmux\f[R] command opens several panes in a terminal
@@ -39,7 +39,7 @@ Alternately, the visualizer pane can display a Python ASCIImatics
 visualization.
 .SS COMMAND LINE OPTIONS
 .PP
-Defaults: cover art disabled, ascii art disabled, recording disabled
+Defaults: cover art enabled, ascii art disabled, recording disabled
 .TP
 \f[B]-a\f[R]
 Indicates display album cover art using original method
@@ -47,8 +47,9 @@ Indicates display album cover art using original method
 \f[B]-A\f[R]
 Indicates disable display of album cover art
 .TP
-\f[B]-f\f[R]
-Indicates we have been invoked from a fullscreen window
+\f[B]-c client\f[R]
+Specifies an MPD client to run in the client pane (album cover art is
+enabled for \f[V]mpcplus\f[R] and \f[V]ncmpcpp\f[R] MPD clients only)
 .TP
 \f[B]-g\f[R]
 Indicates do not use gradient colors for spectrum visualizer

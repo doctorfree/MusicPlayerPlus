@@ -1005,18 +1005,18 @@ make_it_so() {
   # End visualizer startup section
 
   # TODO: handle other graphical mpd clients
-  [ "${MPCPLUS}" == "cantata" ] && {
-    COVER_ART=
-    CURRENT=
-    FULLSCREEN=
-    GNOME=
-    KITTY=
-    RETRO=
-    SIMPLE=
-    TILIX=
-    TMUX_MPC=
-    USE_TMUX=
-  }
+  # [ "${MPCPLUS}" == "cantata" ] && {
+  #   COVER_ART=
+  #   CURRENT=
+  #   FULLSCREEN=
+  #   GNOME=
+  #   KITTY=
+  #   RETRO=
+  #   SIMPLE=
+  #   TILIX=
+  #   TMUX_MPC=
+  #   USE_TMUX=
+  # }
   # Fullscreen ASCIImatics Animations
   [ "${SPLASH}" ] && FULLSCREEN=1
 
@@ -1031,7 +1031,14 @@ make_it_so() {
       MPCOMM="${MPPSPLASH}"
     fi
   else
-    [ "${TMUX_MPC}" ] && MPCOMM="${MPCPLUS_TMUX}"
+    [ "${TMUX_MPC}" ] && {
+      if [ "${USE_MPCPLUS}" ]
+      then
+        MPCOMM="${MPCPLUS_TMUX}"
+      else
+        MPCOMM="${MPCPLUS_TMUX} -c '${MPCPLUS}'"
+      fi
+    }
   fi
 
   # Begin MPD client startup section
@@ -3351,6 +3358,7 @@ else
   use_figlet=
 fi
 
+USE_MPCPLUS=1
 while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:Uv:wWx:X:yYz:u" flag
 do
   case $flag in
@@ -3400,7 +3408,10 @@ do
           CLIENT=
         fi
       }
-      [ "${CLIENT}" ] && MPCPLUS="${CLIENT}"
+      [ "${CLIENT}" ] && {
+        MPCPLUS="${CLIENT}"
+        USE_MPCPLUS=
+      }
       ;;
     D)
       case "${OPTARG}" in

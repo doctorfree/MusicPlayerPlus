@@ -18,10 +18,11 @@ else
 fi
 
 usage() {
-  printf "\nUsage: mpcplus-tmux [-a] [-A] [-g] [-p script] [-r] [-u]"
+  printf "\nUsage: mpcplus-tmux [-a] [-A] [-c client] [-g] [-p script] [-r] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates display album cover art using tmuxp"
   printf "\n\t-A indicates disable display of album cover art"
+  printf "\n\t-c client specifies an MPD client to run in the client pane"
   printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-p script specifies an asciimatics script to run"
   printf " in the visualizer pane"
@@ -68,9 +69,11 @@ PYART=
 RECORD=
 USAGE=
 V_HEIGHT=30
+CLIENT_COMM=mpcplus
+USE_MPCPLUS=1
 ALT_SCRIPT="${MPCDIR}/ueberzug/mpcplus-ueberzug"
 ARGS="$*"
-while getopts "aAgm:p:ru" flag; do
+while getopts "aAc:gm:p:ru" flag; do
     case $flag in
         a)
           USE_TMUXP=1
@@ -79,6 +82,10 @@ while getopts "aAgm:p:ru" flag; do
         A)
             USE_ART=
             ALT_ART=
+          ;;
+        c)
+          CLIENT_COMM=${OPTARG}
+          USE_MPCPLUS=
           ;;
         g)
           USE_GRAD=
@@ -131,9 +138,14 @@ MAIN_PANE_HEIGHT=$((2 * ${numrows} / 3))
 
 if [ "${USE_ART}" ]
 then
-  MPPCOMM="${ALT_SCRIPT}"
+  if [ "${USE_MPCPLUS}" ]
+  then
+    MPPCOMM="${ALT_SCRIPT}"
+  else
+    MPPCOMM="${ALT_SCRIPT} -c '${CLIENT_COMM}'"
+  fi
 else
-  MPPCOMM="mpcplus"
+  MPPCOMM="${CLIENT_COMM}"
 fi
 if [ "${USE_GRAD}" ]
 then

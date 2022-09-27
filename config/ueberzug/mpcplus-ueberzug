@@ -8,11 +8,26 @@ cleanup() {
     pkill mpcplus_cover_art.sh
 }
 
+USE_MPCPLUS=1
+while getopts "c:" flag; do
+    case $flag in
+        c)
+            CLIENT_COMM="$OPTARG"
+            USE_MPCPLUS=
+            ;;
+    esac
+done
+
 pkill -P $$ 2>/dev/null
 rm "$FIFO_UEBERZUG" 2>/dev/null
 mkfifo "$FIFO_UEBERZUG" >/dev/null
 trap cleanup EXIT 2>/dev/null
 tail --follow "$FIFO_UEBERZUG" | ueberzug layer --silent --parser simple >/dev/null 2>&1 &
 
-mpcplus --config="${HOME}/.config/mpcplus/ueberzug/config"
+if [ "${USE_MPCPLUS}" ]
+then
+  mpcplus --config="${HOME}/.config/mpcplus/ueberzug/config"
+else
+  ${CLIENT_COMM}
+fi
 cleanup
