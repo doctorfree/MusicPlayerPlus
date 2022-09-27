@@ -806,12 +806,14 @@ make_it_so() {
     [ "${SIMPLE}" ] && TMUX_MPC=1
     [ "${USE_OPAC}" ] || TMUX_MPC=1
   }
+  # Always use tmux in cool-retro-term
+  [ "${RETRO}" ] && TMUX_MPC=1
 
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
   # if we are displaying an asciimatics animation, or using cool-retro-term.
-  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || [ "${RETRO}" ] || {
+  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
     if [ "${FULLSCREEN}" ]
     then
       if [ "${KITTY}" ]
@@ -1037,127 +1039,127 @@ make_it_so() {
   then
     ${MPCOMM}
   else
-    if [ "${RETRO}" ]
+    if [ "${FULLSCREEN}" ]
     then
-      if [ "${FULLSCREEN}" ]
+      if [ "${KITTY}" ]
       then
-        cool-retro-term --fullscreen -e "${MPCOMM}" > /dev/null 2>&1 &
+        kitty --title="${MTITLE}" \
+              --start-as fullscreen \
+              --override font_size=18 \
+              --override background_opacity=0.7 \
+              --override tab_bar_min_tabs=2 \
+              ${MPCOMM} 2> /dev/null &
       else
-        cool-retro-term -e "${MPCOMM}" > /dev/null 2>&1 &
-      fi
-    else
-      if [ "${FULLSCREEN}" ]
-      then
-        if [ "${KITTY}" ]
+        if [ "${TILIX}" ]
         then
-          kitty --title="${MTITLE}" \
-                --start-as fullscreen \
-                --override font_size=18 \
-                --override background_opacity=0.7 \
-                --override tab_bar_min_tabs=2 \
-                ${MPCOMM} 2> /dev/null &
+          tilix --title="${MTITLE}" \
+                --full-screen \
+                --window-style=borderless \
+                --profile=MusicPlayer \
+                --command="${MPCOMM}" 2> /dev/null &
         else
-          if [ "${TILIX}" ]
+          if [ "${GNOME}" ]
           then
-            tilix --title="${MTITLE}" \
-                  --full-screen \
-                  --window-style=borderless \
+            gnome-terminal --title="${MTITLE}" \
                   --profile=MusicPlayer \
-                  --command="${MPCOMM}" 2> /dev/null &
+                  --hide-menubar \
+                  --full-screen \
+                  -- ${MPCOMM} &
           else
-            if [ "${GNOME}" ]
+            if [ "${SIMPLE}" ]
             then
-              gnome-terminal --title="${MTITLE}" \
-                    --profile=MusicPlayer \
-                    --hide-menubar \
-                    --full-screen \
-                    -- ${MPCOMM} &
+              st -t "${MTITLE}" \
+                 -g "800x600" \
+                 -f "Monospace:size=24" \
+                 ${MPCOMM} 2> /dev/null &
             else
-              if [ "${SIMPLE}" ]
+              if [ "${RETRO}" ]
               then
-                st -t "${MTITLE}" \
-                   -g "800x600" \
-                   -f "Monospace:size=24" \
-                   ${MPCOMM} 2> /dev/null &
+                cool-retro-term --fullscreen -e ${MPCOMM} > /dev/null 2>&1 &
               else
                 ${MPCOMM}
               fi
             fi
           fi
         fi
+      fi
+    else
+      if [ "${KITTY}" ]
+      then
+        kitty --title="${MTITLE}" \
+              --start-as normal \
+              --override font_size=18 \
+              --override initial_window_width=120c \
+              --override initial_window_height=28c \
+              --override tab_bar_min_tabs=2 \
+              ${MPCOMM} 2> /dev/null &
+        [ "${USE_EWMH}" ] && {
+          sleep 1
+          mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+            grep -v "${VTITLE}" | grep "${MTITLE}"`
+          [ "${mpc_win}" ] || {
+            mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+              grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+          }
+          [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
+        }
       else
-        if [ "${KITTY}" ]
+        if [ "${TILIX}" ]
         then
-          kitty --title="${MTITLE}" \
-                --start-as normal \
-                --override font_size=18 \
-                --override initial_window_width=120c \
-                --override initial_window_height=28c \
-                --override tab_bar_min_tabs=2 \
-                ${MPCOMM} 2> /dev/null &
+          tilix --title="${MTITLE}" \
+                --window-style=borderless \
+                --geometry=90x20+150+25 \
+                --profile=MusicPlayer \
+                --command="${MPCOMM}" 2> /dev/null &
           [ "${USE_EWMH}" ] && {
             sleep 1
-            mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+            til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
               grep -v "${VTITLE}" | grep "${MTITLE}"`
-            [ "${mpc_win}" ] || {
-              mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
+            [ "${til_win}" ] || {
+              til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
                 grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
             }
-            [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
+            [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
           }
         else
-          if [ "${TILIX}" ]
+          if [ "${GNOME}" ]
           then
-            tilix --title="${MTITLE}" \
-                  --window-style=borderless \
-                  --geometry=90x20+150+25 \
+            gnome-terminal --title="${MTITLE}" \
                   --profile=MusicPlayer \
-                  --command="${MPCOMM}" 2> /dev/null &
+                  --hide-menubar \
+                  --geometry=90x20+150+25 \
+                  -- ${MPCOMM} &
             [ "${USE_EWMH}" ] && {
               sleep 1
-              til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
                 grep -v "${VTITLE}" | grep "${MTITLE}"`
-              [ "${til_win}" ] || {
-                til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
+              [ "${gno_win}" ] || {
+                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
                   grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
               }
-              [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
+              [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
             }
           else
-            if [ "${GNOME}" ]
+            if [ "${SIMPLE}" ]
             then
-              gnome-terminal --title="${MTITLE}" \
-                    --profile=MusicPlayer \
-                    --hide-menubar \
-                    --geometry=90x20+150+25 \
-                    -- ${MPCOMM} &
+              st -t "${MTITLE}" \
+                 -g "100x26+50+25" \
+                 -f "Monospace:size=24" \
+                 ${MPCOMM} 2> /dev/null &
               [ "${USE_EWMH}" ] && {
                 sleep 1
-                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                   grep -v "${VTITLE}" | grep "${MTITLE}"`
-                [ "${gno_win}" ] || {
-                  gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
+                [ "${stl_win}" ] || {
+                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
                     grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
                 }
-                [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
+                [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
               }
             else
-              if [ "${SIMPLE}" ]
+              if [ "${RETRO}" ]
               then
-                st -t "${MTITLE}" \
-                   -g "100x26+50+25" \
-                   -f "Monospace:size=24" \
-                   ${MPCOMM} 2> /dev/null &
-                [ "${USE_EWMH}" ] && {
-                  sleep 1
-                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                    grep -v "${VTITLE}" | grep "${MTITLE}"`
-                  [ "${stl_win}" ] || {
-                    stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                      grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
-                  }
-                  [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
-                }
+                cool-retro-term -e ${MPCOMM} > /dev/null 2>&1 &
               else
                 ${MPCOMM} &
                 # TODO: handle other graphical mpd clients
