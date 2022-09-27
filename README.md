@@ -75,6 +75,8 @@ MusicPlayerPlus is a character-based console and terminal window music player
 
 ## Overview
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 The MusicPlayerPlus project provides integration and extension of several audio
 packages designed to stream and play music. MusicPlayerPlus interacts with the
 Music Player Daemon (MPD). Outputs from the MPD streaming audio server are used
