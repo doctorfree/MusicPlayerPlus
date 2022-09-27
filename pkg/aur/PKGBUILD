@@ -38,13 +38,6 @@ export CARGO_TARGET_DIR=target
 
 prepare() {
   cd "${srcdir}/${pkgname}"
-  for rustproj in bliss-analyze blissify
-  do
-    git clone https://github.com/doctorfree/${rustproj}
-    cd ${rustproj}
-    cargo fetch --locked --target "${CARCH}-unknown-linux-gnu"
-    cd ..
-  done
 }
 
 build() {
@@ -62,44 +55,6 @@ build() {
     make > make$$.out
     cd ..
   fi
-
-  # Build bliss-analyze
-  if [ -x scripts/build-bliss-analyze.sh ]
-  then
-    scripts/build-bliss-analyze.sh
-  else
-    PROJ=bliss-analyze
-    [ -d ${PROJ} ] || git clone https://github.com/doctorfree/bliss-analyze
-    [ -x ${PROJ}/target/release/bliss-analyze ] || {
-      cd ${PROJ}
-      PKGPATH=`pkg-config --variable pc_path pkg-config`
-      [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
-        PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
-      }
-      export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
-      cargo build --frozen --release --all-features
-      cd ..
-    }
-  fi
-
-  # Build blissify
-  if [ -x scripts/build-blissify.sh ]
-  then
-    scripts/build-blissify.sh
-  else
-    PROJ=blissify
-    [ -d ${PROJ} ] || git clone https://github.com/doctorfree/blissify
-    [ -x ${PROJ}/target/release/blissify ] || {
-      cd ${PROJ}
-      PKGPATH=`pkg-config --variable pc_path pkg-config`
-      [ -d /usr/lib/ffmpeg4.4/pkgconfig ] && {
-        PKGPATH="/usr/lib/ffmpeg4.4/pkgconfig:${PKGPATH}"
-      }
-      export PKG_CONFIG_PATH="${PKGPATH}:/usr/lib/pkgconfig"
-      cargo build --frozen --release --all-features
-      cd ..
-    }
-  fi
 }
 
 package() {
@@ -110,9 +65,7 @@ package() {
     "${destdir}/share/doc/${pkgname}" "${destdir}/share/${pkgname}" \
     "${destdir}/share/consolefonts" "${destdir}/share/${pkgname}/mpcplus" \
     "${destdir}/share/licenses" \
-    "${destdir}/share/licenses/${pkgname}" \
-    "${destdir}/share/doc/${pkgname}/blissify" \
-    "${destdir}/share/doc/${pkgname}/bliss-analyze"
+    "${destdir}/share/licenses/${pkgname}"
   do
     [ -d ${pkgdir}/${dir} ] || mkdir ${pkgdir}/${dir}
   done
@@ -125,12 +78,6 @@ package() {
   cp -a bin ${pkgdir}/${destdir}/bin
   cp mppcava/mppcava ${pkgdir}/${destdir}/bin/mppcava
   cp mppcava/mppcava.psf ${pkgdir}/${destdir}/share/consolefonts
-  [ -f blissify/target/release/blissify ] && {
-    cp blissify/target/release/blissify ${pkgdir}/${destdir}/bin
-  }
-  [ -f bliss-analyze/target/release/bliss-analyze ] && {
-    cp bliss-analyze/target/release/bliss-analyze ${pkgdir}/${destdir}/bin
-  }
   cp *.desktop "${pkgdir}/${destdir}/share/applications"
   cp copyright ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}
@@ -142,12 +89,6 @@ package() {
   pandoc -f gfm README.md | tee ${pkgdir}/${destdir}/share/doc/${pkgname}/README.html > /dev/null
   gzip -9 ${pkgdir}/${destdir}/share/doc/${pkgname}/CHANGELOG.md
 
-  cp blissify/CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${pkgname}/blissify
-  cp blissify/README.md ${pkgdir}/${destdir}/share/doc/${pkgname}/blissify
-
-  cp bliss-analyze/ChangeLog ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
-  cp bliss-analyze/LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
-  cp bliss-analyze/README.md ${pkgdir}/${destdir}/share/doc/${pkgname}/bliss-analyze
   cp -a share/alsa-capabilities ${pkgdir}/${destdir}/share/doc/${pkgname}/alsa-capabilities
 
   cp asound.conf.tmpl ${pkgdir}/${destdir}/share/${pkgname}

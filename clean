@@ -1,6 +1,6 @@
 #!/bin/bash
 
-sudo rm -rf dist releases blissify bliss-analyze musicplayerplus
+sudo rm -rf dist releases musicplayerplus
 
 for proj in mppcava
 do

@@ -41,8 +41,6 @@ config/beets/configs/*
 config/beets/secrets.yaml
 beets/*/__pycache__/
 beets/*/*.egg-info/
-blissify/
-bliss-analyze/
 pkg/dist/arch/*
 pkg/dist/centos/*
 pkg/dist/fedora/*

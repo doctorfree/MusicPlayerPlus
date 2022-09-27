@@ -928,7 +928,7 @@ install_external_package() {
   }
 
   [ "${DL_URL}" ] && {
-    printf "\n\tAttempting to install ${PROJECT} ..."
+    printf "\n\tInstalling ${PROJECT} ..."
     if [ "${debian}" ]
     then
       [ "${have_wget}" ] || {
@@ -2197,6 +2197,18 @@ printf "\nInitializing MusicPlayerPlus, please wait ..."
   PROJECT=mpplus-essentia
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
   install_external_package
+}
+[ -x /usr/bin/blissify ] || {
+  case "${mach}" in
+    arm*)
+      ;;
+    *)
+      OWNER=doctorfree
+      PROJECT=mpplus-bliss
+      API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+      install_external_package
+      ;;
+  esac
 }
 
 [ "${MUSIC_DIRECTORY}" ] || {

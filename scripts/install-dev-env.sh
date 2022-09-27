@@ -35,7 +35,7 @@ else
     PKGS="base-devel eigen fftw clang ffmpeg4.4 libsamplerate taglib \
           chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
           alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
-          qt5-tools python python-numpy python-six sndio cargo"
+          qt5-tools python python-numpy python-six sndio"
     if [ "$1" == "-r" ]
     then
       sudo pacman -Rs ${PKGS}
@@ -139,29 +139,3 @@ else
     fi
   fi
 fi
-
-# Cargo is a build dependency on Arch
-[ "${arch}" ] || {
-  have_cargo=`type -p cargo`
-  if [ "$1" == "-r" ]
-  then
-    [ "${have_cargo}" ] && rustup self uninstall -y
-  else
-    [ "${have_cargo}" ] || {
-      [ -f ~/.cargo/env ] && source ~/.cargo/env
-      have_cargo=`type -p cargo`
-      [ "${have_cargo}" ] || {
-          curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs > /tmp/rst$$
-          sh /tmp/rst$$ -y
-          rm -f /tmp/rst$$
-          [ -f ~/.cargo/env ] && source ~/.cargo/env
-      }
-      have_cargo=`type -p cargo`
-      [ "${have_cargo}" ] || {
-          echo "The cargo tool cannot be located."
-          echo "Cargo is required to build blissify. Exiting."
-          exit 1
-      }
-    }
-  fi
-}

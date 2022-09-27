@@ -4,6 +4,12 @@
 
 MPD_CONF="${HOME}/.config/mpd/mpd.conf"
 
+have_blissify=`type -p blissify`
+[ "${have_blissify}" ] || {
+  echo "Could not locate blissify in PATH. Exiting."
+  exit 1
+}
+
 [ "${MPD_HOST}" ] || {
   mpd_host=`grep ^bind_to_address ${MPD_CONF}`
   mpd_host=`echo ${mpd_host} | awk ' { print $2 } ' | sed -e "s/\"//g"`
