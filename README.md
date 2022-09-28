@@ -918,6 +918,9 @@ MPD must have at least one `audio_output` configured and in order
 to use the spectrum visualizer as configured by default it is necessary
 to configure a second `audio_output` in MPD.
 
+The default MPD `audio_output` setting is `PulseAudio`. To modify the MPD audio
+output, uncomment one of `ALSA`, `PulseAudio`, or `PipeWire` and restart MPD.
+
 A FIFO `audio_output` is used as a data source for the spectrum visualizer.
 To configure this output, add the following to `~/.config/mpd/mpd.conf`:
 
@@ -935,7 +938,7 @@ An example ALSA `audio_output` configuration in `~/.config/mpd/mpd.conf`:
 ```
 audio_output {
 	type		"alsa"
-	name		"My ALSA Device"
+	name		"ALSA"
     buffer_time "50000"   # (50ms); default is 500000 microseconds (0.5s)
 #	device		"hw:0,0"	# optional
 #	mixer_type      "hardware"      # optional
