@@ -612,11 +612,11 @@ USE_TMUX=
 #    'console' will force a tmux session
 #    'current' will force a tmux session in the current terminal window
 #    'gnome' will use the gnome-terminal emulator if installed
-#    'kitty' will use the Kitty terminal emulator if installed
+#    'kitty' will use the kitty terminal emulator if installed
 #    'retro' will use cool-retro-term if installed
 #    'simple' will use the ST terminal emulator if installed
 #    'tilix' will use the Tilix terminal emulator if installed
-#  Default fallback if none specified or not available is Kitty
+#  Default fallback if none specified or not available is kitty
 #
 #  Uncomment the preferred mode
 #MPP_MODE=console
@@ -1239,8 +1239,18 @@ Sublime on a variety of Linux distributions.
 Supported terminal emulators in MusicPlayerPlus include `kitty`, `tilix`,
 `gnome-terminal`, `st`, and `cool-retro-term`. Kitty is the default terminal
 emulator used by MusicPlayerPlus except on Raspberry Pi OS where `st` is used
-as the default. An alternate terminal emulator can be specified on the
-`mpplus` command line:
+as the default.
+
+**[Note:]** The [kitty terminal emulator](https://sw.kovidgoyal.net/kitty/)
+is very cool. A default kitty theme is provided (the 'Music Player Plus' theme)
+and should suffice for most users. An alternate kitty theme can be configured
+using the kitty themes kitten. To use this kitten, run:
+
+```
+kitty +kitten themes
+```
+
+An alternate terminal emulator can be specified on the `mpplus` command line:
 
 ```
 mpplus -c ... # indicates use the current terminal and a tmux session
@@ -1523,7 +1533,7 @@ Where:
 
 	'bandcamp' downloads all albums in your Bandcamp collections
 	'import' performs a Beets music library import
-	'kitty' installs the Kitty terminal emulator
+	'kitty' installs the kitty terminal emulator
 	'metadata' performs a library metadata update
 	'mopidy' installs and configures Mopidy extensible music server
 		Note: activating Mopidy deactivates MPD

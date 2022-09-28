@@ -2476,6 +2476,22 @@ then
 else
   cp -a ${MPPCDIR}/kitty ${KITTYCONFDIR}
 fi
+[ -f ${KITTYCONF} ] && {
+  if [ "${BROWSER}" ]
+  then
+    # If the user has set the BROWSER environment variable then use it
+    browser_app=`echo "${BROWSER}" | awk ' { print $1 } '`
+    browser_app=`basename ${browser_app}`
+    have_browser=`type -p ${browser_app}`
+    [ "${have_browser}" ] || BROWSER=default
+  else
+    BROWSER=default
+    have_browser=1
+  fi
+  cat "${KITTYCONF}" | sed -e "s%__SET__BROWSER__%${BROWSER}%" > /tmp/browser$$
+  cp /tmp/browser$$ "${KITTYCONF}"
+  rm -f /tmp/browser$$
+}
 [ -f ${KITTYCONFDIR}/kitty.conf ] || cp ${KITTYCONF} ${KITTYCONFDIR}/kitty.conf
 
 [ "${quiet}" ] || {
