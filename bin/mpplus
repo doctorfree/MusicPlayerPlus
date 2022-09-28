@@ -50,14 +50,14 @@ BEETSLOGDIR="${HOME}/.config/beets/logs"
 MPPCONF="${HOME}/.config/mpprc"
 
 usage() {
-  printf "\nUsage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]"
-  printf "\n\t[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
+  printf "\nUsage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]"
+  printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
   printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
   printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-uU]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
-  printf "\n\t-A indicates display album cover art (implies tmux session)"
+  printf "\n\t-A 'on|off' specifies whether to display album cover art"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
   printf "\n\t-E indicates do not use gradient colors for spectrum visualizer"
   printf "\n\t-f indicates fullscreen display"
@@ -102,7 +102,7 @@ usage() {
   printf "\n\t\tto MP3 format files and exit. A subsequent 'mpplus -I' import"
   printf "\n\t\twill be necessary to import these newly converted music files."
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
-  printf "\n\t\tIn conjunction with '-I', the '-A' flag disables auto-tagging"
+  printf "\n\t\tIn conjunction with '-I', the '-A on' option disables auto-tagging"
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-L indicates download lyrics to the Beets library and exit"
@@ -803,17 +803,17 @@ make_it_so() {
 
   # In fullscreen mode terminals without transparency use tmux
   [ "${FULLSCREEN}" ] && {
-    [ "${SIMPLE}" ] && TMUX_MPC=1
-    [ "${USE_OPAC}" ] || TMUX_MPC=1
+    [ "${SIMPLE}" ] && USE_TMUX=1
+    [ "${USE_OPAC}" ] || USE_TMUX=1
   }
   # Always use tmux in cool-retro-term
-  [ "${RETRO}" ] && TMUX_MPC=1
+  [ "${RETRO}" ] && USE_TMUX=1
 
   # Begin visualizer startup section
   #
   # Do not start visualizer here if we are going to start a tmux session,
   # if we are displaying an asciimatics animation, or using cool-retro-term.
-  [ "${TMUX_MPC}" ] || [ "${SPLASH}" ] || {
+  [ "${USE_TMUX}" ] || [ "${SPLASH}" ] || {
     if [ "${FULLSCREEN}" ]
     then
       if [ "${KITTY}" ]
@@ -822,7 +822,7 @@ make_it_so() {
         kitty --title "${VTITLE}" \
               --start-as fullscreen \
               --override font_size=8 \
-              --override background_opacity=1.0 \
+              ${KITTY_OPACITY} \
               --override hide_window_decorations=yes \
               --override tab_bar_min_tabs=2 \
               ${VISUALIZER} 2> /dev/null &
@@ -844,7 +844,7 @@ make_it_so() {
                   -- ${VISUALIZER} &
           else
             # No supported terminal emulator available, use tmux
-            TMUX_MPC=1
+            USE_TMUX=1
           fi
         fi
       fi
@@ -932,6 +932,7 @@ make_it_so() {
               --override initial_window_width=240c \
               --override initial_window_height=12c \
               --override tab_bar_min_tabs=2 \
+              ${KITTY_OPACITY} \
               --single-instance \
               ${VISUALIZER} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
@@ -995,7 +996,7 @@ make_it_so() {
               }
             else
               # No supported terminal emulator available, use tmux
-              TMUX_MPC=1
+              USE_TMUX=1
             fi
           fi
         fi
@@ -1004,22 +1005,15 @@ make_it_so() {
   }
   # End visualizer startup section
 
-  # TODO: handle other graphical mpd clients
-  # [ "${MPCPLUS}" == "cantata" ] && {
-  #   COVER_ART=
-  #   CURRENT=
-  #   FULLSCREEN=
-  #   GNOME=
-  #   KITTY=
-  #   RETRO=
-  #   SIMPLE=
-  #   TILIX=
-  #   TMUX_MPC=
-  #   USE_TMUX=
-  # }
   # Fullscreen ASCIImatics Animations
   [ "${SPLASH}" ] && FULLSCREEN=1
 
+  if [ "${FULLSCREEN}" ]
+  then
+    KITTY_OPACITY="--override background_opacity=0.7"
+  else
+    KITTY_OPACITY="--override background_opacity=1.0"
+  fi
   # Set the command to use based on command line switches (-S, -T)
   MPCOMM="${MPCPLUS}"
   if [ "${SPLASH}" ]
@@ -1031,13 +1025,15 @@ make_it_so() {
       MPCOMM="${MPPSPLASH}"
     fi
   else
-    [ "${TMUX_MPC}" ] && {
+    [ "${USE_TMUX}" ] && {
       if [ "${USE_MPCPLUS}" ]
       then
         MPCOMM="${MPCPLUS_TMUX}"
       else
         MPCOMM="${MPCPLUS_TMUX} -c '${MPCPLUS}'"
       fi
+      # No transparency if using tmux
+      KITTY_OPACITY="--override background_opacity=1.0"
     }
   fi
 
@@ -1053,7 +1049,7 @@ make_it_so() {
         kitty --title="${MTITLE}" \
               --start-as fullscreen \
               --override font_size=18 \
-              --override background_opacity=0.7 \
+              ${KITTY_OPACITY} \
               --override tab_bar_min_tabs=2 \
               ${MPCOMM} 2> /dev/null &
       else
@@ -1099,6 +1095,7 @@ make_it_so() {
               --override initial_window_width=120c \
               --override initial_window_height=28c \
               --override tab_bar_min_tabs=2 \
+              ${KITTY_OPACITY} \
               ${MPCOMM} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
           sleep 1
@@ -2654,7 +2651,6 @@ show_main_menu() {
               ;;
           "Launch mpcplus in Current",*|*,"Launch mpcplus in Current")
               MPCPLUS="mpcplus"
-              TMUX_MPC=1
               USE_TMUX=1
               CURRENT=1
               break
@@ -2774,10 +2770,10 @@ show_main_menu() {
               fi
               if [ "${COVER_ART}" ]
               then
-                TMUX_MPC=1
+                USE_TMUX=1
                 MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -A//"`
               else
-                TMUX_MPC=
+                USE_TMUX=
                 MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
               fi
               save_it_so=1
@@ -3110,7 +3106,6 @@ KITTY=
 RETRO=
 SIMPLE=
 TILIX=
-TMUX_MPC=
 USE_TMUX=
 
 # Retrieve user preferences
@@ -3134,23 +3129,19 @@ case "${MPP_MODE}" in
       if [ "${consolemode}" ]
       then
         CONSOLE_MODE=1
-        TMUX_MPC=1
         USE_TMUX=1
       else
         pick_terminal || {
           CONSOLE_MODE=1
-          TMUX_MPC=1
           USE_TMUX=1
         }
       fi
     else
       CONSOLE_MODE=1
-      TMUX_MPC=1
       USE_TMUX=1
     fi
     ;;
   current)
-    TMUX_MPC=1
     USE_TMUX=1
     CURRENT=1
     ;;
@@ -3359,7 +3350,7 @@ else
 fi
 
 USE_MPCPLUS=1
-while getopts "AabBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:Uv:wWx:X:yYz:u" flag
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:Uv:wWx:X:yYz:u" flag
 do
   case $flag in
     a)
@@ -3369,8 +3360,20 @@ do
       tagflag="-a"
       ;;
     A)
-      [ "${have_uebz}" ] && COVER_ART=1
-      tagflag="-A"
+      art_onoff=`echo "${OPTARG}" | tr '[:upper:]' '[:lower:]'`
+      if [ "${art_onoff}" == "on" ]
+      then
+        [ "${have_uebz}" ] && COVER_ART=1
+        tagflag="-A"
+      else
+        if [ "${art_onoff}" == "off" ]
+        then
+          COVER_ART=
+        else
+          echo "Invalid argument to -A option: ${OPTARG}"
+          usage
+        fi
+      fi
       ;;
     b)
       MPPSPLASH="${MPPSPLASH} -b"
@@ -3380,7 +3383,6 @@ do
       BLISSIFY=1
       ;;
     c)
-      TMUX_MPC=1
       USE_TMUX=1
       CURRENT=1
       MPP_MODE=current
@@ -3526,7 +3528,6 @@ do
         KITTY=
         CURRENT=1
         MPP_MODE=current
-        TMUX_MPC=1
         USE_TMUX=1
       }
       ;;
@@ -3627,6 +3628,7 @@ do
         if [ "${tmux_onoff}" == "off" ]
         then
           USE_TMUX=
+          COVER_ART=
         else
           echo "Invalid argument to -T option: ${OPTARG}"
           usage
@@ -3686,7 +3688,7 @@ save_config
 
 if [ "${COVER_ART}" ]
 then
-  TMUX_MPC=1
+  USE_TMUX=1
 else
   MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
 fi
@@ -3694,14 +3696,7 @@ fi
 # The -T option says use tmux, -S says do asciimatics
 # If we have both then do asciimatics in tmux
 # If just the -T then do mpcplus in tmux
-[ "${USE_TMUX}" ] && {
-  if [ "${SPLASH}" ]
-  then
-    TMUX_SPLASH=1
-  else
-    TMUX_MPC=1
-  fi
-}
+[ "${USE_TMUX}" ] && [ "${SPLASH}" ] && TMUX_SPLASH=1
 
 [ "${CONSOLE_MODE}" ] || {
   [ "${GNOME}" ] || {

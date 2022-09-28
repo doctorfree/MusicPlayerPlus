@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A] [-a] [-b] [-B] [-c] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -36,8 +36,8 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 *MPCplus/Visualizer options:*
 
-**-A**
-: Indicates display album cover art (implies tmux session)
+**-A 'on|off'**
+: Specifies whether to display album cover art
 
 **-c**
 : Indicates use current terminal emulator / console mode
