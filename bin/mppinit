@@ -2185,6 +2185,28 @@ remove_kitty() {
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
 
+if [ "${debian}" ]
+then
+  sudo ${APT} update > /dev/null 2>&1
+else
+  if [ "${arch}" ]
+  then
+    sudo pacman -Syy --noconfirm > /dev/null 2>&1
+  else
+    if [ "${centos}" ]
+    then
+      sudo ${DNF} update > /dev/null 2>&1
+    else
+      if [ "${fedora}" ]
+      then
+        sudo ${DNF} update > /dev/null 2>&1
+      else
+        echo "Unsupported platform"
+      fi
+    fi
+  fi
+fi
+
 # Install mpcplus if not already present
 [ -x /usr/bin/mpcplus ] || {
   OWNER=doctorfree
