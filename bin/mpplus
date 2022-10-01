@@ -1253,6 +1253,11 @@ do_service_action() {
           systemctl --user ${action} mpd.socket
         }
       }
+      [ "${service}" == "pipewire.service" ] && {
+        systemctl --user is-active pipewire.socket >/dev/null 2>&1 && {
+          systemctl --user ${action} pipewire.socket
+        }
+      }
       [ "${service}" == "pulseaudio.service" ] && {
         systemctl --user is-active pulseaudio.socket >/dev/null 2>&1 && {
           systemctl --user ${action} pulseaudio.socket
@@ -1268,6 +1273,12 @@ do_service_action() {
           systemctl --user ${action} mpd.socket
         }
         sudo systemctl --user --global disable mpd.socket
+      }
+      [ "${service}" == "pipewire.service" ] && {
+        systemctl --user is-enabled pipewire.socket >/dev/null 2>&1 && {
+          systemctl --user ${action} pipewire.socket
+        }
+        sudo systemctl --user --global disable pipewire.socket
       }
       [ "${service}" == "pulseaudio.service" ] && {
         systemctl --user is-enabled pulseaudio.socket >/dev/null 2>&1 && {
@@ -1316,7 +1327,7 @@ do_service_action() {
 }
 
 mpp_service() {
-  ALL_SERVICES="navidrome mopidy mpdstats webplugin yams mpd pulseaudio"
+  ALL_SERVICES="navidrome mopidy mpdstats webplugin yams mpd pipewire pulseaudio"
   SERVICE_ACTION=$1
   if [ "$2" == "ALL" ]
   then
@@ -1673,6 +1684,10 @@ show_system_status() {
     m_active="active" || m_active="inactive"
   systemctl --user is-enabled mpd.service >/dev/null 2>&1 && \
     m_enabled="enabled" || m_enabled="disabled"
+  systemctl --user is-active pipewire.service >/dev/null 2>&1 && \
+    i_active="active" || i_active="inactive"
+  systemctl --user is-enabled pipewire.service >/dev/null 2>&1 && \
+    i_enabled="enabled" || i_enabled="disabled"
   systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && \
     p_active="active" || p_active="inactive"
   systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && \
@@ -1711,6 +1726,9 @@ show_system_status() {
   fi
   [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
     printf "\nMusic Player Daemon service is ${m_enabled} and ${m_active}"
+  }
+  [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
+    printf "\nPipeWire service is ${i_enabled} and ${i_active}"
   }
   [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
     printf "\nPulseAudio service is ${p_enabled} and ${p_active}"
@@ -1764,6 +1782,9 @@ show_logs_menu() {
     [ "${n_active}" == "active" ] || [ "${n_enabled}" == "enabled" ] && {
       options+=("View Navidrome Server Log")
     }
+    [ "${i_active}" == "active" ] || [ "${i_enabled}" == "enabled" ] && {
+      options+=("View PipeWire Server Log")
+    }
     [ "${p_active}" == "active" ] || [ "${p_enabled}" == "enabled" ] && {
       options+=("View PulseAudio Server Log")
     }
@@ -1810,6 +1831,10 @@ show_logs_menu() {
               ;;
           "View Navidrome Server Log",*|*,"View Navidrome Server Log")
               journalctl --user-unit=navidrome.service --since yesterday
+              break
+              ;;
+          "View PipeWire Server Log",*|*,"View PipeWire Server Log")
+              journalctl --user-unit=pipewire.service --since yesterday
               break
               ;;
           "View PulseAudio Server Log",*|*,"View PulseAudio Server Log")
@@ -1887,6 +1912,12 @@ show_services_menu() {
         options+=("Enable Navidrome Server")
       fi
     }
+    if [ "${i_enabled}" == "enabled" ]
+    then
+      options+=("Disable PipeWire")
+    else
+      options+=("Enable PipeWire")
+    fi
     if [ "${p_enabled}" == "enabled" ]
     then
       options+=("Disable PulseAudio")
@@ -1938,6 +1969,13 @@ show_services_menu() {
         options+=("Start Navidrome Server")
       fi
     }
+    if [ "${i_active}" == "active" ]
+    then
+      options+=("Stop PipeWire")
+      options+=("Restart PipeWire")
+    else
+      options+=("Start PipeWire")
+    fi
     if [ "${p_active}" == "active" ]
     then
       options+=("Stop PulseAudio")
@@ -1966,6 +2004,9 @@ show_services_menu() {
     }
     [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
       [ "${have_navi}" ] && options+=("Status of Navidrome Server")
+    }
+    [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
+      options+=("Status of PipeWire")
     }
     [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
       options+=("Status of PulseAudio")
@@ -2125,7 +2166,34 @@ show_services_menu() {
               fi
               break
               ;;
+          "Enable PipeWire",*|*,"Enable PipeWire")
+              mpp_service disable pulseaudio
+              mpp_service enable pipewire
+              break
+              ;;
+          "Disable PipeWire",*|*,"Disable PipeWire")
+              mpp_service disable pipewire
+              break
+              ;;
+          "Start PipeWire",*|*,"Start PipeWire")
+              mpp_service stop pulseaudio
+              mpp_service start pipewire
+              break
+              ;;
+          "Stop PipeWire",*|*,"Stop PipeWire")
+              mpp_service stop pipewire
+              break
+              ;;
+          "Restart PipeWire",*|*,"Restart PipeWire")
+              mpp_service restart pipewire
+              break
+              ;;
+          "Status of PipeWire",*|*,"Status of PipeWire")
+              mpp_service status pipewire
+              break
+              ;;
           "Enable PulseAudio",*|*,"Enable PulseAudio")
+              mpp_service disable pipewire
               mpp_service enable pulseaudio
               break
               ;;
@@ -2134,6 +2202,7 @@ show_services_menu() {
               break
               ;;
           "Start PulseAudio",*|*,"Start PulseAudio")
+              mpp_service stop pipewire
               mpp_service start pulseaudio
               break
               ;;
