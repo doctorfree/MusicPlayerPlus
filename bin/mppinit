@@ -20,6 +20,7 @@ MPCDIR=${USERCONF}/mpcplus
 MPDCONFDIR="${USERCONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 MPPCONF="${USERCONF}/mpprc"
+PWCONFDIR="${USERCONF}/pipewire"
 BEETSCONFDIR="${USERCONF}/beets"
 BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
@@ -2430,6 +2431,21 @@ else
   else
     cp -a ${MPPCDIR}/mpd ${MPDCONFDIR}
   fi
+fi
+
+[ "${quiet}" ] || {
+  printf "\n\tInstalling PipeWire configuration in ${PWCONFDIR} ..."
+}
+if [ -d ${PWCONFDIR} ]
+then
+  if [ "${overwrite}" ]
+  then
+    cp -a ${MPPCDIR}/pipewire ${USERCONF}
+  else
+    cp -an ${MPPCDIR}/pipewire ${USERCONF}
+  fi
+else
+  cp -a ${MPPCDIR}/pipewire ${PWCONFDIR}
 fi
 
 [ "${quiet}" ] || {
