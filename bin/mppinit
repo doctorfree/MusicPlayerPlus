@@ -880,13 +880,20 @@ get_mpd_status() {
 }
 
 install_external_package() {
+  have_curl=`type -p curl`
   [ "${have_curl}" ] || {
     install_package curl
     have_curl=`type -p curl`
   }
+  have_jq=`type -p jq`
   [ "${have_jq}" ] || {
     install_package jq
     have_jq=`type -p jq`
+  }
+  have_wget=`type -p wget`
+  [ "${have_wget}" ] || {
+    install_package wget
+    have_wget=`type -p wget`
   }
   DL_URL=
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
@@ -932,10 +939,6 @@ install_external_package() {
     printf "\n\tInstalling ${PROJECT} ..."
     if [ "${debian}" ]
     then
-      [ "${have_wget}" ] || {
-        install_package wget
-        have_wget=`type -p wget`
-      }
       [ "${have_wget}" ] && {
         TEMP_DEB="$(mktemp --suffix=.deb)"
         wget --quiet -O "${TEMP_DEB}" "${DL_URL}" > /dev/null 2>&1
@@ -1877,6 +1880,18 @@ install_kitty() {
       # Update the paths to the kitty and its icon in the kitty.desktop file(s)
       sed -i "s|Icon=kitty|Icon=/home/${MPP_USER}/${LOCAL}/kitty.app/share/icons/hicolor/256x256/apps/kitty.png|g" ~/.local/share/applications/kitty*.desktop
       sed -i "s|Exec=kitty|Exec=/home/${MPP_USER}/${LOCAL}/kitty.app/bin/kitty|g" ~/.local/share/applications/kitty*.desktop
+      # Install the Kitty terminfo entry
+      [ -f "${HOME}/.terminfo/x/xterm-kitty" ] || {
+        [ -f "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" ] && {
+          have_tic=`type -p tic`
+          [ "${have_tic}" ] && {
+            [ -d ${HOME}/.terminfo ] || mkdir -p ${HOME}/.terminfo
+            [ -d ${HOME}/.terminfo/x ] || mkdir -p ${HOME}/.terminfo/x
+            tic -x -o ${HOME}/.terminfo \
+              "${HOME}/${LOCAL}/lib/kitty/terminfo/kitty.terminfo" > /dev/null 2>&1
+          }
+        }
+      }
       [ "${quiet}" ] || printf " done!\n"
     else
       printf "\n${BOLD}ERROR:${NORM} Download of Kitty installation script failed"
