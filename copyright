@@ -7,34 +7,9 @@ Files: *
 Copyright: 2021-2022 Ronald Record <ronaldrecord@gmail.com>
 License: MIT
 
-Files: mpcplus/*
-Copyright: 2021-2022 Ronald Record <ronaldrecord@gmail.com>
-           2008-2012 Andrzej Rybczak <electricityispower@gmail.com>
-           2009-2010 Frank Blendinger <fb@intoxicatedmind.net>
-License: GPL-2+
-
 Files: mppcava/*
 Copyright: 2015 Karl Stavestrand <karl@stavestrand.no>
 License: MIT
-
-License: GPL-2+
- This package is free software; you can redistribute it and/or
- modify it under the terms of the GNU General Public License as
- published by the Free Software Foundation; either version 2 of the
- License, or (at your option) any later version.
- .
- This package is distributed in the hope that it will be useful,
- but WITHOUT ANY WARRANTY; without even the implied warranty of
- MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- General Public License for more details.
- .
- You should have received a copy of the GNU General Public License
- along with this package; if not, write to the Free Software
- Foundation, 51 Franklin Street, Fifth Floor, Boston, MA
- 02110-1301, USA
- .
- On Debian systems, the complete text of the GNU General Public
- License can be found in `/usr/share/common-licenses/GPL-2'.
 
 License: MIT
  Permission is hereby granted, free of charge, to any person obtaining a
