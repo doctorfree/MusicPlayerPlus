@@ -8,6 +8,9 @@
 #
 MUSIC_DIR="~/Music"
 
+# MPD client
+MPD_CLIENT="mpcplus"
+
 ## General settings
 #
 # To enable any of these, set to 1

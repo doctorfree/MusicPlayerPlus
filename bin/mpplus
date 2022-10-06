@@ -1,7 +1,6 @@
 #!/bin/bash
 #
-# mpplus - Run mpcplus and visualizer in separate terminal emulators,
-#          or a specified MPD client and visualizer in separate windows.
+# mpplus - Run an MPD client and visualizer, manage music services
 #
 # Written by Ronald Joe Record <ronaldrecord@gmail.com>
 # March, 2022
@@ -11,24 +10,25 @@
 # customized for my setup, you may need to adjust the geometry
 # to get the two windows to align as desired. I wanted the visualizer
 # terminal window at the bottom of the screen and aligned with
-# the mpcplus terminal window.
+# the MPD client terminal window.
 #
 # If the "-t" option is specified then only a single terminal
 # emulator is used, tilix. Tilix is invoked twice with different
-# profiles, one for mpcplus and another for the visualizer.
+# profiles, one for an MPD client and another for the visualizer.
 # The profiles are named "MusicPlayer" and "Visualizer". 
 #
 # In both types of invocations, with or without "-t", the terminal
-# profiles used have font sizee settings of 32 and 8 for mpcplus and
+# profiles used have font size settings of 32 and 8 for the MPD client and
 # visualizer, respectively. This aligns the windows, on my system, when
 # not in fullscreen mode.
 #
-# When using the cool-retro-term for mpcplus (-r option), adjust the
-# size of the cool-retro-term window manually so it aligns with the
+# When using the cool-retro-term for MPD client display (-r option), adjust
+# the size of the cool-retro-term window manually so it aligns with the
 # visualizer window. I could not figure out how to specify a geometry
-# for the cool-retro-term window when invoked with "-e mpcplus".
+# for the cool-retro-term window when invoked with "-e ${MPD_CLIENT}".
 #
-# An alternate MPD client can be specified on the command line.
+# An MPD client can be specified on the command line, default is 'mpcplus'.
+# Only 'mpcplus' and 'ncmpcpp' MPD clients are supported for album cover art display.
 
 BOLD=$(tput bold)
 NORM=$(tput sgr0)
@@ -2682,12 +2682,12 @@ show_main_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Launch mpcplus in Current")
-    [ "${have_kitty}" ] && options+=("Launch mpcplus with Kitty")
-    [ "${have_gnome}" ] && options+=("Launch mpcplus with Gnome")
-    [ "${have_retro}" ] && options+=("Launch mpcplus with Retro")
-    [ "${have_simple}" ] && options+=("Launch mpcplus with Simple")
-    [ "${have_tilix}" ] && options+=("Launch mpcplus with Tilix")
+    options=("Launch ${MPD_CLIENT} in Current")
+    [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty")
+    [ "${have_gnome}" ] && options+=("Launch ${MPD_CLIENT} with Gnome")
+    [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro")
+    [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple")
+    [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler")
     options+=("ASCIImatics Animations")
@@ -2718,34 +2718,34 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Launch mpcplus in Current",*|*,"Launch mpcplus in Current")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} in Current",*|*,"Launch ${MPD_CLIENT} in Current")
+              MPCPLUS="${MPD_CLIENT}"
               USE_TMUX=1
               CURRENT=1
               break
               ;;
-          "Launch mpcplus with Kitty",*|*,"Launch mpcplus with Kitty")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} with Kitty",*|*,"Launch ${MPD_CLIENT} with Kitty")
+              MPCPLUS="${MPD_CLIENT}"
               KITTY=1
               break
               ;;
-          "Launch mpcplus with Gnome",*|*,"Launch mpcplus with Gnome")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} with Gnome",*|*,"Launch ${MPD_CLIENT} with Gnome")
+              MPCPLUS="${MPD_CLIENT}"
               GNOME=1
               break
               ;;
-          "Launch mpcplus with Retro",*|*,"Launch mpcplus with Retro")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} with Retro",*|*,"Launch ${MPD_CLIENT} with Retro")
+              MPCPLUS="${MPD_CLIENT}"
               RETRO=1
               break
               ;;
-          "Launch mpcplus with Simple",*|*,"Launch mpcplus with Simple")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} with Simple",*|*,"Launch ${MPD_CLIENT} with Simple")
+              MPCPLUS="${MPD_CLIENT}"
               SIMPLE=1
               break
               ;;
-          "Launch mpcplus with Tilix",*|*,"Launch mpcplus with Tilix")
-              MPCPLUS="mpcplus"
+          "Launch ${MPD_CLIENT} with Tilix",*|*,"Launch ${MPD_CLIENT} with Tilix")
+              MPCPLUS="${MPD_CLIENT}"
               TILIX=1
               break
               ;;
@@ -2937,12 +2937,18 @@ show_main_menu() {
 }
 
 init_vars() {
-  MPCPLUS="mpcplus"
+  if [ "${MPD_CLIENT}" ]
+  then
+    MPCPLUS="${MPD_CLIENT}"
+  else
+    MPCPLUS="mpcplus"
+    MPD_CLIENT="${MPCPLUS}"
+  fi
   if [ "${USE_GRAD}" ]
   then
-    MPCPLUS_TMUX="mpcplus-tmux"
+    MPCPLUS_TMUX="mpcplus-tmux -c ${MPCPLUS}"
   else
-    MPCPLUS_TMUX="mpcplus-tmux -g"
+    MPCPLUS_TMUX="mpcplus-tmux -c ${MPCPLUS} -g"
   fi
   MPPSPLASH="mppsplash"
   MPPSPLASH_TMUX="mppsplash-tmux"
@@ -2987,6 +2993,10 @@ save_config() {
   echo "## Music library location" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
   echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## MPD Client" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "MPD_CLIENT=\"${MPD_CLIENT}\"" >> ${MPPCONF}
   echo "" >> ${MPPCONF}
   echo "## General settings" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
@@ -3477,10 +3487,18 @@ do
         else
           echo "Continuing, using mpcplus rather than ${CLIENT}."
           CLIENT=
+          if [ "${MPD_CLIENT}" ]
+          then
+            MPCPLUS="${MPD_CLIENT}"
+          else
+            MPCPLUS="mpcplus"
+            MPD_CLIENT="${MPCPLUS}"
+          fi
         fi
       }
       [ "${CLIENT}" ] && {
         MPCPLUS="${CLIENT}"
+        MPD_CLIENT="${MPCPLUS}"
         USE_MPCPLUS=
       }
       ;;

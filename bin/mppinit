@@ -456,6 +456,10 @@ init_mpp_conf() {
     echo "#" >> ${MPPCONF}
     echo "MUSIC_DIR=\"~/Music\"" >> ${MPPCONF}
     echo "" >> ${MPPCONF}
+    echo "## MPD Client" >> ${MPPCONF}
+    echo "#" >> ${MPPCONF}
+    echo "MPD_CLIENT=\"mpcplus\"" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
     echo "## General settings" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
     echo "# To enable any of these, set to 1" >> ${MPPCONF}
