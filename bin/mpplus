@@ -3135,7 +3135,7 @@ pathadd "${HOME}/.local/bin"
 export PATH
 
 # Check if initialization has been run
-if [ -f ${HOME}/.config/mpcplus/config ]
+if [ -f ${HOME}/.config/mppcava/config ]
 then
   [ -f ${MPPCONF} ] || save_config
 else
@@ -3485,14 +3485,15 @@ do
           echo "Continuing, using cantata rather than ${CLIENT}."
           CLIENT=cantata
         else
-          echo "Continuing, using mpcplus rather than ${CLIENT}."
           CLIENT=
           if [ "${MPD_CLIENT}" ]
           then
             MPCPLUS="${MPD_CLIENT}"
+            echo "Continuing, using ${MPD_CLIENT} rather than ${CLIENT}."
           else
             MPCPLUS="mpcplus"
             MPD_CLIENT="${MPCPLUS}"
+            echo "Continuing, using mpcplus rather than ${CLIENT}."
           fi
         fi
       }

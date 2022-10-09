@@ -21,7 +21,7 @@ AUDIO=1
 # Display cover art in tmux sessions
 COVER_ART=1
 # Display mpcplus and mppcava in a tmux session
-USE_TMUX=
+USE_TMUX=1
 
 ## Terminal emulator / display mode
 #
