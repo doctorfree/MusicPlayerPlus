@@ -2940,10 +2940,16 @@ init_vars() {
   if [ "${MPD_CLIENT}" ]
   then
     MPCPLUS="${MPD_CLIENT}"
+    mpcbase=`basename ${MPCPLUS}`
+    type -p ${mpcbase} > /dev/null || {
+      [ -x "${MPCPLUS}" ] || {
+        MPCPLUS=mpcplus
+      }
+    }
   else
     MPCPLUS="mpcplus"
-    MPD_CLIENT="${MPCPLUS}"
   fi
+  MPD_CLIENT="${MPCPLUS}"
   if [ "${USE_GRAD}" ]
   then
     MPCPLUS_TMUX="mpcplus-tmux -c ${MPCPLUS}"
@@ -3489,12 +3495,18 @@ do
           if [ "${MPD_CLIENT}" ]
           then
             MPCPLUS="${MPD_CLIENT}"
-            echo "Continuing, using ${MPD_CLIENT} rather than ${CLIENT}."
+            mpcbase=`basename ${MPCPLUS}`
+            type -p ${mpcbase} > /dev/null || {
+              [ -x "${MPCPLUS}" ] || {
+                MPCPLUS=mpcplus
+              }
+            }
+            echo "Continuing, using ${MPCPLUS} rather than ${CLIENT}."
           else
             MPCPLUS="mpcplus"
-            MPD_CLIENT="${MPCPLUS}"
             echo "Continuing, using mpcplus rather than ${CLIENT}."
           fi
+          MPD_CLIENT="${MPCPLUS}"
         fi
       }
       [ "${CLIENT}" ] && {
