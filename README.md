@@ -139,9 +139,8 @@ Integration is provided for:
 
 The goal of MusicPlayerPlus is to provide the user with a sophisticated set
 of complex music library tools that can be integrated and managed in a fairly
-simple to understand and administer fashion. We wish to make the difficult easy.
-Also, to make some cool looking powerful stuff happen from the command-line
-in a character-based environment.
+simple to understand fashion. Also, to make some cool looking powerful stuff
+happen from the command-line in a character-based environment.
 
 ### Requirements
 
@@ -207,6 +206,14 @@ MusicPlayerPlus adds the following commands to your system:
 The `bliss-analyze` and `blissify` commands are currently not available on
 Raspberry Pi installations due to lack of support for that architecture in
 the `ffmpeg` library.
+
+**[Note:]** MusicPlayerPlus functions as a front-end and management system for
+any MPD/Mopidy/Navidrome client. The default MPD client is `mpcplus` but any
+MPD client can be configured by setting `MPD_CLIENT` in `~/.config/mpprc`.
+While `mpcplus` is the recommended MPD client, `ncmpcpp` is also supported
+with some integration for visualizer data source management. Other MPD clients
+available for use with MusicPlayerPlus include ncmpc, pms, vimpc, pimpd2,
+nncmpp, mmtc, and mpq.
 
 Additional detail and info can be found in the
 [MusicPlayerPlus Wiki](https://github.com/doctorfree/MusicPlayerPlus/wiki).
@@ -274,7 +281,7 @@ mppinit import
 The `mppinit import` command converts any WAV format media to MP3 format
 and imports the music library into the Beets media library management system.
 
-**[NOTE:]** A Beets import can take hours for a large music library.
+**[Note:]** A Beets import can take hours for a large music library.
 A test import using a music library over 500GB in size, with nearly
 4000 artists, 3000 albums, and over 30,000 tracks consumed nearly 12 hours.
 Import times will vary from system to system and library to library
@@ -293,7 +300,7 @@ The `mppinit metadata` command identifies and deletes duplicate tracks,
 retrieves album genres from Last.fm, downloads album cover art, and
 (optionally) analyzes and retrieves metadata for all songs in the music library.
 
-**[NOTE:]** A Beets metadata retrieval can take hours for a large music library.
+**[Note:]** A Beets metadata retrieval can take hours for a large music library.
 The MusicPlayerPlus default Beets configuration uses `ffmpeg` to compute
 checksums for every track in the library to find duplicates.
 
@@ -326,7 +333,7 @@ actions. The drawback of using Blissify is it does not add acoustic metadata
 to the Beets library so the results of a Blissify analysis are only available
 to Blissify and not Beets.
 
-**[NOTE:]** Acoustic analysis with `blissify` is currently not available on
+**[Note:]** Acoustic analysis with `blissify` is currently not available on
 Raspberry Pi installations due to lack of support for that architecture in
 the `ffmpeg` library.
 
@@ -490,7 +497,7 @@ or
 sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.armhf.deb
 ```
 
-**NOTE:** In some cases you may see a warning message when installing the
+**[Note:]** In some cases you may see a warning message when installing the
 Debian package. The message:
 
 Repository is broken: musicplayerplus:amd64 (= <version-<release>) has no Size information
@@ -539,7 +546,7 @@ sudo pacman -U ./MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst
 
 ## Post Installation Configuration
 
-**[NOTE:]** Extensive post-installation steps are covered here.
+**[Note:]** Extensive post-installation steps are covered here.
 Minimal post-installation configuration required is the execution
 of the command `mppinit`. If the MPD music library is located in
 the default `$HOME/Music` directory then no further configuration
@@ -660,7 +667,7 @@ After `mppinit` completes the MusicPlayerPlus initialization, edit the
 
 ### MPD Music Directory Configuration
 
-**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
+**[Note:]** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
 This is performed by the `mppinit` command. MusicPlayerPlus 1.0.3r1
 and later installations need not perform the following manual procedures
@@ -690,7 +697,7 @@ Any time the MPD music directory is manually modified, run `mppinit sync`.
 
 ### Initializing the Beets media library management system
 
-**[NOTE:]** Beets is NOT the now defunct music service purchased by Apple.
+**[Note:]** Beets is NOT the now defunct music service purchased by Apple.
 It is an open source media library management system.
 
 MusicPlayerPlus includes the Beets media library management system
@@ -739,7 +746,7 @@ Beets query documentation. The Beets `play` plugin should match the
 query string to songs in your music library, add those songs to the
 MPD queue, and play them. Use `beet ls QUERY` to see what would be played.
 
-**[NOTE:]** MusicPlayerPlus has configured the Beets play plugin
+**[Note:]** MusicPlayerPlus has configured the Beets play plugin
 to use the command `/usr/share/musicplayerplus/scripts/mpcplay.sh`
 to play media with this plugin. This script clears the MPD queue,
 adds any songs matching the query to the queue, and plays the MPD queue.
@@ -1016,7 +1023,7 @@ for details.
 
 ### Start MPD
 
-**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform
+**[Note:]** MusicPlayerPlus version 1.0.3 release 1 and later perform
 an automated MPD user configuration and systemd service activation.
 Initialization with `mppinit` for these installations should automatically
 start the user MPD service. No further action should be required for
@@ -1062,7 +1069,7 @@ some system checks can optionally be performed.
 
 ### Initialize Music Database
 
-**NOTE:** MusicPlayerPlus version 1.0.3 release 1 and later perform an
+**[Note:]** MusicPlayerPlus version 1.0.3 release 1 and later perform an
 automated MPD music database initialization during execution of `mppinit`.
 
 For versions of MusicPlayerPlus prior to v1.0.3r1, initialize the music
@@ -1128,7 +1135,7 @@ To view the effective Mopidy configuration run the command `mopidy config`.
 This will display the full Mopidy configuration with passwords masked out
 so that you can safely share the output with others for debugging.
 
-**[NOTE:]** The Mopidy MPD extension provides compatibility with MPD
+**[Note:]** The Mopidy MPD extension provides compatibility with MPD
 clients but does not implement all MPD features. MPD is much more powerful
 and flexible in terms of its configurable inputs and outputs. After
 activating Mopidy some features may not work the same as they did with MPD.
