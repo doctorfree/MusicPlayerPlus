@@ -17,6 +17,7 @@ MCPTDIR=${MPCONFDIR}/scripts
 CCPTDIR=${MPPCDIR}/calliope
 USERCONF=${HOME}/.config
 MPCDIR=${USERCONF}/mpcplus
+NCMDIR=${USERCONF}/ncmpcpp
 MPDCONFDIR="${USERCONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 MPPCONF="${USERCONF}/mpprc"
@@ -739,6 +740,15 @@ sync_music_dir() {
       cat ${MPCDIR}/config-art.conf | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/art$$
       cp /tmp/art$$ ${MPCDIR}/config-art.conf
       rm -f /tmp/art$$
+    }
+    [ -f ${NCMDIR}/config ] && {
+      ncm_music=`grep ^mpd_music_dir ${NCMDIR}/config`
+      ncm_music=`echo ${ncm_music} | awk ' { print $3 } '`
+      [ "${mpd_music}" == "${ncm_music}" ] || {
+        cat ${NCMDIR}/config | sed -e "s%^mpd_music_dir.*%mpd_music_dir = ${mpd_music}%" > /tmp/ncm$$
+        cp /tmp/ncm$$ ${NCMDIR}/config
+        rm -f /tmp/ncm$$
+      }
     }
     bts_custom=1
     bts_music=`grep ^directory: ${BEETSCONF}`
@@ -2343,6 +2353,16 @@ then
 else
   cp ${MPCONFDIR}/bindings ${MPCDIR}/bindings
 fi
+
+[ -f ${NCMDIR}/config ] && {
+  grep ^visualizer_data_source ${NCMDIR}/config > /dev/null || {
+    echo "#
+# The default:
+visualizer_data_source = ~/.config/mpd/mpd.fifo
+# For use with Mopidy:
+#visualizer_data_source = localhost:5555" >> ${NCMDIR}/config
+  }
+}
 
 for cfg in ${CFGS}
 do

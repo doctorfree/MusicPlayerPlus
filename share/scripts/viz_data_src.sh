@@ -10,15 +10,24 @@
 # Written 2022-08-26 by Ronald Joe Record <ronaldrecord@gmail.com>
 
 MPC_CONF="${HOME}/.config/mpcplus/config"
+NCM_CONF="${HOME}/.config/ncmpcpp/config"
 ART_CONF="${HOME}/.config/mpcplus/config-art"
 UEB_CONF="${HOME}/.config/mpcplus/ueberzug/config"
 CAV_CONF="${HOME}/.config/mppcava/config"
 CAV_TMUX="${HOME}/.config/mppcava/config-tmux"
 
+have_ncmpcpp=`type -p ncmpcpp`
+if [ "${have_ncmpcpp}" ]
+then
+  ncmpcpp --version | grep visualizer > /dev/null || NCM_CONF=
+else
+  NCM_CONF=
+fi
+
 if [ "$1" == "mopidy" ]
 then
   # Modify mpcplus config with Mopidy visualizer_data_source
-  for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF}
+  for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF} ${NCM_CONF}
   do
     [ -f "${mpcconf}" ] && {
       cat "${mpcconf}" | \
@@ -45,12 +54,12 @@ else
   if [ "$1" == "mpd" ]
   then
     # Modify mpcplus config with MPD visualizer_data_source
-    for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF}
+    for mpcconf in ${MPC_CONF} ${ART_CONF} ${UEB_CONF} ${NCM_CONF}
     do
       [ -f "${mpcconf}" ] && {
         cat "${mpcconf}" | \
-          # Comment all entries out and use the default, a fifo
-          sed -e "s%^visualizer_data_source =%#visualizer_data_source =%" > /tmp/viz$$
+          sed -e "s%^visualizer_data_source =%#visualizer_data_source =%" \
+              -e "s%^#visualizer_data_source = ~/.config/mpd/mpd.fifo%visualizer_data_source = ~/.config/mpd/mpd.fifo%" > /tmp/viz$$
         cp /tmp/viz$$ "${mpcconf}"
         rm -f /tmp/viz$$
       }
