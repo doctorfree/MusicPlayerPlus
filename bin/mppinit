@@ -1844,7 +1844,7 @@ install_kitty() {
       curl --silent --location \
         https://sw.kovidgoyal.net/kitty/installer.sh > /tmp/kitty-$$.sh
     }
-    if [ -f /tmp/kitty-$$.sh ]
+    if [ -s /tmp/kitty-$$.sh ]
     then
       have_stow=`type -p stow`
       if [ "${have_stow}" ]
@@ -1976,9 +1976,6 @@ remove_kitty() {
   else
     init_warn kitty
   fi
-  [ "${quiet}" ] || {
-    printf "\n\n${BOLD}Kitty terminal emulator installed${NORM}\n"
-  }
   exit 0
 }
 

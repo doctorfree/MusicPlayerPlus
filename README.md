@@ -152,6 +152,11 @@ MusicPlayerPlus is compiled and packaged for installation on:
 - Raspberry Pi OS (armhf)
 - Ubuntu Linux (amd64)
 
+Installation and initialization require admistrative privilege. The `mppinit`
+command, executed after installing MusicPlayerPlus, installs several packages
+and therefore requires access to the Internet along with administrative
+privilege (e.g. `sudo` privilege).
+
 Memory and storage requirements depend upon the size of the music library.
 
 With a moderate sized music library, the Music Player Daemon can exceed a
