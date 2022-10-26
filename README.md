@@ -2378,3 +2378,5 @@ If you are just modifying the shell scripts or configuration files then
 you don't need to worry about the extensive list of dependencies listed above.
 
 Feel free to email me at github@ronrecord.com with questions or comments.
+
+![Analytics](https://repobeats.axiom.co/api/embed/f64a367623243e389443cc3ec6507f1e845a5b1a.svg "Repobeats analytics image")
