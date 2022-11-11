@@ -279,7 +279,7 @@ as described below or they can be performed in two steps using `mppinit`.
 
 **Step 1**, import the music library into Beets:
 
-```
+```shell
 mppinit import
 ```
 
@@ -297,7 +297,7 @@ When the import is complete
 
 **Step 2**, retrieve additional metadata:
 
-```
+```shell
 mppinit metadata
 ```
 
@@ -347,7 +347,7 @@ For example, the AcousticBrainz service seems to think a lot of songs
 have 0 beets per minute and tags them erroneously. After retrieving
 metadata using AcousticBrainz, list the songs that have a bpm value of 0:
 
-```
+```shell
 beet list bpm:0
 ```
 
@@ -425,7 +425,7 @@ The entire full tilt boogie initialization, for those with both Bandcamp
 and Soundcloud accounts with songs and albums in a collection or liked,
 and who wish to apply thorough, reliable, complete, and accurate metadata:
 
-```
+```shell
 # Initialize MusicPlayerPlus, activate Music Player Daemon
 # This is the only required setup step
 mppinit
@@ -567,7 +567,7 @@ be configured by editing the MusicPlayerPlus configuration file
 
 Initialize the MusicPlayerPlus configuration by executing the command:
 
-```
+```console
 mppinit
 ```
 
@@ -594,7 +594,7 @@ previous invocation's options and settings as the default.
 
 The default installed `mpprc` contains:
 
-```
+```shell
 ## MusicPlayerPlus runtime configuration
 #
 #  After modifying any of the following settings, run the command:
@@ -692,7 +692,7 @@ steps and run `mppinit sync`:
 For example, to set the MPD music directory to the `/u/audio/music` directory,
 edit `$HOME/.config/mpprc` and change the *MUSIC_DIR* setting:
 
-```
+```shell
 MUSIC_DIR="/u/audio/music"
 ```
 
@@ -721,13 +721,13 @@ Beets configuration provided by MusicPlayerPlus moves and tags files in the
 music library during this process. It adds music library data to the Beets
 database. To import your music library into Beets, issue the following command:
 
-```
+```console
 mppinit import
 ```
 
 or to skip WAV format media conversion and just perform the Beets import:
 
-```
+```console
 mpplus -I
 ```
 
@@ -739,7 +739,7 @@ run `mppinit metadata`.
 
 After importing the music library into Beets, try playing something with:
 
-```
+```console
 beet play QUERY
 ```
 
@@ -793,14 +793,14 @@ all the songs in the MPD music library. Initialize the Blissify database
 with the command `blissify update <mpd music directory>`. For example,
 assuming the default MPD music directory:
 
-```
+```console
 blissify update ~/Music
 ```
 
 Blissify database initialization would have been automatically performed
 during setup if metadata initialization were done with:
 
-```
+```console
 mppinit -b metadata
 ```
 
@@ -810,13 +810,13 @@ to make a 30 song playlist that queues the closest song to the currently
 playing song, then the closest song to the second song, etc, effectively
 making a "path" through the songs, execute the command:
 
-```
+```console
 blissify playlist --seed-song 30
 ```
 
 To save the current MPD playlist (queue), execute the command:
 
-```
+```console
 mpc save <playlist-name>
 ```
 
@@ -831,7 +831,7 @@ retrieval with AcousticBrainz, both described in the next sections.
 After completing the Beets music library import with either `mppinit import`
 or `mpplus -I`, additional Beets metadata can be retrieved with the command:
 
-```
+```console
 mppinit -e metadata
 ```
 
@@ -899,7 +899,7 @@ command `mpplus -y`.
 
 Activate the YAMS scrobbler for Last.fm with the command:
 
-```
+```console
 mpplus -Y
 ```
 
@@ -1015,7 +1015,7 @@ for `fzmp` would be necessary.
 To modify the `fzmp` playlist view key binding, edit the `fzmp` configuration
 file `~/.config/mpcplus/fzmp.conf` and add a line like the following:
 
-```
+```console
 playlist_view_key F6
 ```
 
@@ -1036,7 +1036,7 @@ MusicPlayerPlus v1.0.3r1 or later installations.
 
 Status of the MPD service can be checked with:
 
-```
+```console
 systemctl --user status mpd.service
 ```
 
@@ -1163,7 +1163,7 @@ The default music server in MusicPlayerPlus is the Music Player Daemon (MPD).
 An alternate music server and streamer, Navidrome, is also supported.
 To install, configure, and activate Navidrome issue the command:
 
-```
+```console
 mppinit navidrome
 ```
 
@@ -1237,7 +1237,7 @@ https://www.navidrome.org/docs/overview/#apps
 Subsonic client compatible with Navidrome. On Apple MacOS, install sonixd
 with Homebrew:
 
-```
+```console
 brew install --cask sonixd
 ```
 
@@ -1258,13 +1258,13 @@ is very cool. A default kitty theme is provided (the 'Music Player Plus' theme)
 and should suffice for most users. An alternate kitty theme can be configured
 using the kitty themes kitten. To use this kitten, run:
 
-```
+```console
 kitty +kitten themes
 ```
 
 An alternate terminal emulator can be specified on the `mpplus` command line:
 
-```
+```console
 mpplus -c ... # indicates use the current terminal and a tmux session
 mpplus -e ... # indicates use the simple terminal emulator (st)
 mpplus -g ... # indicates use the gnome terminal emulator
@@ -1526,7 +1526,7 @@ provide a brief summary of the command line options.
 
 The `mppinit` performs one-time initializations:
 
-```
+```text
 Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
@@ -1566,7 +1566,7 @@ Where:
 The `mpplus` command serves as a general user interface for all of the
 MusicPlayerPlus capabilities:
 
-```
+```text
 Usage: mpplus [-A] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f]
 	[-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]
 	[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]
@@ -1651,7 +1651,7 @@ General options:
 The `mpcplus` command is an MPD client and acts as the primary
 MusicPlayerPlus music player:
 
-```
+```text
 Usage: mpcplus [options]...
 Options:
   -h [ --host ] HOST (=localhost)       connect to server at host
@@ -1682,7 +1682,7 @@ and much more via the keyboard. View the
 The `mppsplash` command can be used to display a variety of character
 based animations optionally accompanied by audio:
 
-```
+```text
 Usage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] [-m] [-p] [-s song] [-u]
 Where:
 	-A indicates use all effects
@@ -1705,7 +1705,7 @@ Where:
 The `mppcava` command is the MusicPlayerPlus custom character based
 audio spectrum visualizer:
 
-```
+```text
 Usage : mppcava [options]
 Visualize audio input in terminal. 
 
@@ -1790,7 +1790,7 @@ started integrating album art in MusicPlayerPlus.
 An album cover art downloader is included in MusicPlayerPlus. To download
 cover art for all of the albums in your MPD music directory, run the command:
 
-```
+```console
 mpplus -D art
 ```
 
