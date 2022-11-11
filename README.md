@@ -1656,7 +1656,7 @@ Usage: mpcplus [options]...
 Options:
   -h [ --host ] HOST (=localhost)       connect to server at host
   -p [ --port ] PORT (=6600)            connect to server at port
-  --current-song [=FORMAT(={{{(%l) }{{%a - }%t}}|{%f}})]
+  --current-song [=FORMAT(=<format string>)]
                                         print current song using given format 
                                         and exit
   -c [ --config ] PATH (=~/.config/mpcplus/config AND ~/.mpcplus/config)
