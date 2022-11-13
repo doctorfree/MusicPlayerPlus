@@ -2379,4 +2379,15 @@ you don't need to worry about the extensive list of dependencies listed above.
 
 Feel free to email me at github@ronrecord.com with questions or comments.
 
+## Connect
+
+[<img align="left" alt="ronrecord.com" width="22px" src="icons/globe.png" />][website]
+[<img align="left" alt="doctorfree | YouTube" width="22px" src="icons/youtube.png" />][youtube]
+[<img align="left" alt="ronrecord | Twitter" width="22px" src="icons/twitter.png" />][twitter]
+[<img align="left" alt="ronrecord | LinkedIn" width="22px" src="icons/linkedin.png" />][linkedin]
+[<img align="left" alt="doctorfree | Instagram" width="22px" src="icons/instagram.png" />][instagram]
+<a rel="me" href="https://fosstodon.org/@doctorfree"><img align="left" alt="doctorfree | Mastodon" width="22px" src="icons/mastodon.png" /></a>
+
+<br />
+
 ![Analytics](https://repobeats.axiom.co/api/embed/f64a367623243e389443cc3ec6507f1e845a5b1a.svg "Repobeats analytics image")
