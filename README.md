@@ -2391,3 +2391,9 @@ Feel free to email me at github@ronrecord.com with questions or comments.
 <br />
 
 ![Analytics](https://repobeats.axiom.co/api/embed/f64a367623243e389443cc3ec6507f1e845a5b1a.svg "Repobeats analytics image")
+
+[website]: https://ronrecord.com
+[twitter]: https://twitter.com/ronrecord
+[youtube]: https://youtube.com/c/doctorfree
+[instagram]: https://instagram.com/doctorfree
+[linkedin]: https://linkedin.com/in/ronrecord
