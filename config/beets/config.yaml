@@ -334,6 +334,7 @@ mpd:
     rating_mix: 0.75
 
 # Uncomment this and the discogs plugin entry to enable Discogs metadata source
+# Install the discogs-client with "python3 -m pip install python3-discogs-client"
 #
 #discogs:
 #   source_weight: 0.0
