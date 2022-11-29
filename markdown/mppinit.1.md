@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp | import | kitty | metadata | mopidy | mpd | navidrome | soundcloud | sync | yams]
+**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp | discogs | import | kitty | metadata | mopidy | mpd | navidrome | soundcloud | sync | yams]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -32,6 +32,12 @@ in a `Soundcloud` sub-folder.
 
 Invoked with the `import` argument, *mppinit import* imports the music
 library to the Beets media management system.
+
+Invoked with the `discogs` argument, *mppinit discogs* attempts to
+auto-generate an Obsidian vault from a Discogs user collection. Both
+`DISCOGS_USER` and `DISCOGS_TOKEN` must be configured in `$HOME/.config/mpprc`.
+The location of the generated Obsidian vault can be specified by setting
+`DISCOGS_DIR` in `mpprc`. Default location is `$HOME/Documents/Obsidian/Discogs/`.
 
 Invoked with the `kitty` argument, *mppinit kitty* installs the Kitty
 terminal emulator used as the default terminal in MusicPlayerPlus.
@@ -92,6 +98,9 @@ MusicPlayerPlus configuration across all configuration files.
 
 **-u**
 : displays usage message and exits
+
+**discogs**
+: auto-generates an Obsidian vault from a Discogs user collection
 
 **import**
 : performs a Beets music library import

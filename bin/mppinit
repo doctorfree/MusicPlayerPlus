@@ -71,7 +71,7 @@ exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r]"
-  printf " [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|"
+  printf " [-U] [-y] [-u] [bandcamp|discogs|import|kitty|metadata|mopidy|mpd|navidrome|"
   printf "soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
@@ -88,6 +88,8 @@ usage() {
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
+  printf "\n\t'discogs' auto-generates an Obsidian vault from your Discogs user collection"
+  printf "\n\t\t(DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'kitty' installs the Kitty terminal emulator"
   printf "\n\t'metadata' performs a library metadata update"
@@ -1206,13 +1208,27 @@ while getopts "abdel:oqrUyu" flag; do
 done
 shift $(( OPTIND - 1 ))
 
+argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
+
+[ "${argument}" == "discogs" ] && {
+    printf "\nAttempting to generate an Obsidian vault from your Discogs user collection\n"
+    if [ -x ${SCPTDIR}/discogs2markdown.sh ]
+    then
+      ${SCPTDIR}/discogs2markdown.sh
+    else
+      printf "\nDiscogs to Markdown script "
+      printf "${SCPTDIR}/discogs2markdown.sh"
+      printf "\nis not found or not executable. No markdown generated.\n"
+      exit 1
+    fi
+  exit 0
+}
+
 [ "${essentia}" ] && [ "${acbrainz}" ] && {
   printf "\nOnly one of '-a' and '-e' can be specified."
   printf "\nExiting."
   usage
 }
-
-argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
 
 PYTHON=""
 POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )

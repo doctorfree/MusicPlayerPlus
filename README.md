@@ -13,6 +13,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Album cover art download
 - ***plus*** Bandcamp collections download
 - ***plus*** Soundcloud favorites download
+- ***plus*** Discogs user collection to markdown generator
 - ***plus*** Automated setup, import and organization, metadata, playlists, ...
 
 ## Table of contents
@@ -47,6 +48,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Installing Navidrome](#installing-navidrome)
         1. [Navidrome clients](#navidrome-clients)
     1. [Terminal Emulator Support](#terminal-emulator-support)
+    1. [Discogs User Collection](#discogs-user-collection)
 1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
     1. [Services](#services)
     1. [Which services should be installed and activated](#which-services-should-be-installed-and-activated)
@@ -605,6 +607,9 @@ The default installed `mpprc` contains:
 #
 MUSIC_DIR="~/Music"
 
+# MPD client
+MPD_CLIENT="mpcplus"
+
 ## General settings
 #
 # To enable any of these, set to 1
@@ -615,7 +620,7 @@ AUDIO=1
 # Display cover art in tmux sessions
 COVER_ART=1
 # Display mpcplus and mppcava in a tmux session
-USE_TMUX=
+USE_TMUX=1
 
 ## Terminal emulator / display mode
 #
@@ -624,11 +629,11 @@ USE_TMUX=
 #    'console' will force a tmux session
 #    'current' will force a tmux session in the current terminal window
 #    'gnome' will use the gnome-terminal emulator if installed
-#    'kitty' will use the kitty terminal emulator if installed
+#    'kitty' will use the Kitty terminal emulator if installed
 #    'retro' will use cool-retro-term if installed
 #    'simple' will use the ST terminal emulator if installed
 #    'tilix' will use the Tilix terminal emulator if installed
-#  Default fallback if none specified or not available is kitty
+#  Default fallback if none specified or not available is Kitty
 #
 #  Uncomment the preferred mode
 #MPP_MODE=console
@@ -644,6 +649,17 @@ MPP_MODE=kitty
 # The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'
 # If you do not have a Bandcamp account, leave blank
 BANDCAMP_USER=
+
+# The Discogs username can be found by visiting discogs.com. Login, use the
+# dropdown of your user icon in the upper right corner, click on 'Profile'.
+# Your Discogs username is the last component of the profile URL.
+DISCOGS_USER=
+# The Discogs API token can be found by visiting
+# https://www.discogs.com/settings/developers
+DISCOGS_TOKEN=
+# Location of the generated custom Discogs Obsidian vault
+# Can be anywhere you have write permission
+DISCOGS_DIR="${HOME}/Documents/Obsidian/Discogs"
 
 # Your Last.fm username, api key, and api secret
 # If you do not have a Last.fm account, leave blank
@@ -1307,6 +1323,26 @@ MusicPlayerPlus control window and the spectrum visualizer.
 
 To modify these terminal emulator profiles, launch the desired terminal
 emulator and modify the desired profile in the Preferences dialog.
+
+### Discogs User Collection
+
+MusicPlayerPlus includes support for the auto-generation of an
+[Obsidian](https://obsidian.md) vault from a [Discogs](https://discogs.com)
+user collection. If you have curated a Discogs user collection then the
+extremely rich data available from Discogs can be used to generate markdown
+format files reflecting the artists, albums, tracks, and items in your collection.
+The generated markdown reflecting your Discogs collection includes a preconfigured
+Obsidian vault along with plugins, settings, and theme. The Obsidian Dataview
+plugin can be used to query the Obsidian vault in a variety of ways similar to
+a database of your collection. Several example Dataview queries are included.
+
+In order to use this facility, both `DISCOGS_USER` and `DISCOGS_TOKEN` must be
+configured in `$HOME/.config/mpprc`. If these are set and there is an existing
+Discogs collection for the configured Discogs user, then the resulting Obsidian
+vault from the command `mppinit discogs` will be located in the folder specified
+by `DISCOGS_DIR` in `mpprc`.
+
+See the [Obsidian Custom Discogs README](https://github.com/doctorfree/Obsidian-Custom-Discogs#readme) for details on setup and maintenance of a Discogs Obsidian vault.
 
 ## MusicPlayerPlus Services and Clients
 
