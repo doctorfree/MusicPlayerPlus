@@ -51,6 +51,17 @@ MPP_MODE=kitty
 # If you do not have a Bandcamp account, leave blank
 BANDCAMP_USER=
 
+# The Discogs username can be found by visiting discogs.com. Login, use the
+# dropdown of your user icon in the upper right corner, click on 'Profile'.
+# Your Discogs username is the last component of the profile URL.
+DISCOGS_USER=
+# The Discogs API token can be found by visiting
+# https://www.discogs.com/settings/developers
+DISCOGS_TOKEN=
+# Location of the generated custom Discogs Obsidian vault
+# Can be anywhere you have write permission
+DISCOGS_DIR="${HOME}/Documents/Obsidian/Discogs"
+
 # Your Last.fm username, api key, and api secret
 # If you do not have a Last.fm account, leave blank
 LASTFM_USER=
