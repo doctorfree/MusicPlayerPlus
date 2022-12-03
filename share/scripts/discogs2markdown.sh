@@ -48,6 +48,7 @@ done
 shift $(( OPTIND - 1 ))
 
 [ "${DISCOGS_DIR}" ] || DISCOGS_DIR="${HOME}/Documents/Obsidian/Discogs"
+DISCOGS_DIR="${DISCOGS_DIR/#\~/$HOME}"
 
 if [ -f "${DISCOGS_DIR}/Dataview_Queries.md" ]
 then

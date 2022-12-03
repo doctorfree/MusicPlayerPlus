@@ -505,6 +505,17 @@ init_mpp_conf() {
     echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
     echo "BANDCAMP_USER=" >> ${MPPCONF}
     echo "" >> ${MPPCONF}
+    echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >> ${MPPCONF}
+    echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >> ${MPPCONF}
+    echo "# Your Discogs username is the last component of the profile URL." >> ${MPPCONF}
+    echo "DISCOGS_USER=" >> ${MPPCONF}
+    echo "# The Discogs API token can be found by visiting" >> ${MPPCONF}
+    echo "# https://www.discogs.com/settings/developers" >> ${MPPCONF}
+    echo "DISCOGS_TOKEN=" >> ${MPPCONF}
+    echo "# Location of the generated custom Discogs Obsidian vault" >> ${MPPCONF}
+    echo "# Can be anywhere you have write permission" >> ${MPPCONF}
+    echo "DISCOGS_DIR=\"~/Documents/Obsidian/Discogs\"" >> ${MPPCONF}
+    echo "" >> ${MPPCONF}
     echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
     echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
     echo "LASTFM_USER=" >> ${MPPCONF}

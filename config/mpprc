@@ -60,7 +60,7 @@ DISCOGS_USER=
 DISCOGS_TOKEN=
 # Location of the generated custom Discogs Obsidian vault
 # Can be anywhere you have write permission
-DISCOGS_DIR="${HOME}/Documents/Obsidian/Discogs"
+DISCOGS_DIR="~/Documents/Obsidian/Discogs"
 
 # Your Last.fm username, api key, and api secret
 # If you do not have a Last.fm account, leave blank

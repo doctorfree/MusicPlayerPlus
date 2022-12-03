@@ -51,7 +51,7 @@ MPPCONF="${HOME}/.config/mpprc"
 
 usage() {
   printf "\nUsage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]"
-  printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|soundcloud] [-d music_directory] [-h]"
+  printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]"
   printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
   printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-uU]"
@@ -92,6 +92,8 @@ usage() {
   printf "\n\t-D 'art' indicates download album cover art and exit"
   printf "\n\t-D 'bandcamp' indicates download Bandcamp songs and exit"
   printf "\n\t-D 'soundcloud' indicates download Soundcloud songs and exit"
+  printf "\n\t-D 'discogs' generate markdown from Discogs collection"
+  printf "\n\t-D 'local' generate markdown from local music library"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art. Without this option -D will use"
   printf "\n\t\tthe 'MUSIC_DIR' setting in '~/.config/mpprc'"
@@ -347,6 +349,18 @@ make_it_so() {
 
   [ "${DOWNLOAD_SOUNDCLOUD}" ] && {
     mppinit soundcloud
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${DOWNLOAD_DISCOGS}" ] && {
+    mppinit discogs
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${DOWNLOAD_LOCAL}" ] && {
+    mppinit discogs Local
     [ "${DO_NOT_EXIT}" ] || exit 0
     return
   }
@@ -1616,6 +1630,10 @@ show_downloads_menu() {
     options+=("List YouTube Playlists")
     options+=("List YouTube Uploads")
     options+=("List YouTube URL")
+    [ "${DISCOGS_USER}" ] && [ "${DISCOGS_TOKEN}" ] && {
+      options+=("Markdown from Discogs")
+      options+=("Markdown from Local Library")
+    }
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -1663,6 +1681,14 @@ show_downloads_menu() {
               ;;
           "List YouTube URL"*,*|*,"List YouTube URL"*)
               LIST_YT_URL=1
+              break
+              ;;
+          "Markdown from Discogs"*,*|*,"Markdown from Discogs"*)
+              DOWNLOAD_DISCOGS=1
+              break
+              ;;
+          "Markdown from Local"*,*|*,"Markdown from Local"*)
+              DOWNLOAD_LOCAL=1
               break
               ;;
           "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -1791,7 +1817,7 @@ show_logs_menu() {
     [ "${y_active}" == "active" ] || [ "${y_enabled}" == "enabled" ] && {
       options+=("View Last.FM Scrobbler Log")
     }
-    options+=("Manage Music Services")
+    options+=("Manage Services")
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
     do
@@ -1845,7 +1871,7 @@ show_logs_menu() {
               journalctl --user-unit=yams.service --since yesterday
               break
               ;;
-          "Manage Music Services"*,*|*,"Manage Music Services"*)
+          "Manage Services"*,*|*,"Manage Services"*)
               clear
               printf "\n"
               show_services_menu
@@ -2696,8 +2722,8 @@ show_main_menu() {
     options+=("Fetch Lyrics" "Blissify Audio Info Extraction")
     options+=("Essentia Audio Info Extraction")
     options+=("AcousticBrainz Info Retrieval")
-    options+=("Manage Music Downloads")
-    options+=("Manage Music Services")
+    options+=("Manage Downloads")
+    options+=("Manage Services")
     options+=("View Music Service Logs")
     [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
     options+=("Select Music Directory")
@@ -2760,14 +2786,14 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Manage Music Downloads"*,*|*,"Manage Music Downloads"*)
+          "Manage Downloads"*,*|*,"Manage Downloads"*)
               clear
               printf "\n"
               show_downloads_menu
               skip_it_so=1
               break
               ;;
-          "Manage Music Services"*,*|*,"Manage Music Services"*)
+          "Manage Services"*,*|*,"Manage Services"*)
               clear
               printf "\n"
               show_services_menu
@@ -2965,6 +2991,8 @@ init_vars() {
   DOWNLOAD_ART=
   DOWNLOAD_BANDCAMP=
   DOWNLOAD_SOUNDCLOUD=
+  DOWNLOAD_DISCOGS=
+  DOWNLOAD_LOCAL=
   DOWNLOAD_YOUTUBE=
   LIST_YT_PLAYLISTS=
   LIST_YT_UPLOADS=
@@ -3111,7 +3139,7 @@ BANDCAMP_USER=
   echo "DISCOGS_TOKEN=${DISCOGS_TOKEN}" >> ${MPPCONF}
   echo "# Location of the generated custom Discogs Obsidian vault" >> ${MPPCONF}
   echo "# Can be anywhere you have write permission" >> ${MPPCONF}
-  echo "DISCOGS_DIR=\"${HOME}/Documents/Obsidian/Discogs\"" >> ${MPPCONF}
+  echo "DISCOGS_DIR=\"${DISCOGS_DIR}\"" >> ${MPPCONF}
   echo "" >> ${MPPCONF}
   echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
   echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
@@ -3537,6 +3565,12 @@ do
           ;;
         Soundcloud|soundcloud)
           DOWNLOAD_SOUNDCLOUD=1
+          ;;
+        Discogs|discogs)
+          DOWNLOAD_DISCOGS=1
+          ;;
+        Local|local)
+          DOWNLOAD_LOCAL=1
           ;;
         *)
           DOWNLOAD_YOUTUBE=1

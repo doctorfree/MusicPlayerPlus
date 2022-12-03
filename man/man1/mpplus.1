@@ -22,11 +22,11 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .SS SYNOPSIS
 .PP
 \f[B]mpplus\f[R] [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-D
-art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G]
-[-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M
-alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script]
-[-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v viz_comm]
-[-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-E] [-e]
+[-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num]
+[-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P
+script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v
+viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SS DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -58,6 +58,12 @@ for all albums in the music library
 .IP \[bu] 2
 When invoked as \f[V]mpplus -D bandcamp\f[R] it will downlad songs from
 Bandcamp
+.IP \[bu] 2
+When invoked as \f[V]mpplus -D discogs\f[R] it will generate markdown
+from a Discogs collection
+.IP \[bu] 2
+When invoked as \f[V]mpplus -D local\f[R] it will generate markdown from
+a local music library
 .IP \[bu] 2
 When invoked as \f[V]mpplus -D soundcloud\f[R] it will downlad songs
 from Soundcloud
@@ -171,6 +177,12 @@ Indicates download album cover art and exit
 .TP
 \f[B]-D bandcamp\f[R]
 Indicates download songs from Bandcamp and exit
+.TP
+\f[B]-D discogs\f[R]
+generate markdown from a Discogs collection
+.TP
+\f[B]-D local\f[R]
+generate markdown from a local music library
 .TP
 \f[B]-D soundcloud\f[R]
 Indicates download songs from Soundcloud and exit
@@ -311,6 +323,9 @@ already have cover art
 .TP
 \f[B]mpplus -D soundcloud\f[R]
 Download favorited songs from Soundcloud
+.TP
+\f[B]mpplus -D local\f[R]
+Generate markdown from the local music library
 .TP
 \f[B]mpplus -I\f[R]
 Import the music library into the Beets library management system

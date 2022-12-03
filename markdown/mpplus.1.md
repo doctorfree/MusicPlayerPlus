@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-D art|bandcamp|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-E] [-e] [-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -22,6 +22,8 @@ The *mpplus* command can be used in conjunction with the Beets music library man
 
 - When invoked as `mpplus -D art` it will downlad album cover art for all albums in the music library
 - When invoked as `mpplus -D bandcamp` it will downlad songs from Bandcamp
+- When invoked as `mpplus -D discogs` it will generate markdown from a Discogs collection
+- When invoked as `mpplus -D local` it will generate markdown from a local music library
 - When invoked as `mpplus -D soundcloud` it will downlad songs from Soundcloud
 - When invoked as `mpplus -F` it will convert WAV format files in the music library to MP3 format files
 - When invoked as `mpplus -G` it will convert M4A format files in the music library to MP3 format files
@@ -120,6 +122,12 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-D bandcamp**
 : Indicates download songs from Bandcamp and exit
+
+**-D discogs**
+: generate markdown from a Discogs collection
+
+**-D local**
+: generate markdown from a local music library
 
 **-D soundcloud**
 : Indicates download songs from Soundcloud and exit
@@ -220,6 +228,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **mpplus -D soundcloud**
 : Download favorited songs from Soundcloud
+
+**mpplus -D local**
+: Generate markdown from the local music library
 
 **mpplus -I**
 : Import the music library into the Beets library management system

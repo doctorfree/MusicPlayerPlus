@@ -37,7 +37,7 @@ Invoked with the `discogs` argument, *mppinit discogs* attempts to
 generate an Obsidian vault from a Discogs user collection. Both
 `DISCOGS_USER` and `DISCOGS_TOKEN` must be configured in `$HOME/.config/mpprc`.
 The location of the generated Obsidian vault can be specified by setting
-`DISCOGS_DIR` in `mpprc`. Default location is `$HOME/Documents/Obsidian/Discogs/`.
+`DISCOGS_DIR` in `mpprc`. Default location is `~/Documents/Obsidian/Discogs/`.
 
 Invoked with the `discogs local` argument, *mppinit discogs local* attempts to
 generate an Obsidian vault from the local music library. Similar to above,
