@@ -276,6 +276,44 @@ create_profiles() {
   }
 }
 
+install_ueberzug() {
+  [ "${have_git}" ] && {
+    mod="ueberzug"
+    repo="ueberzug-mpplus"
+    [ -d tmp$$ ] || mkdir -p tmp$$
+    cd tmp$$
+    if [ -d ${repo} ]
+    then
+      cd ${repo}
+      git pull > /dev/null 2>&1
+    else
+      git clone https://github.com/doctorfree/${repo} > /dev/null 2>&1
+      cd ${repo}
+    fi
+    if ${PIP} list 2> /dev/null | grep ${mod} > /dev/null
+    then
+      if [ "${upgrade}" ]
+      then
+        [ "${quiet}" ] || {
+          printf " upgrade ${mod},"
+        }
+        ${PYTHON} -m pip install --user --upgrade -e . > /dev/null 2>&1
+      else
+        [ "${quiet}" ] || {
+          printf " ${mod} installed,"
+        }
+      fi
+    else
+      [ "${quiet}" ] || {
+        printf " install ${mod},"
+      }
+      ${PYTHON} -m pip install --user -e . > /dev/null 2>&1
+    fi
+    cd ../..
+    rm -rf tmp$$
+  }
+}
+
 pip_install() {
   mod="$1"
   if ${PIP} list 2> /dev/null | grep ${mod} > /dev/null
@@ -1037,6 +1075,7 @@ quiet=
 beetsdev=
 
 have_bliss=`type -p blissify`
+have_git=`type -p git`
 have_gnome=`type -p gnome-terminal`
 have_kitty=`type -p kitty`
 have_tilix=`type -p tilix`
@@ -2822,7 +2861,6 @@ done
   fi
 }
 
-have_git=`type -p git`
 TPM="${HOME}/.tmux/plugins/tpm"
 [ -d ${TPM} ] || {
   [ "${have_git}" ] && {
@@ -2932,11 +2970,12 @@ then
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
              pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
-             python-mpd2 requests sacad tmuxp ueberzug ${YT_DLP} \
+             python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
              calliope-music bandcamp-downloader scdl flask-cors iniparse
   do
     pip_install "${pkg}"
   done
+  install_ueberzug
   [ "${quiet}" ] || printf " done!\n"
 
   [ "${quiet}" ] || {
