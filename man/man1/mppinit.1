@@ -22,8 +22,8 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .SS SYNOPSIS
 .PP
 \f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U]
-[-y] [-u] [bandcamp | discogs | import | kitty | metadata | mopidy | mpd
-| navidrome | soundcloud | sync | yams]
+[-y] [-u] [bandcamp|discogs|discogs
+local|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -53,13 +53,18 @@ Invoked with the \f[V]import\f[R] argument, \f[I]mppinit import\f[R]
 imports the music library to the Beets media management system.
 .PP
 Invoked with the \f[V]discogs\f[R] argument, \f[I]mppinit discogs\f[R]
-attempts to auto-generate an Obsidian vault from a Discogs user
-collection.
+attempts to generate an Obsidian vault from a Discogs user collection.
 Both \f[V]DISCOGS_USER\f[R] and \f[V]DISCOGS_TOKEN\f[R] must be
 configured in \f[V]$HOME/.config/mpprc\f[R].
 The location of the generated Obsidian vault can be specified by setting
 \f[V]DISCOGS_DIR\f[R] in \f[V]mpprc\f[R].
 Default location is \f[V]$HOME/Documents/Obsidian/Discogs/\f[R].
+.PP
+Invoked with the \f[V]discogs local\f[R] argument, \f[I]mppinit discogs
+local\f[R] attempts to generate an Obsidian vault from the local music
+library.
+Similar to above, \f[V]DISCOGS_USER\f[R] and \f[V]DISCOGS_TOKEN\f[R]
+must be configured in \f[V]$HOME/.config/mpprc\f[R].
 .PP
 Invoked with the \f[V]kitty\f[R] argument, \f[I]mppinit kitty\f[R]
 installs the Kitty terminal emulator used as the default terminal in
@@ -133,7 +138,10 @@ indicates answer \[aq]yes\[aq] to all and proceed
 displays usage message and exits
 .TP
 \f[B]discogs\f[R]
-auto-generates an Obsidian vault from a Discogs user collection
+generates an Obsidian vault from a Discogs user collection
+.TP
+\f[B]discogs local\f[R]
+generates an Obsidian vault from your local music library
 .TP
 \f[B]import\f[R]
 performs a Beets music library import

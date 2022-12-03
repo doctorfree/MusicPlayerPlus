@@ -1327,20 +1327,19 @@ emulator and modify the desired profile in the Preferences dialog.
 ### Discogs User Collection
 
 MusicPlayerPlus includes support for the auto-generation of an
-[Obsidian](https://obsidian.md) vault from a [Discogs](https://discogs.com)
-user collection. If you have curated a Discogs user collection then the
-extremely rich data available from Discogs can be used to generate markdown
-format files reflecting the artists, albums, tracks, and items in your collection.
-The generated markdown reflecting your Discogs collection includes a preconfigured
+[Obsidian](https://obsidian.md) vault from either a [Discogs](https://discogs.com)
+user collection or a local music library. The extremely rich data available from
+Discogs can be used to generate markdown format files reflecting the artists,
+albums, tracks, and items in your collection or library. The generated markdown
+reflecting your Discogs collection or music library includes a preconfigured
 Obsidian vault along with plugins, settings, and theme. The Obsidian Dataview
 plugin can be used to query the Obsidian vault in a variety of ways similar to
-a database of your collection. Several example Dataview queries are included.
+a database of your library. Several example Dataview queries are included.
 
 In order to use this facility, both `DISCOGS_USER` and `DISCOGS_TOKEN` must be
-configured in `$HOME/.config/mpprc`. If these are set and there is an existing
-Discogs collection for the configured Discogs user, then the resulting Obsidian
-vault from the command `mppinit discogs` will be located in the folder specified
-by `DISCOGS_DIR` in `mpprc`.
+configured in `$HOME/.config/mpprc`. If these are set then the resulting Obsidian
+vault from the either the command `mppinit discogs` or `mppinit discogs local`
+will be located in the folder specified by `DISCOGS_DIR` in `mpprc`.
 
 See the [Obsidian Custom Discogs README](https://github.com/doctorfree/Obsidian-Custom-Discogs#readme) for details on setup and maintenance of a Discogs Obsidian vault.
 
@@ -1563,7 +1562,7 @@ provide a brief summary of the command line options.
 The `mppinit` performs one-time initializations:
 
 ```text
-Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
 Where:
 	'-a' use AcousticBrainz for acoustic audio analysis (deprecated)
 	'-b' use Blissify for MPD acoustic audio analysis
@@ -1580,8 +1579,11 @@ Where:
 	'-u' displays this usage message and exits
 
 	'bandcamp' downloads all albums in your Bandcamp collections
+	'discogs' generates an Obsidian vault from your Discogs user collection
+	'discogs local' generates an Obsidian vault from your local music library
+		(DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)
 	'import' performs a Beets music library import
-	'kitty' installs the kitty terminal emulator
+	'kitty' installs the Kitty terminal emulator
 	'metadata' performs a library metadata update
 	'mopidy' installs and configures Mopidy extensible music server
 		Note: activating Mopidy deactivates MPD
@@ -1593,10 +1595,12 @@ Where:
 	'sync' synchronizes MusicPlayerPlus configuration across configs
 	'yams' activates the YAMS Last.fm scrobbler service
 
+
 'mppinit' must be run as the MusicPlayerPlus user, not root.
 'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',
 	'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',
 	'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'
+
 ```
 
 The `mpplus` command serves as a general user interface for all of the

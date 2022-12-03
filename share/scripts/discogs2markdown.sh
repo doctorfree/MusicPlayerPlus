@@ -7,9 +7,10 @@
 [ -f "${HOME}/.config/mpprc" ] && . "${HOME}/.config/mpprc"
 
 usage() {
-  printf "\nUsage: discogs2markdown [-R] [-U] [-t token] [-u user] [-h]"
+  printf "\nUsage: discogs2markdown [-l] [-r] [-U] [-t token] [-u user] [-h]"
   printf "\nWhere:"
-  printf "\n\t-R indicates remove intermediate JSON created during previous run"
+  printf "\n\t-l indicates use local music library rather than Discogs collection"
+  printf "\n\t-r indicates remove intermediate JSON created during previous run"
   printf "\n\t-U indicates perform an update of the Discogs collection"
   printf "\n\t-t 'token' specifies the Discogs API token"
   printf "\n\t-u 'user' specifies the Discogs username"
@@ -21,10 +22,14 @@ cleanarg=
 updarg=
 userarg=
 tokenarg=
-while getopts "RUt:u:h" flag; do
+uselocal=
+while getopts "lrUt:u:h" flag; do
     case $flag in
-        R)
-            cleanarg="-R"
+        l)
+            uselocal=1
+            ;;
+        r)
+            cleanarg="-r"
             ;;
         U)
             updarg="-U"
@@ -67,7 +72,16 @@ else
 fi
 if [ -x Setup ]
 then
-  ./Setup "${cleanarg}" "${updarg}" "${userarg}" "${tokenarg}"
+  if [ "${uselocal}" ]
+  then
+    ./Setup "${cleanarg}" "${updarg}" "${userarg}" "${tokenarg}" -L "${MUSIC_DIR}"
+  else
+    ./Setup "${cleanarg}" "${updarg}" "${userarg}" "${tokenarg}"
+  fi
+  echo ""
+  echo "See README.md and Process.md in ${DISCOGS_DIR}"
+  echo "for info on the additional features available there."
+  echo ""
 else
   echo "ERROR: Missing 'Setup' script. Check ${DISCOGS_DIR}"
   exit 1

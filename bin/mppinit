@@ -71,8 +71,8 @@ exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r]"
-  printf " [-U] [-y] [-u] [bandcamp|discogs|import|kitty|metadata|mopidy|mpd|navidrome|"
-  printf "soundcloud|sync|yams]"
+  printf " [-U] [-y] [-u] [bandcamp|discogs|discogs local|import|kitty|metadata|"
+  printf "mopidy|mpd|navidrome|soundcloud|sync|yams]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -88,7 +88,8 @@ usage() {
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
-  printf "\n\t'discogs' auto-generates an Obsidian vault from your Discogs user collection"
+  printf "\n\t'discogs' generates an Obsidian vault from your Discogs user collection"
+  printf "\n\t'discogs local' generates an Obsidian vault from your local music library"
   printf "\n\t\t(DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)"
   printf "\n\t'import' performs a Beets music library import"
   printf "\n\t'kitty' installs the Kitty terminal emulator"
@@ -1211,10 +1212,24 @@ shift $(( OPTIND - 1 ))
 argument=`echo "$1" | tr '[:upper:]' '[:lower:]'`
 
 [ "${argument}" == "discogs" ] && {
-    printf "\nAttempting to generate an Obsidian vault from your Discogs user collection\n"
+    [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+    [ "${DISCOGS_USER}" ] && [ "${DISCOGS_TOKEN}" ] || {
+      echo "DISCOGS_USER and DISCOGS_TOKEN must be set in ${MPPCONF}"
+      echo "Exiting"
+      exit 1
+    }
+    use_local=`echo "$2" | tr '[:upper:]' '[:lower:]'`
+    localarg=
+    if [ "${use_local}" == "local" ]
+    then
+      localarg="-l"
+      printf "\nGenerating an Obsidian vault from your local music library\n"
+    else
+      printf "\nGenerating an Obsidian vault from your Discogs user collection\n"
+    fi
     if [ -x ${SCPTDIR}/discogs2markdown.sh ]
     then
-      ${SCPTDIR}/discogs2markdown.sh
+      ${SCPTDIR}/discogs2markdown.sh ${localarg}
     else
       printf "\nDiscogs to Markdown script "
       printf "${SCPTDIR}/discogs2markdown.sh"
