@@ -75,9 +75,10 @@ if [ -x Setup ]
 then
   if [ "${uselocal}" ]
   then
-    ./Setup "${cleanarg}" "${updarg}" "${userarg}" "${tokenarg}" -L "${MUSIC_DIR}"
+    MUSIC_DIR="${MUSIC_DIR/#\~/$HOME}"
+    ./Setup ${cleanarg} ${updarg} ${userarg} ${tokenarg} -L "${MUSIC_DIR}"
   else
-    ./Setup "${cleanarg}" "${updarg}" "${userarg}" "${tokenarg}"
+    ./Setup ${cleanarg} ${updarg} ${userarg} ${tokenarg}
   fi
   echo ""
   echo "See README.md and Process.md in ${DISCOGS_DIR}"
