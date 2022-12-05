@@ -2,8 +2,44 @@
 
 All notable changes to this project will be documented in this file.
 
-## MusicPlayerPlus-3.0.0r1 (2022-10-01)
+## MusicPlayerPlus-3.0.0r1 (2022-12-07)
 * Modular installation and configuration of supporting components
+* Add support for adding markdown releases to a Discogs collection folder
+* Install ueberzug from forked repo as it was deleted from PyPi
+* Integrate Discogs workflow into mppinit and mpplus
+* Support generation of an Obsidian vault from a local music library
+* Add support for auto-generation of Obsidian vault from Discogs collection
+* Modify Beets `paths` configuration to support Discogs release matching
+* Add `DISCOGS_USER`, `DISCOGS_TOKEN`, `DISCOGS_DIR` to `mpprc` configuration
+* Add Jekyll theme for Github Pages
+* Update tmux configuration
+* Check if `MPD_CLIENT` is executable in `PATH`
+* Add `MPD_CLIENT` to `mpprc` configuration
+* Use `MPD_CLIENT` in mpplus, default is `mpcplus`
+* Install kitty terminfo entry in mppinit
+* Add PipeWire service management
+* Add PipeWire user configuration files
+* Add url handling section to Kitty config, default to PulseAudio output in mpd.conf
+* Improved tab bar titles, add section on URLs
+* Use transparency only when needed, modify -A argument to take on|off like -T
+* Remove blissify and bliss-analyze from build and packaging - now a separate package
+* Disable album cover art if not using mpcplus or ncmpcpp
+* Add client option to mpcplus-tmux and mpcplus-ueberzug - any MPD client can be used
+* Always use tmux in cool-retro-term, do not quote command in cool-retro-term
+* Improve Kitty tab bar, use 'Home' for tab title when in user home directory
+* Move svm_models to mpplus-essentia package
+* Add clock to Kitty tab bar
+* Improve Kitty tab bar and theme
+* Add kitty/tab.conf, modify Kitty startup session
+* Use an external Essentia package install in mppinit
+* Add curl to dependencies, check for required utilities in mppinit
+* Add pkg/dist/get_latest package download script
+* Improve mppinit package download/install
+* Convenience scripts to retrieve release artifacts
+* Add clone, build, and config for mmtc MPD client
+* Add commands to add to MPD queue and select for queue
+* Add scripts to clone and build mpq, pms, and songmem
+* Add clone, build, and config for nncmpp
 
 ## MusicPlayerPlus-2.0.1r3 (2022-09-20)
 * Add CentOS Linux build and packaging support

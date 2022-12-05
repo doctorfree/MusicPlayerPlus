@@ -2,6 +2,9 @@
 
 This major new release of MusicPlayerPlus adds support for many new features and components including:
 
+* Auto-generation of Obsidian markdown vault from Discogs collection
+* Auto-generation of Obsidian markdown vault from local music library
+* Auto-generation of Discogs collection from Obsidian markdown vaults
 * Modular installation and configuration of supporting components
 * Integration of the [Beets media library management system](https://beets.io/)
 * Support for the [Mopidy Music Server](https://mopidy.com/) and extensions
@@ -143,49 +146,6 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 ## Changelog
 
-Changes in version 3.0.0 release 1 include:
-
-* Modular installation and configuration of supporting components
-* Arch Linux build and packaging support
-* CentOS Linux build and packaging support
-* Integration of the Beets media library management system
-* Add support for Mopidy and Mopidy administration
-* Add support for Navidrome and Navidrome administration
-* Add new config file `~/.config/mpprc` for MusicPlayerPlus preferences
-* Fixes for EWMH non-compliant window managers (e.g. DWM)
-* Add support for Kitty as default terminal emualator
-    * Custom Kitty configuration, themes, and sessions
-* Add Beets web plugin service
-* Automated Beets xtractor plugin installation and configuration
-    * Beets xtractor plugin performs acoustic analysis and metadata updates
-    * Gaia and Essentia for audio analysis and audio-based information retrieval
-    * Pre-compiled `streaming_extractor_music` extractor binary with Gaia
-* Support for automated WAV to MP3 conversion with `mpplus -F`
-* Support for automated lyrics download with `mpplus -L`
-* Support for YAMS Last.fm scrobbler activation with `mpplus -Y`
-* Help menu to `mpplus`
-* Man pages for `scdl` and `bandcamp-dl`
-* Script to download Soundcloud favorites
-* Script to download Bandcamp collections
-* Options to use AcousticBrainz rather than Essentia for audio information
-* Custom targets to xtractor config
-* Bandcamp and Soundcloud downloads to mppinit
-* Import and metadata retrieval to `mppinit`
-* Add blissify MPD library analysis and smart playlist generator
-* Add mpplus menu to manage downloads
-* Add new command 'listyt' to list YouTube video titles and urls
-* Add Sphinx docs for Read the Docs MusicPlayerPlus documentation
-* Add mppdl command and yt-dlp module for downloading audio from various sites
-* Add mppcover command to display album cover art of currently playing song
-* Only install Bliss utils if they compile successfully
-* Additional python module dependencies installed during mppinit
-* Messages in mppinit tailored to which acoustic analysis is performed
-* Remove dependencies on gnome-terminal and tilix
-* Add dependency on wmctrl and xrandr, remove dependency on dconf
-* Improved album cover art download and display
-* Preserve existing user configurations where appropriate
-* Add view service logs menu to mpplus
-* Add mpd-monitor and mpd-configure commands and man pages
-* Integrate RoonCommandLine, MirrorCommand, and Asciiville menus
+View the full changelog for this release at https://github.com/doctorfree/MusicPlayerPlus/blob/v3.0.0r1/CHANGELOG.md
 
 See [CHANGELOG.md](https://github.com/doctorfree/MusicPlayerPlus/blob/master/CHANGELOG.md) for a full list of changes in every MusicPlayerPlus release
