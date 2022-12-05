@@ -52,9 +52,9 @@ MPPCONF="${HOME}/.config/mpprc"
 usage() {
   printf "\nUsage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]"
   printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]"
-  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N]"
+  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z]"
   printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
-  printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-uU]"
+  printf "\n\t[-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]"
   printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A 'on|off' specifies whether to display album cover art"
@@ -71,7 +71,6 @@ usage() {
   printf "\n\t-k indicates use kitty terminal emulator"
   printf "\n\t-r indicates use retro terminal emulator"
   printf "\n\t-t indicates use tilix terminal emulator"
-  printf "\n\t-U indicates use tmuxp to create tmux sessions"
   printf "\n\t-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava"
   printf "\nASCIImatics animation options:"
   printf "\n\t-a indicates play audio during ASCIImatics display"
@@ -94,6 +93,8 @@ usage() {
   printf "\n\t-D 'soundcloud' indicates download Soundcloud songs and exit"
   printf "\n\t-D 'discogs' generate markdown from Discogs collection"
   printf "\n\t-D 'local' generate markdown from local music library"
+  printf "\n\t-U 'vault' indicates upload releases in 'vault' to Discogs collection"
+  printf "\n\t-Z performs a dry run of a Discogs collection upload"
   printf "\n\t-d 'music_directory' specifies the music directory to use for"
   printf "\n\t\tdownloaded album cover art. Without this option -D will use"
   printf "\n\t\tthe 'MUSIC_DIR' setting in '~/.config/mpprc'"
@@ -362,6 +363,14 @@ make_it_so() {
   [ "${DOWNLOAD_LOCAL}" ] && {
     mppinit discogs Local
     [ "${DO_NOT_EXIT}" ] || exit 0
+    return
+  }
+
+  [ "${vault}" ] && {
+    vault=`basename "${vault}"`
+    mppinit ${dryrun} discogs upload ${vault} ${vault}
+    [ "${DO_NOT_EXIT}" ] || exit 0
+    vault=
     return
   }
 
@@ -1623,6 +1632,13 @@ show_downloads_menu() {
     else
       show_menu_title "${FIG_TEXT}"
     fi
+    if [ "${dryrun}" ]
+    then
+      usedrun="Dry Run ON"
+    else
+      usedrun="Dry Run OFF"
+    fi
+    skip_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Download Album Cover Art" "Download Bandcamp Songs")
     options+=("Download Soundcloud Songs" "Download YouTube Songs")
@@ -1633,6 +1649,11 @@ show_downloads_menu() {
     [ "${DISCOGS_USER}" ] && [ "${DISCOGS_TOKEN}" ] && {
       options+=("Markdown from Discogs")
       options+=("Markdown from Local Library")
+      DISCOGS_DIR="${DISCOGS_DIR/#\~/$HOME}"
+      [ -d "${DISCOGS_DIR}" ] && {
+        options+=("Discogs Collection from Markdown")
+      }
+      options+=("Toggle Dry Run (${usedrun})")
     }
     options+=("Main menu" "Quit")
     select opt in "${options[@]}"
@@ -1689,6 +1710,20 @@ show_downloads_menu() {
               ;;
           "Markdown from Local"*,*|*,"Markdown from Local"*)
               DOWNLOAD_LOCAL=1
+              break
+              ;;
+          "Discogs Collection from Markdown",*|*,"Discogs Collection from Markdown")
+              select_vault_dir
+              break
+              ;;
+          "Toggle Dry Run"*,*|*,"Toggle Dry Run"*)
+              if [ "${dryrun}" ]
+              then
+                dryrun=
+              else
+                dryrun="-n"
+              fi
+              skip_it_so=1
               break
               ;;
           "Quit",*|*,"Quit"|"quit",*|*,"quit")
@@ -2630,6 +2665,50 @@ choose_folder() {
   rm  -f ${TMP}
 }
 
+choose_vault_folder() {
+  TMP="$(mktemp)"
+  ranger --choosedir="${TMP}" "${DISCOGS_DIR}" 1>&2
+  cat ${TMP}
+  rm  -f ${TMP}
+}
+
+select_vault_dir() {
+  if [ "${have_ranger}" ]
+  then
+    echo ""
+    echo "Choosing the vault folder in Ranger is done by visiting a directory"
+    echo ""
+    echo "Use the arrow keys to browse folders"
+    echo "Press 'Enter' to enter a directory"
+    echo ""
+    echo "While in the directory you wish to select, quit Ranger with 'q'"
+    echo ""
+    while true
+    do
+      read -p "Select vault folder now? (y/n) " answer
+      case ${answer} in
+        [Yy]* )
+          vault="$(choose_vault_folder)"
+          echo ""
+          echo "Selected vault folder = ${vault}"
+          echo ""
+          break
+          ;;
+        [Nn]* )
+          printf "\nSkipping vault folder selection.\n"
+          break
+          ;;
+        * ) echo "Please answer 'y' to select directory, or 'n' to skip."
+          ;;
+      esac
+    done
+  else
+    vault=$(dialog --stdout \
+                   --title "Please select a vault folder" \
+                   --fselect ${DISCOGS_DIR} 14 48)
+  fi
+}
+
 select_music_dir() {
   if [ "${have_ranger}" ]
   then
@@ -3475,7 +3554,9 @@ else
 fi
 
 USE_MPCPLUS=1
-while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:Uv:wWx:X:yYz:u" flag
+vault=
+dryrun=
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:U:v:wWx:X:yYZz:u" flag
 do
   case $flag in
     a)
@@ -3782,7 +3863,7 @@ do
       fi
       ;;
     U)
-      MPCPLUS_TMUX="${MPCPLUS_TMUX} -a"
+      vault="${OPTARG}"
       ;;
     v)
       viz_com=`echo "${OPTARG}" | awk ' { print $1 } '`
@@ -3812,6 +3893,9 @@ do
       ;;
     Y)
       ACT_YAMS=1
+      ;;
+    Z)
+      dryrun="-n"
       ;;
     z)
       FZMPOPT="${OPTARG}"

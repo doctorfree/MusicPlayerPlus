@@ -7,9 +7,10 @@
 [ -f "${HOME}/.config/mpprc" ] && . "${HOME}/.config/mpprc"
 
 usage() {
-  printf "\nUsage: discogs2markdown [-l] [-r] [-U] [-t token] [-u user] [-h]"
+  printf "\nUsage: discogs2markdown [-l] [-n] [-r] [-U] [-t token] [-u user] [-h]"
   printf "\nWhere:"
   printf "\n\t-l indicates use local music library rather than Discogs collection"
+  printf "\n\t-n indicates perform a dry run, don't do anything"
   printf "\n\t-r indicates remove intermediate JSON created during previous run"
   printf "\n\t-U indicates perform an update of the Discogs collection"
   printf "\n\t-t 'token' specifies the Discogs API token"
@@ -23,10 +24,23 @@ updarg=
 userarg=
 tokenarg=
 uselocal=
-while getopts "lrUt:u:h" flag; do
+vaultarg=
+folderarg=
+dryrun=
+upload=
+while getopts "alnrUf:t:u:v:h" flag; do
     case $flag in
+        a)
+            upload=1
+            ;;
+        f)
+            folderarg="-f ${OPTARG}"
+            ;;
         l)
             uselocal=1
+            ;;
+        n)
+            dryrun="-n"
             ;;
         r)
             cleanarg="-r"
@@ -39,6 +53,9 @@ while getopts "lrUt:u:h" flag; do
             ;;
         u)
             userarg="-u ${OPTARG}"
+            ;;
+        v)
+            vaultarg="-v ${OPTARG}"
             ;;
         h)
             usage
@@ -76,9 +93,14 @@ then
   if [ "${uselocal}" ]
   then
     MUSIC_DIR="${MUSIC_DIR/#\~/$HOME}"
-    ./Setup ${cleanarg} ${updarg} ${userarg} ${tokenarg} -L "${MUSIC_DIR}"
+    ./Setup ${cleanarg} ${dryrun} ${updarg} ${userarg} ${tokenarg} -L "${MUSIC_DIR}"
   else
-    ./Setup ${cleanarg} ${updarg} ${userarg} ${tokenarg}
+    if [ "${upload}" ]
+    then
+      ./Setup -A ${dryrun} ${folderarg} ${userarg} ${tokenarg} ${vaultarg}
+    else
+      ./Setup ${cleanarg} ${dryrun} ${updarg} ${userarg} ${tokenarg}
+    fi
   fi
   echo ""
   echo "See README.md and Process.md in ${DISCOGS_DIR}"
