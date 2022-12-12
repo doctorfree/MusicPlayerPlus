@@ -2,9 +2,10 @@
 
 All notable changes to this project will be documented in this file.
 
-## MusicPlayerPlus-3.0.0r1 (2022-12-07)
+## MusicPlayerPlus-3.0.0r1 (2022-12-14)
 * Modular installation and configuration of supporting components
 * Add support for adding markdown releases to a Discogs collection folder
+* Update mppcava with changes from cava version 0.8.3
 * Install ueberzug from forked repo as it was deleted from PyPi
 * Integrate Discogs workflow into mppinit and mpplus
 * Support generation of an Obsidian vault from a local music library
