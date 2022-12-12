@@ -31,6 +31,19 @@
 #define HAS_SNDIO false
 #endif
 
+#ifdef _MSC_VER
+#define HAS_WINSCAP true
+#define SDL true
+#define HAS_FIFO false
+#define HAS_SHMEM false
+#define PATH_MAX 260
+#else
+#define HAS_WINSCAP false
+#define HAS_FIFO true
+#define HAS_SHMEM true
+
+#endif
+
 // These are in order of least-favourable to most-favourable choices, in case
 // multiple are supported and configured.
 enum input_method {
@@ -40,7 +53,8 @@ enum input_method {
     INPUT_PULSE,
     INPUT_SNDIO,
     INPUT_SHMEM,
-    INPUT_MAX
+    INPUT_WINSCAP,
+    INPUT_MAX,
 };
 
 enum output_method {
@@ -48,6 +62,7 @@ enum output_method {
     OUTPUT_NONCURSES,
     OUTPUT_RAW,
     OUTPUT_SDL,
+    OUTPUT_SDL_GLSL,
     OUTPUT_NORITAKE,
     OUTPUT_NOT_SUPORTED
 };
@@ -57,9 +72,13 @@ enum data_format { FORMAT_ASCII = 0, FORMAT_BINARY = 1, FORMAT_NTK3000 = 2 };
 
 enum xaxis_scale { NONE, FREQUENCY, NOTE };
 
+enum orientation { ORIENT_BOTTOM, ORIENT_TOP, ORIENT_LEFT, ORIENT_RIGHT };
+
 struct config_params {
     char *color, *bcolor, *raw_target, *audio_source,
-        /**gradient_color_1, *gradient_color_2,*/ **gradient_colors, *data_format;
+        /**gradient_color_1, *gradient_color_2,*/ **gradient_colors, *data_format, *vertex_shader,
+        *fragment_shader;
+
     char bar_delim, frame_delim;
     double monstercat, integral, gravity, ignore, sens, noise_reduction;
     unsigned int lower_cut_off, upper_cut_off;
@@ -68,10 +87,12 @@ struct config_params {
     enum output_method output;
     enum xaxis_scale xaxis;
     enum mono_option mono_opt;
+    enum orientation orientation;
     int userEQ_keys, userEQ_enabled, col, bgcol, autobars, stereo, raw_format, ascii_range,
         bit_format, gradient, gradient_count, fixedbars, framerate, bar_width, bar_spacing,
         bar_height, autosens, overshoot, waves, fifoSample, fifoSampleBits, sleep_timer, sdl_width,
-        sdl_height, sdl_x, sdl_y, draw_and_quit, zero_test, non_zero_test, reverse, sync_updates;
+        sdl_height, sdl_x, sdl_y, draw_and_quit, zero_test, non_zero_test, reverse, sync_updates,
+        continuous_rendering;
 };
 
 struct error_s {

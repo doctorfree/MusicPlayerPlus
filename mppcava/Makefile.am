@@ -43,3 +43,6 @@ if SDL
     mppcava_SOURCES += output/sdl_cava.c
 endif
 
+if SDL_GLSL
+    mppcava_SOURCES += output/sdl_glsl.c
+endif

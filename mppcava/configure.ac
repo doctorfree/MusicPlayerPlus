@@ -203,9 +203,30 @@ AC_CHECK_LIB(SDL2,SDL_Init, have_sdl=yes, have_sdl=no)
     if [[ $have_sdl = "yes" ]] ; then
       LIBS="$LIBS -lSDL2"
       CPPFLAGS="$CPPFLAGS -DSDL"
+
+      dnl ######################
+      dnl checking for opengl (only if we know we have sdl)
+      dnl ######################
+      AC_ARG_ENABLE([output_sdl_glsl],
+        AS_HELP_STRING([--disable-output-sdl-glsl],
+          [do not include support for output with sdl_glsl])
+      )
+      AS_IF([test "x$enable_output_sdl_glsl" != "xno"], [
+      AX_CHECK_GL(have_opengl=yes, have_opengl=no)
+      if [[ $have_opengl = "yes" ]] ; then
+        LIBS="$LIBS $GL_LIBS"
+        CPPFLAGS="$CPPFLAGS -DSDL_GLSL $GL_CFLAGS"
+      fi
+
+      if [[ $have_opengl = "no" ]] ; then
+        AC_MSG_NOTICE([INFO: building without sdl_glsl support])
+      fi
+      ],
+        [have_opengl=no]
+      )
     fi
 
-    if [[ $have_fftw = "no" ]] ; then
+    if [[ $have_sdl = "no" ]] ; then
       AC_MSG_NOTICE([INFO: building without sdl support])
     fi
 ],
@@ -213,6 +234,7 @@ AC_CHECK_LIB(SDL2,SDL_Init, have_sdl=yes, have_sdl=no)
 )
 
 AM_CONDITIONAL([SDL], [test "x$have_sdl" = "xyes"])
+AM_CONDITIONAL([SDL_GLSL], [test "x$have_opengl" = "xyes"])
 
 dnl ######################
 dnl checking for ncursesw

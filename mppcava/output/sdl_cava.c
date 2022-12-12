@@ -1,6 +1,11 @@
-#include "output/sdl_cava.h"
-
+#ifdef _MSC_VER
+#define _CRT_SECURE_NO_WARNINGS 1
+#include <SDL.h>
+#else
 #include <SDL2/SDL.h>
+#endif
+
+#include "output/sdl_cava.h"
 
 #include <stdbool.h>
 #include <stdlib.h>
@@ -39,7 +44,7 @@ void init_sdl_window(int width, int height, int x, int y) {
         printf("SDL could not initialize! SDL_Error: %s\n", SDL_GetError());
     } else {
         gWindow =
-            SDL_CreateWindow("cava", x, y, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+            SDL_CreateWindow("mppcava", x, y, width, height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
         if (gWindow == NULL) {
             printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
         } else {
@@ -63,7 +68,7 @@ void init_sdl_surface(int *w, int *h, char *const fg_color_string, char *const b
 }
 
 int draw_sdl(int bars_count, int bar_width, int bar_spacing, int remainder, int height,
-             const int bars[], int previous_frame[], int frame_time) {
+             const int bars[], int previous_frame[], int frame_time, enum orientation orientation) {
 
     bool update = false;
     int rc = 0;
@@ -80,10 +85,33 @@ int draw_sdl(int bars_count, int bar_width, int bar_spacing, int remainder, int 
         SDL_SetRenderDrawColor(gRenderer, bg_color.R, bg_color.G, bg_color.B, 0xFF);
         SDL_RenderClear(gRenderer);
         for (int bar = 0; bar < bars_count; bar++) {
-            fillRect.x = bar * (bar_width + bar_spacing) + remainder;
-            fillRect.y = height - bars[bar];
-            fillRect.w = bar_width;
-            fillRect.h = bars[bar];
+            switch (orientation) {
+            case ORIENT_LEFT:
+                fillRect.x = 0;
+                fillRect.y = bar * (bar_width + bar_spacing) + remainder;
+                fillRect.w = bars[bar];
+                fillRect.h = bar_width;
+                break;
+            case ORIENT_RIGHT:
+                fillRect.x = height - bars[bar];
+                fillRect.y = bar * (bar_width + bar_spacing) + remainder;
+                fillRect.w = bars[bar];
+                fillRect.h = bar_width;
+                break;
+            case ORIENT_TOP:
+                fillRect.x = bar * (bar_width + bar_spacing) + remainder;
+                fillRect.y = 0;
+                fillRect.w = bar_width;
+                fillRect.h = bars[bar];
+                break;
+            default:
+                fillRect.x = bar * (bar_width + bar_spacing) + remainder;
+                fillRect.y = height - bars[bar];
+                fillRect.w = bar_width;
+                fillRect.h = bars[bar];
+                break;
+            }
+
             SDL_SetRenderDrawColor(gRenderer, fg_color.R, fg_color.G, fg_color.B, 0xFF);
             SDL_RenderFillRect(gRenderer, &fillRect);
         }

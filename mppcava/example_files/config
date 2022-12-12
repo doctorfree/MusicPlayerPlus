@@ -19,10 +19,10 @@
 # 200 means double height. Accepts only non-negative values.
 ; sensitivity = 100
 
-# The number of bars (0-200). 0 sets it to auto (fill up console).
+# The number of bars (0-512). 0 sets it to auto (fill up console).
 # Bars' width and space between bars in number of characters.
 ; bars = 0
-bar_width = 1
+; bar_width = 2
 ; bar_spacing = 1
 # bar_height is only used for output in "noritake" format
 ; bar_height = 32
@@ -31,17 +31,22 @@ bar_width = 1
 ; bar_width = 20
 ; bar_spacing = 5
 
+# sdl_glsl have these default values, they are only used to calulate max number of bars.
+bar_width = 1
+; bar_spacing = 0
+
 
 # Lower and higher cutoff frequencies for lowest and highest bars
 # the bandwidth of the visualizer.
 # Note: there is a minimum total bandwidth of 43Mhz x number of bars.
-# Cava will automatically increase the higher cutoff if a too low band is specified.
+# Mppcava will automatically increase the higher cutoff if a too low band is specified.
 ; lower_cutoff_freq = 50
 ; higher_cutoff_freq = 10000
 higher_cutoff_freq = 20000
 
-# Seconds with no input before mppcava goes to sleep mode. Cava will not perform FFT or drawing and
-# only check for input once per second. Cava will wake up once input is detected. 0 = disable.
+
+# Seconds with no input before mppcava goes to sleep mode. Mppcava will not perform FFT or drawing and
+# only check for input once per second. Mppcava will wake up once input is detected. 0 = disable.
 ; sleep_timer = 0
 
 
@@ -49,6 +54,7 @@ higher_cutoff_freq = 20000
 
 # Audio capturing method. Possible methods are: 'pulse', 'alsa', 'fifo', 'sndio' or 'shmem'
 # Defaults to 'pulse', 'alsa' or 'fifo', in that order, dependent on what support mppcava was built with.
+# On windows this is automatic and no input settings are needed.
 #
 # All input methods uses the same config variable 'source'
 # to define where it should get the audio.
@@ -79,7 +85,8 @@ sample_bits = 16
 
 [output]
 
-# Output method. Can be 'ncurses', 'noncurses', 'raw', 'noritake' or 'sdl'.
+# Output method. Can be 'ncurses', 'noncurses', 'raw', 'noritake', 'sdl'
+# or 'sdl_glsl'.
 # 'noncurses' uses a custom framebuffer technique and prints only changes
 # from frame to frame in the terminal. 'ncurses' is default if supported.
 #
@@ -91,7 +98,15 @@ sample_bits = 16
 #  in graphic mode. It only support the 3000 series graphical VFDs for now.
 #
 # 'sdl' uses the Simple DirectMedia Layer to render in a graphical context.
+# 'sdl_glsl' uses SDL to create an OpenGL context. Write your own shaders or
+# use one of the predefined ones.
 ; method = ncurses
+
+# Orientation of the visualization. Can be 'bottom', 'top', 'left' or 'right'.
+# Default is 'bottom'. Other orientations are only supported on sdl and ncruses
+# output. Note: many fonts have weird glyphs for 'top' and 'right' characters,
+# which can make ncurses not look right.
+; orientation = bottom
 
 # Visual channels. Can be 'stereo' or 'mono'.
 # 'stereo' mirrors both channels with low frequencies in center.
@@ -135,6 +150,13 @@ sample_bits = 16
 # defaults to off since the behaviour in other terminal emulators is unknown
 ; alacritty_sync = 0
 
+# Shaders for sdl_glsl, located in $HOME/.config/mppcava/shaders
+; vertex_shader = pass_through.vert
+; fragment_shader = normalized_bars.frag
+
+; for glsl output mode, keep rendering even if no audio
+; continuous_rendering = 0
+
 [color]
 
 # Colors can be one of seven predefined: black, blue, cyan, green, magenta, red, white, yellow.
@@ -144,13 +166,13 @@ sample_bits = 16
 ; background = default
 ; foreground = default
 
-# SDL only support hex code colors, these are the default:
+# SDL and sdl_glsl only support hex code colors, these are the default:
 ; background = '#111111'
-; foreground = '#33cccc'
+; foreground = '#33ffff'
 
 
 # Gradient mode, only hex defined colors are supported,
-# background must also be defined in hex  or remain commented out. 1 = on, 0 = off.
+# background must also be defined in hex or remain commented out. 1 = on, 0 = off.
 # You can define as many as 8 different colors. They range from bottom to top of screen
 gradient = 1
 gradient_count = 8
@@ -179,17 +201,16 @@ gradient_color_8 = '#cc3333'
 # Accepts only non-negative values. 50 means half gravity, 200 means double. Set to 0 to disable "drop off".
 # DEPRECATED as of 0.8.0, use noise_reduction instead
 ; gravity = 100
-gravity = 77
 
 
-# In bar height, bars that would have been lower than this will not be drawn.
+# In bar height, bars that would have been lower that this will not be drawn.
 # DEPRECATED as of 0.8.0
 ; ignore = 0
 
-# Noise reduction, float 0 - 1. default 0.77
+# Noise reduction, int 0 - 100. default 77
 # the raw visualization is very noisy, this factor adjusts the integral and gravity filters to keep the signal smooth
 # 1 will be very slow and smooth, 0 will be fast but noisy.
-; noise_reduction = 0.77
+noise_reduction = 77
 
 
 [eq]

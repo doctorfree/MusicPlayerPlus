@@ -71,7 +71,7 @@ void getPulseDefaultSink(void *data) {
     m_pulseaudio_mainloop = pa_mainloop_new();
 
     mainloop_api = pa_mainloop_get_api(m_pulseaudio_mainloop);
-    pulseaudio_context = pa_context_new(mainloop_api, "cava device list");
+    pulseaudio_context = pa_context_new(mainloop_api, "mppcava device list");
 
     // This function connects to the pulse server
     pa_context_connect(pulseaudio_context, NULL, PA_CONTEXT_NOFLAGS, NULL);
@@ -101,16 +101,13 @@ void getPulseDefaultSink(void *data) {
 void *input_pulse(void *data) {
 
     struct audio_data *audio = (struct audio_data *)data;
-    uint16_t frames = audio->input_buffer_size / 2;
-    int channels = 2;
-    int16_t buf[frames * channels];
+    uint16_t frames = audio->input_buffer_size / audio->channels;
+    unsigned char buf[audio->input_buffer_size * audio->format / 8];
 
     /* The sample type to use */
     static const pa_sample_spec ss = {.format = PA_SAMPLE_S16LE, .rate = 44100, .channels = 2};
 
-    audio->format = 16;
-
-    const int frag_size = frames * channels * audio->format / 8 *
+    const int frag_size = frames * audio->channels * audio->format / 8 *
                           2; // we double this because of cpu performance issues with pulseaudio
 
     pa_buffer_attr pb = {.maxlength = (uint32_t)-1, // BUFSIZE * 2,
@@ -119,7 +116,7 @@ void *input_pulse(void *data) {
     pa_simple *s = NULL;
     int error;
 
-    if (!(s = pa_simple_new(NULL, "cava", PA_STREAM_RECORD, audio->source, "audio for cava", &ss,
+    if (!(s = pa_simple_new(NULL, "mppcava", PA_STREAM_RECORD, audio->source, "audio for mppcava", &ss,
                             NULL, &pb, &error))) {
         sprintf(audio->error_message, __FILE__ ": Could not open pulseaudio source: %s, %s. \
 		To find a list of your pulseaudio sources run 'pacmd list-sources'\n",
@@ -137,7 +134,7 @@ void *input_pulse(void *data) {
             audio->terminate = 1;
         }
 
-        write_to_cava_input_buffers(frames * channels, buf, data);
+        write_to_cava_input_buffers(audio->input_buffer_size, buf, data);
     }
 
     pa_simple_free(s);
