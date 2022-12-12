@@ -6,7 +6,7 @@
 #
 # Ubuntu 18.04 or higher:
 # sudo apt install libfftw3-dev libasound2-dev libncursesw5-dev \
-#    libpulse-dev libtool automake libiniparser-dev libsdl2-2.0-0 libsdl2-dev
+#    libpulse-dev libtool automake libiniparser-dev libsdl2-dev
 #
 # Fedora:
 # sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \

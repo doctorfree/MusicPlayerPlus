@@ -19,7 +19,7 @@ then
         libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
         libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev \
         autotools-dev autoconf autoconf-archive libtool libboost-all-dev \
-        fftw-dev libsdl2-2.0-0 libsdl2-dev libiniparser-dev libyaml-dev swig \
+        fftw-dev libsdl2-dev libiniparser-dev libyaml-dev swig \
         python3-dev pkg-config libncurses-dev libasound2-dev libreadline-dev \
         libpulse-dev libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake \
         qtbase5-dev-tools libavfilter-dev libavdevice-dev libsqlite3-dev"
