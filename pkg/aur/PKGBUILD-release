@@ -94,6 +94,7 @@ package() {
   cp -a config/mppcava "${pkgdir}/${destdir}/share/${pkgname}/mppcava"
   cp mppcava/example_files/config ${pkgdir}/${destdir}/share/${pkgname}/mppcava/template.conf
   cp -a config/navidrome "${pkgdir}/${destdir}/share/${pkgname}/navidrome"
+  cp -a config/pipewire "${pkgdir}/${destdir}/share/${pkgname}/pipewire"
   cp -a config/tmuxp ${pkgdir}/${destdir}/share/${pkgname}/tmuxp
   cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/mpcplus/ueberzug
   cp -a config/yt-dlp "${pkgdir}/${destdir}/share/${pkgname}/yt-dlp"
