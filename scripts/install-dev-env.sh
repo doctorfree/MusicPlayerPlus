@@ -63,7 +63,7 @@ else
             pulseaudio-libs-devel libtool automake iniparser-devel \
             llvm-devel SDL2-devel eigen3-devel libyaml-devel clang-devel \
             swig libchromaprint-devel python-devel python3-devel \
-            python3-yaml python3-six sqlite-devel \
+            python3-yaml python3-six sqlite-devel autoconf-archive \
             libmpdclient-devel taglib-devel libsamplerate-devel"
       if [ "$1" == "-r" ]
       then
