@@ -112,7 +112,7 @@ else
           libcurl-devel boost-devel eigen3-devel libyaml-devel clang-devel \
           swig readline-devel libchromaprint-devel python3-devel python3-yaml \
           python3-six sqlite-devel libmpdclient-devel taglib-devel \
-          libsamplerate-devel python3-numpy"
+          autoconf-archive libsamplerate-devel python3-numpy"
         if [ "$1" == "-r" ]
         then
           sudo ${PINS} -y remove ffmpeg-devel
