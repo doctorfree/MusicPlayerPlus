@@ -17,7 +17,7 @@ jobs:
     - name: upgrade
       run: sudo apt upgrade -y
     - name: install
-      run: sudo apt install build-essentials libtool automake iniparser libncurses-dev libfftw3-dev -y
+      run: sudo apt install build-essentials libtool autoconf-archive automake iniparser libncurses-dev libfftw3-dev -y
     - name: autogen
       run: ./autogen.sh
       working-directory: ./mppcava
