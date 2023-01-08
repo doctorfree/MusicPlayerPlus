@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.1r1 (2023-01-09)
+* Arch Linux modular installation fixes
+
 ## MusicPlayerPlus-3.0.0r2 (2023-01-03)
 * Modular installation and configuration of supporting components
 * Add support for adding markdown releases to a Discogs collection folder
