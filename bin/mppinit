@@ -41,8 +41,8 @@ SCPS="album_cover.sh cover_obs.sh mppsplash-dual.sh"
 EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
             Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
-BOLD=$(tput bold)
-NORM=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
 MPP_USER=$(id -un)
 
 mud="music_directory"

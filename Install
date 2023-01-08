@@ -16,8 +16,8 @@ PKG_NAMES="MusicPlayerPlus musicplayerplus"
 SRC="${HOME}/src"
 DEB_ARCH=amd64
 RPM_ARCH=x86_64
-BOLD=$(tput bold)
-NORMAL=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORMAL=$(tput sgr0 2>/dev/null)
 
 PKG_AVAILABLE=
 PKG_SELECTED=

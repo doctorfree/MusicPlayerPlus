@@ -108,10 +108,10 @@ action_from_keybind() {
 }
 
 declare -A colors
-colors[red]=$(tput setaf 1)
-colors[green]=$(tput setaf 2)
-colors[blue]=$(tput setaf 4)
-colors[reset]=$(tput sgr0)
+colors[red]=$(tput setaf 1 2>/dev/null)
+colors[green]=$(tput setaf 2 2>/dev/null)
+colors[blue]=$(tput setaf 4 2>/dev/null)
+colors[reset]=$(tput sgr0 2>/dev/null)
 
 info() {
   color green "$@" >&2

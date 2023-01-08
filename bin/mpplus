@@ -30,8 +30,8 @@
 # An MPD client can be specified on the command line, default is 'mpcplus'.
 # Only 'mpcplus' and 'ncmpcpp' MPD clients are supported for album cover art display.
 
-BOLD=$(tput bold)
-NORM=$(tput sgr0)
+BOLD=$(tput bold 2>/dev/null)
+NORM=$(tput sgr0 2>/dev/null)
 PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
 MTITLE="Music Player Plus"
