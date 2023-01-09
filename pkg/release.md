@@ -6,6 +6,7 @@ This major new release of MusicPlayerPlus adds support for many new features and
 * Auto-generation of Obsidian markdown vault from local music library
 * Auto-generation of Discogs collection from Obsidian markdown vaults
 * Modular installation and configuration of supporting components
+* Support for Arch-like platforms (e.g. Manjaro)
 * PipeWire service management and configuration
 * Integration of the [Beets media library management system](https://beets.io/)
 * Support for the [Mopidy Music Server](https://mopidy.com/) and extensions
