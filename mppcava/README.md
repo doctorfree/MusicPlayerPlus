@@ -2,7 +2,7 @@
 
 **M**usic**P**layer**P**lus **C**ross-platform **A**udio **V**isu**a**lizer
 
-by [Karl Stavestrand](mailto:karl@stavestrand.no) modified and integrated by [Ronald Record](maito:ronaldrecord@gmail.com)
+by [Karl Stavestrand](mailto:karl@stavestrand.no) modified and integrated by [Ronald Record](mailto:ronaldrecord@gmail.com)
 
 ![spectrum](https://github.com/karlstav/cava/blob/master/example_files/cava.gif "spectrum")
 
