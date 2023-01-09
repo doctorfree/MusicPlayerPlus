@@ -1,9 +1,8 @@
-CAVA [![Build Status](https://github.com/karlstav/cava/workflows/build-and-test/badge.svg)](https://github.com/karlstav/cava/actions)
-====================
+# MPPCAVA
 
-**C**ross-platform **A**udio **V**isu**a**lizer
+**M**usic**P**layer**P**lus **C**ross-platform **A**udio **V**isu**a**lizer
 
-by [Karl Stavestrand](mailto:karl@stavestrand.no)
+by [Karl Stavestrand](mailto:karl@stavestrand.no) modified and integrated by [Ronald Record](maito:ronaldrecord@gmail.com)
 
 ![spectrum](https://github.com/karlstav/cava/blob/master/example_files/cava.gif "spectrum")
 
