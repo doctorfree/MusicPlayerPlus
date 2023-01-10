@@ -46,7 +46,6 @@ package() {
   cp copyright ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp LICENSE ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp LICENSE ${pkgdir}/${destdir}/share/licenses/${pkgname}
-  cp NOTICE ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp AUTHORS ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp CHANGELOG.md ${pkgdir}/${destdir}/share/doc/${pkgname}
   cp README.md ${pkgdir}/${destdir}/share/doc/${pkgname}
