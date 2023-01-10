@@ -14,8 +14,6 @@
 SRC_NAME="MusicPlayerPlus"
 PKG_NAMES="MusicPlayerPlus musicplayerplus"
 SRC="${HOME}/src"
-DEB_ARCH=amd64
-RPM_ARCH=x86_64
 BOLD=$(tput bold 2>/dev/null)
 NORMAL=$(tput sgr0 2>/dev/null)
 
@@ -40,9 +38,9 @@ get_available_packages() {
       do
         if [ "${arch}" ]
         then
-          pkgname=`basename ${pkg} | sed -e "s/-v${PKG_VER}r${PKG_REL}-${PACKAGE}-${ARCH}.${SUF}//"` 
+          pkgname=`basename ${pkg} | sed -e "s/-v${PKG_VER}r${PKG_REL}-${PACKAGE}.${SUF}//"` 
         else
-          pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}//"` 
+          pkgname=`basename ${pkg} | sed -e "s/_${PKG_VER}-${PKG_REL}.${SUF}//"` 
         fi
         PKG_AVAILABLE="${PKG_AVAILABLE} ${pkgname}"
       done
@@ -85,7 +83,7 @@ have_yum=`type -p yum`
 have_pac=`type -p pacman`
 [ -f /etc/os-release ] && . /etc/os-release
 [ "${ID_LIKE}" == "debian" ] && debian=1
-[ "${ID}" == "arch" ] && arch=1
+[ "${ID}" == "arch" ] || [ "${ID_LIKE}" == "arch" ] && arch=1
 [ "${ID}" == "centos" ] && centos=1
 [ "${ID}" == "fedora" ] && fedora=1
 [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
@@ -93,30 +91,18 @@ have_pac=`type -p pacman`
 if [ "${debian}" ]
 then
   SUF=deb
-  [ "${have_dpkg}" ] && {
-    dpkg_arch=`dpkg --print-architecture`
-    [ "${dpkg_arch}" == "${DEB_ARCH}" ] || DEB_ARCH=${dpkg_arch}
-  }
-  ARCH=${DEB_ARCH}
 else
   if [ "${arch}" ]
   then
     SUF=zst
-    ARCH=`uname -m`
   else
     if [ "${centos}" ]
     then
       SUF=rpm
-      elversion=`rpm -E %centos`
-      DIST="el${elversion}"
-      ARCH=${RPM_ARCH}
     else
       if [ "${fedora}" ]
       then
         SUF=rpm
-        fcversion=`rpm -E %fedora`
-        DIST="fc${fcversion}"
-        ARCH=${RPM_ARCH}
       else
         echo "Unsupported platform"
       fi
@@ -183,17 +169,12 @@ for PKG_NAME in ${PKG_NAMES}
 do
   if [ "${arch}" ]
   then
-    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}-v${PKG_VER}r${PKG_REL}-${PACKAGE}-${ARCH}.pkg.tar.${SUF}"
+    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}-v${PKG_VER}r${PKG_REL}-${PACKAGE}-any.pkg.tar.${SUF}"
   else
-    if [ "${debian}" ]
-    then
-      PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF}"
-    else
-      PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${DIST}.${ARCH}.${SUF}"
-    fi
+    PKG="${SRC}/${SRC_NAME}/releases/${PKG_VER}/${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF}"
   fi
   [ -f "${PKG}" ] || {
-    echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.${SUF} not found."
+    echo "${PKG_NAME}_${PKG_VER}-${PKG_REL}.${SUF} not found."
     for pkgs in ${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}
     do
       [ "${pkgs}" == "${SRC}/${SRC_NAME}/releases/*/${PKG_NAME}_*.${SUF}" ] || {
