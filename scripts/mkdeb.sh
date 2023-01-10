@@ -6,7 +6,6 @@ DEBFULLNAME="Ronald Record"
 DEBEMAIL="ronaldrecord@gmail.com"
 DESTDIR="usr"
 SRC=${HOME}/src
-ARCH=amd64
 SUDO=sudo
 GCI=
 
@@ -17,8 +16,6 @@ dpkg=`type -p dpkg-deb`
     echo "Exiting"
     exit 1
 }
-dpkg_arch=`dpkg --print-architecture`
-[ "${dpkg_arch}" == "${ARCH}" ] || ARCH=${dpkg_arch}
 
 [ -f "${SRC}/${SRC_NAME}/VERSION" ] || {
   [ -f "/builds/doctorfree/${SRC_NAME}/VERSION" ] || {
@@ -58,7 +55,7 @@ echo "Package: ${PKG}
 Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
-Architecture: ${ARCH}
+Architecture: all
 Depends: alsa-utils, bc, coreutils, curl, flac, jq, libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mediainfo, mpd (>= 0.21.20), tmux, ffmpeg, inotify-tools, figlet, fzf, mpc, python3-dev, python3-pip, mplayer, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3-dev, libfftw3-dev, libsamplerate0, libiniparser-dev, libyaml-dev, libsdl2-dev, libasound2, libpulse-dev, libcurl4-openssl-dev, libsqlite3-0 (>= 3.6.0), libavformat58 (>= 7:4.1), libavfilter7 (>= 7:4.0), libswresample3 (>= 7:4.0), libavcodec58 (>= 7:4.2), libswscale5 (>= 7:4.0), libavdevice58 (>= 7:4.0), libavutil56 (>= 7:4.0), wget, wmctrl, x11-utils, x11-xserver-utils
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 35000
@@ -74,7 +71,7 @@ chmod 644 ${OUT_DIR}/DEBIAN/control
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
            "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}" \
-           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}/mpcplus"
+           "${DESTDIR}/share/${PKG}/mpcplus"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}
@@ -147,7 +144,7 @@ ${SUDO} chown -R root:root ${OUT_DIR}/${DESTDIR}
 
 cd dist
 echo "Building ${PKG_NAME}_${PKG_VER} Debian package"
-${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.${ARCH}.deb
+${SUDO} dpkg --build ${PKG_NAME}_${PKG_VER} ${PKG_NAME}_${PKG_VER}-${PKG_REL}.deb
 cd ${PKG_NAME}_${PKG_VER}
 echo "Creating compressed tar archive of ${PKG_NAME} ${PKG_VER} distribution"
 tar cf - usr | gzip -9 > ../${PKG_NAME}_${PKG_VER}-${PKG_REL}.tgz

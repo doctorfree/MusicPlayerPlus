@@ -42,7 +42,7 @@ mkdir ${OUT_DIR}
 for dir in "${DESTDIR}" "${DESTDIR}/share" "${DESTDIR}/share/man" \
            "${DESTDIR}/share/applications" "${DESTDIR}/share/doc" \
            "${DESTDIR}/share/doc/${PKG}" "${DESTDIR}/share/${PKG}" \
-           "${DESTDIR}/share/consolefonts" "${DESTDIR}/share/${PKG}/mpcplus"
+           "${DESTDIR}/share/${PKG}/mpcplus"
 do
     [ -d ${OUT_DIR}/${dir} ] || ${SUDO} mkdir ${OUT_DIR}/${dir}
     ${SUDO} chown root:root ${OUT_DIR}/${dir}

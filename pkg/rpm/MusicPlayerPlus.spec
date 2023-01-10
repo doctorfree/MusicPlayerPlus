@@ -1,7 +1,7 @@
 Name: MusicPlayerPlus
 Version:    %{_version}
 Release:    %{_release}%{?dist}
-BuildArch:  x86_64
+BuildArch:  noarch
 AutoReqProv: no
 %if 0%{?centos} > 0
 Requires: alsa-utils, bc, boost, coreutils, curl, dnf-plugins-core, flac, iniparser, jq, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tmux, inotify-tools, figlet, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr

@@ -39,46 +39,30 @@ Download the [latest Debian, Arch, or RPM package format release](https://github
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_3.0.1-2.amd64.deb
-```
-
-or, on a Raspberry Pi:
-
-```bash
-sudo apt install ./MusicPlayerPlus_3.0.1-2.armhf.deb
+sudo apt install ./MusicPlayerPlus_3.0.1-2.deb
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./musicplayerplus-v3.0.1r2-1-x86_64.pkg.tar.zst
+sudo pacman -U ./musicplayerplus-v3.0.1r2-1-any.pkg.tar.zst
 ```
 
-Install the package on RPM based systems by executing one of the following commands.
-
-On Fedora Linux:
+Install the package on RPM based systems by executing the command.
 
 ```bash
-sudo yum localinstall ./MusicPlayerPlus_3.0.1-2.fc36.x86_64.rpm
-```
-
-On CentOS Linux:
-
-```bash
-sudo yum localinstall ./MusicPlayerPlus_3.0.1-2.el8.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_3.0.1-2.rpm
 ```
 
 ### PKGBUILD Installation
 
-To install on a Raspberry Pi running Arch Linux, MusicPlayerPlus must be built from sources using the Arch PKGBUILD files provided in `MusicPlayerPlus-pkgbuild-3.0.1-2.tar.gz`. This process can be performed on any `x86_64` or `armv7h ` architecture system running Arch Linux. An `x86_64` architecture precompiled package is supplied (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.1-2.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+A precompiled package is supplied for Arch Linux (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.1-2.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
 
 ```
 tar xzf MusicPlayerPlus-pkgbuild-3.0.1-2.tar.gz
 cd musicplayerplus
 makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
-
-**[Note:]** The full MusicPlayerPlus build from sources can be time consuming. Use a pre-built package if one is available for your platform.
 
 ## Configuration
 
