@@ -3171,9 +3171,16 @@ sync_music_dir
 printf " done.\n"
 
 [ -f "${MPPCONF}" ] && {
-  cat "${MPPCONF}" | sed -e "s/^MPPINIT=.*/MPPINIT=1/" > /tmp/mpp$$
-  cp /tmp/mpp$$ "${MPPCONF}"
-  rm -f /tmp/mpp$$
+  append=
+  grep MPPINIT "${MPPCONF}" > /dev/null || append=1
+  if [ "${append}" ]
+  then
+    echo "MPPINIT=1" >> "${MPPCONF}"
+  else
+    cat "${MPPCONF}" | sed -e "s/^MPPINIT=.*/MPPINIT=1/" > /tmp/mpp$$
+    cp /tmp/mpp$$ "${MPPCONF}"
+    rm -f /tmp/mpp$$
+  fi
 }
 
 printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}"
