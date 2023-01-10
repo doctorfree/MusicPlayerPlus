@@ -510,6 +510,8 @@ init_mpp_conf() {
     echo "# To enable any of these, set to 1" >> ${MPPCONF}
     echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
+    echo "# Has mppinit been run" >> ${MPPCONF}
+    echo "MPPINIT=1" >> ${MPPCONF}
     echo "# Play audio during asciimatics animations" >> ${MPPCONF}
     echo "AUDIO=1" >> ${MPPCONF}
     echo "# Display cover art in tmux sessions" >> ${MPPCONF}
@@ -1392,7 +1394,8 @@ get_mpd_status
 set_music_dir
 
 [ -d ${USERCONF} ] || mkdir ${USERCONF}
-if [ -f ${USERCONF}/mppcava/config ]
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+if [ "${MPPINIT}" ]
 then
   initialized=1
 else
@@ -2363,7 +2366,13 @@ else
   fi
 fi
 
-# Install mpcplus if not already present
+# Install mppcava and mpcplus if not already present
+[ -x /usr/bin/mppcava ] || {
+  OWNER=doctorfree
+  PROJECT=mppcava
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  install_external_package
+}
 [ -x /usr/bin/mpcplus ] || {
   OWNER=doctorfree
   PROJECT=mpcplus
@@ -3160,6 +3169,12 @@ disable_sys_mpd
 sync_music_dir
 
 printf " done.\n"
+
+[ -f "${MPPCONF}" ] && {
+  cat "${MPPCONF}" | sed -e "s/^MPPINIT=.*/MPPINIT=1/" > /tmp/mpp$$
+  cp /tmp/mpp$$ "${MPPCONF}"
+  rm -f /tmp/mpp$$
+}
 
 printf "\n${BOLD}MusicPlayerPlus Initialization Complete${NORM}"
 [ "${empty_music}" ] && {

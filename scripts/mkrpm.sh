@@ -33,20 +33,6 @@ OUT_DIR="dist/${PKG_NAME}_${PKG_VER}"
 
 cd "${SRC}/${SRC_NAME}"
 
-# Build mppcava
-if [ -x scripts/build-mppcava.sh ]
-then
-  scripts/build-mppcava.sh
-else
-  cd mppcava
-  make clean
-  make distclean
-  [ -x ./configure ] || ./autogen.sh > /dev/null
-  ./configure --prefix=/usr > configure$$.out
-  make > make$$.out
-  cd ..
-fi
-
 ${SUDO} rm -rf dist
 mkdir dist
 
@@ -68,8 +54,6 @@ do
 done
 
 ${SUDO} cp -a bin ${OUT_DIR}/${DESTDIR}/bin
-${SUDO} cp mppcava/mppcava ${OUT_DIR}/${DESTDIR}/bin/mppcava
-${SUDO} cp mppcava/mppcava.psf ${OUT_DIR}/${DESTDIR}/share/consolefonts
 
 ${SUDO} cp *.desktop "${OUT_DIR}/${DESTDIR}/share/applications"
 ${SUDO} cp copyright ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}
@@ -102,7 +86,6 @@ ${SUDO} cp -a config/kitty "${OUT_DIR}/${DESTDIR}/share/${PKG}/kitty"
 ${SUDO} cp -a config/mopidy "${OUT_DIR}/${DESTDIR}/share/${PKG}/mopidy"
 ${SUDO} cp -a config/mpd "${OUT_DIR}/${DESTDIR}/share/${PKG}/mpd"
 ${SUDO} cp -a config/mppcava "${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava"
-${SUDO} cp mppcava/example_files/config ${OUT_DIR}/${DESTDIR}/share/${PKG}/mppcava/template.conf
 ${SUDO} cp -a config/navidrome "${OUT_DIR}/${DESTDIR}/share/${PKG}/navidrome"
 ${SUDO} cp -a config/pipewire "${OUT_DIR}/${DESTDIR}/share/${PKG}/pipewire"
 ${SUDO} cp -a config/tmuxp ${OUT_DIR}/${DESTDIR}/share/${PKG}/tmuxp

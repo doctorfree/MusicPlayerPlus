@@ -3116,6 +3116,8 @@ save_config() {
   echo "# To enable any of these, set to 1" >> ${MPPCONF}
   echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
+  echo "# Has mppinit been run" >> ${MPPCONF}
+  echo "MPPINIT=${MPPINIT}" >> ${MPPCONF}
   echo "# Play audio during asciimatics animations" >> ${MPPCONF}
   echo "AUDIO=${AUDIO}" >> ${MPPCONF}
   echo "# Display cover art in tmux sessions" >> ${MPPCONF}
@@ -3260,10 +3262,9 @@ pathadd "${HOME}/.local/bin"
 export PATH
 
 # Check if initialization has been run
-if [ -f ${HOME}/.config/mppcava/config ]
-then
-  [ -f ${MPPCONF} ] || save_config
-else
+[ -f "${MPPCONF}" ] || save_config
+[ -f "${MPPCONF}" ] && . "${MPPCONF}"
+[ "${MPPINIT}" ] || {
   echo ""
   echo "MusicPlayerPlus initialization needs to be run once."
   echo "Answer 'y' to initialize, or 'n' to skip it for now."
@@ -3286,7 +3287,7 @@ else
         ;;
     esac
   done
-fi
+}
 
 have_beet=`type -p beet`
 have_wmctrl=`type -p wmctrl`
