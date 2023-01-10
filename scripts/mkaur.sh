@@ -7,7 +7,7 @@ PKG_NAME="MusicPlayerPlus"
 FULLNAME="Ronald Record"
 EMAIL="ronaldrecord@gmail.com"
 DESTDIR="usr"
-ARCH=x86_64
+ARCH=any
 SUDO=sudo
 GCI=
 

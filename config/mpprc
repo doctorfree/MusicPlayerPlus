@@ -16,6 +16,8 @@ MPD_CLIENT="mpcplus"
 # To enable any of these, set to 1
 # For example, to enable cover art display in tmux sessions set COVER_ART=1
 #
+# Has mppinit been run
+MPPINIT=
 # Play audio during asciimatics animations
 AUDIO=1
 # Display cover art in tmux sessions

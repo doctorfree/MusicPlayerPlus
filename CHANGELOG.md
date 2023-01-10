@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.1r2 (2023-01-10)
+* Use external `mppcava` package
+
 ## MusicPlayerPlus-3.0.1r1 (2023-01-09)
 * Arch Linux modular installation fixes
 * Support for Arch-like platforms (e.g. Manjaro)

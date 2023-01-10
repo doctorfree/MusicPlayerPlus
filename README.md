@@ -146,13 +146,13 @@ happen from the command-line in a character-based environment.
 
 ### Requirements
 
-MusicPlayerPlus is compiled and packaged for installation on:
+MusicPlayerPlus is compiled and packaged for installation on any Linux platform. It has been tested on the following platforms:
 
-- Arch Linux (x86_64)
-- CentOS Linux (x86_64)
-- Fedora Linux (x86_64)
-- Raspberry Pi OS (armhf)
-- Ubuntu Linux (amd64)
+- Arch Linux
+- CentOS Linux
+- Fedora Linux
+- Raspberry Pi OS
+- Ubuntu Linux
 
 Installation and initialization require admistrative privilege. The `mppinit`
 command, executed after installing MusicPlayerPlus, installs several packages
@@ -461,15 +461,15 @@ Package Manager (RPM).
 MusicPlayerPlus has been tested successfully on the following platforms:
 
 - **Arch Linux 2022.07.01**
-    - `MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst`
+    - `MusicPlayerPlus_<version>-<release>-any.pkg.tar.zst`
 - **Ubuntu Linux 20.04**
-    - `MusicPlayerPlus_<version>-<release>.amd64.deb`
+    - `MusicPlayerPlus_<version>-<release>.deb`
 - **Fedora Linux 36**
-    - `MusicPlayerPlus_<version>-<release>.x86_64.rpm`
+    - `MusicPlayerPlus_<version>-<release>.rpm`
 - **CentOS Linux 8**
-    - `MusicPlayerPlus_<version>-<release>.x86_64.rpm`
+    - `MusicPlayerPlus_<version>-<release>.rpm`
 - **Raspbian Linux 11**
-    - `MusicPlayerPlus_<version>-<release>.armhf.deb`
+    - `MusicPlayerPlus_<version>-<release>.deb`
 
 ### Debian package installation
 
@@ -487,30 +487,22 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo apt install ./MusicPlayerPlus_<version>-<release>.amd64.deb
+sudo apt install ./MusicPlayerPlus_<version>-<release>.deb
 ```
 or
 ```console
-sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.amd64.deb
+sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.deb
 ```
 
 or, on a Raspberry Pi:
 
 ```console
-sudo apt install ./MusicPlayerPlus_<version>-<release>.armhf.deb
+sudo apt install ./MusicPlayerPlus_<version>-<release>.deb
 ```
 or
 ```console
-sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.armhf.deb
+sudo dpkg -i ./MusicPlayerPlus_<version>-<release>.deb
 ```
-
-**[Note:]** In some cases you may see a warning message when installing the
-Debian package. The message:
-
-Repository is broken: musicplayerplus:amd64 (= <version-<release>) has no Size information
-
-can safely be ignored. This is an issue with the Debian packaging system
-and has no effect on the installation.
 
 ### RPM Package installation
 
@@ -525,11 +517,11 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
+sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.rpm
 ```
 or
 ```console
-sudo rpm -i ./MusicPlayerPlus_<version>-<release>.x86_64.rpm
+sudo rpm -i ./MusicPlayerPlus_<version>-<release>.rpm
 ```
 
 ### Arch Package installation
@@ -548,7 +540,7 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo pacman -U ./MusicPlayerPlus_<version>-<release>-x86_64.pkg.tar.zst
+sudo pacman -U ./MusicPlayerPlus_<version>-<release>-any.pkg.tar.zst
 ```
 
 ## Post Installation Configuration
