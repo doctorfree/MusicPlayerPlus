@@ -1690,9 +1690,21 @@ fi
     printf "\n\tDownloading album cover art\n\n"
     mpplus -D art > /dev/null 2>&1
     [ "${proceed}" ] || {
+      if [ "${essentia}" ]
+      then
+        WITH="with Beets Xtractor plugin"
+      else
+        if [ "${acbrainz}" ]
+        then
+          WITH="with AcousticBrainz plugin"
+        else
+          WITH="with Blissify"
+        fi
+      fi
       while true
       do
-        read -p "Retrieve acoustic information for all tracks (possibly long) ? (y/n) " yn
+        printf "\nAcoustic information retrieval can be a very long process.\n"
+        read -p "Retrieve acoustic information for all tracks ${WITH} ? (y/n) " yn
         case $yn in
           [Yy]* )
             break
