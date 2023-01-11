@@ -83,11 +83,11 @@ while getopts "aAc:gm:p:ru" flag; do
           ;;
         c)
           CLIENT_COMM=${OPTARG}
-          USE_MPCPLUS=
           client_name=`echo "${CLIENT_COMM}" | awk ' { print $1 } '`
           client_name=`basename ${client_name}`
-          [ "${client_name}" == "mpcplus" ] || [ "${client_name}" == "ncmpcpp" ] || {
-            USE_ART=
+          [ "${client_name}" == "mpcplus" ] || {
+            USE_MPCPLUS=
+            [ "${client_name}" == "ncmpcpp" ] || USE_ART=
           }
           ;;
         g)

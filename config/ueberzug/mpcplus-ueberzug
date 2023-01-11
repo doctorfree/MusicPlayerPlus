@@ -9,11 +9,14 @@ cleanup() {
 }
 
 USE_MPCPLUS=1
+CLIENT_COMM="mpcplus"
 while getopts "c:" flag; do
     case $flag in
         c)
             CLIENT_COMM="$OPTARG"
-            USE_MPCPLUS=
+            client_name=`echo "${CLIENT_COMM}" | awk ' { print $1 } '`
+            client_name=`basename ${client_name}`
+            [ "${client_name}" == "mpcplus" ] || USE_MPCPLUS=
             ;;
     esac
 done
@@ -26,7 +29,7 @@ tail --follow "$FIFO_UEBERZUG" | ueberzug layer --silent --parser simple >/dev/n
 
 if [ "${USE_MPCPLUS}" ]
 then
-  mpcplus --config="${HOME}/.config/mpcplus/ueberzug/config"
+  ${CLIENT_COMM} --config="${HOME}/.config/mpcplus/ueberzug/config"
 else
   ${CLIENT_COMM}
 fi
