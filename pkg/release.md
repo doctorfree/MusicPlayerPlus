@@ -2,6 +2,7 @@
 
 This major new release of MusicPlayerPlus adds support for many new features and components including:
 
+* MusicPlayerPlus package is now architecture independent
 * Auto-generation of Obsidian markdown vault from Discogs collection
 * Auto-generation of Obsidian markdown vault from local music library
 * Auto-generation of Discogs collection from Obsidian markdown vaults
@@ -31,7 +32,6 @@ This major new release of MusicPlayerPlus adds support for many new features and
     * `mppinit -l /path/to/library`
 * Many more improvements and features (See [Changelog](#changelog) below)
 
-
 ## Installation
 
 Download the [latest Debian, Arch, or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
@@ -51,7 +51,7 @@ sudo pacman -U ./musicplayerplus-v3.0.1r2-1-any.pkg.tar.zst
 Install the package on RPM based systems by executing the command.
 
 ```bash
-sudo yum localinstall ./MusicPlayerPlus_3.0.1-2.rpm
+sudo dnf localinstall ./MusicPlayerPlus_3.0.1-2.rpm
 ```
 
 ### PKGBUILD Installation
@@ -100,7 +100,7 @@ sudo apt remove musicplayerplus
 Removal of the package on RPM based systems can be accomplished by issuing the command:
 
 ```bash
-sudo yum remove MusicPlayerPlus
+sudo dnf remove MusicPlayerPlus
 ```
 
 Removal of the package on Arch Linux based systems can be accomplished by issuing the command:

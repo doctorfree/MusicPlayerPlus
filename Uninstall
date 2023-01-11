@@ -10,6 +10,7 @@ else
   have_apt=`type -p apt`
   have_dpkg=`type -p dpkg`
   have_rpm=`type -p rpm`
+  have_dnf=`type -p dnf`
   have_yum=`type -p yum`
   have_pac=`type -p pacman`
   [ -f /etc/os-release ] && . /etc/os-release
@@ -43,15 +44,20 @@ else
         echo "Cannot locate pacman to remove. Skipping."
       fi
     else
-      if [ "${have_yum}" ]
+      if [ "${have_dnf}" ]
       then
-        sudo yum remove "${PKG}"
+        sudo dnf remove "${PKG}"
       else
-        if [ "${have_rpm}" ]
+        if [ "${have_yum}" ]
         then
-          sudo rpm -e "${PKG}"
+          sudo yum remove "${PKG}"
         else
-          echo "Cannot locate either yum or rpm to remove. Skipping."
+          if [ "${have_rpm}" ]
+          then
+            sudo rpm -e "${PKG}"
+          else
+            echo "Cannot locate either yum or rpm to remove. Skipping."
+          fi
         fi
       fi
     fi

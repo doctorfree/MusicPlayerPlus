@@ -517,7 +517,7 @@ package from the
 Install the MusicPlayerPlus package by executing the command
 
 ```console
-sudo yum localinstall ./MusicPlayerPlus_<version>-<release>.rpm
+sudo dnf localinstall ./MusicPlayerPlus_<version>-<release>.rpm
 ```
 or
 ```console
@@ -1914,7 +1914,7 @@ using the MusicPlayerPlus RPM format package, remove the MusicPlayerPlus
 package by executing the command:
 
 ```console
-    sudo yum remove MusicPlayerPlus
+    sudo dnf remove MusicPlayerPlus
 ```
 or
 ```console

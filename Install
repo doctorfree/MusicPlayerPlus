@@ -79,6 +79,7 @@ fedora=
 have_apt=`type -p apt`
 have_dpkg=`type -p dpkg`
 have_rpm=`type -p rpm`
+have_dnf=`type -p dnf`
 have_yum=`type -p yum`
 have_pac=`type -p pacman`
 [ -f /etc/os-release ] && . /etc/os-release
@@ -210,15 +211,20 @@ do
         echo "Cannot locate pacman to install. Skipping."
       fi
     else
-      if [ "${have_yum}" ]
+      if [ "${have_dnf}" ]
       then
-        sudo yum localinstall "${PKG}"
+        sudo dnf localinstall "${PKG}"
       else
-        if [ "${have_rpm}" ]
+        if [ "${have_yum}" ]
         then
-          sudo rpm -i "${PKG}"
+          sudo yum localinstall "${PKG}"
         else
-          echo "Cannot locate either yum or rpm to install. Skipping."
+          if [ "${have_rpm}" ]
+          then
+            sudo rpm -i "${PKG}"
+          else
+            echo "Cannot locate either yum or rpm to install. Skipping."
+          fi
         fi
       fi
     fi
