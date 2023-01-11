@@ -114,15 +114,15 @@ usage() {
 }
 
 get_ip() {
-  have_hostname=`type -p hostname`
-  if [ "${have_hostname}" ]
+  have_ip=`type -p ip`
+  if [ "${have_ip}" ]
   then
-    IP=`hostname -I | awk '{print $1}'`
+    IP=`ip route get 1.2.3.4 | head -1 | awk '{print $7}'`
   else
-    have_ip=`type -p ip`
-    if [ "${have_ip}" ]
+    have_hostname=`type -p hostname`
+    if [ "${have_hostname}" ]
     then
-      IP=`ip route get 1.2.3.4 | head -1 | awk '{print $7}'`
+      IP=`hostname -I | awk '{print $1}'`
     else
       IP="<ip address>"
     fi
