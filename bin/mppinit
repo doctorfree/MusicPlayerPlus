@@ -280,40 +280,70 @@ create_profiles() {
 }
 
 install_ueberzug() {
-  [ "${have_git}" ] && {
-    mod="ueberzug"
-    repo="ueberzug-mpplus"
-    [ -d tmp$$ ] || mkdir -p tmp$$
-    cd tmp$$
-    if [ -d ${repo} ]
+  have_curl=`type -p curl`
+  [ "${have_curl}" ] || {
+    install_package curl
+    have_curl=`type -p curl`
+  }
+  have_jq=`type -p jq`
+  [ "${have_jq}" ] || {
+    install_package jq
+    have_jq=`type -p jq`
+  }
+  have_wget=`type -p wget`
+  [ "${have_wget}" ] || {
+    install_package wget
+    have_wget=`type -p wget`
+  }
+  DL_URL=
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    if [ "${arch}" ]
     then
-      cd ${repo}
-      git pull > /dev/null 2>&1
+      DL_URL=$(curl --silent "${API_URL}" | \
+               jq --raw-output '.assets | .[]?.browser_download_url' | \
+               grep "-arch-linux.*\.whl")
     else
-      git clone https://github.com/doctorfree/${repo} > /dev/null 2>&1
-      cd ${repo}
-    fi
-    if ${PIP} list 2> /dev/null | grep ${mod} > /dev/null
-    then
-      if [ "${upgrade}" ]
+      if [ "${centos}" ]
       then
-        [ "${quiet}" ] || {
-          printf " upgrade ${mod},"
-        }
-        ${PYTHON} -m pip install --user --upgrade -e . > /dev/null 2>&1
+        DL_URL=$(curl --silent "${API_URL}" | \
+                 jq --raw-output '.assets | .[]?.browser_download_url' | \
+                 grep "centos-linux.*\.whl")
       else
-        [ "${quiet}" ] || {
-          printf " ${mod} installed,"
-        }
+        if [ "${fedora}" ]
+        then
+          DL_URL=$(curl --silent "${API_URL}" | \
+                   jq --raw-output '.assets | .[]?.browser_download_url' | \
+                   grep "fedora-linux.*\.whl")
+        else
+          if [ "${debian}" ]
+          then
+            if [ "${mach}" == "x86_64" ]
+            then
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "debian-linux.*\.whl")
+            else
+              DL_URL=$(curl --silent "${API_URL}" | \
+                       jq --raw-output '.assets | .[]?.browser_download_url' | \
+                       grep "rpi-linux.*\.whl")
+            fi
+          else
+            printf "\n\tNo ${PROJECT} release asset found for this platform ..."
+          fi
+        fi
       fi
-    else
-      [ "${quiet}" ] || {
-        printf " install ${mod},"
-      }
-      ${PYTHON} -m pip install --user -e . > /dev/null 2>&1
     fi
-    cd ../..
-    rm -rf tmp$$
+  }
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling ${PROJECT} ..."
+    [ "${have_wget}" ] && {
+      TEMP_WHL="$(mktemp --suffix=.whl)"
+      wget --quiet -O "${TEMP_WHL}" "${DL_URL}" > /dev/null 2>&1
+      chmod 644 "${TEMP_WHL}"
+      ${PYTHON} -m pip install --user --upgrade "${TEMP_WHL}" > /dev/null 2>&1
+      rm -f "${TEMP_WHL}"
+    }
   }
 }
 
@@ -3044,6 +3074,9 @@ then
   do
     pip_install "${pkg}"
   done
+  OWNER="doctorfree"
+  PROJECT="ueberzug-mpplus"
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
   install_ueberzug
   [ "${quiet}" ] || printf " done!\n"
 
