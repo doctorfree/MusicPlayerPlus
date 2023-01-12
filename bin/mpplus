@@ -2827,31 +2827,67 @@ show_main_menu() {
               MPCPLUS="${MPD_CLIENT}"
               USE_TMUX=1
               CURRENT=1
+              MPP_MODE=current
+              GNOME=
+              KITTY=
+              RETRO=
+              SIMPLE=
+              TILIX=
               break
               ;;
           "Launch ${MPD_CLIENT} with Kitty",*|*,"Launch ${MPD_CLIENT} with Kitty")
               MPCPLUS="${MPD_CLIENT}"
               KITTY=1
+              MPP_MODE=kitty
+              CURRENT=
+              GNOME=
+              RETRO=
+              SIMPLE=
+              TILIX=
               break
               ;;
           "Launch ${MPD_CLIENT} with Gnome",*|*,"Launch ${MPD_CLIENT} with Gnome")
               MPCPLUS="${MPD_CLIENT}"
+              MPP_MODE=gnome
               GNOME=1
+              CURRENT=
+              KITTY=
+              RETRO=
+              SIMPLE=
+              TILIX=
               break
               ;;
           "Launch ${MPD_CLIENT} with Retro",*|*,"Launch ${MPD_CLIENT} with Retro")
               MPCPLUS="${MPD_CLIENT}"
               RETRO=1
+              MPP_MODE=retro
+              CURRENT=
+              GNOME=
+              KITTY=
+              SIMPLE=
+              TILIX=
               break
               ;;
           "Launch ${MPD_CLIENT} with Simple",*|*,"Launch ${MPD_CLIENT} with Simple")
               MPCPLUS="${MPD_CLIENT}"
               SIMPLE=1
+              MPP_MODE=simple
+              CURRENT=
+              GNOME=
+              KITTY=
+              RETRO=
+              TILIX=
               break
               ;;
           "Launch ${MPD_CLIENT} with Tilix",*|*,"Launch ${MPD_CLIENT} with Tilix")
               MPCPLUS="${MPD_CLIENT}"
               TILIX=1
+              MPP_MODE=tilix
+              CURRENT=
+              GNOME=
+              KITTY=
+              RETRO=
+              SIMPLE=
               break
               ;;
           "Cantata Music Player Plus",*|*,"Cantata Music Player Plus")
@@ -3210,7 +3246,6 @@ save_config() {
   echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
   echo "BANDCAMP_USER=${BANDCAMP_USER}" >> ${MPPCONF}
   echo "" >> ${MPPCONF}
-BANDCAMP_USER=
   echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >> ${MPPCONF}
   echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >> ${MPPCONF}
   echo "# Your Discogs username is the last component of the profile URL." >> ${MPPCONF}
