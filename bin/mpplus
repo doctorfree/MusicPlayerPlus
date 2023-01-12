@@ -956,7 +956,6 @@ make_it_so() {
               --override initial_window_height=12c \
               --override tab_bar_min_tabs=2 \
               ${KITTY_OPACITY} \
-              --single-instance \
               ${VISUALIZER} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
           sleep 1
