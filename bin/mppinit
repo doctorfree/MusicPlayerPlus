@@ -295,44 +295,20 @@ install_ueberzug() {
     install_package wget
     have_wget=`type -p wget`
   }
+  pyc=`${PYTHON} -V | awk ' { print $2 } ' | awk -F '.' ' { print $1 $2 } '`
+  case "${mach}" in
+      arm*)
+        architecture="aarch64"
+        ;;
+      *)
+        architecture="${mach}"
+        ;;
+  esac
   DL_URL=
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
-    if [ "${arch}" ]
-    then
-      DL_URL=$(curl --silent "${API_URL}" | \
-               jq --raw-output '.assets | .[]?.browser_download_url' | \
-               grep "-arch-linux.*\.whl")
-    else
-      if [ "${centos}" ]
-      then
-        DL_URL=$(curl --silent "${API_URL}" | \
-                 jq --raw-output '.assets | .[]?.browser_download_url' | \
-                 grep "centos-linux.*\.whl")
-      else
-        if [ "${fedora}" ]
-        then
-          DL_URL=$(curl --silent "${API_URL}" | \
-                   jq --raw-output '.assets | .[]?.browser_download_url' | \
-                   grep "fedora-linux.*\.whl")
-        else
-          if [ "${debian}" ]
-          then
-            if [ "${mach}" == "x86_64" ]
-            then
-              DL_URL=$(curl --silent "${API_URL}" | \
-                       jq --raw-output '.assets | .[]?.browser_download_url' | \
-                       grep "debian-linux.*\.whl")
-            else
-              DL_URL=$(curl --silent "${API_URL}" | \
-                       jq --raw-output '.assets | .[]?.browser_download_url' | \
-                       grep "rpi-linux.*\.whl")
-            fi
-          else
-            printf "\n\tNo ${PROJECT} release asset found for this platform ..."
-          fi
-        fi
-      fi
-    fi
+    DL_URL=$(curl --silent "${API_URL}" | \
+             jq --raw-output '.assets | .[]?.browser_download_url' | \
+             grep "cp${pyc}.*${architecture}\.whl")
   }
 
   [ "${DL_URL}" ] && {
