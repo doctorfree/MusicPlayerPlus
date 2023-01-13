@@ -314,11 +314,12 @@ install_ueberzug() {
   [ "${DL_URL}" ] && {
     printf "\n\tInstalling ${PROJECT} ..."
     [ "${have_wget}" ] && {
-      TEMP_WHL="$(mktemp --suffix=.whl)"
+      TEMP_WHL=`basename ${DL_URL}`
+      TEMP_WHL="/tmp/${TEMP_WHL}"
       wget --quiet -O "${TEMP_WHL}" "${DL_URL}" > /dev/null 2>&1
       chmod 644 "${TEMP_WHL}"
       ${PYTHON} -m pip install --user --upgrade "${TEMP_WHL}" > /dev/null 2>&1
-      rm -f "${TEMP_WHL}"
+#     rm -f "${TEMP_WHL}"
     }
   }
 }
