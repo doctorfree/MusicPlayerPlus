@@ -62,7 +62,7 @@ start_tmux_session() {
   tmux a #
 }
 
-MPP_ENV_MODE=unknown
+MPP_ENV_MODE=
 USE_GRAD=1
 USE_ART=1
 PYART=

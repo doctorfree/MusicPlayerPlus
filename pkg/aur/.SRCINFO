@@ -15,6 +15,7 @@ pkgbase = musicplayerplus
 	depends = coreutils
 	depends = curl
 	depends = flac
+	depends = imagemagick
 	depends = jq
 	depends = libcurl-compat
 	depends = libmpdclient
