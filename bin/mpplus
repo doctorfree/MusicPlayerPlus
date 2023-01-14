@@ -1134,7 +1134,7 @@ make_it_so() {
         then
           tilix --title="${MTITLE}" \
                 --window-style=borderless \
-                --geometry=90x22+150+25 \
+                --geometry=80x20+150+25 \
                 --profile=MusicPlayer \
                 --command="${MPCOMM}" 2> /dev/null &
           [ "${USE_EWMH}" ] && {
@@ -1153,7 +1153,7 @@ make_it_so() {
             gnome-terminal --title="${MTITLE}" \
                   --profile=MusicPlayer \
                   --hide-menubar \
-                  --geometry=90x22+150+25 \
+                  --geometry=80x20+150+25 \
                   -- ${MPCOMM} &
             [ "${USE_EWMH}" ] && {
               sleep 1

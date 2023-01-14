@@ -21,8 +21,14 @@ fallback_image="$HOME/.config/mpcplus/ueberzug/img/fallback.png"
 # Only set this if the geometries are wrong or mpcplus shouts at you to do it.
 # Visually select/highlight a character on your terminal, zoom in an image 
 # editor and count how many pixels a character's width and height are.
-font_height=40
-font_width=20
+font_height=45
+font_width=22
+max_width=24
+reserved_playlist_cols=30
+reserved_cols_in_percent="false"
+force_square="false"
+square_alignment="top"
+left_aligned="true"
 use_kitty=
 
 unset LINES COLUMNS # Required in order for tput to work in a script
@@ -46,22 +52,21 @@ case "${MPP_MODE}" in
     ;;
   gnome)
     padding_top=5
-    padding_left=5
     padding_bottom=1
-    padding_right=1
+    padding_right=0
+    padding_left=5
     ;;
   kitty)
     padding_top=5
     padding_bottom=1
     padding_right=1
     padding_left=5
-    use_kitty=1
-
-    kitty_size=$(kitty icat --print-window-size)
-    pxwidth=${kitty_size%%x*}
-    pxheight=${kitty_size##*x}
-    font_height=$(echo "scale=0; $pxheight / $term_lines" | bc -l)
-    font_width=$(echo "scale=0; $pxwidth / $term_cols" | bc -l)
+#   use_kitty=1
+#   kitty_size=$(kitty icat --print-window-size)
+#   pxwidth=${kitty_size%%x*}
+#   pxheight=${kitty_size##*x}
+#   font_height=$(echo "scale=0; $pxheight / $term_lines" | bc -l)
+#   font_width=$(echo "scale=0; $pxwidth / $term_cols" | bc -l)
     ;;
   retro)
     padding_top=2
@@ -78,22 +83,16 @@ case "${MPP_MODE}" in
   tilix)
     padding_top=4
     padding_bottom=1
-    padding_right=1
+    padding_right=0
     padding_left=2
     ;;
   *)
     padding_top=5
+    padding_left=5
     padding_bottom=1
     padding_right=1
-    padding_left=5
     ;;
 esac
-max_width=0
-reserved_playlist_cols=30
-reserved_cols_in_percent="false"
-force_square="false"
-square_alignment="top"
-left_aligned="true"
 
 main() {
     kill_previous_instances >/dev/null 2>&1
@@ -115,7 +114,19 @@ kill_previous_instances() {
 
 find_cover_image() {
 
-    # First we check if the audio file has an embedded album art
+    # First we check for an external cover art image
+    album="$(mpc --format %album% current)"
+    file="$(mpc --format %file% current)"
+    album_dir="${file%/*}"
+    album_dir="$music_library/$album_dir"
+    found_covers="$(find "$album_dir" -type d -exec find {} -maxdepth 1 -type f \
+    -iregex ".*/.*\(${album}\|cover\|folder\|artwork\|front\).*[.]\\(jpe?g\|png\|gif\|bmp\)" \; )"
+    cover_path="$(echo "$found_covers" | head -n1)"
+    if [ -n "$cover_path" ]; then
+        return
+    fi
+
+    # If no external image is available then use embedded art if it exists
     ext="$(mpc --format %file% current | sed 's/^.*\.//')"
     if [ "$ext" = "flac" ]; then
         # since FFMPEG cannot export embedded FLAC art we use metaflac
@@ -127,18 +138,7 @@ find_cover_image() {
             /tmp/mpd_cover.jpg &&
             cover_path="/tmp/mpd_cover.jpg" && return
     fi
-
-    # If no embedded art was found we look inside the music file's directory
-    album="$(mpc --format %album% current)"
-    file="$(mpc --format %file% current)"
-    album_dir="${file%/*}"
-    album_dir="$music_library/$album_dir"
-    found_covers="$(find "$album_dir" -type d -exec find {} -maxdepth 1 -type f \
-    -iregex ".*/.*\(${album}\|cover\|folder\|artwork\|front\).*[.]\\(jpe?g\|png\|gif\|bmp\)" \; )"
-    cover_path="$(echo "$found_covers" | head -n1)"
-    if [ -n "$cover_path" ]; then
-        return
-    fi
+    [ -f "${cover_path}" ] || cover_path=
 
     # If we still failed to find a cover image, we use the fallback
     if [ -z "$cover_path" ]; then
@@ -154,7 +154,6 @@ display_cover_image() {
       kitty +kitten icat --silent --clear
       kitty +kitten icat --silent --align=left --z-index=-1 \
             --place="${ueber_width}x${ueber_height}@${ueber_left}x${padding_top}" \
-            "$cover_path"
     else
       send_to_ueberzug \
         action "add" \
@@ -204,10 +203,11 @@ compute_geometry() {
 compute_geometry_left_aligned() {
     ueber_left=$padding_left
     max_width_chars=$(( term_cols * max_width / 100 ))
-    if [ "$max_width" != 0 ] &&
-        [ $(( ueber_width + padding_right + padding_left )) -gt "$max_width_chars" ]; then
+    [ "$max_width" != 0 ] && {
+      [ $(( ueber_width + padding_right + padding_left )) -gt "$max_width_chars" ] && {
         ueber_width=$(( max_width_chars - padding_left - padding_right ))
-    fi
+      }
+    }
 }
 
 compute_geometry_right_aligned() {
