@@ -1114,8 +1114,8 @@ make_it_so() {
         kitty --title="${MTITLE}" \
               --start-as normal \
               --override font_size=18 \
-              --override initial_window_width=120c \
-              --override initial_window_height=28c \
+              --override initial_window_width=140c \
+              --override initial_window_height=32c \
               --override tab_bar_min_tabs=2 \
               ${KITTY_OPACITY} \
               ${MPCOMM} 2> /dev/null &
@@ -1134,7 +1134,7 @@ make_it_so() {
         then
           tilix --title="${MTITLE}" \
                 --window-style=borderless \
-                --geometry=90x20+150+25 \
+                --geometry=90x22+150+25 \
                 --profile=MusicPlayer \
                 --command="${MPCOMM}" 2> /dev/null &
           [ "${USE_EWMH}" ] && {
@@ -1153,7 +1153,7 @@ make_it_so() {
             gnome-terminal --title="${MTITLE}" \
                   --profile=MusicPlayer \
                   --hide-menubar \
-                  --geometry=90x20+150+25 \
+                  --geometry=90x22+150+25 \
                   -- ${MPCOMM} &
             [ "${USE_EWMH}" ] && {
               sleep 1
