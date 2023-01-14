@@ -17,6 +17,18 @@ MUSIC_DIR=
 # Need to expand a tilda to $HOME
 music_library="${MUSIC_DIR/#\~/$HOME}"
 fallback_image="$HOME/.config/mpcplus/ueberzug/img/fallback.png"
+
+# Only set this if the geometries are wrong or mpcplus shouts at you to do it.
+# Visually select/highlight a character on your terminal, zoom in an image 
+# editor and count how many pixels a character's width and height are.
+font_height=40
+font_width=20
+use_kitty=
+
+unset LINES COLUMNS # Required in order for tput to work in a script
+term_lines=$(tput lines)
+term_cols=$(tput cols)
+
 # Customize padding for each supported terminal emulator
 [ "${MPP_ENV_MODE}" ] && MPP_MODE="${MPP_ENV_MODE}"
 case "${MPP_MODE}" in
@@ -33,16 +45,23 @@ case "${MPP_MODE}" in
     padding_left=2
     ;;
   gnome)
-    padding_top=4
-    padding_left=3
+    padding_top=5
+    padding_left=5
     padding_bottom=1
     padding_right=1
     ;;
   kitty)
-    padding_top=3
+    padding_top=5
     padding_bottom=1
     padding_right=1
-    padding_left=2
+    padding_left=5
+    use_kitty=1
+
+    kitty_size=$(kitty icat --print-window-size)
+    pxwidth=${kitty_size%%x*}
+    pxheight=${kitty_size##*x}
+    font_height=$(echo "scale=0; $pxheight / $term_lines" | bc -l)
+    font_width=$(echo "scale=0; $pxwidth / $term_cols" | bc -l)
     ;;
   retro)
     padding_top=2
@@ -51,8 +70,8 @@ case "${MPP_MODE}" in
     padding_right=1
     ;;
   simple)
-    padding_left=1
-    padding_top=3
+    padding_left=4
+    padding_top=4
     padding_bottom=1
     padding_right=1
     ;;
@@ -66,21 +85,15 @@ case "${MPP_MODE}" in
     padding_top=5
     padding_bottom=1
     padding_right=1
-    padding_left=1
+    padding_left=5
     ;;
 esac
-max_width=25
+max_width=0
 reserved_playlist_cols=30
 reserved_cols_in_percent="false"
 force_square="false"
 square_alignment="top"
 left_aligned="true"
-
-# Only set this if the geometries are wrong or mpcplus shouts at you to do it.
-# Visually select/highlight a character on your terminal, zoom in an image 
-# editor and count how many pixels a character's width and height are.
-font_height=40
-font_width=20
 
 main() {
     kill_previous_instances >/dev/null 2>&1
@@ -136,7 +149,14 @@ find_cover_image() {
 display_cover_image() {
     compute_geometry
 
-    send_to_ueberzug \
+    if [ "${use_kitty}" ]
+    then
+      kitty +kitten icat --silent --clear
+      kitty +kitten icat --silent --align=left --z-index=-1 \
+            --place="${ueber_width}x${ueber_height}@${ueber_left}x${padding_top}" \
+            "$cover_path"
+    else
+      send_to_ueberzug \
         action "add" \
         identifier "mpd_cover" \
         path "$cover_path" \
@@ -147,6 +167,7 @@ display_cover_image() {
         synchronously_draw "True" \
         scaler "forced_cover" \
         scaling_position_x "0.5"
+    fi
 }
 
 detect_window_resizes() {
@@ -160,10 +181,7 @@ detect_window_resizes() {
 # ==== Helper functions =========================================================
 
 compute_geometry() {
-    unset LINES COLUMNS # Required in order for tput to work in a script
-    term_lines=$(tput lines)
-    term_cols=$(tput cols)
-    if [ -z "$font_height" ] || [ -z "$font_height" ]; then
+    if [ -z "$font_height" ] || [ -z "$font_width" ]; then
         guess_font_size
     fi
 
@@ -273,7 +291,7 @@ END
     # must use a temporary file
     term_width=$(awk '{print $1}' /tmp/mpcplus_geometry.txt)
     term_height=$(awk '{print $2}' /tmp/mpcplus_geometry.txt)
-    rm "/tmp/mpcplus_geometry.txt"
+    rm -f "/tmp/mpcplus_geometry.txt"
 
     if ! is_font_size_successfully_computed; then
         echo "Failed to guess font size, try setting it in mpcplus_cover_art.sh settings"
