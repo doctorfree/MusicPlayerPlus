@@ -1,7 +1,9 @@
 #!/bin/bash
+#
 # Cover art script for mpcplus-ueberzug
 
 ## SETTINGS
+KITTY_SOCKET="/tmp/__mppkitty__"
 # Get music library location from MusicPlayerPlus configuration
 MUSIC_DIR=
 [ -f "${HOME}/.config/mpprc" ] && . "${HOME}/.config/mpprc"
@@ -57,12 +59,13 @@ case "${MPP_MODE}" in
     padding_left=5
     ;;
   kitty)
-    padding_top=5
+    padding_top=1
     padding_bottom=1
     padding_right=1
-    padding_left=5
-#   use_kitty=1
+    padding_left=1
+    use_kitty=1
 #   kitty_size=$(kitty icat --print-window-size)
+#   kitty_size=$(kitty @ --to unix:${KITTY_SOCKET} kitten icat --print-window-size)
 #   pxwidth=${kitty_size%%x*}
 #   pxheight=${kitty_size##*x}
 #   font_height=$(echo "scale=0; $pxheight / $term_lines" | bc -l)
@@ -151,9 +154,13 @@ display_cover_image() {
 
     if [ "${use_kitty}" ]
     then
-      kitty +kitten icat --silent --clear
-      kitty +kitten icat --silent --align=left --z-index=-1 \
+      [ -S ${KITTY_SOCKET} ] && {
+        kitty @ --to unix:${KITTY_SOCKET} kitten --match title:'mpcplus-tmux' \
+            icat --silent --clear
+        kitty @ --to unix:${KITTY_SOCKET} kitten --match title:'mpcplus-tmux' \
+            icat --align=left --z-index=-1 \
             --place="${ueber_width}x${ueber_height}@${ueber_left}x${padding_top}" \
+      }
     else
       send_to_ueberzug \
         action "add" \

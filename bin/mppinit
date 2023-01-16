@@ -17,11 +17,13 @@ MCPTDIR=${MPCONFDIR}/scripts
 CCPTDIR=${MPPCDIR}/calliope
 USERCONF=${HOME}/.config
 MPCDIR=${USERCONF}/mpcplus
+CAVDIR=${USERCONF}/mppcava
 NCMDIR=${USERCONF}/ncmpcpp
 MPDCONFDIR="${USERCONF}/mpd"
 MPDCONF="${MPDCONFDIR}/mpd.conf"
 MPPCONF="${USERCONF}/mpprc"
 PWCONFDIR="${USERCONF}/pipewire"
+TMUXPDIR="${USERCONF}/tmuxp"
 BEETSCONFDIR="${USERCONF}/beets"
 BEETSLOGDIR="${BEETSCONFDIR}/logs"
 BEETSCONF="${BEETSCONFDIR}/config.yaml"
@@ -2574,35 +2576,35 @@ else
   cp -a ${OPCONFDIR}/ueberzug ${MPCDIR}/ueberzug
 fi
 
-[ -d ${USERCONF}/mppcava ] || mkdir -p ${USERCONF}/mppcava
-if [ -f ${USERCONF}/mppcava/config ]
+[ -d ${CAVDIR} ] || mkdir -p ${CAVDIR}
+if [ -f ${CAVDIR}/config ]
 then
-  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
+  [ "${overwrite}" ] && cp ${MPPCDIR}/mppcava/config ${CAVDIR}/config
 else
-  cp ${MPPCDIR}/mppcava/config ${USERCONF}/mppcava/config
+  cp ${MPPCDIR}/mppcava/config ${CAVDIR}/config
 fi
 
-if [ -d ${USERCONF}/tmuxp ]
+if [ -d ${TMUXPDIR} ]
 then
   for tmc in ${MPPCDIR}/tmuxp/*
   do
     tmcbase=`basename "${tmc}"`
     if [ -d "${tmc}" ]
     then
-      [ -d "${USERCONF}/tmuxp/${tmcbase}" ] || {
-        cp -a "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
+      [ -d "${TMUXPDIR}/${tmcbase}" ] || {
+        cp -a "${tmc}" "${TMUXPDIR}/${tmcbase}"
       }
     else
-      if [ -f "${USERCONF}/tmuxp/${tmcbase}" ]
+      if [ -f "${TMUXPDIR}/${tmcbase}" ]
       then
-        [ "${overwrite}" ] && cp "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
+        [ "${overwrite}" ] && cp "${tmc}" "${TMUXPDIR}/${tmcbase}"
       else
-        cp "${tmc}" "${USERCONF}/tmuxp/${tmcbase}"
+        cp "${tmc}" "${TMUXPDIR}/${tmcbase}"
       fi
     fi
   done
 else
-  cp -a ${MPPCDIR}/tmuxp ${USERCONF}/tmuxp
+  cp -a ${MPPCDIR}/tmuxp ${TMUXPDIR}
 fi
 
 create_profiles
@@ -3169,17 +3171,17 @@ fi
 # Integrate previously set cava user preferences into mppcava/config
 [ -x ${SCPTDIR}/set_prev_cava.sh ] && ${SCPTDIR}/set_prev_cava.sh
 
-cp ${USERCONF}/mpcplus/config ${USERCONF}/mpcplus/config-art.conf
+cp ${MPCDIR}/config ${MPCDIR}/config-art.conf
 echo '##### album cover art display #####
 header_visibility = no
 statusbar_visibility = no
 execute_on_song_change = "~/.config/mpcplus/cover_obs.sh"' \
-  >> ${USERCONF}/mpcplus/config-art.conf
+  >> ${MPCDIR}/config-art.conf
 
-cp ${USERCONF}/mppcava/config ${USERCONF}/mppcava/config-tmux
-cat ${USERCONF}/mppcava/config-tmux | \
+cp ${CAVDIR}/config ${CAVDIR}/config-tmux
+cat ${CAVDIR}/config-tmux | \
   sed -e "s/^gradient/; gradient/" > /tmp/cav$$
-cp /tmp/cav$$ ${USERCONF}/mppcava/config-tmux
+cp /tmp/cav$$ ${CAVDIR}/config-tmux
 rm -f /tmp/cav$$
 
 disable_sys_mpd

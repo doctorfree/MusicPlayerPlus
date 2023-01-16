@@ -1,0 +1,65 @@
+#!/bin/bash
+
+function launch_player() {
+  kitty @ new-window --new-tab --tab-title music --title cover sh
+  kitty @ send-text 'export PS1="" \r'
+  change_cover
+  kitty @ new-window --title mpcplus mpcplus
+  kitty @ resize-window --increment 93
+}
+
+function change_cover() {
+  kitty @ kitten icat --clear
+  kitty @ kitten icat --align=left --z-index=-1 --place=20x10@5x5 --hold "${cover_path}"
+}
+
+function extract_cover() {
+  cover_path=
+  album="$(mpc --format %album% current)"
+  file="$(mpc --format %file% current)"
+  album_dir="${file%/*}"
+  album_dir="${music_library}/${album_dir}"
+  found_covers="$(find "${album_dir}" -type d -exec find {} -maxdepth 1 -type f \
+    -iregex ".*/.*\(${album}\|cover\|folder\|artwork\|front\).*[.]\\(jpe?g\|png\|gif\|bmp\)" \; )"
+  cover_path="$(echo "${found_covers}" | head -n1)"
+
+  [ "${cover_path}" ] || {
+    # If no external art was found we look inside the track file
+    temp_song="$(mktemp)"
+    cp "${music_library}/${file}" "$temp_song"
+
+    ffmpeg \
+      -hide_banner \
+      -loglevel 0 \
+      -y \
+      -i "$temp_song" \
+      -vf scale=400:-1 \
+      "/tmp/cover.png" > /dev/null 2>&1
+
+    cover_path="/tmp/cover.png"
+    rm "$temp_song"
+  }
+}
+
+# Get music library location from MusicPlayerPlus configuration
+MUSIC_DIR=
+[ -f "${HOME}/.config/mpprc" ] && . "${HOME}/.config/mpprc"
+# If music library location not set, get it from MPD configuration
+[ "${MUSIC_DIR}" ] || {
+  MPDCONF="${HOME}/.config/mpd/mpd.conf"
+  [ -f "${MPDCONF}" ] && {
+    MUSIC_DIR=`grep ^music_directory ${MPDCONF}`
+    MUSIC_DIR=`echo ${MUSIC_DIR} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+  }
+  [ "${MUSIC_DIR}" ] || MUSIC_DIR="$HOME/Music"
+}
+# Need to expand a tilda to $HOME
+music_library="${MUSIC_DIR/#\~/$HOME}"
+fallback_image="$HOME/.config/mpcplus/ueberzug/img/fallback.png"
+
+if [[ $1 == "extract" ]]; then
+  extract_cover
+  change_cover
+else
+  launch_player
+fi

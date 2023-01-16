@@ -34,7 +34,7 @@ BOLD=$(tput bold 2>/dev/null)
 NORM=$(tput sgr0 2>/dev/null)
 PLEASE="Please enter your"
 VTITLE="Spectrum Visualizer"
-MTITLE="Music Player Plus"
+MTITLE="MusicPlayerPlus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
 DO_NOT_EXIT=
@@ -843,6 +843,7 @@ make_it_so() {
       then
         QRTRHEIGHT=1
         kitty --title "${VTITLE}" \
+              --config NONE \
               --start-as fullscreen \
               --override font_size=8 \
               ${KITTY_OPACITY} \
@@ -950,6 +951,7 @@ make_it_so() {
       if [ "${KITTY}" ]
       then
         kitty --title="${VTITLE}" \
+              --config NONE \
               --start-as normal \
               --override font_size=8 \
               --override initial_window_width=240c \
@@ -1069,8 +1071,11 @@ make_it_so() {
       if [ "${KITTY}" ]
       then
         kitty --title="${MTITLE}" \
+              --config NONE \
               --start-as fullscreen \
-              --override font_size=18 \
+              --override font_size=28 \
+              --listen-on unix:${KITTY_SOCKET} \
+              --override allow_remote_control=yes \
               ${KITTY_OPACITY} \
               --override tab_bar_min_tabs=2 \
               ${MPCOMM} 2> /dev/null &
@@ -1112,10 +1117,13 @@ make_it_so() {
       if [ "${KITTY}" ]
       then
         kitty --title="${MTITLE}" \
+              --config NONE \
               --start-as normal \
-              --override font_size=18 \
-              --override initial_window_width=140c \
-              --override initial_window_height=32c \
+              --listen-on unix:${KITTY_SOCKET} \
+              --override allow_remote_control=yes \
+              --override font_size=28 \
+              --override initial_window_width=92c \
+              --override initial_window_height=26c \
               --override tab_bar_min_tabs=2 \
               ${KITTY_OPACITY} \
               ${MPCOMM} 2> /dev/null &
@@ -3589,6 +3597,7 @@ else
 fi
 
 USE_MPCPLUS=1
+KITTY_SOCKET="/tmp/__mppkitty__"
 vault=
 dryrun=
 while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:U:v:wWx:X:yYZz:u" flag
