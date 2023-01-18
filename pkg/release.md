@@ -19,6 +19,7 @@ This major new release of MusicPlayerPlus adds support for many new features and
     * RPM format packaging (tested on Fedora 35, CentOS 8)
 * Support for Kitty as default terminal emualator
     * Custom Kitty configuration, themes, and sessions
+* Support for album cover art display in tabbed terminals
 * Support for YAMS Last.fm scrobbler activation
 * Automated download of Soundcloud favorites
 * Automated download of Bandcamp collections

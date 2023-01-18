@@ -1,5 +1,5 @@
 new_tab mpplus
 title mpplus
 layout fat:bias=70;full_size=1;mirrored=false
-launch bash -c mpcplus
+launch bash -c $HOME/.config/mpcplus/ueberzug/mpcplus-ueberzug
 launch bash -c mppcava

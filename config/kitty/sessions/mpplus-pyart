@@ -1,0 +1,5 @@
+new_tab mpplus-env
+title mpplus-env
+layout fat:bias=50;full_size=1;mirrored=false
+launch bash -c $MPPCOMM
+launch bash -c $VIZCOMM

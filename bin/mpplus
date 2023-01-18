@@ -1034,7 +1034,7 @@ make_it_so() {
 
   if [ "${FULLSCREEN}" ]
   then
-    KITTY_OPACITY="--override background_opacity=0.7"
+    KITTY_OPACITY="--override background_opacity=0.8"
   else
     KITTY_OPACITY="--override background_opacity=1.0"
   fi

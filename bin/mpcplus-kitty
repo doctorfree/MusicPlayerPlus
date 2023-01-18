@@ -1,0 +1,165 @@
+#!/bin/bash
+#
+# mpcplus-kitty - run the mpcplus MPD client, spectrum visualizer using kitty
+
+SESSION=musicplayerplus
+KITTY_SESSION="${HOME}/.config/kitty/sessions/mpplus-env"
+
+if [ -f ${HOME}/.config/mpcplus/config ]
+then
+  MPCDIR="${HOME}/.config/mpcplus"
+else
+  if [ -f ${HOME}/.mpcplus/config ]
+  then
+    MPCDIR="${HOME}/.mpcplus"
+  else
+    mppinit
+    MPCDIR="${HOME}/.config/mpcplus"
+  fi
+fi
+
+usage() {
+  printf "\nUsage: mpcplus-kitty [-A] [-c client] [-g] [-p script] [-r] [-u]"
+  printf "\nWhere:"
+  printf "\n\t-A indicates disable display of album cover art"
+  printf "\n\t-c client specifies an MPD client to run in the client pane"
+  printf "\n\t\tAlbum cover art display is only supported for mpcplus and ncmpcpp"
+  printf "\n\t-g indicates do not use gradient colors for spectrum visualizer"
+  printf "\n\t-p script specifies an asciimatics script to run"
+  printf " in the visualizer pane"
+  printf "\n\t-r indicates record kitty session with asciinema"
+  printf "\n\t-u displays this usage message and exits\n"
+  printf "\nDefaults: cover art enabled, ascii art disabled, recording disabled"
+  printf "\nThis run:"
+  if [ "${PYART}" ]
+  then
+    printf "\n\tascii art enabled"
+  else
+    printf "\n\tascii art disabled"
+  fi
+  if [ "${RECORD}" ]
+  then
+    printf "\n\trecording enabled"
+  else
+    printf "\n\trecording disabled"
+  fi
+  printf "\nType 'man mpcplus-kitty' for detailed usage info on mpcplus-kitty"
+  printf "\nType 'man mpcplus' for detailed usage info on the mpcplus MPD client\n"
+  exit 1
+}
+
+start_kitty_session() {
+  KITTY_SOCKET="/tmp/__mppkitty__"
+  MTITLE="MusicPlayerPlus"
+  KITTY_OPACITY="--override background_opacity=0.8"
+
+  kitty --title="${MTITLE}" \
+        --config NONE \
+        --start-as normal \
+        --listen-on unix:${KITTY_SOCKET} \
+        --override allow_remote_control=yes \
+        --override font_size=28 \
+        --override initial_window_width=92c \
+        --override initial_window_height=26c \
+        --override tab_bar_min_tabs=2 \
+        ${KITTY_OPACITY} \
+        --session ${KITTY_SESSION} &
+}
+
+USE_GRAD=1
+USE_ART=1
+PYART=
+RECORD=
+USAGE=
+CLIENT_COMM=mpcplus
+USE_MPCPLUS=1
+ALT_SCRIPT="${MPCDIR}/ueberzug/mpcplus-ueberzug"
+ARGS="$*"
+while getopts "Ac:gp:ru" flag; do
+    case $flag in
+        A)
+            USE_ART=
+          ;;
+        c)
+          CLIENT_COMM=${OPTARG}
+          client_name=`echo "${CLIENT_COMM}" | awk ' { print $1 } '`
+          client_name=`basename ${client_name}`
+          [ "${client_name}" == "mpcplus" ] || {
+            USE_MPCPLUS=
+            [ "${client_name}" == "ncmpcpp" ] || USE_ART=
+          }
+          ;;
+        g)
+          USE_GRAD=
+          ;;
+        p)
+          PYART=${OPTARG}
+          ;;
+        r)
+          have_nema=`type -p asciinema`
+          [ "${have_nema}" ] && RECORD=1
+          ;;
+        u)
+          USAGE=1
+          ;;
+    esac
+done
+shift $(( OPTIND - 1 ))
+
+[ "${USAGE}" ] && usage
+
+if [ "${DISPLAY}" ]
+then
+  consolemode=
+  # Check if on a console screen
+  have_tty=`type -p tty`
+  [ "${have_tty}" ] && {
+    tty=$(tty)
+    echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
+    echo "${tty}" | grep /dev/con > /dev/null && consolemode=1
+  }
+  [ "${consolemode}" ] || {
+    # Check if this is an SSH session
+    [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ] && consolemode=1
+  }
+  [ "${consolemode}" ] && USE_ART=
+else
+  USE_ART=
+fi
+
+if [ "${USE_ART}" ]
+then
+  if [ "${USE_MPCPLUS}" ]
+  then
+    MPPCOMM="${ALT_SCRIPT}"
+  else
+    MPPCOMM="${ALT_SCRIPT} -c '${CLIENT_COMM}'"
+  fi
+else
+  MPPCOMM="${CLIENT_COMM}"
+fi
+if [ "${USE_GRAD}" ]
+then
+  VIZCOMM="mppcava"
+else
+  VIZCOMM="mppcava -p ${HOME}/.config/mppcava/config-tmux"
+fi
+[ "${PYART}" ] && {
+  have_pyart=`type -p mpp${PYART}`
+  [ "${have_pyart}" ] && {
+    VIZCOMM="mpp${PYART}"
+    KITTY_SESSION="${HOME}/.config/kitty/sessions/mpplus-pyart"
+  }
+}
+export MPPCOMM VIZCOMM
+
+start_kitty_session
+
+[ "${RECORD}" ] && {
+  VID_DIR=$HOME/Videos
+  [ -d ${VID_DIR} ] || mkdir ${VID_DIR}
+  REC_DIR=${VID_DIR}/asciinema
+  [ -d ${REC_DIR} ] || mkdir ${REC_DIR}
+  echo "Recording this ${SESSION} session with asciinema"
+  asciinema rec ${REC_DIR}/${SESSION}-$(date +%F--%H%M).cast
+}

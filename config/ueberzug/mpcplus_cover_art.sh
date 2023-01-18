@@ -48,40 +48,34 @@ case "${MPP_MODE}" in
     ;;
   current)
     padding_top=3
-    padding_bottom=1
-    padding_right=1
-    padding_left=2
+    padding_bottom=2
+    padding_right=0
+    padding_left=1
     ;;
   gnome)
     padding_top=5
     padding_bottom=1
     padding_right=0
-    padding_left=5
+    padding_left=4
     ;;
   kitty)
-    padding_top=1
+    padding_top=3
     padding_bottom=1
-    padding_right=1
+    padding_right=0
     padding_left=1
-    use_kitty=1
-#   kitty_size=$(kitty icat --print-window-size)
-#   kitty_size=$(kitty @ --to unix:${KITTY_SOCKET} kitten icat --print-window-size)
-#   pxwidth=${kitty_size%%x*}
-#   pxheight=${kitty_size##*x}
-#   font_height=$(echo "scale=0; $pxheight / $term_lines" | bc -l)
-#   font_width=$(echo "scale=0; $pxwidth / $term_cols" | bc -l)
+#   use_kitty=1
     ;;
   retro)
     padding_top=2
-    padding_left=3
+    padding_left=0
     padding_bottom=1
-    padding_right=1
+    padding_right=0
     ;;
   simple)
-    padding_left=4
-    padding_top=4
+    padding_top=3
+    padding_left=1
     padding_bottom=1
-    padding_right=1
+    padding_right=0
     ;;
   tilix)
     padding_top=4
@@ -154,12 +148,13 @@ display_cover_image() {
 
     if [ "${use_kitty}" ]
     then
+      # Not yet working, Kitty still uses Ueberzug for now
       [ -S ${KITTY_SOCKET} ] && {
-        kitty @ --to unix:${KITTY_SOCKET} kitten --match title:'mpcplus-tmux' \
-            icat --silent --clear
-        kitty @ --to unix:${KITTY_SOCKET} kitten --match title:'mpcplus-tmux' \
-            icat --align=left --z-index=-1 \
+        kitty @ --to unix:${KITTY_SOCKET} icat --silent --clear
+        kitty @ --to unix:${KITTY_SOCKET} \
+            icat --align=left --z-index=-1 --hold --silent \
             --place="${ueber_width}x${ueber_height}@${ueber_left}x${padding_top}" \
+            "${cover_path}"
       }
     else
       send_to_ueberzug \
