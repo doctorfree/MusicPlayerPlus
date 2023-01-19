@@ -14,7 +14,7 @@ else
     . ${SRC}/VERSION
   else
     VERSION=3.0.1
-    RELEASE=2
+    RELEASE=3
     PACKAGE=1
   fi
 fi
