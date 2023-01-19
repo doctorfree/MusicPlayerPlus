@@ -494,6 +494,211 @@ remove_mopidy() {
   have_mopidy=
 }
 
+save_mpp_conf() {
+  echo "## MusicPlayerPlus runtime configuration" > ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  After modifying any of the following settings, run the command:" >> ${MPPCONF}
+  echo "#    mppinit sync" >> ${MPPCONF}
+  echo "#  as your normal MusicPlayerPlus user" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## Music library location" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "MUSIC_DIR=\"${MUSIC_DIR}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## MPD Client" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "MPD_CLIENT=\"${MPD_CLIENT}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## General settings" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# To enable any of these, set to 1" >> ${MPPCONF}
+  echo "# For example, to enable cover art display in tmux sessions set COVER_ART=1" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Has mppinit been run" >> ${MPPCONF}
+  echo "MPPINIT=${MPPINIT}" >> ${MPPCONF}
+  echo "# Play audio during asciimatics animations" >> ${MPPCONF}
+  echo "AUDIO=${AUDIO}" >> ${MPPCONF}
+  echo "# Display cover art in tmux sessions" >> ${MPPCONF}
+  echo "COVER_ART=${COVER_ART}" >> ${MPPCONF}
+  echo "# Display mpcplus and mppcava in a tmux session" >> ${MPPCONF}
+  echo "USE_TMUX=${USE_TMUX}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "## Terminal emulator preference" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  Can be one of: console, current, gnome, kitty, retro, simple, tilix" >> ${MPPCONF}
+  echo "#  Where:" >> ${MPPCONF}
+  echo "#    'console' will force a tmux session" >> ${MPPCONF}
+  echo "#    'current' will force a tmux session in the current terminal window" >> ${MPPCONF}
+  echo "#    'gnome' will use the gnome-terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'kitty' will use the Kitty terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'retro' will use cool-retro-term if installed" >> ${MPPCONF}
+  echo "#    'simple' will use the ST terminal emulator if installed" >> ${MPPCONF}
+  echo "#    'tilix' will use the Tilix terminal emulator if installed" >> ${MPPCONF}
+  echo "#  Default fallback if none specified or not available is Kitty" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "#  Uncomment the preferred mode" >> ${MPPCONF}
+  if [ "${CONSOLE_MODE}" ]
+  then
+    echo "MPP_MODE=console" >> ${MPPCONF}
+    echo "#MPP_MODE=current" >> ${MPPCONF}
+    echo "#MPP_MODE=gnome" >> ${MPPCONF}
+    echo "#MPP_MODE=retro" >> ${MPPCONF}
+    echo "#MPP_MODE=simple" >> ${MPPCONF}
+    echo "#MPP_MODE=tilix" >> ${MPPCONF}
+    echo "#MPP_MODE=kitty" >> ${MPPCONF}
+  else
+    echo "#MPP_MODE=console" >> ${MPPCONF}
+    if [ "${CURRENT}" ]
+    then
+      echo "MPP_MODE=current" >> ${MPPCONF}
+      echo "#MPP_MODE=gnome" >> ${MPPCONF}
+      echo "#MPP_MODE=retro" >> ${MPPCONF}
+      echo "#MPP_MODE=simple" >> ${MPPCONF}
+      echo "#MPP_MODE=tilix" >> ${MPPCONF}
+      echo "#MPP_MODE=kitty" >> ${MPPCONF}
+    else
+      echo "#MPP_MODE=current" >> ${MPPCONF}
+      if [ "${GNOME}" ]
+      then
+        echo "MPP_MODE=gnome" >> ${MPPCONF}
+        echo "#MPP_MODE=retro" >> ${MPPCONF}
+        echo "#MPP_MODE=simple" >> ${MPPCONF}
+        echo "#MPP_MODE=tilix" >> ${MPPCONF}
+        echo "#MPP_MODE=kitty" >> ${MPPCONF}
+      else
+        echo "#MPP_MODE=gnome" >> ${MPPCONF}
+        if [ "${RETRO}" ]
+        then
+          echo "MPP_MODE=retro" >> ${MPPCONF}
+          echo "#MPP_MODE=simple" >> ${MPPCONF}
+          echo "#MPP_MODE=tilix" >> ${MPPCONF}
+          echo "#MPP_MODE=kitty" >> ${MPPCONF}
+        else
+          echo "#MPP_MODE=retro" >> ${MPPCONF}
+          if [ "${SIMPLE}" ]
+          then
+            echo "MPP_MODE=simple" >> ${MPPCONF}
+            echo "#MPP_MODE=tilix" >> ${MPPCONF}
+            echo "#MPP_MODE=kitty" >> ${MPPCONF}
+          else
+            echo "#MPP_MODE=simple" >> ${MPPCONF}
+            if [ "${TILIX}" ]
+            then
+              echo "MPP_MODE=tilix" >> ${MPPCONF}
+              echo "#MPP_MODE=kitty" >> ${MPPCONF}
+            else
+              echo "#MPP_MODE=tilix" >> ${MPPCONF}
+              if [ "${KITTY}" ]
+              then
+                echo "MPP_MODE=kitty" >> ${MPPCONF}
+              else
+                echo "#MPP_MODE=kitty" >> ${MPPCONF}
+              fi
+            fi
+          fi
+        fi
+      fi
+    fi
+  fi
+
+  echo "" >> ${MPPCONF}
+  echo "## Album cover art position" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Album cover art is positioned within the preferred terminal window with" >> ${MPPCONF}
+  echo "# padding values hard coded in the cover art display script. These padding" >> ${MPPCONF}
+  echo "# values are customized for each of the supported terminal emulators. The" >> ${MPPCONF}
+  echo "# default padding values should suffice but they can be overriden here. To" >> ${MPPCONF}
+  echo "# override the padding values, set OVERRIDE_PADDING=1 and set any or all of" >> ${MPPCONF}
+  echo "# the 'padding_override_*' values to adjust album cover art placement. See" >> ${MPPCONF}
+  echo "# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values." >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Set to 1 to override default padding, leave unset to use custom defaults" >> ${MPPCONF}
+  echo "OVERRIDE_PADDING=${OVERRIDE_PADDING}" >> ${MPPCONF}
+  echo "# Uncomment any or all and set preferred padding value(s)" >> ${MPPCONF}
+  if [ "${padding_override_top}" ]
+  then
+    echo "padding_override_top=${padding_override_top}" >> ${MPPCONF}
+  else
+    echo "# padding_override_top=3" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_bottom}" ]
+  then
+    echo "padding_override_bottom=${padding_override_bottom}" >> ${MPPCONF}
+  else
+    echo "# padding_override_bottom=1" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_left}" ]
+  then
+    echo "padding_override_left=${padding_override_left}" >> ${MPPCONF}
+  else
+    echo "# padding_override_left=1" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_right}" ]
+  then
+    echo "padding_override_right=${padding_override_right}" >> ${MPPCONF}
+  else
+    echo "# padding_override_right=0" >> ${MPPCONF}
+  fi
+  echo "#" >> ${MPPCONF}
+  echo "# The font size in pixels is set to 22x45 for album cover art display." >> ${MPPCONF}
+  echo "# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or" >> ${MPPCONF}
+  echo "# font height in pixels to match your system." >> ${MPPCONF}
+  echo "OVERRIDE_FONT_SIZE=${OVERRIDE_FONT_SIZE}" >> ${MPPCONF}
+  echo "# Uncomment either or both and set font width and/or font height value(s)" >> ${MPPCONF}
+  if [ "${font_override_width}" ]
+  then
+    echo "font_override_width=${font_override_width}" >> ${MPPCONF}
+  else
+    echo "# font_override_width=22" >> ${MPPCONF}
+  fi
+  if [ "${font_override_height}" ]
+  then
+    echo "font_override_height=${font_override_height}" >> ${MPPCONF}
+  else
+    echo "# font_override_height=45" >> ${MPPCONF}
+  fi
+
+  echo "" >> ${MPPCONF}
+  echo "## Service access" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}
+  echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
+  echo "BANDCAMP_USER=${BANDCAMP_USER}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >> ${MPPCONF}
+  echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >> ${MPPCONF}
+  echo "# Your Discogs username is the last component of the profile URL." >> ${MPPCONF}
+  echo "DISCOGS_USER=${DISCOGS_USER}" >> ${MPPCONF}
+  echo "# The Discogs API token can be found by visiting" >> ${MPPCONF}
+  echo "# https://www.discogs.com/settings/developers" >> ${MPPCONF}
+  echo "DISCOGS_TOKEN=${DISCOGS_TOKEN}" >> ${MPPCONF}
+  echo "# Location of the generated custom Discogs Obsidian vault" >> ${MPPCONF}
+  echo "# Can be anywhere you have write permission" >> ${MPPCONF}
+  echo "DISCOGS_DIR=\"${DISCOGS_DIR}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
+  echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
+  echo "LASTFM_USER=${LASTFM_USER}" >> ${MPPCONF}
+  echo "LASTFM_APIKEY=${LASTFM_APIKEY}" >> ${MPPCONF}
+  echo "LASTFM_SECRET=${LASTFM_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >> ${MPPCONF}
+  echo "# click on the username at top right then 'Profile'. The user slug" >> ${MPPCONF}
+  echo "# is the last component of the URL when viewing your Soundcloud Profile." >> ${MPPCONF}
+  echo "# If you do not have a Soundcloud account, leave blank" >> ${MPPCONF}
+  echo "SOUNDCLOUD_SLUG=${SOUNDCLOUD_SLUG}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Spotify client id and client secret" >> ${MPPCONF}
+  echo "# If you do not have a Spotify account, leave blank" >> ${MPPCONF}
+  echo "SPOTIFY_CLIENT=${SPOTIFY_CLIENT}" >> ${MPPCONF}
+  echo "SPOTIFY_SECRET=${SPOTIFY_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your YouTube api key" >> ${MPPCONF}
+  echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
+  echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >> ${MPPCONF}
+  chmod 600 ${MPPCONF}
+}
+
 init_mpp_conf() {
   if [ -f ${MPPCDIR}/mpprc ]
   then
@@ -2360,33 +2565,7 @@ remove_kitty() {
   exit 0
 }
 
-[ ${initialized} ] && {
-  [ "${proceed}" ] || {
-    [ "${overwrite}" ] || {
-      printf "\nMusicPlayerPlus initialization has previously been performed"
-      printf "\nand there is an existing MusicPlayerPlus configuration.\n\n"
-      while true
-      do
-        read -p "Preserve existing, Overwrite existing, Skip ? (p/o/s) " pos
-        case $pos in
-          [Pp]* )
-            break
-            ;;
-          [Oo]* )
-            overwrite=1
-            break
-            ;;
-          [Ss]* )
-            printf "\nExiting.\n\n"
-            exit 0
-            ;;
-          * ) echo "Please answer 'p', 'o', or 's'."
-            ;;
-        esac
-      done
-    }
-  }
-}
+save_mpp_conf
 
 printf "\nInitializing MusicPlayerPlus, please wait ..."
 

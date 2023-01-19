@@ -3360,9 +3360,17 @@ pathadd "/usr/local/bin"
 pathadd "${HOME}/.local/bin"
 export PATH
 
-# Check if initialization has been run
 [ -f "${MPPCONF}" ] || save_config
 [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+# Convert 0 settings to unset
+[ "${MPPINIT}" == "0" ] && MPPINIT=
+[ "${AUDIO}" == "0" ] && AUDIO=
+[ "${COVER_ART}" == "0" ] && COVER_ART=
+[ "${USE_TMUX}" == "0" ] && USE_TMUX=
+[ "${OVERRIDE_PADDING}" == "0" ] && OVERRIDE_PADDING=
+[ "${OVERRIDE_FONT_SIZE}" == "0" ] && OVERRIDE_FONT_SIZE=
+
+# Check if initialization has been run
 [ "${MPPINIT}" ] || {
   echo ""
   echo "MusicPlayerPlus initialization needs to be run once."
