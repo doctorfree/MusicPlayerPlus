@@ -3247,6 +3247,63 @@ save_config() {
   fi
 
   echo "" >> ${MPPCONF}
+  echo "## Album cover art position" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Album cover art is positioned within the preferred terminal window with" >> ${MPPCONF}
+  echo "# padding values hard coded in the cover art display script. These padding" >> ${MPPCONF}
+  echo "# values are customized for each of the supported terminal emulators. The" >> ${MPPCONF}
+  echo "# default padding values should suffice but they can be overriden here. To" >> ${MPPCONF}
+  echo "# override the padding values, set OVERRIDE_PADDING=1 and set any or all of" >> ${MPPCONF}
+  echo "# the 'padding_override_*' values to adjust album cover art placement. See" >> ${MPPCONF}
+  echo "# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values." >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# Set to 1 to override default padding, leave unset to use custom defaults" >> ${MPPCONF}
+  echo "OVERRIDE_PADDING=${OVERRIDE_PADDING}" >> ${MPPCONF}
+  echo "# Uncomment any or all and set preferred padding value(s)" >> ${MPPCONF}
+  if [ "${padding_override_top}" ]
+  then
+    echo "padding_override_top=${padding_override_top}" >> ${MPPCONF}
+  else
+    echo "# padding_override_top=3" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_bottom}" ]
+  then
+    echo "padding_override_bottom=${padding_override_bottom}" >> ${MPPCONF}
+  else
+    echo "# padding_override_bottom=1" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_left}" ]
+  then
+    echo "padding_override_left=${padding_override_left}" >> ${MPPCONF}
+  else
+    echo "# padding_override_left=1" >> ${MPPCONF}
+  fi
+  if [ "${padding_override_right}" ]
+  then
+    echo "padding_override_right=${padding_override_right}" >> ${MPPCONF}
+  else
+    echo "# padding_override_right=0" >> ${MPPCONF}
+  fi
+  echo "#" >> ${MPPCONF}
+  echo "# The font size in pixels is set to 22x45 for album cover art display." >> ${MPPCONF}
+  echo "# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or" >> ${MPPCONF}
+  echo "# font height in pixels to match your system." >> ${MPPCONF}
+  echo "OVERRIDE_FONT_SIZE=${OVERRIDE_FONT_SIZE}" >> ${MPPCONF}
+  echo "# Uncomment either or both and set font width and/or font height value(s)" >> ${MPPCONF}
+  if [ "${font_override_width}" ]
+  then
+    echo "font_override_width=${font_override_width}" >> ${MPPCONF}
+  else
+    echo "# font_override_width=22" >> ${MPPCONF}
+  fi
+  if [ "${font_override_height}" ]
+  then
+    echo "font_override_height=${font_override_height}" >> ${MPPCONF}
+  else
+    echo "# font_override_height=45" >> ${MPPCONF}
+  fi
+
+  echo "" >> ${MPPCONF}
   echo "## Service access" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
   echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}

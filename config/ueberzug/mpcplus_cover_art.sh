@@ -91,6 +91,17 @@ case "${MPP_MODE}" in
     ;;
 esac
 
+[ "${OVERRIDE_PADDING}" ] && {
+    [ "${padding_override_top}" ] && padding_top=${padding_override_top}
+    [ "${padding_override_bottom}" ] && padding_bottom=${padding_override_bottom}
+    [ "${padding_override_left}" ] && padding_left=${padding_override_left}
+    [ "${padding_override_right}" ] && padding_right=${padding_override_right}
+}
+[ "${OVERRIDE_FONT_SIZE}" ] && {
+    [ "${font_override_width}" ] && font_width=${font_override_width}
+    [ "${font_override_height}" ] && font_height=${font_override_height}
+}
+
 main() {
     kill_previous_instances >/dev/null 2>&1
     find_cover_image        >/dev/null 2>&1

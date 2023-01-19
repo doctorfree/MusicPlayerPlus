@@ -47,6 +47,32 @@ USE_TMUX=1
 #MPP_MODE=tilix
 MPP_MODE=kitty
 
+## Album cover art position
+#
+# Album cover art is positioned within the preferred terminal window with
+# padding values hard coded in the cover art display script. These padding
+# values are customized for each of the supported terminal emulators. The
+# default padding values should suffice but they can be overriden here. To
+# override the padding values, set OVERRIDE_PADDING=1 and set any or all of
+# the 'padding_override_*' values to adjust album cover art placement. See
+# ~/.config/mpcplus/ueberzug/mpcplus_cover_art.sh for default padding values.
+#
+# Set to 1 to override default padding, leave unset to use custom defaults
+OVERRIDE_PADDING=
+# Uncomment any or all and set preferred padding value(s)
+# padding_override_top=3
+# padding_override_bottom=1
+# padding_override_right=0
+# padding_override_left=1
+#
+# The font size in pixels is set to 22x45 for album cover art display.
+# To override this, set OVERRIDE_FONT_SIZE=1 and adjust the font width and/or
+# font height in pixels to match your system.
+OVERRIDE_FONT_SIZE=
+# Uncomment either or both and set font width and/or font height value(s)
+# font_override_width=22
+# font_override_height=45
+
 ## Service access
 #
 # The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'
