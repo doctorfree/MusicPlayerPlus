@@ -92,6 +92,7 @@ package() {
   cp -a config/mpd "${pkgdir}/${destdir}/share/${pkgname}/mpd"
   cp -a config/mppcava "${pkgdir}/${destdir}/share/${pkgname}/mppcava"
   cp -a config/navidrome "${pkgdir}/${destdir}/share/${pkgname}/navidrome"
+  cp -a config/ncmpcpp "${pkgdir}/${destdir}/share/${pkgname}/ncmpcpp"
   cp -a config/pipewire "${pkgdir}/${destdir}/share/${pkgname}/pipewire"
   cp -a config/tmuxp ${pkgdir}/${destdir}/share/${pkgname}/tmuxp
   cp -a config/ueberzug ${pkgdir}/${destdir}/share/${pkgname}/mpcplus/ueberzug

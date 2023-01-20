@@ -2835,6 +2835,21 @@ else
 fi
 
 [ "${quiet}" ] || {
+  printf "\n\tInstalling ncmpcpp configuration in ${NCMDIR} ..."
+}
+if [ -d ${NCMDIR} ]
+then
+  if [ "${overwrite}" ]
+  then
+    cp -a ${MPPCDIR}/ncmpcpp ${USERCONF}
+  else
+    cp -an ${MPPCDIR}/ncmpcpp ${USERCONF}
+  fi
+else
+  cp -a ${MPPCDIR}/ncmpcpp ${NCMDIR}
+fi
+
+[ "${quiet}" ] || {
   printf "\n\tInstalling PipeWire configuration in ${PWCONFDIR} ..."
 }
 if [ -d ${PWCONFDIR} ]
