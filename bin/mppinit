@@ -507,6 +507,7 @@ save_mpp_conf() {
   echo "" >> ${MPPCONF}
   echo "## MPD Client" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
+  echo "# Album cover art is only supported with 'mpcplus' and 'ncmpcpp'" >> ${MPPCONF}
   echo "MPD_CLIENT=\"${MPD_CLIENT}\"" >> ${MPPCONF}
   echo "" >> ${MPPCONF}
   echo "## General settings" >> ${MPPCONF}
@@ -716,6 +717,7 @@ init_mpp_conf() {
     echo "" >> ${MPPCONF}
     echo "## MPD Client" >> ${MPPCONF}
     echo "#" >> ${MPPCONF}
+    echo "# Album cover art is only supported with 'mpcplus' and 'ncmpcpp'" >> ${MPPCONF}
     echo "MPD_CLIENT=\"mpcplus\"" >> ${MPPCONF}
     echo "" >> ${MPPCONF}
     echo "## General settings" >> ${MPPCONF}
