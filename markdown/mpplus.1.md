@@ -189,6 +189,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-u**
 : Displays this usage message and exits
 
+## CONFIGURATION
+See `man mpprc` for a detailed description of each of the `mpplus` configuration options in `~/.config/mpprc`.
+
 ## EXAMPLES
 **mpplus**
 : Launches `mpcplus` music player client running in the kitty terminal emulator with mppcava spectrum visualizer running in another kitty window. 
@@ -262,7 +265,7 @@ Submit bug reports online at:
 https://github.com/doctorfree/MusicPlayerPlus/issues
 
 ## SEE ALSO
-**mppcava**(1), **mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
+**mpprc**(5), **mppcava**(1), **mppsplash**(1), **mpcplus**(1), **mpcpluskeys**(1)
 
 Full documentation and sources at:
 

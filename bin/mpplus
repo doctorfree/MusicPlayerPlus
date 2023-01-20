@@ -3248,6 +3248,45 @@ save_config() {
   fi
 
   echo "" >> ${MPPCONF}
+  echo "## Service access" >> ${MPPCONF}
+  echo "#" >> ${MPPCONF}
+  echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}
+  echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
+  echo "BANDCAMP_USER=${BANDCAMP_USER}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >> ${MPPCONF}
+  echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >> ${MPPCONF}
+  echo "# Your Discogs username is the last component of the profile URL." >> ${MPPCONF}
+  echo "DISCOGS_USER=${DISCOGS_USER}" >> ${MPPCONF}
+  echo "# The Discogs API token can be found by visiting" >> ${MPPCONF}
+  echo "# https://www.discogs.com/settings/developers" >> ${MPPCONF}
+  echo "DISCOGS_TOKEN=${DISCOGS_TOKEN}" >> ${MPPCONF}
+  echo "# Location of the generated custom Discogs Obsidian vault" >> ${MPPCONF}
+  echo "# Can be anywhere you have write permission" >> ${MPPCONF}
+  echo "DISCOGS_DIR=\"${DISCOGS_DIR}\"" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
+  echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
+  echo "LASTFM_USER=${LASTFM_USER}" >> ${MPPCONF}
+  echo "LASTFM_APIKEY=${LASTFM_APIKEY}" >> ${MPPCONF}
+  echo "LASTFM_SECRET=${LASTFM_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >> ${MPPCONF}
+  echo "# click on the username at top right then 'Profile'. The user slug" >> ${MPPCONF}
+  echo "# is the last component of the URL when viewing your Soundcloud Profile." >> ${MPPCONF}
+  echo "# If you do not have a Soundcloud account, leave blank" >> ${MPPCONF}
+  echo "SOUNDCLOUD_SLUG=${SOUNDCLOUD_SLUG}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your Spotify client id and client secret" >> ${MPPCONF}
+  echo "# If you do not have a Spotify account, leave blank" >> ${MPPCONF}
+  echo "SPOTIFY_CLIENT=${SPOTIFY_CLIENT}" >> ${MPPCONF}
+  echo "SPOTIFY_SECRET=${SPOTIFY_SECRET}" >> ${MPPCONF}
+  echo "" >> ${MPPCONF}
+  echo "# Your YouTube api key" >> ${MPPCONF}
+  echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
+  echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >> ${MPPCONF}
+
+  echo "" >> ${MPPCONF}
   echo "## Album cover art position" >> ${MPPCONF}
   echo "#" >> ${MPPCONF}
   echo "# Album cover art is positioned within the preferred terminal window with" >> ${MPPCONF}
@@ -3303,45 +3342,6 @@ save_config() {
   else
     echo "# font_override_height=45" >> ${MPPCONF}
   fi
-
-  echo "" >> ${MPPCONF}
-  echo "## Service access" >> ${MPPCONF}
-  echo "#" >> ${MPPCONF}
-  echo "# The Bandcamp username can be found by visiting Bandcamp 'Settings' -> 'Fan'" >> ${MPPCONF}
-  echo "# If you do not have a Bandcamp account, leave blank" >> ${MPPCONF}
-  echo "BANDCAMP_USER=${BANDCAMP_USER}" >> ${MPPCONF}
-  echo "" >> ${MPPCONF}
-  echo "# The Discogs username can be found by visiting discogs.com. Login, use the" >> ${MPPCONF}
-  echo "# dropdown of your user icon in the upper right corner, click on 'Profile'." >> ${MPPCONF}
-  echo "# Your Discogs username is the last component of the profile URL." >> ${MPPCONF}
-  echo "DISCOGS_USER=${DISCOGS_USER}" >> ${MPPCONF}
-  echo "# The Discogs API token can be found by visiting" >> ${MPPCONF}
-  echo "# https://www.discogs.com/settings/developers" >> ${MPPCONF}
-  echo "DISCOGS_TOKEN=${DISCOGS_TOKEN}" >> ${MPPCONF}
-  echo "# Location of the generated custom Discogs Obsidian vault" >> ${MPPCONF}
-  echo "# Can be anywhere you have write permission" >> ${MPPCONF}
-  echo "DISCOGS_DIR=\"${DISCOGS_DIR}\"" >> ${MPPCONF}
-  echo "" >> ${MPPCONF}
-  echo "# Your Last.fm username, api key, and api secret" >> ${MPPCONF}
-  echo "# If you do not have a Last.fm account, leave blank" >> ${MPPCONF}
-  echo "LASTFM_USER=${LASTFM_USER}" >> ${MPPCONF}
-  echo "LASTFM_APIKEY=${LASTFM_APIKEY}" >> ${MPPCONF}
-  echo "LASTFM_SECRET=${LASTFM_SECRET}" >> ${MPPCONF}
-  echo "" >> ${MPPCONF}
-  echo "# The Soundcloud user slug can be found by logging in to Soundcloud" >> ${MPPCONF}
-  echo "# click on the username at top right then 'Profile'. The user slug" >> ${MPPCONF}
-  echo "# is the last component of the URL when viewing your Soundcloud Profile." >> ${MPPCONF}
-  echo "# If you do not have a Soundcloud account, leave blank" >> ${MPPCONF}
-  echo "SOUNDCLOUD_SLUG=${SOUNDCLOUD_SLUG}" >> ${MPPCONF}
-  echo "" >> ${MPPCONF}
-  echo "# Your Spotify client id and client secret" >> ${MPPCONF}
-  echo "# If you do not have a Spotify account, leave blank" >> ${MPPCONF}
-  echo "SPOTIFY_CLIENT=${SPOTIFY_CLIENT}" >> ${MPPCONF}
-  echo "SPOTIFY_SECRET=${SPOTIFY_SECRET}" >> ${MPPCONF}
-  echo "" >> ${MPPCONF}
-  echo "# Your YouTube api key" >> ${MPPCONF}
-  echo "# If you do not have a YouTube account, leave blank" >> ${MPPCONF}
-  echo "YOUTUBE_APIKEY=${YOUTUBE_APIKEY}" >> ${MPPCONF}
   chmod 600 ${MPPCONF}
 }
 
