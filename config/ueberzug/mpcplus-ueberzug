@@ -9,6 +9,7 @@ cleanup() {
 }
 
 USE_MPCPLUS=1
+USE_NCMPCPP=
 CLIENT_COMM="mpcplus"
 while getopts "c:" flag; do
     case $flag in
@@ -17,6 +18,7 @@ while getopts "c:" flag; do
             client_name=`echo "${CLIENT_COMM}" | awk ' { print $1 } '`
             client_name=`basename ${client_name}`
             [ "${client_name}" == "mpcplus" ] || USE_MPCPLUS=
+            [ "${client_name}" == "ncmpcpp" ] && USE_NCMPCPP=1
             ;;
     esac
 done
@@ -31,6 +33,11 @@ if [ "${USE_MPCPLUS}" ]
 then
   ${CLIENT_COMM} --config="${HOME}/.config/mpcplus/ueberzug/config"
 else
-  ${CLIENT_COMM}
+  if [ "${USE_NCMPCPP}" ]
+  then
+    ${CLIENT_COMM} --config="${HOME}/.config/mpcplus/ueberzug/config-ncmpcpp"
+  else
+    ${CLIENT_COMM}
+  fi
 fi
 cleanup
