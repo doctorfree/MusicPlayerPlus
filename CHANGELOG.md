@@ -6,6 +6,7 @@ All notable changes to this project will be documented in this file.
 * Add settings for cover art padding and font size in `mpprc`
 * Merge existing `mpprc` in initial `mppinit`
 * Some settings in `mpprc` can either be unset or 0
+* Support display of album cover art when using `ncmpcpp`
 
 ## MusicPlayerPlus-3.0.1r2 (2023-01-17)
 * Use external `mppcava` package
