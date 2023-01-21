@@ -1378,6 +1378,9 @@ then
   [ "${ID}" == "arch" ] || [ "${ID_LIKE}" == "arch" ] && arch=1
   [ "${ID}" == "centos" ] && centos=1
   [ "${ID}" == "fedora" ] && fedora=1
+  [ "${arch}" ] || [ "${debian}" ] || [ "${fedora}" ] || [ "${centos}" ] || {
+    echo "${ID_LIKE}" | grep debian > /dev/null && debian=1
+  }
 else
   if [ -f /etc/arch-release ]
   then

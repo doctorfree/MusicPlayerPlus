@@ -12,6 +12,9 @@ fedora=
 [ "${ID}" == "centos" ] && centos=1
 [ "${ID}" == "fedora" ] && fedora=1
 [ "${debian}" ] || [ -f /etc/debian_version ] && debian=1
+[ "${arch}" ] || [ "${debian}" ] || [ "${fedora}" ] || [ "${centos}" ] || {
+  echo "${ID_LIKE}" | grep debian > /dev/null && debian=1
+}
 
 if [ "${debian}" ]
 then
