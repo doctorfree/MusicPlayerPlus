@@ -4,9 +4,9 @@ Release:    %{_release}%{?dist}
 BuildArch:  noarch
 AutoReqProv: no
 %if 0%{?centos} > 0
-Requires: alsa-utils, bc, boost, coreutils, curl, dnf-plugins-core, flac, iniparser, jq, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tmux, inotify-tools, figlet, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr, ImageMagick
+Requires: alsa-utils, bc, boost, coreutils, curl, dialog, dnf-plugins-core, flac, iniparser, jq, libcurl, libmpdclient, ncurses, readline, taglib, mpd, tmux, inotify-tools, figlet, python3-devel, python3-pip, mplayer, libchromaprint-devel, dconf, util-linux, sqlite, libavdevice, wget, wmctrl, xdpyinfo, xprop, xrandr, ImageMagick
 %else
-Requires: alsa-utils, bc, boost, coreutils, curl, dnf-plugins-core, flac, iniparser, jq, libcurl, ncurses, readline, taglib, mediainfo, tmux, inotify-tools, figlet, fzf, mpc, python3-devel, python3-pip, libchromaprint-devel, dconf, util-linux, sqlite, wget, wmctrl, xdpyinfo, xprop, xrandr, ImageMagick
+Requires: alsa-utils, bc, boost, coreutils, curl, dialog, dnf-plugins-core, flac, iniparser, jq, libcurl, ncurses, readline, taglib, mediainfo, tmux, inotify-tools, figlet, fzf, mpc, python3-devel, python3-pip, libchromaprint-devel, dconf, util-linux, sqlite, wget, wmctrl, xdpyinfo, xprop, xrandr, ImageMagick
 %endif
 URL:        https://github.com/doctorfree/MusicPlayerPlus
 Vendor:     Doctorwhen's Bodacious Laboratory
