@@ -419,7 +419,7 @@ xtractor:
     auto: no
     dry-run: no
     write: yes
-    threads: 4
+    threads: 2
     force: no
     quiet: no
     keep_output: yes

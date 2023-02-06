@@ -985,6 +985,49 @@ no longer available.
 
 ### MusicPlayerPlus custom xtractor metadata configuration
 
+By default, the following paths are set in the `xtractor` section
+of the Beets configuration
+
+```yaml
+xtractor:
+    auto: no
+    threads: 2
+    ...
+    essentia_extractor: /usr/bin/essentia_streaming_extractor_music
+    extractor_profile:
+        outputFormat: json
+        ...
+        highlevel:
+            compute: 1
+            svm_models:
+                - /usr/share/mpplus-essentia/svm_models/danceability.history
+                - /usr/share/mpplus-essentia/svm_models/gender.history
+#               - /usr/share/mpplus-essentia/svm_models/genre_dortmund.history
+#               - /usr/share/mpplus-essentia/svm_models/genre_electronic.history
+#               - /usr/share/mpplus-essentia/svm_models/genre_tzanetakis.history
+                - /usr/share/mpplus-essentia/svm_models/genre_rosamerica.history
+                - /usr/share/mpplus-essentia/svm_models/ismir04_rhythm.history
+                - /usr/share/mpplus-essentia/svm_models/mood_acoustic.history
+                - /usr/share/mpplus-essentia/svm_models/mood_aggressive.history
+                - /usr/share/mpplus-essentia/svm_models/mood_electronic.history
+                - /usr/share/mpplus-essentia/svm_models/mood_happy.history
+                - /usr/share/mpplus-essentia/svm_models/mood_party.history
+                - /usr/share/mpplus-essentia/svm_models/mood_relaxed.history
+                - /usr/share/mpplus-essentia/svm_models/mood_sad.history
+                - /usr/share/mpplus-essentia/svm_models/moods_mirex.history
+                - /usr/share/mpplus-essentia/svm_models/timbre.history
+                - /usr/share/mpplus-essentia/svm_models/tonal_atonal.history
+                - /usr/share/mpplus-essentia/svm_models/voice_instrumental.history
+```
+
+Determine how many threads your system will support with a command like:
+
+```shell
+lscpu | egrep 'Model name|Socket|Thread|NUMA|CPU\(s\)'
+```
+
+and set the `threads` configuration value accordingly.
+
 The default MusicPlayerPlus Beets configuration includes a customized
 `xtractor` plugin configuration providing many flexible metadata tags.
 These include metadata tags for Beets per Minute, Key and Scale,
