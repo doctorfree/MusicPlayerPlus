@@ -1306,10 +1306,30 @@ Beets plugins are installed and configured automatically by MusicPlayerPlus.
 MusicPlayerPlus 2.0.1 and later include automated installation and
 configuration for the following Beets plugins:
 
-* acousticbrainz, albumtypes, bandcamp, describe, duplicates, edit
-* extrafiles, fetchart, fromfilename, hook, importadded, info, lyrics
-* lastgenre, missing, mbsync, mpdstats, play, playlist, smartplaylist
-* mpdupdate, unimported, xtractor, yearfixer
+- [acousticbrainz](https://beets.readthedocs.io/en/stable/plugins/acousticbrainz.html)
+- [albumtypes](https://beets.readthedocs.io/en/stable/plugins/albumtypes.html)
+- [bandcamp](https://github.com/snejus/beetcamp)
+- [describe](https://github.com/adamjakab/BeetsPluginDescribe)
+- [duplicates](https://beets.readthedocs.io/en/stable/plugins/duplicates.html)
+- [edit](https://beets.readthedocs.io/en/stable/plugins/edit.html)
+- [fetchart](https://beets.readthedocs.io/en/stable/plugins/fetchart.html)
+- [fromfilename](https://beets.readthedocs.io/en/stable/plugins/fromfilename.html)
+- [hook](https://beets.readthedocs.io/en/stable/plugins/hook.html)
+- [importadded](https://beets.readthedocs.io/en/stable/plugins/importadded.html)
+- [info](https://beets.readthedocs.io/en/stable/plugins/info.html)
+- [lyrics](https://beets.readthedocs.io/en/stable/plugins/lyrics.html)
+- [lastgenre](https://beets.readthedocs.io/en/stable/plugins/lastgenre.html)
+- [missing](https://beets.readthedocs.io/en/stable/plugins/missing.html)
+- [mbsync](https://beets.readthedocs.io/en/stable/plugins/mbsync.html)
+- [mpdstats](https://beets.readthedocs.io/en/stable/plugins/mpdstats.html)
+- [play](https://beets.readthedocs.io/en/stable/plugins/play.html)
+- [playlist](https://beets.readthedocs.io/en/stable/plugins/playlist.html)
+- [smartplaylist](https://beets.readthedocs.io/en/stable/plugins/smartplaylist.html)
+- [mpdupdate](https://beets.readthedocs.io/en/stable/plugins/mpdupdate.html)
+- [unimported](https://beets.readthedocs.io/en/stable/plugins/unimported.html)
+- [web](https://beets.readthedocs.io/en/stable/plugins/web.html)
+- [xtractor](https://github.com/adamjakab/BeetsPluginXtractor)
+- [yearfixer](https://github.com/adamjakab/BeetsPluginYearFixer)
 
 See the MusicPlayerPlus [Wiki article on Beets plugins](https://github.com/doctorfree/MusicPlayerPlus/wiki/BeetsPlugins)
 for an introduction to the installed and configured MusicPlayerPlus Beets plugins.
