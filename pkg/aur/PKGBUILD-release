@@ -1,4 +1,5 @@
 # Maintainer: Ronald Record <github@ronrecord.com>
+# shellcheck shell=bash disable=SC2034,SC2154
 
 pkgname=musicplayerplus
 pkgver=v3.0.1r3
