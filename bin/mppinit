@@ -3088,6 +3088,11 @@ if [ "${PIP}" ]; then
     calliope-music bandcamp-downloader scdl flask-cors iniparse; do
     pip_install "${pkg}"
   done
+  # Install fixed cpe script
+  [ -f ${CCPTDIR}/cpe ] && {
+    cp ${CCPTDIR}/cpe ${HOME}/.local/bin/cpe
+    chmod 755 ${HOME}/.local/bin/cpe
+  }
   OWNER="doctorfree"
   PROJECT="ueberzug-mpplus"
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
