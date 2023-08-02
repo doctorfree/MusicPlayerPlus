@@ -1,3 +1,19 @@
-remote_theme: pages-themes/midnight@v0.2.0
+remote_theme: doctorfree/jekyll-theme-neoman
 plugins:
-- jekyll-remote-theme # add this line to the plugins list if you already have one
+  - jekyll-remote-theme
+
+title: MusicPlayerPlus
+email: ronaldrecord@gmail.com
+description: >- # this means to ignore newlines until "baseurl:"
+  The MusicPlayerPlus project provides integration and extension of several audio
+  packages designed to stream and play music. MusicPlayerPlus interacts with the
+  Music Player Daemon (MPD). Outputs from the MPD streaming audio server are used
+  as MusicPlayerPlus inputs for playback and visualization. MusicPlayerPlus
+  components are used to manage and control MPD and ALSA configuration.
+baseurl: ""
+url: "https://mpplus.neoman.dev"
+twitter_username: ronrecord
+github_username: doctorfree
+
+show_downloads: false
+# google_analytics:
