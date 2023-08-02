@@ -16,6 +16,13 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Discogs user collection to markdown generator
 - ***plus*** Automated setup, import and organization, metadata, playlists, ...
 
+MusicPlayerPlus is one of the [Neoman](https://neoman.dev) managed projects:
+
+| **Neoman** | **Managed** | **Projects** |
+| ---------- | ----------- | ------------ |
+| [Asciiville](https://asciiville.dev) | [Lazyman](https://lazyman.dev) | [MirrorCommand](https://mirrorcommand.dev) |
+| [MusicPlayerPlus](https://musicplayerplus.dev) | [Neoman](https://neoman.dev) | [RoonCommandLine](https://rooncommand.dev) |
+
 ## Table of contents
 
 1. [Overview](#overview)
@@ -971,12 +978,12 @@ audio_output {
 Or, to use PulseAudio:
 
 ```
-audio_output {  
-    type  "pulse"  
+audio_output {
+    type  "pulse"
     name  "pulse audio"
-    device         "pulse" 
-    mixer_type      "hardware" 
-}  
+    device         "pulse"
+    mixer_type      "hardware"
+}
 ```
 
 Output with PipeWire can also be configured:
@@ -1311,7 +1318,7 @@ These profiles are named "MusicPlayer" and "Visualizer".
 
 The custom MusicPlayerPlus terminal profiles are used to provide font sizes
 and background transparencies that enhance the visual appeal of both the
-MusicPlayerPlus control window and the spectrum visualizer. 
+MusicPlayerPlus control window and the spectrum visualizer.
 
 To modify these terminal emulator profiles, launch the desired terminal
 emulator and modify the desired profile in the Preferences dialog.
@@ -1689,11 +1696,11 @@ Options:
   -h [ --host ] HOST (=localhost)       connect to server at host
   -p [ --port ] PORT (=6600)            connect to server at port
   --current-song [=FORMAT(=<format string>)]
-                                        print current song using given format 
+                                        print current song using given format
                                         and exit
   -c [ --config ] PATH (=~/.config/mpcplus/config AND ~/.mpcplus/config)
                                         specify configuration file(s)
-  --ignore-config-errors                ignore unknown and invalid options in 
+  --ignore-config-errors                ignore unknown and invalid options in
                                         configuration files
   --test-lyrics-fetchers                check if lyrics fetchers work
   -b [ --bindings ] PATH (=~/.config/mpcplus/bindings AND ~/.mpcplus/bindings)
@@ -1739,7 +1746,7 @@ audio spectrum visualizer:
 
 ```text
 Usage : mppcava [options]
-Visualize audio input in terminal. 
+Visualize audio input in terminal.
 
 Options:
     -p          path to config file
@@ -1891,7 +1898,7 @@ If a MusicPlayerPlus tmux session has been initiated over SSH using the
 Terminal app on macOS then it may be necessary to configure the Terminal
 profile in use to "Use Option as Meta key" in order to recognize the custom
 tmux key bindings using the `Alt` key. To configure the Terminal app profile
-in this manner, go to `Terminal -> Preferences -> Profiles`. Select the 
+in this manner, go to `Terminal -> Preferences -> Profiles`. Select the
 profile you are using (usually "Basic Default") and select the `Keyboard` tab.
 Click the "Use Option as Meta key" checkbox and exit Terminal preferences.
 
@@ -2027,7 +2034,7 @@ This means you can resize a pane by `<prefix>` `Alt ↓` (tmux prefix followed
 by "Alt-DownArrow"). The default MusicPlayerPlus tmux prefix is `Ctrl-a` so in
 order to resize the `mpcplus` pane using the keyboard, type `Ctrl-a` then type
 `Alt ↓`. You can repeat `Alt ↓` several times without needing to re-type the
-`Ctrl-a` prefix if you type it fast enough (about a second). If the display of 
+`Ctrl-a` prefix if you type it fast enough (about a second). If the display of
 `Ctrl` on the tmux status line disappears and you still need to resize the
 `mpcplus` pane, then you will need to re-type the prefix key `Ctrl-a`.
 
@@ -2329,7 +2336,7 @@ to a wider variety of Linux platforms and potentially Mac OS X.
 If you have the means and you would like to sponsor MusicPlayerPlus development,
 testing, platform support, and continued improvement then your monetary
 support could play a very critical role. A little bit goes a long way
-in MusicPlayerPlus. For example, a bootable USB SSD device could serve as a 
+in MusicPlayerPlus. For example, a bootable USB SSD device could serve as a
 means of porting and testing support for additional platforms. Or, a
 decent cup of coffee could be the difference between a bug filled
 release and a glorious musical adventure.
