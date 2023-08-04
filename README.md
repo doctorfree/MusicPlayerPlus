@@ -1,4 +1,6 @@
-## MusicPlayerPlus
+<div align="center">
+  <img src="https://raw.githubusercontent.com/wiki/doctorfree/MusicPlayerPlus/img/musicplayerplus.png" style="width:800px;height:140px;">
+</div>
 
 MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Beets media library management with preconfigured plugins
