@@ -33,6 +33,7 @@ pkg/dist/fedora/*
 pkg/dist/rpi/*
 releases/*
 tmp/*
+config/mpd/tmp
 tools/*
 # vim files
 .*.sw[a-z]
