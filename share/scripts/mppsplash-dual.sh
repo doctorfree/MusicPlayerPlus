@@ -40,6 +40,8 @@ usage() {
   exit 1
 }
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 custom_audio=
 AUDIO=
 CYCLE=

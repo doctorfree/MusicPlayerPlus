@@ -17,6 +17,8 @@ PYTHON_BINARY=""
 POTENTIAL_BINARIES=( "python" "python3" "python3.6" "python3.5" "python3.7" "python3.4" "python3.3" "python3.8" "python3.2" "python3.1" )
 PY3_SUPPORT=false
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 for i in "${POTENTIAL_BINARIES[@]}"
 do
 	PYTHON_BINARY="$i"

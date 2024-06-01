@@ -263,6 +263,41 @@ create_profiles() {
   }
 }
 
+install_figlet() {
+  have_make=$(type -p make)
+  if [ "${have_make}" ]; then
+    HERE=$(pwd)
+    git clone https://github.com/cmatsuoka/figlet /tmp/figlet$$ > /dev/null 2>&1
+    cd /tmp/figlet$$
+    sudo make install > /dev/null 2>&1
+    cd "${HERE}"
+    sudo rm -rf /tmp/figlet$$
+  else
+    printf "\nInstallation of figlet requires 'make' but 'make' not found."
+    printf "\nInstall 'make' and try again. Skipping installation of figlet.\n"
+  fi
+}
+
+install_fzf() {
+  [ -f ${HOME}/.local/bin/fzf ] && {
+    mv ${HOME}/.local/bin/fzf ${HOME}/.local/bin/fzf-bak$$
+  }
+  [ -d ${HOME}/.fzf ] && mv ${HOME}/.fzf ${HOME}/.fzf$$
+  git clone --depth 1 https://github.com/junegunn/fzf.git \
+    ${HOME}/.fzf > /dev/null 2>&1
+  [ -f ${HOME}/.fzf/install ] && chmod 755 ${HOME}/.fzf/install
+  [ -x ${HOME}/.fzf/install ] && ${HOME}/.fzf/install --all > /dev/null 2>&1
+  pathadd "${HOME}/.fzf/bin"
+  if [ -f ${HOME}/.fzf/bin/fzf ]; then
+    ln -s ${HOME}/.fzf/bin/fzf ${HOME}/.local/bin/fzf
+    rm -f ${HOME}/.local/bin/fzf-bak$$
+  else
+    [ -f ${HOME}/.local/bin/fzf-bak$$ ] && {
+      mv ${HOME}/.local/bin/fzf-bak$$ ${HOME}/.local/bin/fzf
+    }
+  fi
+}
+
 install_ueberzug() {
   have_curl=$(type -p curl)
   [ "${have_curl}" ] || {
@@ -307,27 +342,6 @@ install_ueberzug() {
   }
 }
 
-pip_install() {
-  mod="$1"
-  if ${PIP} list 2>/dev/null | grep ${mod} >/dev/null; then
-    if [ "${upgrade}" ]; then
-      [ "${quiet}" ] || {
-        printf " upgrade ${mod},"
-      }
-      ${PYTHON} -m pip install --user --upgrade ${mod} >/dev/null 2>&1
-    else
-      [ "${quiet}" ] || {
-        printf " ${mod} installed,"
-      }
-    fi
-  else
-    [ "${quiet}" ] || {
-      printf " install ${mod},"
-    }
-    ${PYTHON} -m pip install --user ${mod} >/dev/null 2>&1
-  fi
-}
-
 set_have_navi() {
   if [ -x /opt/navidrome/navidrome ]; then
     have_navi=1
@@ -368,8 +382,10 @@ init_mopidy() {
   sudo ${PYTHON} -m pip install --upgrade mopidy >/dev/null 2>&1
 
   for extension in ${EXT_MOPIDY}; do
-    pip_install "${extension}"
+    printf "\n\tInstalling Mopidy extension ${extension}"
+    ${PYTHON} -m pip install --user --upgrade ${extension} >/dev/null 2>&1
   done
+  printf "\n"
 
   # Disable MPD services
   systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && {
@@ -1391,6 +1407,35 @@ fi
   fi
 }
 
+export PYENV_ROOT="$HOME/.pyenv"
+PY_VER="3.11"
+command -v pyenv >/dev/null || export PATH="$PYENV_ROOT/bin:$PATH"
+command -v pyenv >/dev/null || {
+  [ -x ${HOME}/.pyenv/libexec/pyenv ] || {
+      if [ -x ${SCPTDIR}/setup-pyenv.sh ]; then
+        ${SCPTDIR}/setup-pyenv.sh
+      else
+          have_curl=$(type -p curl)
+          [ "${have_curl}" ] && curl https://pyenv.run | bash
+      fi
+  }
+}
+command -v pyenv >/dev/null && {
+  eval "$(pyenv init -)"
+  [ -x ${HOME}/.pyenv/shims/python${PY_VER} ] || pyenv install ${PY_VER}
+  pyenv global ${PY_VER}
+}
+
+[ -f ${HOME}/.venv/bin/activate ] || python3 -m venv ${HOME}/.venv
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
+if command -v python3 >/dev/null
+then
+  export PYTHON="python3"
+else
+  export PYTHON="python"
+fi
+
 MUSIC_DIRECTORY=
 dryrun=
 while getopts "abdel:noqrUyu" flag; do
@@ -1490,8 +1535,6 @@ argument=$(echo "$1" | tr '[:upper:]' '[:lower:]')
   printf "\nExiting."
   usage
 }
-
-PYTHON="python3"
 
 # User needs to be in group adm for some systemctl actions
 id -nG | grep -qw adm || {
@@ -2170,7 +2213,7 @@ install_kitty() {
     }
   }
 
-  JETB_URL="${GHUC}/JetBrains/JetBrainsMono/master/install_manual.sh"
+  JETB_URL="https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh"
   curl -fsSL "${JETB_URL}" >/tmp/jetb-$$.sh
   [ $? -eq 0 ] || {
     rm -f /tmp/jetb-$$.sh
@@ -2467,6 +2510,18 @@ else
   fi
 fi
 
+have_fzf=$(type -p fzf)
+[ "${have_fzf}" ] || {
+  [ "${quiet}" ] || printf "\n\tInstalling fzf ..."
+  install_fzf
+}
+
+have_figlet=$(type -p figlet)
+[ "${have_figlet}" ] || {
+  [ "${quiet}" ] || printf "\n\tInstalling figlet ..."
+  install_figlet
+}
+
 # Install mppcava and mpcplus if not already present
 [ -x /usr/bin/mppcava ] || {
   OWNER=doctorfree
@@ -2560,14 +2615,6 @@ case "${mach}" in
     install_terminal
     ;;
 esac
-
-pathadd "${HOME}/.fzf/bin"
-have_fzf=$(type -p fzf)
-[ "${have_fzf}" ] || {
-  [ -d ${HOME}/.fzf ] && rm -rf ${HOME}/.fzf
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install --all
-}
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
@@ -3083,10 +3130,11 @@ if [ "${PIP}" ]; then
   fi
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
-    pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
-    python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
-    calliope-music bandcamp-downloader scdl flask-cors iniparse; do
-    pip_install "${pkg}"
+    iniparse pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
+    PyYAML python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
+    calliope-music bandcamp-downloader scdl flask-cors click; do
+    printf "  ${pkg}"
+    ${PYTHON} -m pip install --user --upgrade ${pkg} >/dev/null 2>&1
   done
   # Install fixed cpe script
   [ -f ${CCPTDIR}/cpe ] && {

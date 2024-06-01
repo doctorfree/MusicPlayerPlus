@@ -3662,6 +3662,8 @@ else
   use_figlet=
 fi
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 USE_MPCPLUS=1
 KITTY_SOCKET="/tmp/__mppkitty__"
 vault=

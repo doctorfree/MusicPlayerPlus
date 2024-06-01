@@ -15,6 +15,8 @@ usage() {
   exit 1
 }
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 mpd_music=
 custom_dir=
 cover_name="cover"
