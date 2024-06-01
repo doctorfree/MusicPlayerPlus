@@ -263,6 +263,41 @@ create_profiles() {
   }
 }
 
+install_figlet() {
+  have_make=$(type -p make)
+  if [ "${have_make}" ]; then
+    HERE=$(pwd)
+    git clone https://github.com/cmatsuoka/figlet /tmp/figlet$$ > /dev/null 2>&1
+    cd /tmp/figlet$$
+    sudo make install > /dev/null 2>&1
+    cd "${HERE}"
+    sudo rm -rf /tmp/figlet$$
+  else
+    printf "\nInstallation of figlet requires 'make' but 'make' not found."
+    printf "\nInstall 'make' and try again. Skipping installation of figlet.\n"
+  fi
+}
+
+install_fzf() {
+  [ -f ${HOME}/.local/bin/fzf ] && {
+    mv ${HOME}/.local/bin/fzf ${HOME}/.local/bin/fzf-bak$$
+  }
+  [ -d ${HOME}/.fzf ] && mv ${HOME}/.fzf ${HOME}/.fzf$$
+  git clone --depth 1 https://github.com/junegunn/fzf.git \
+    ${HOME}/.fzf > /dev/null 2>&1
+  [ -f ${HOME}/.fzf/install ] && chmod 755 ${HOME}/.fzf/install
+  [ -x ${HOME}/.fzf/install ] && ${HOME}/.fzf/install --all > /dev/null 2>&1
+  pathadd "${HOME}/.fzf/bin"
+  if [ -f ${HOME}/.fzf/bin/fzf ]; then
+    ln -s ${HOME}/.fzf/bin/fzf ${HOME}/.local/bin/fzf
+    rm -f ${HOME}/.local/bin/fzf-bak$$
+  else
+    [ -f ${HOME}/.local/bin/fzf-bak$$ ] && {
+      mv ${HOME}/.local/bin/fzf-bak$$ ${HOME}/.local/bin/fzf
+    }
+  fi
+}
+
 install_ueberzug() {
   have_curl=$(type -p curl)
   [ "${have_curl}" ] || {
@@ -2170,7 +2205,7 @@ install_kitty() {
     }
   }
 
-  JETB_URL="${GHUC}/JetBrains/JetBrainsMono/master/install_manual.sh"
+  JETB_URL="https://raw.githubusercontent.com/JetBrains/JetBrainsMono/master/install_manual.sh"
   curl -fsSL "${JETB_URL}" >/tmp/jetb-$$.sh
   [ $? -eq 0 ] || {
     rm -f /tmp/jetb-$$.sh
@@ -2467,6 +2502,18 @@ else
   fi
 fi
 
+have_fzf=$(type -p fzf)
+[ "${have_fzf}" ] || {
+  [ "${quiet}" ] || printf "\n\tInstalling fzf ..."
+  install_fzf
+}
+
+have_figlet=$(type -p figlet)
+[ "${have_figlet}" ] || {
+  [ "${quiet}" ] || printf "\n\tInstalling figlet ..."
+  install_figlet
+}
+
 # Install mppcava and mpcplus if not already present
 [ -x /usr/bin/mppcava ] || {
   OWNER=doctorfree
@@ -2560,14 +2607,6 @@ case "${mach}" in
     install_terminal
     ;;
 esac
-
-pathadd "${HOME}/.fzf/bin"
-have_fzf=$(type -p fzf)
-[ "${have_fzf}" ] || {
-  [ -d ${HOME}/.fzf ] && rm -rf ${HOME}/.fzf
-  git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install --all
-}
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling configuration files in $USERCONF ..."
