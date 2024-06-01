@@ -24,6 +24,8 @@ have_scdl=`type -p scdl`
 MPPCONF="${HOME}/.config/mpprc"
 [ -f "${MPPCONF}" ] && . "${MPPCONF}"
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 [ "${SOUNDCLOUD_SLUG}" ] || {
   echo "Enter your Soundcloud account 'user slug' at the prompt."
   echo ""

@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # vim:fileencoding=utf8
 #
@@ -34,11 +34,12 @@ else:
 
 def error(message=None):
     if message:
-        sys.stderr.write(message + "\n")
+        sys.stderr.write(message + '\n')
 
 
 def delete_if_exists(path):
-    """Delete a file, but ignore file not found error."""
+    """Delete a file, but ignore file not found error.
+    """
     try:
         os.unlink(path)
     except EnvironmentError as e:
@@ -63,15 +64,22 @@ def file_is_closed(stdfile):
 
 # Adjustments to iniparse to optionally use name=value format (nospace)
 # and support for parameters without '=' specified
-class CrudiniInputFilter:
+class CrudiniInputFilter():
     def __init__(self, fp, iniopt):
         self.fp = fp
         self.iniopt = iniopt
         self.crudini_no_arg = False
+        self.indented = False
+        self.last_section = 'DEFAULT'
+        self.section_indents = {}
         self.windows_eol = None
         # Note [ \t] used rather than \s to avoid adjusting \r\n when no value
         # Unicode spacing around the delimiter would be very unusual anyway
-        self.delimiter_spacing = re.compile(r"(.*?)[ \t]*([:=])[ \t]*(.*)")
+        self.delimiter_spacing = re.compile(r'(.*?)[ \t]*([:=])[ \t]*(.*)')
+        self.leading_whitespace = re.compile(r'([ \t]+)(.+)')
+        self.replace_leading = re.compile(r'^(.+) ;crudini_indent>(.*)<$',
+                                          flags=re.MULTILINE)
+        self.section_match = re.compile(r'[ \t]*\[([^]]+)\].*')
 
     def readline(self):
         line = self.fp.readline()
@@ -82,16 +90,30 @@ class CrudiniInputFilter:
         # so we can undo iniparse auto conversion to unix
         if self.windows_eol is None:
             if line:
-                self.windows_eol = len(line) >= 2 and line[-2] == "\r"
+                self.windows_eol = len(line) >= 2 and line[-2] == '\r'
             else:
-                self.windows_eol = os.name == "nt"
+                self.windows_eol = os.name == 'nt'
 
-        if line and line[0] not in "[ \t#;\n\r":
-            if "=" not in line and ":" not in line:
+        if line.strip() and line[0] not in '#;%':
+
+            if 'ignoreindent' in self.iniopt:
+                section = line.lstrip()[0] == '['
+            else:
+                section = line[0] == '['
+            if section:
+                section_name = self.section_match.sub(r'\1', line.rstrip())
+                if not section_name:
+                    return line
+                self.last_section = section_name
+
+            if line[0] in ' \t' and 'ignoreindent' not in self.iniopt:
+                return line
+
+            if not section and '=' not in line and ':' not in line:
                 self.crudini_no_arg = True
-                line = line.rstrip() + " = crudini_no_arg\n"
+                line = line.rstrip() + ' = crudini_no_arg\n'
 
-            if "nospace" in self.iniopt:
+            if not section and 'nospace' in self.iniopt:
                 # Convert _all_ existing params. New params are handled in
                 # the iniparse specialization in CrudiniConfigParser()
 
@@ -100,7 +122,18 @@ class CrudiniInputFilter:
                 # that were then adjusted on output like for crudini_no_arg
                 # But if need to remove the spacing, then should for all params
 
-                line = self.delimiter_spacing.sub(r"\1\2\3", line)
+                line = self.delimiter_spacing.sub(r'\1\2\3', line)
+
+            if line[0] in ' \t':
+                self.indented = True
+
+                # Set default indent for section to last indent
+                leading_ws = self.leading_whitespace.sub(r'\1', line.rstrip())
+                self.section_indents[self.last_section] = leading_ws
+
+                # match leading spaces and put in trailing ;crudini_indent=...
+                reorder_ws = r'\2 ;crudini_indent>\1<'
+                line = self.leading_whitespace.sub(reorder_ws, line)
 
         return line
 
@@ -115,15 +148,14 @@ class AddDefaultSection(CrudiniInputFilter):
     def readline(self):
         if self.first:
             self.first = False
-            return "[%s]" % iniparse.DEFAULTSECT
+            return '[%s]' % iniparse.DEFAULTSECT
         else:
             return CrudiniInputFilter.readline(self)
 
 
 class FileLock(object):
     """Advisory file based locking.  This should be reasonably cross platform
-    and also work over distributed file systems."""
-
+       and also work over distributed file systems."""
     def __init__(self, exclusive=False):
         # In inplace mode, the process must be careful to not close this fp
         # until finished, nor open and close another fp associated with the
@@ -131,7 +163,7 @@ class FileLock(object):
         self.fp = None
         self.locked = False
 
-        if os.name == "nt":
+        if os.name == 'nt':
             # XXX: msvcrt.locking is problematic on windows
             # See the history of the portalocker implementation for example:
             # https://github.com/WoLpH/portalocker/commits/develop/portalocker
@@ -162,20 +194,20 @@ class FileLock(object):
 
 class LockedFile(FileLock):
     """Open a file with advisory locking.  This provides the Isolation
-    property of ACID, to avoid missing writes.  In addition this provides AC
-    properties of ACID if crudini is the only logic accessing the ini file.
-    This should work on most platforms and distributed file systems.
+       property of ACID, to avoid missing writes.  In addition this provides AC
+       properties of ACID if crudini is the only logic accessing the ini file.
+       This should work on most platforms and distributed file systems.
 
-    Caveats in --inplace mode:
-     - File must be writeable
-     - File should be generally non readable to avoid read lock DoS.
-    Caveats in replace mode:
-     - Less responsive when there is contention."""
+       Caveats in --inplace mode:
+        - File must be writeable
+        - File should be generally non readable to avoid read lock DoS.
+       Caveats in replace mode:
+        - Less responsive when there is contention."""
 
     def __init__(self, filename, operation, inplace, create):
+
         self.fp_cmp = None
         self.filename = filename
-        self.operation = operation
 
         FileLock.__init__(self, operation != "--get")
 
@@ -190,16 +222,16 @@ class LockedFile(FileLock):
             # Also an exclusive lock needs write perms anyway.
             open_mode = os.O_RDWR
 
-            if create and operation != "--del":
+            if create and operation != '--del':
                 open_mode += os.O_CREAT
 
             # Don't convert line endings, so we maintain CRLF in files
             if sys.version_info[0] >= 3:
-                open_args = {"newline": ""}
+                open_args = {'newline': ''}
 
         try:
-            self.fp = os.fdopen(
-                os.open(self.filename, open_mode, 0o666), **open_args)
+            self.fp = os.fdopen(os.open(self.filename, open_mode, 0o666),
+                                **open_args)
             if inplace:
                 # In general readers (--get) are protected by file_replace(),
                 # but using read lock here gives AC of the ACID properties
@@ -210,12 +242,10 @@ class LockedFile(FileLock):
                 # The file may have been renamed since the open so recheck
                 while True:
                     self.lock()
-                    fpnew = os.fdopen(
-                        os.open(self.filename, open_mode, 0o666), **open_args
-                    )
-                    if os.name == "nt" or os.path.sameopenfile(
-                        self.fp.fileno(), fpnew.fileno()
-                    ):
+                    fpnew = os.fdopen(os.open(self.filename, open_mode, 0o666),
+                                      **open_args)
+                    if (os.name == 'nt' or
+                       os.path.sameopenfile(self.fp.fileno(), fpnew.fileno())):
                         # Note we don't fpnew.close() here as that would break
                         # any existing fcntl lock (fcntl.lockf is an fcntl lock
                         # despite the name).  We don't use flock() at present
@@ -230,12 +260,9 @@ class LockedFile(FileLock):
             # Treat --del on a non existing file as operating on NULL data
             # which will be deemed unchanged, and thus not re{written,created}
             # We don't exit early here so that --verbose is also handled.
-            if (
-                create
-                and operation == "--del"
-                and e.errno in (errno.ENOTDIR, errno.ENOENT)
-            ):
-                self.fp = StringIO("")
+            if create and operation == '--del' \
+               and e.errno in (errno.ENOTDIR, errno.ENOENT):
+                self.fp = StringIO('')
             else:
                 error(str(e))
                 sys.exit(1)
@@ -260,7 +287,7 @@ class CrudiniConfigParser(iniparse.RawConfigParser):
         iniparse.RawConfigParser.__init__(self)
         # Without the following we can't have params starting with "rem"!
         # We ignore lines starting with '%' which mercurial uses to include
-        iniparse.change_comment_syntax("%;#", allow_rem=False)
+        iniparse.change_comment_syntax('%;#', allow_rem=False)
         if preserve_case:
             self.optionxform = str
         # Adjust iniparse separator to default to no space around equals
@@ -271,12 +298,11 @@ class CrudiniConfigParser(iniparse.RawConfigParser):
 
             def new_ol_init(self, name, value, separator="=", *args, **kw):
                 orig_ol_init(self, name, value, separator, *args, **kw)
-
             orig_ol_init = iniparse.ini.OptionLine.__init__
             iniparse.ini.OptionLine.__init__ = new_ol_init
 
 
-class Print:
+class Print():
     """Use for default output format."""
 
     def section_header(self, section):
@@ -295,8 +321,8 @@ class Print:
         :param section: str (default 'None')
         """
 
-        if value == "crudini_no_arg":
-            value = ""
+        if value == 'crudini_no_arg':
+            value = ''
         print(name or value)
 
 
@@ -304,22 +330,22 @@ class PrintIni(Print):
     """Use for ini output format."""
 
     def __init__(self):
-        self.sep = " "
+        self.sep = ' '
 
     def section_header(self, section):
         print("[%s]" % section)
 
     def name_value(self, name, value, section=None):
-        if value == "crudini_no_arg":
-            value = ""
-        print(name, "=", value.replace("\n", "\n "), sep=self.sep)
+        if value == 'crudini_no_arg':
+            value = ''
+        print(name, '=', value.replace('\n', '\n '), sep=self.sep)
 
 
 class PrintIniNoSpace(PrintIni):
     """Use for ini output format with no space around equals"""
 
     def __init__(self):
-        self.sep = ""
+        self.sep = ''
 
 
 class PrintLines(Print):
@@ -329,15 +355,15 @@ class PrintLines(Print):
         # Both unambiguous and easily parseable by shell. Caveat is
         # that sections and values with spaces are awkward to split in shell
         if section:
-            line = "[ %s ]" % section
+            line = '[ %s ]' % section
             if name:
-                line += " "
+                line += ' '
         if name:
-            line += "%s" % name
-        if value == "crudini_no_arg":
-            value = ""
+            line += '%s' % name
+        if value == 'crudini_no_arg':
+            value = ''
         if value:
-            line += " = %s" % value.replace("\n", "\\n")
+            line += ' = %s' % value.replace('\n', '\\n')
         print(line)
 
 
@@ -346,7 +372,8 @@ class PrintSh(Print):
 
     @staticmethod
     def _valid_sh_identifier(
-        i, safe_chars=frozenset(string.ascii_letters + string.digits + "_")
+        i,
+        safe_chars=frozenset(string.ascii_letters + string.digits + '_')
     ):
         """Provide validation of the output identifiers as it's dangerous to
         leave validation to shell. Consider for example doing eval on this in
@@ -365,30 +392,28 @@ class PrintSh(Print):
         return True
 
     def name_value(self, name, value, section=None):
-        if not PrintSh._valid_sh_identifier(name):
-            error("Invalid sh identifier: %s" % name)
+        if section and name:
+            identifier = "%s_%s" % (section, name)
+        else:
+            identifier = name
+        if not PrintSh._valid_sh_identifier(identifier):
+            error('Invalid sh identifier "%s"' % identifier)
             sys.exit(1)
-        if value == "crudini_no_arg":
-            value = ""
-        sys.stdout.write("%s=%s\n" % (name, pipes.quote(value)))
+        if value == 'crudini_no_arg':
+            value = ''
+        sys.stdout.write("%s=%s\n" % (identifier, pipes.quote(value)))
 
 
-class Crudini:
-    mode = (
-        fmt
-    ) = (
-        update
-    ) = (
-        iniopt
-    ) = (
-        inplace
-    ) = cfgfile = output = section = param = value = vlist = listsep = verbose = None
+class Crudini():
+    mode = fmt = update = iniopt = inplace = cfgfile = output = section = \
+        param = value = vlist = listsep = verbose = None
 
     locked_file = None
-    section_explicit_default = False
+    section_explicit_default = None
     data = None
     conf = None
     added_default_section = False
+    ini_section_blanks = []
     _print = None
 
     # The following exits cleanly on Ctrl-C,
@@ -436,12 +461,12 @@ class Crudini:
         with Crudini.remove_file_on_error(tmp):
             shutil.copystat(name, tmp)
 
-            if hasattr(os, "fchown") and os.geteuid() == 0:
+            if hasattr(os, 'fchown') and os.geteuid() == 0:
                 st = os.stat(name)
                 os.fchown(f, st.st_uid, st.st_gid)
 
             if sys.version_info[0] >= 3:
-                os.write(f, bytearray(data, "utf-8"))
+                os.write(f, bytearray(data, 'utf-8'))
             else:
                 os.write(f, data)
             # We assume the existing file is persisted,
@@ -453,12 +478,12 @@ class Crudini:
             os.fsync(f)
             os.close(f)
 
-            if hasattr(os, "replace"):  # >= python 3.3
+            if hasattr(os, 'replace'):  # >= python 3.3
                 os.replace(tmp, name)  # atomic even on windows
-            elif os.name == "posix":
+            elif os.name == 'posix':
                 os.rename(tmp, name)  # atomic on POSIX
             else:
-                backup = tmp + ".backup"
+                backup = tmp + '.backup'
                 os.rename(name, backup)
                 os.rename(tmp, name)
                 delete_if_exists(backup)
@@ -468,11 +493,11 @@ class Crudini:
             # rather than continuing to reference the old inode.
             # This also provides verification in exit status that
             # this update completes.
-            if os.name != "nt":
+            if os.name != 'nt':
                 O_DIRECTORY = 0
-                if hasattr(os, "O_DIRECTORY"):
+                if hasattr(os, 'O_DIRECTORY'):
                     O_DIRECTORY = os.O_DIRECTORY
-                dirfd = os.open(os.path.dirname(name) or ".", O_DIRECTORY)
+                dirfd = os.open(os.path.dirname(name) or '.', O_DIRECTORY)
                 os.fsync(dirfd)
                 os.close(dirfd)
 
@@ -490,9 +515,9 @@ class Crudini:
         # Don't convert line endings, so we maintain CRLF in files
         open_args = {}
         if sys.version_info[0] >= 3:
-            open_args = {"newline": ""}
+            open_args = {'newline': ''}
 
-        with open(name, "w", **open_args) as f:
+        with open(name, 'w', **open_args) as f:
             f.write(data)
             f.flush()
             os.fsync(f.fileno())
@@ -502,7 +527,7 @@ class Crudini:
         try:
             iniparse.DEFAULTSECT
         except AttributeError:
-            iniparse.DEFAULTSECT = "DEFAULT"
+            iniparse.DEFAULTSECT = 'DEFAULT'
 
     # TODO item should be items and split also
     # especially in merge mode
@@ -510,25 +535,25 @@ class Crudini:
     def update_list(curr_val, item, mode, sep):
         curr_items = []
         use_space = True  # Perhaps have 'nospace' set this default?
-        if curr_val and curr_val != "crudini_no_arg":
+        if curr_val and curr_val != 'crudini_no_arg':
             if sep is None:  # Default to comma separated
-                use_space = " " in curr_val or "," not in curr_val
+                use_space = ' ' in curr_val or ',' not in curr_val
                 curr_items = [v.strip() for v in curr_val.split(",")]
-            elif sep == "":  # Empty means whitespace separated
+            elif sep == '':  # Empty means whitespace separated
                 curr_items = curr_val.split(None)
 
                 # Find first run of whitespace to maintain current delimiter
-                whitespace_re = re.compile(r"\S*(\s+)")
+                whitespace_re = re.compile(r'\S*(\s+)')
                 first_whitespace = whitespace_re.match(curr_val)
                 if first_whitespace:
                     sep = first_whitespace.group(1)
                 else:
-                    sep = " "
+                    sep = ' '
 
                 # Maintain empty `param =` line if present
-                if sep == "\n" or sep == "\r\n":
+                if sep == '\n' or sep == '\r\n':
                     if curr_val.startswith(sep):
-                        curr_items.insert(0, "")
+                        curr_items.insert(0, '')
             else:
                 curr_items = curr_val.split(sep)
 
@@ -554,20 +579,19 @@ class Crudini:
             output = sys.stderr
         else:
             output = sys.stdout
-        output.write(
-            """\
+        output.write("""\
 A utility for manipulating ini files
 
-Usage:
+Usage: %s --set [OPTION]...   config_file section   [param] [value]
+  or:  %s --get [OPTION]...   config_file [section] [param]
+  or:  %s --del [OPTION]...   config_file section   [param] [list value]
+  or:  %s --merge [OPTION]... config_file [section]
 
-  %s --set [OPTION]...   config_file section   [param] [value]
-  %s --get [OPTION]...   config_file [section] [param]
-  %s --del [OPTION]...   config_file section   [param] [list value]
-  %s --merge [OPTION]... config_file [section]
+SECTION can be empty ("") or "DEFAULT" in which case,
+params not in a section, i.e. global parameters are operated on.
+If 'DEFAULT' is used with --set, an explicit [DEFAULT] section is added.
 
-  SECTION can be empty ("") or "DEFAULT" in which case,
-  params not in a section, i.e. global parameters are operated on.
-  If 'DEFAULT' is used with --set, an explicit [DEFAULT] section is added.
+Multiple --set|--del|--get operations for a config_file can be specified.
 
 Options:
 
@@ -578,6 +602,7 @@ Options:
                        Formats are 'sh','ini','lines'
   --ini-options=OPT  Set options for handling ini files.  Options are:
                        'nospace': use format name=value not name = value
+                       'ignoreindent': ignore leading whitespace
   --inplace          Lock and write files in place.
                        This is not atomic but has less restrictions
                        than the default replacement method.
@@ -588,159 +613,230 @@ Options:
   --verbose          Indicate on stderr if changes were made
   --help             Write this help to stdout
   --version          Write version to stdout
-"""
-            % (cmd, cmd, cmd, cmd)
+""" % (cmd, cmd, cmd, cmd)
         )
         sys.exit(exitval)
 
+    def set_operation(self, operation):
+        self.mode = None
+        self.cfgfile = self.section = self.param = self.value = None
+        try:
+            self.mode = operation[0]
+            self.cfgfile = operation[1]
+            self.section = operation[2]
+            self.param = operation[3]
+            self.value = operation[4]
+        except IndexError:
+            pass
+
     def parse_options(self):
+
         # Handle optional arg to long option
         # The gettopt module should really support this
         for i, opt in enumerate(sys.argv):
-            if opt == "--existing":
-                sys.argv[i] = "--existing="
-            elif opt == "--":
+            if opt == '--existing':
+                sys.argv[i] = '--existing='
+            elif opt == '--':
                 break
 
+        long_options = [
+            'del',
+            'existing=',
+            'format=',
+            'get',
+            'help',
+            'ini-options=',
+            'inplace',
+            'list',
+            'list-sep=',
+            'merge',
+            'output=',
+            'set',
+            'verbose',
+            'version'
+        ]
+
+        # Group args into options and operations
+        options = []
+        operations = []
+        next_is_option_param = False
+        for i, opt in enumerate(sys.argv[1:]):
+            if next_is_option_param:
+                options.append(opt)
+                next_is_option_param = False
+            elif opt in ('--get', '--set', '--del', '--merge'):
+                operations.append([opt])
+            elif opt == '--':
+                if operations:
+                    operations[-1].extend(sys.argv[i+2:])
+                # else discard as was done before multi operation support
+                break
+            elif opt.startswith('--'):
+                options.append(opt)
+                if '=' not in opt and opt[2:]+'=' in long_options:
+                    next_is_option_param = True
+            else:
+                if operations:
+                    operations[-1].append(opt)
+                else:
+                    error('Unknown operation: %s' % opt)
+                    break
+
         try:
-            long_options = [
-                "del",
-                "existing=",
-                "format=",
-                "get",
-                "help",
-                "ini-options=",
-                "inplace",
-                "list",
-                "list-sep=",
-                "merge",
-                "output=",
-                "set",
-                "verbose",
-                "version",
-            ]
-            opts, args = getopt.getopt(sys.argv[1:], "", long_options)
+            opts, args = getopt.getopt(options, '', long_options)
         except getopt.GetoptError as e:
             error(str(e))
             self.usage(1)
 
+        self.iniopt = ()
         for o, a in opts:
-            if o in ("--help",):
+            if o in ('--help',):
                 self.usage(0)
-            elif o in ("--version",):
-                print("crudini 0.9.3")
+            elif o in ('--version',):
+                print('crudini 0.9.5')
                 sys.exit(0)
-            elif o in ("--verbose",):
+            elif o in ('--verbose',):
                 self.verbose = True
-            elif o in ("--set", "--del", "--get", "--merge"):
-                if self.mode:
-                    error("One of --set|--del|--get|--merge can be specified")
-                    self.usage(1)
-                self.mode = o
-            elif o in ("--format",):
+            elif o in ('--format',):
                 self.fmt = a
-                if self.fmt not in ("sh", "ini", "lines"):
-                    error("--format not recognized: %s" % self.fmt)
+                if self.fmt not in ('sh', 'ini', 'lines'):
+                    error('--format not recognized: %s' % self.fmt)
                     self.usage(1)
-            elif o in ("--ini-options",):
-                self.iniopt = a.split(",")
+            elif o in ('--ini-options',):
+                self.iniopt = a.split(',')
                 for opt in self.iniopt:
-                    if opt not in ("nospace"):
-                        error("--ini-options not recognized: %s" % opt)
+                    if opt not in ('', 'nospace', 'ignoreindent'):
+                        error('--ini-options not recognized: %s' % opt)
                         self.usage(1)
-            elif o in ("--existing",):
-                self.update = a or "param"  # 'param' implies all must exist
-                if self.update not in ("file", "section", "param"):
-                    error("--existing item not recognized: %s" % self.update)
+            elif o in ('--existing',):
+                self.update = a or 'param'  # 'param' implies all must exist
+                if self.update not in ('file', 'section', 'param'):
+                    error('--existing item not recognized: %s' % self.update)
                     self.usage(1)
-            elif o in ("--inplace",):
+            elif o in ('--inplace',):
                 self.inplace = True
-            elif o in ("--list",):
+            elif o in ('--list',):
                 self.vlist = "set"  # TODO support combos of list, sorted, ...
-            elif o in ("--list-sep",):
+            elif o in ('--list-sep',):
                 self.listsep = a
-            elif o in ("--output",):
+            elif o in ('--output',):
                 self.output = a
 
-        if not self.mode:
-            error("One of --set|--del|--get|--merge must be specified")
+        if not operations:
+            error('One of --set|--del|--get|--merge must be specified')
             self.usage(1)
 
-        try:
-            self.cfgfile = args[0]
-            self.section = args[1]
-            self.param = args[2]
-            self.value = args[3]
-        except IndexError:
-            pass
-
-        if not self.output:
-            self.output = self.cfgfile
-
-        if file_is_closed(sys.stdout) and (self.output == "-" or self.mode == "--get"):
-            error("stdout is closed")
-            sys.exit(1)
-
-        if self.cfgfile is None:
-            self.usage(1)
-        if self.section is None and self.mode in ("--del", "--set"):
-            self.usage(1)
-        if self.param is not None and self.mode in ("--merge",):
-            self.usage(1)
-        if self.value is not None and self.mode not in ("--set",):
-            if not (self.mode == "--del" and self.vlist):
-                error("A value should not be specified with %s" % self.mode)
-                self.usage(1)
-
-        if self.mode == "--merge" and self.fmt == "sh":
-            # I'm not sure how useful is is to support this.
-            # printenv will already generate a mostly compat ini format.
-            # If you want to also include non exported vars (from `set`),
-            # then there is a format change.
-            error("sh format input is not supported at present")
-            sys.exit(1)
-
-        # Protect against generating non parseable ini files
-        if self.section and ("[" in self.section or "]" in self.section):
-            error(
-                "section names should not contain '[' or ']': %s" % self.section)
-            sys.exit(1)
-        if self.param and self.param.startswith("["):
-            error("param names should not start with '[': %s" % self.param)
-            sys.exit(1)
-
-        if not self.iniopt:
-            self.iniopt = ()
-        # A "param=with=equals = value" line can not be found with --get
-        # so avoid the ambiguity.  Restrict to 'nospace' to allow hack in
-        # https://github.com/pixelb/crudini/issues/33#issuecomment-1151253988
-        if "nospace" in self.iniopt and self.param and "=" in self.param:
-            error("param names should not contain '=': %s" % self.param)
-            sys.exit(1)
-
-        if self.fmt == "lines":
+        if self.fmt == 'lines':
             self._print = PrintLines()
-        elif self.fmt == "sh":
+        elif self.fmt == 'sh':
             self._print = PrintSh()
-        elif self.fmt == "ini":
-            if "nospace" in self.iniopt:
+        elif self.fmt == 'ini':
+            if 'nospace' in self.iniopt:
                 self._print = PrintIniNoSpace()
             else:
                 self._print = PrintIni()
         else:
             self._print = Print()
 
+        # Validate all operations combinations
+        for o in operations:
+            if self.mode and self.mode != o[0]:
+                mixable = ('--set', '--del')
+                if self.mode not in mixable or o[0] not in mixable:
+                    error("--get|--merge modes can't be mixed"
+                          "with --set|--del")
+                    self.usage(1)
+            elif self.mode == '--merge':
+                error("--merge mode can't be repeated")
+                self.usage(1)
+
+            if self.cfgfile and len(o) > 1 and self.cfgfile != o[1]:
+                error("Can't operate on multiple files")
+                self.usage(1)
+
+            self.set_operation(o)
+
+            if self.cfgfile is None:
+                self.usage(1)
+            if self.section is None and self.mode in ('--del', '--set'):
+                self.usage(1)
+            if self.param is not None and self.mode in ('--merge',):
+                self.usage(1)
+            if self.value is not None and self.mode not in ('--set',):
+                if not (self.mode == '--del' and self.vlist):
+                    error('A value should not be specified with %s'
+                          % self.mode)
+                    self.usage(1)
+
+            # Convert secion '' to 'DEFAULT',
+            # ensuring no conflicting DEFAULT section specs
+            if self.section_explicit_default is None:
+                if self.section == '':
+                    o[2] = self.section = iniparse.DEFAULTSECT
+                    self.section_explicit_default = False
+                elif self.section == iniparse.DEFAULTSECT:
+                    self.section_explicit_default = True
+            elif self.section is not None:
+                if ((self.section == '' and self.section_explicit_default)
+                    or (self.section == iniparse.DEFAULTSECT
+                        and not self.section_explicit_default)):
+                    error("Conflicting %s section specifications" %
+                          iniparse.DEFAULTSECT)
+                    sys.exit(1)
+                elif self.section == '':
+                    o[2] = self.section = iniparse.DEFAULTSECT
+
+            if self.mode == '--merge' and self.fmt == 'sh':
+                # I'm not sure how useful is is to support this.
+                # printenv will already generate a mostly compat ini format.
+                # If you want to also include non exported vars (from `set`),
+                # then there is a format change.
+                error('sh format input is not supported at present')
+                sys.exit(1)
+
+            # Protect against generating non parseable ini files
+            if self.section and ('[' in self.section or ']' in self.section):
+                error("section names should not contain '[' or ']': %s" %
+                      self.section)
+                sys.exit(1)
+            if self.param and self.param.startswith('['):
+                error("param names should not start with '[': %s" % self.param)
+                sys.exit(1)
+
+            # A "param=with=equals = value" line can not be found with --get
+            # so avoid the ambiguity.  Note this precludes the "nospace" hack
+            # in https://github.com/pixelb/crudini/issues/33#issuecomment-\
+            # 1151253988
+            if self.param and '=' in self.param:
+                error("param names should not contain '=': %s" % self.param)
+                if 'nospace' not in self.iniopt:
+                    error("Use --ini-options=nospace if you want that format")
+                sys.exit(1)
+
+        if self.section_explicit_default is None:
+            self.section_explicit_default = False
+
+        if not self.output:
+            self.output = self.cfgfile
+
+        if file_is_closed(sys.stdout) \
+           and (self.output == '-' or self.mode == '--get'):
+            error("stdout is closed")
+            sys.exit(1)
+
+        return operations
+
     def _has_default_section(self):
         fp = StringIO(self.data)
         for line in fp:
-            if line.startswith("[%s]" % iniparse.DEFAULTSECT):
+            if line.startswith('[%s]' % iniparse.DEFAULTSECT):
                 return True
         return False
 
     def _chksum(self, data):
         h = hashlib.sha256()
         if sys.version_info[0] >= 3:
-            h.update(bytearray(data, "utf-8"))
+            h.update(bytearray(data, 'utf-8'))
         else:
             h.update(data)
         return h.digest()
@@ -751,17 +847,17 @@ Options:
                 # Read all data up front as this is done by iniparse anyway
                 # Doing it here will avoid rereads on reparse and support
                 # correct parsing of stdin
-                if filename == "-":
+                if filename == '-':
                     self.data = sys.stdin.read()
                 else:
                     self.data = self.locked_file.fp.read()
-                if self.mode != "--get":
+                if self.mode != '--get':
                     # compare checksums to flag any changes
                     # (even spacing or case adjustments) with --verbose,
                     # and to avoid rewriting the file if not necessary
                     self.chksum = self._chksum(self.data)
 
-                if self.data.startswith("\n"):
+                if self.data.startswith('\n'):
                     self.newline_at_start = True
                 else:
                     self.newline_at_start = False
@@ -772,12 +868,14 @@ Options:
             else:
                 fp = CrudiniInputFilter(fp, self.iniopt)
 
-            conf = CrudiniConfigParser(
-                preserve_case=preserve_case,
-                space_around_delimiters=("nospace" not in self.iniopt),
-            )
+            conf = CrudiniConfigParser(preserve_case=preserve_case,
+                                       space_around_delimiters=(
+                                         'nospace' not in self.iniopt))
             conf.readfp(fp)
             self.crudini_no_arg = fp.crudini_no_arg
+            self.indented = fp.indented
+            self.replace_leading = fp.replace_leading
+            self.section_indents = fp.section_indents
             self.windows_eol = fp.windows_eol
             return conf
         except EnvironmentError as e:
@@ -788,10 +886,9 @@ Options:
         self.added_default_section = False
         self.data = None
 
-        if filename != "-":
-            self.locked_file = LockedFile(
-                filename, self.mode, self.inplace, not self.update
-            )
+        if filename != '-':
+            self.locked_file = LockedFile(filename, self.mode, self.inplace,
+                                          not self.update)
         elif file_is_closed(sys.stdin):
             error("stdin is closed")
             sys.exit(1)
@@ -806,13 +903,17 @@ Options:
                     # reparse with inserted [DEFAULT] to be able to add global
                     # opts etc.
                     conf = self._parse_file(
-                        filename, add_default=True, preserve_case=preserve_case
+                        filename,
+                        add_default=True,
+                        preserve_case=preserve_case
                     )
                     self.added_default_section = True
 
         except configparser.MissingSectionHeaderError:
             conf = self._parse_file(
-                filename, add_default=True, preserve_case=preserve_case
+                filename,
+                add_default=True,
+                preserve_case=preserve_case
             )
             self.added_default_section = True
         except configparser.ParsingError as e:
@@ -824,31 +925,49 @@ Options:
 
     def set_name_value(self, section, param, value):
         curr_val = None
+        ignore_indent = 'ignoreindent' in self.iniopt
 
-        if self.update in ("param", "section"):
+        # Since indents stripped on read, ensure no ambiguities
+        # Also allow to set default indent on params with explicit indent
+        # We don't support this for sections as in all cases they
+        # can have [  leading spaces] in their names. TODO: Perhaps should
+        # support specifying '  [spaces before brackets]' for sections?
+        if ignore_indent and param:
+            stripped_param = param.lstrip()
+            current_indent = self.section_indents.get(section or 'DEFAULT')
+            if not current_indent:
+                leading_ws = param[:len(param)-len(stripped_param)]
+                if leading_ws:
+                    self.indented = True
+                    self.section_indents[section] = leading_ws
+            param = stripped_param
+
+        if self.update in ('param', 'section'):
             if param is None:
                 if not (
-                    section == iniparse.DEFAULTSECT or self.conf.has_section(
-                        section)
+                    section == iniparse.DEFAULTSECT or
+                    self.conf.has_section(section)
                 ):
                     raise configparser.NoSectionError(section)
             else:
                 try:
                     curr_val = self.conf.get(section, param)
                 except configparser.NoSectionError:
-                    if self.update == "section":
+                    if self.update == 'section':
                         raise
                 except configparser.NoOptionError:
-                    if self.update == "param":
+                    if self.update == 'param':
                         raise
-        elif section != iniparse.DEFAULTSECT and not self.conf.has_section(section):
+        elif (section != iniparse.DEFAULTSECT and
+                not self.conf.has_section(section)):
             if self.mode == "--del":
                 return
             else:
                 # Note this always adds a '\n' before the section name
                 # resulting in double spaced sections or blank line at
                 # the start of a new file to which a new section is added.
-                # We handle the empty file case at least when writing.
+                # List the sections here to adjust when writing.
+                self.ini_section_blanks.append(section)
                 self.conf.add_section(section)
 
         if param is not None:
@@ -856,29 +975,38 @@ Options:
                 curr_val = self.conf.get(section, param)
             except configparser.NoOptionError:
                 if self.mode == "--del":
-                    if self.update not in ("param", "section"):
+                    if self.update not in ('param', 'section'):
                         return
 
             if value is None:
                 # Unspecified param should clear list.  This will also force
                 # existing param "flags" or new params to use '=' delimiter.
                 if self.vlist:
-                    curr_val = ""
+                    curr_val = ''
 
-                if curr_val == "crudini_no_arg":
+                if curr_val == 'crudini_no_arg':
                     # param already exists without delimiter
                     return
                 elif curr_val is None and self.crudini_no_arg:
                     # some params exist without delimiter
                     # so default new param to not use one
-                    value = "crudini_no_arg"
+                    value = 'crudini_no_arg'
                 else:
                     # Otherwise use a delimeter
-                    value = ""
+                    value = ''
+
+            # Add a default indent through an inline comment, to later replace
+            section_indent = self.section_indents.get(section)
+            if curr_val is None and ignore_indent and section_indent:
+                value += ' ;crudini_indent>%s<' % section_indent
 
             if self.vlist:
                 value = self.update_list(
-                    curr_val, value, self.mode, self.listsep)
+                    curr_val,
+                    value,
+                    self.mode,
+                    self.listsep
+                )
             self.conf.set(section, param, value)
 
     def command_set(self):
@@ -903,7 +1031,7 @@ Options:
                     ignore_errs = (configparser.NoOptionError,)
                     if self.section is not None:
                         msection = self.section
-                    elif self.update not in ("param", "section"):
+                    elif self.update not in ('param', 'section'):
                         ignore_errs += (configparser.NoSectionError,)
                     try:
                         set_param = True
@@ -922,20 +1050,16 @@ Options:
                 for name in self.conf.defaults():
                     self.conf.remove_option(iniparse.DEFAULTSECT, name)
             else:
-                if not self.conf.remove_section(self.section) and self.update in (
-                    "param",
-                    "section",
-                ):
+                if not self.conf.remove_section(self.section) \
+                   and self.update in ('param', 'section'):
                     raise configparser.NoSectionError(self.section)
         elif self.value is None:
             try:
-                if (
-                    not self.conf.remove_option(self.section, self.param)
-                    and self.update == "param"
-                ):
+                if not self.conf.remove_option(self.section, self.param) \
+                   and self.update == 'param':
                     raise configparser.NoOptionError(self.section, self.param)
             except configparser.NoSectionError:
-                if self.update in ("param", "section"):
+                if self.update in ('param', 'section'):
                     raise
         else:  # remove item from list
             self.set_name_value(self.section, self.param, self.value)
@@ -943,14 +1067,14 @@ Options:
     def command_get(self):
         """Output a section/parameter"""
 
-        if self.fmt != "lines":
+        if self.fmt != 'lines' and self.fmt != 'sh':
             if self.section is None:
                 if self.conf.defaults():
                     self._print.section_header(iniparse.DEFAULTSECT)
                 for item in self.conf.sections():
                     self._print.section_header(item)
             elif self.param is None:
-                if self.fmt == "ini":
+                if self.fmt == 'ini':
                     self._print.section_header(self.section)
                 if self.section == iniparse.DEFAULTSECT:
                     defaults_to_strip = {}
@@ -981,9 +1105,16 @@ Options:
                 sections = (self.section,)
             if self.param is not None:
                 val = self.conf.get(self.section, self.param)
-                self._print.name_value(self.param, val, self.section)
+                print_section = self.section
+                if self.fmt == 'sh':
+                    print_section = None
+                self._print.name_value(self.param, val, print_section)
             else:
                 for section in sections:
+                    print_section = section
+                    if self.fmt == 'sh':
+                        if self.section or section == iniparse.DEFAULTSECT:
+                            print_section = None
                     if section == iniparse.DEFAULTSECT:
                         defaults_to_strip = {}
                     else:
@@ -994,105 +1125,119 @@ Options:
                         # if matching value also in default (global) section.
                         if defaults_to_strip.get(item[0]) != item[1]:
                             val = item[1]
-                            self._print.name_value(item[0], val, section)
+                            self._print.name_value(item[0], val, print_section)
                             items = True
-                    if not items:
-                        self._print.name_value(None, None, section)
+                    if not items and self.fmt != 'sh':
+                        self._print.name_value(None, None, print_section)
 
     def run(self):
         if not file_is_closed(sys.stdin) and sys.stdin.isatty():
             sys.excepthook = Crudini.cli_exception
 
         Crudini.init_iniparse_defaultsect()
-        self.parse_options()
+        operations = self.parse_options()
 
-        self.section_explicit_default = False
-        if self.section == "":
-            self.section = iniparse.DEFAULTSECT
-        elif self.section == iniparse.DEFAULTSECT:
-            self.section_explicit_default = True
+        # --set takes precedence to create file etc.
+        if self.mode == '--del':
+            for o in operations:
+                if o[0] == '--set':
+                    self.mode = '--set'
+                    break
 
-        if self.mode == "--merge":
-            self.mconf = self.parse_file("-", preserve_case=True)
+        if self.mode == '--merge':
+            self.mconf = self.parse_file('-', preserve_case=True)
 
         self.madded_default_section = self.added_default_section
 
         try:
-            if self.mode == "--get" and self.param is None:
+            if self.mode == '--get' and self.param is None:
                 # Maintain case when outputting params.
                 # Note sections are handled case sensitively
                 # even if optionxform is not set.
                 preserve_case = True
             else:
                 preserve_case = False
-            self.conf = self.parse_file(
-                self.cfgfile, preserve_case=preserve_case)
+            self.conf = self.parse_file(self.cfgfile,
+                                        preserve_case=preserve_case)
 
             # Take the [DEFAULT] header from the input if present
             if (
-                self.mode == "--merge"
-                and self.update not in ("param", "section")
-                and not self.madded_default_section
-                and self.mconf.items(iniparse.DEFAULTSECT)
+                self.mode == '--merge' and
+                self.update not in ('param', 'section') and
+                not self.madded_default_section and
+                self.mconf.items(iniparse.DEFAULTSECT)
             ):
                 self.added_default_section = self.madded_default_section
 
-            if self.mode == "--set":
-                self.command_set()
-            elif self.mode == "--merge":
-                self.command_merge()
-            elif self.mode == "--del":
-                self.command_del()
-            elif self.mode == "--get":
-                self.command_get()
+            for o in operations:
+                self.set_operation(o)
 
-            if self.mode != "--get":
+                if self.mode == '--set':
+                    self.command_set()
+                elif self.mode == '--merge':
+                    self.command_merge()
+                elif self.mode == '--del':
+                    self.command_del()
+                elif self.mode == '--get':
+                    self.command_get()
+
+            if self.mode != '--get':
                 # XXX: Ideally we should just do conf.write(f) here, but to
                 # avoid iniparse issues, we massage the data a little here
                 str_data = str(self.conf.data)
-                if len(str_data) and str_data[-1] != "\n":
-                    str_data += "\n"
+                if len(str_data) and str_data[-1] != '\n':
+                    str_data += '\n'
 
                 if (
-                    self.added_default_section
-                    and not (
-                        self.section_explicit_default
-                        and self.mode in ("--set", "--merge")
+                    (
+                        self.added_default_section and
+                        not (
+                            self.section_explicit_default and
+                            self.mode in ('--set', '--merge')
+                        )
+                    ) or
+                    (
+                        self.mode == '--del' and
+                        self.section == iniparse.DEFAULTSECT and
+                        self.param is None
                     )
-                ) or (
-                    self.mode == "--del"
-                    and self.section == iniparse.DEFAULTSECT
-                    and self.param is None
                 ):
                     # See note at add_section() call above detailing
                     # where this extra \n comes from that we handle
                     # here for the edge case of new files.
-                    default_sect = "[%s]\n" % iniparse.DEFAULTSECT
-                    if not self.newline_at_start and str_data.startswith(
-                        default_sect + "\n"
-                    ):
+                    default_sect = '[%s]\n' % iniparse.DEFAULTSECT
+                    if not self.newline_at_start and \
+                       str_data.startswith(default_sect + '\n'):
                         str_data = str_data[len(default_sect) + 1:]
                     else:
-                        str_data = str_data.replace(default_sect, "", 1)
+                        str_data = str_data.replace(default_sect, '', 1)
+
+                # Remove extraneous blanks added by iniparse.
+                # Note iniparse also has a tidy() function to do globally
+                for section in self.ini_section_blanks:
+                    section_s = '\n[%s]\n' % section
+                    str_data = str_data.replace(section_s, section_s[1:], 1)
 
                 if self.windows_eol:
                     # iniparse uses '\n' for new/updated items
                     # so reset all to windows format
-                    str_data = str_data.replace("\r\n", "\n")
-                    str_data = str_data.replace("\n", "\r\n")
+                    str_data = str_data.replace('\r\n', '\n')
+                    str_data = str_data.replace('\n', '\r\n')
+
+                if self.indented:
+                    str_data = self.replace_leading.sub(r'\2\1', str_data)
 
                 if self.crudini_no_arg:
-                    spacing = "" if "nospace" in self.iniopt else " "
-                    str_data = str_data.replace(
-                        "%s=%scrudini_no_arg" % (spacing, spacing), ""
-                    )
+                    spacing = '' if 'nospace' in self.iniopt else ' '
+                    str_data = str_data.replace('%s=%scrudini_no_arg' %
+                                                (spacing, spacing), '')
 
                 changed = self.chksum != self._chksum(str_data)
 
-                if self.output == "-":
+                if self.output == '-':
                     sys.stdout.write(str_data)
                 elif changed:
-                    if os.name == "nt":
+                    if os.name == 'nt':
                         # Close input file as Windows gives access errors on
                         # open files. For e.g. see caveats noted at:
                         # https://bugs.python.org/issue46003
@@ -1101,47 +1246,32 @@ Options:
                     if self.inplace:
                         self.file_rewrite(self.output, str_data)
                     else:
-                        self.file_replace(
-                            os.path.realpath(self.output), str_data)
+                        self.file_replace(os.path.realpath(self.output),
+                                          str_data)
 
                 if self.verbose:
-
                     def quote_val(val):
-                        return pipes.quote(val).replace("\n", "\\n")
-
-                    what = " ".join(
-                        map(
-                            quote_val,
-                            list(
-                                filter(
-                                    bool,
-                                    [
-                                        self.mode,
-                                        self.cfgfile,
-                                        self.section,
-                                        self.param,
-                                        self.value,
-                                    ],
-                                )
-                            ),
-                        )
-                    )
-                    sys.stderr.write(
-                        "%s: %s\n" % (("unchanged", "changed")[changed], what)
-                    )
+                        return pipes.quote(val).replace('\n', '\\n')
+                    what = ' '.join(map(quote_val,
+                                        list(filter(bool,
+                                                    [self.mode, self.cfgfile,
+                                                     self.section, self.param,
+                                                     self.value]))))
+                    sys.stderr.write('%s: %s\n' %
+                                     (('unchanged', 'changed')[changed], what))
 
             # Finish writing now to consistently handle errors here
             # (and while excepthook is set)
             if not file_is_closed(sys.stdout):
                 sys.stdout.flush()
         except configparser.ParsingError as e:
-            error("Error parsing %s: %s" % (self.cfgfile, e.message))
+            error('Error parsing %s: %s' % (self.cfgfile, e.message))
             sys.exit(1)
         except configparser.NoSectionError as e:
-            error("Section not found: %s" % e.section)
+            error('Section not found: %s' % e.section)
             sys.exit(1)
         except configparser.NoOptionError:
-            error("Parameter not found: %s" % self.param)
+            error('Parameter not found: %s' % self.param)
             sys.exit(1)
         except EnvironmentError as e:
             # Handle EPIPE as python 2 doesn't catch SIGPIPE

@@ -59,6 +59,8 @@ mpd_music="${mpd_music/#\~/$HOME}"
 MUSIC_DIR="${mpd_music}/Bandcamp"
 [ -d "${MUSIC_DIR}" ] || mkdir -p "${MUSIC_DIR}"
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 printf "\nBandcamp collections will be downloaded to ${MUSIC_DIR}\n"
 cpe bandcamp ${USEROPT} collection | jq .location | while read url
 do

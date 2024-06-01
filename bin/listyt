@@ -81,6 +81,8 @@ while getopts "c:df:p:v:u" flag; do
 done
 shift $(( OPTIND - 1 ))
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 [ "${channels}" ] || [ "${featured}" ] || \
 [ "${playlist}" ] || [ "${videos}" ] && list_urls
 
