@@ -172,7 +172,12 @@ tmux send-keys "tput civis -- invisible" C-m
 }
 tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
-[ "${DUAL}" ] && tmux split-window -h -p 50
+[ "${DUAL}" ] && {
+  tmux split-window -h -p 50
+  [ -f ${HOME}/.venv/bin/activate ] && {
+    tmux send-keys "source ${HOME}/.venv/bin/activate" C-m
+  }
+}
 
 tmux select-pane -t 1
 have_left=`type -p ${PYLEFT}`

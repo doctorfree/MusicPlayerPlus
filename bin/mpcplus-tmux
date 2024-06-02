@@ -60,6 +60,9 @@ start_tmux_session() {
   tmux send-keys "clear" C-m
   tmux send-keys "${MPPCOMM}; exit" C-m
   tmux split-window -v -p ${V_HEIGHT}
+  [ -f ${HOME}/.venv/bin/activate ] && {
+    tmux send-keys "source ${HOME}/.venv/bin/activate" C-m
+  }
   tmux send-keys "${VIZCOMM}; exit" C-m
   tmux select-pane -t 1
   tmux a #
