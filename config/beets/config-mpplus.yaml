@@ -37,7 +37,7 @@ import:
     log: ~/.config/beets/logs/import.log
 
 plugins:
-    - acousticbrainz
+#   - acousticbrainz
     - albumtypes
     - bandcamp
     - describe
@@ -61,11 +61,11 @@ plugins:
     - xtractor
     - yearfixer
 
-acousticbrainz:
-    auto: no
-    force: no
-    base_url: https://acousticbrainz.org
-    tags: []
+#acousticbrainz:
+#   auto: no
+#   force: no
+#   base_url: https://acousticbrainz.org
+#   tags: []
 
 albumtypes:
     types:

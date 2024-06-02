@@ -2,6 +2,7 @@
 
 This major new release of MusicPlayerPlus adds support for many new features and components including:
 
+* A Python virtual environment is used to provide support for Ubuntu 24.04 and others
 * MusicPlayerPlus package is now architecture independent
 * Auto-generation of Obsidian markdown vault from Discogs collection
 * Auto-generation of Obsidian markdown vault from local music library
@@ -15,7 +16,7 @@ This major new release of MusicPlayerPlus adds support for many new features and
 * Several supported Operating System platforms:
     * Arch Linux build and packaging support (NEW)
     * CentOS Linux build and packaging support (NEW)
-    * Debian format packaging (tested on Ubuntu 20.04 and Raspbian bullseye)
+    * Debian format packaging (tested on Ubuntu 20.04 - 22.04 and Raspbian bullseye)
     * RPM format packaging (tested on Fedora 35, CentOS 8)
 * Support for Kitty as default terminal emualator
     * Custom Kitty configuration, themes, and sessions
@@ -40,27 +41,27 @@ Download the [latest Debian, Arch, or RPM package format release](https://github
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_3.0.1-3.deb
+sudo apt install ./MusicPlayerPlus_3.0.2-1.deb
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./musicplayerplus-v3.0.1r3-1-any.pkg.tar.zst
+sudo pacman -U ./musicplayerplus-v3.0.2r1-1-any.pkg.tar.zst
 ```
 
 Install the package on RPM based systems by executing the command.
 
 ```bash
-sudo dnf localinstall ./MusicPlayerPlus_3.0.1-3.rpm
+sudo dnf localinstall ./MusicPlayerPlus_3.0.2-1.rpm
 ```
 
 ### PKGBUILD Installation
 
-A precompiled package is supplied for Arch Linux (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.1-3.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+A precompiled package is supplied for Arch Linux (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
 
 ```
-tar xzf MusicPlayerPlus-pkgbuild-3.0.1-3.tar.gz
+tar xzf MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz
 cd musicplayerplus
 makepkg --force --log --cleanbuild --noconfirm --syncdeps
 ```
@@ -133,6 +134,6 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 ## Changelog
 
-View the full changelog for this release at https://github.com/doctorfree/MusicPlayerPlus/blob/v3.0.1r3/CHANGELOG.md
+View the full changelog for this release at https://github.com/doctorfree/MusicPlayerPlus/blob/v3.0.2r1/CHANGELOG.md
 
 See [CHANGELOG.md](https://github.com/doctorfree/MusicPlayerPlus/blob/master/CHANGELOG.md) for a full list of changes in every MusicPlayerPlus release
