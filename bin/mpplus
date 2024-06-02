@@ -1406,6 +1406,7 @@ show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
+    clear
     FIG_TEXT="Help Menu"
     if [ "${use_figlet}" ]
     then
@@ -1453,11 +1454,11 @@ show_help_menu() {
     [ "${have_kitty}" ] && options+=("Kitty Terminal Man Page")
     [ "${have_simple}" ] && options+=("Simple Terminal Man Page")
     [ "${have_tilix}" ] && options+=("Tilix Terminal Man Page")
-    options+=("Done / Back" "Quit")
+    options+=("Done / Back  [b]" "Quit         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
-        "Done"*,*|*,"Done"*|"done"*,*|*,"done"*|"Back"*,*|*,"Back"*|"back"*,*|*,"back"*)
+        "Done"*,*|*,"Done"*|"done"*,*|*,"done"*|"Back"*,*|*,"Back"*|"back"*,*|*,"back"*|"b",*|*,"b")
           clear
           printf "\n"
           break 2
@@ -1612,7 +1613,7 @@ show_help_menu() {
           man tilix
           break
           ;;
-        "Quit",*|*,"Quit"|"quit",*|*,"quit")
+        "Quit",*|*,"Quit"|"quit",*|*,"quit"|"q",*|*,"q")
           printf "\nExiting MusicPlayerPlus\n"
           exit 0
           ;;
@@ -1631,6 +1632,7 @@ show_help_menu() {
 show_downloads_menu() {
   while true
   do
+    clear
     FIG_TEXT="Downloads"
     if [ "${use_figlet}" ]
     then
@@ -1662,7 +1664,7 @@ show_downloads_menu() {
       }
       options+=("Toggle Dry Run (${usedrun})")
     }
-    options+=("Main menu" "Quit")
+    options+=("Main menu    [m]" "Quit         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -1672,7 +1674,7 @@ show_downloads_menu() {
               show_help_menu
               break
               ;;
-          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+          "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
               clear
               printf "\n"
               init_vars
@@ -1733,9 +1735,13 @@ show_downloads_menu() {
               skip_it_so=1
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              skip_it_so=1
+              break
               ;;
       esac
       REPLY=
@@ -1823,6 +1829,7 @@ show_logs_menu() {
   have_alsa=`type -p alsa-info`
   while true
   do
+    clear
     show_system_status
     FIG_TEXT="Service Logs Menu"
     if [ "${use_figlet}" ]
@@ -1860,7 +1867,7 @@ show_logs_menu() {
       options+=("View Last.FM Scrobbler Log")
     }
     options+=("Manage Services")
-    options+=("Main menu" "Quit")
+    options+=("Main menu    [m]" "Quit         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -1870,7 +1877,7 @@ show_logs_menu() {
               show_help_menu
               break
               ;;
-          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+          "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
               clear
               printf "\n"
               init_vars
@@ -1919,9 +1926,12 @@ show_logs_menu() {
               show_services_menu
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              break
               ;;
       esac
       REPLY=
@@ -1933,6 +1943,7 @@ show_logs_menu() {
 show_services_menu() {
   while true
   do
+    clear
     show_system_status
     FIG_TEXT="Services Menu"
     if [ "${use_figlet}" ]
@@ -2090,7 +2101,7 @@ show_services_menu() {
       options+=("Update/scan MPD music library")
     }
     options+=("View Music Service Logs")
-    options+=("Main menu" "Quit")
+    options+=("Main menu    [m]" "Quit         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2100,7 +2111,7 @@ show_services_menu() {
               show_help_menu
               break
               ;;
-          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+          "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
               clear
               printf "\n"
               init_vars
@@ -2442,9 +2453,12 @@ show_services_menu() {
               show_logs_menu
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              break
               ;;
       esac
       REPLY=
@@ -2456,6 +2470,7 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
+    clear
     FIG_TEXT="Fuzzy Search"
     if [ "${use_figlet}" ]
     then
@@ -2472,7 +2487,7 @@ show_fzmp_menu() {
     [ "${have_fzf}" ] && options+=("List genres in library")
     [ "${have_fzf}" ] && options+=("Search current playlist")
     [ "${have_fzf}" ] && options+=("List saved playlists")
-    options+=("Main menu" "Quit")
+    options+=("Main menu    [m]" "Quit         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2482,7 +2497,7 @@ show_fzmp_menu() {
               show_help_menu
               break
               ;;
-          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+          "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
               clear
               printf "\n"
               init_vars
@@ -2513,9 +2528,12 @@ show_fzmp_menu() {
               fzmp -P
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              break
               ;;
       esac
     done
@@ -2525,6 +2543,7 @@ show_fzmp_menu() {
 show_ascii_menu() {
   while true
   do
+    clear
     FIG_TEXT="Asciimatics"
     if [ "${use_figlet}" ]
     then
@@ -2558,8 +2577,8 @@ show_ascii_menu() {
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Use Tmux (${usetmux})")
-    [ "${have_ascii}" ] && options+=("Asciiville Menu")
-    options+=("Main menu" "Quit")
+    [ "${have_ascii}" ] && options+=("Asciiville Menu [a]")
+    options+=("Main menu       [m]" "Quit            [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2570,7 +2589,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "Main menu",*|*,"Main menu"|"Back",*|*,"Back"|"back",*|*,"back")
+          "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
               clear
               printf "\n"
               init_vars
@@ -2640,16 +2659,20 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "Asciiville"*,*|*,"Asciiville"*)
+          "Asciiville"*,*|*,"Asciiville"*|"a",*|*,"a")
               clear
               asciiville
               clear
               skip_it_so=1
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              skip_it_so=1
+              break
               ;;
       esac
       REPLY=
@@ -2755,10 +2778,10 @@ select_music_dir() {
 }
 
 show_main_menu() {
-  clear
-  printf "\n"
   while true
   do
+    clear
+    printf "\n"
     if [ "${FULLSCREEN}" ]
     then
       fullstat="ON"
@@ -2816,9 +2839,9 @@ show_main_menu() {
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
     options+=("Toggle Fullscreen (${fullstat})")
-    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu")
-    [ "${have_roon}" ] && options+=("RoonCommandLine Menu")
-    options+=("Quit")
+    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu [m]")
+    [ "${have_roon}" ] && options+=("RoonCommandLine Menu     [r]")
+    options+=("Quit                     [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -3032,7 +3055,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "MagicMirror"*,*|*,"MagicMirror"*)
+          "MagicMirror"*,*|*,"MagicMirror"*|"m",*|*,"m")
               clear
               FIG_TEXT="Mirror Command"
               if [ "${use_figlet}" ]
@@ -3047,7 +3070,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "RoonCommandLine"*,*|*,"RoonCommandLine"*)
+          "RoonCommandLine"*,*|*,"RoonCommandLine"*|"r",*|*,"r")
               clear
               FIG_TEXT="Roon Command"
               if [ "${use_figlet}" ]
@@ -3062,9 +3085,13 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Quit",*|*,"Quit"|"quit",*|*,"quit")
+          "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
               printf "\nExiting\n"
               exit 0
+              ;;
+          *,*|*,*)
+              skip_it_so=1
+              break
               ;;
       esac
       REPLY=

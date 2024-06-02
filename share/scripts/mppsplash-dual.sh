@@ -167,6 +167,9 @@ tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
 tmux send-keys "tput civis -- invisible" C-m
+[ -f ${HOME}/.venv/bin/activate ] && {
+  tmux send-keys "source ${HOME}/.venv/bin/activate" C-m
+}
 tmux send-keys "export PS1=''" C-m
 tmux send-keys "clear" C-m
 [ "${DUAL}" ] && tmux split-window -h -p 50

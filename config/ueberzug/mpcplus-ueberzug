@@ -8,6 +8,8 @@ cleanup() {
     pkill mpcplus_cover_art.sh
 }
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 USE_MPCPLUS=1
 USE_NCMPCPP=
 CLIENT_COMM="mpcplus"

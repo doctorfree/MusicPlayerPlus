@@ -16,6 +16,9 @@ MUSIC_DIR=
   }
   [ "${MUSIC_DIR}" ] || MUSIC_DIR="$HOME/Music"
 }
+
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 # Need to expand a tilda to $HOME
 music_library="${MUSIC_DIR/#\~/$HOME}"
 fallback_image="$HOME/.config/mpcplus/ueberzug/img/fallback.png"

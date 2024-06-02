@@ -336,8 +336,8 @@ install_ueberzug() {
       TEMP_WHL="/tmp/${TEMP_WHL}"
       wget --quiet -O "${TEMP_WHL}" "${DL_URL}" >/dev/null 2>&1
       chmod 644 "${TEMP_WHL}"
-      ${PYTHON} -m pip install --user --upgrade "${TEMP_WHL}" >/dev/null 2>&1
-      #     rm -f "${TEMP_WHL}"
+      ${PYTHON} -m pip install --upgrade "${TEMP_WHL}" >/dev/null 2>&1
+      rm -f "${TEMP_WHL}"
     }
   }
 }
@@ -383,7 +383,7 @@ init_mopidy() {
 
   for extension in ${EXT_MOPIDY}; do
     printf "\n\tInstalling Mopidy extension ${extension}"
-    ${PYTHON} -m pip install --user --upgrade ${extension} >/dev/null 2>&1
+    ${PYTHON} -m pip install --upgrade ${extension} >/dev/null 2>&1
   done
   printf "\n"
 
@@ -2064,9 +2064,9 @@ install_mpc() {
   git clone https://github.com/MusicPlayerDaemon/mpc.git
   cd mpc
   have_meson=$(type -p meson)
-  [ "${have_meson}" ] || ${PYTHON} -m pip install --user meson
+  [ "${have_meson}" ] || ${PYTHON} -m pip install --upgrade meson
   have_ninja=$(type -p ninja)
-  [ "${have_ninja}" ] || ${PYTHON} -m pip install --user ninja
+  [ "${have_ninja}" ] || ${PYTHON} -m pip install --upgrade ninja
   meson . output
   ninja -C output
   [ -x output/mpc ] && sudo cp output/mpc /usr/bin/mpc
@@ -3087,7 +3087,7 @@ if [ "${PIP}" ]; then
     #    - Uninstall Beets (python -m pip uninstall beets)
     #    - pip install https://github.com/beetbox/beets/tarball/master
     ${PYTHON} -m pip uninstall beets >/dev/null 2>&1
-    ${PYTHON} -m pip install --user \
+    ${PYTHON} -m pip install --upgrade \
       https://github.com/beetbox/beets/tarball/master >/dev/null 2>&1
     BEETS=
   else
@@ -3117,11 +3117,11 @@ if [ "${PIP}" ]; then
       YSCV=${YSCV:0:3}
       ${SCPTDIR}/vercomp.sh "${YSCV}" "${YMIN}" >/dev/null
       [ $? -eq 2 ] && {
-        ${PYTHON} -m pip install --user ${SCRB}==0.7.3 >/dev/null 2>&1
+        ${PYTHON} -m pip install --upgrade ${SCRB}==0.7.3 >/dev/null 2>&1
       }
     }
   else
-    ${PYTHON} -m pip install --user ${SCRB}==0.7.3 >/dev/null 2>&1
+    ${PYTHON} -m pip install --upgrade ${SCRB}==0.7.3 >/dev/null 2>&1
   fi
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
@@ -3129,7 +3129,7 @@ if [ "${PIP}" ]; then
     PyYAML python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
     calliope-music bandcamp-downloader scdl flask-cors click; do
     printf "  ${pkg}"
-    ${PYTHON} -m pip install --user --upgrade ${pkg} >/dev/null 2>&1
+    ${PYTHON} -m pip install --upgrade ${pkg} >/dev/null 2>&1
   done
   # Install fixed cpe script
   [ -f ${CCPTDIR}/cpe ] && {
