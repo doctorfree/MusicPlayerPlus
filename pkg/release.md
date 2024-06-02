@@ -36,18 +36,12 @@ This major new release of MusicPlayerPlus adds support for many new features and
 
 ## Installation
 
-Download the [latest Debian, Arch, or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
+Download the [latest Debian or RPM package format release](https://github.com/doctorfree/MusicPlayerPlus/releases) for your platform.
 
 Install the package on Debian based systems by executing the command:
 
 ```bash
 sudo apt install ./MusicPlayerPlus_3.0.2-1.deb
-```
-
-Install the package on Arch Linux based systems by executing the command:
-
-```bash
-sudo pacman -U ./musicplayerplus-v3.0.2r1-1-any.pkg.tar.zst
 ```
 
 Install the package on RPM based systems by executing the command.
@@ -58,7 +52,7 @@ sudo dnf localinstall ./MusicPlayerPlus_3.0.2-1.rpm
 
 ### PKGBUILD Installation
 
-A precompiled package is supplied for Arch Linux (see above). To rebuild this package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz` and use the `makepkg` command to download the sources, build the binaries, and create the installation package:
+To build an Arch Linux package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz` and use the `makepkg` command to download the sources and create the installation package:
 
 ```
 tar xzf MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz
@@ -113,24 +107,20 @@ sudo pacman -Rs musicplayerplus
 
 ## Building MusicPlayerPlus from source
 
-MusicPlayerPlus can be compiled, packaged, and installed from the source code repository. This should be done as a normal user with `sudo` privileges:
+MusicPlayerPlus can be packaged and installed from the source code repository. This should be done as a normal user with `sudo` privileges:
 
 ```
 # Retrieve the source code from the repository
 git clone https://github.com/doctorfree/MusicPlayerPlus.git
 # Enter the MusicPlayerPlus source directory
 cd MusicPlayerPlus
-# Install the necessary build environment (not necessary on Arch Linux)
-scripts/install-dev-env.sh
-# Install Gaia
-./build -i gaia
-# Compile the MusicPlayerPlus components and create an installation package
+# Create an installation package
 ./mkpkg
 # Install MusicPlayerPlus and its dependencies
 ./Install
 ```
 
-The `mkpkg` script detects the platform and creates an installable package in the package format native to that platform. After successfully building the MusicPlayerPlus components, the resulting installable package will be found in the `./releases/<version>/` directory.
+The `mkpkg` script detects the platform and creates an installable package in the package format native to that platform. After successfully building the MusicPlayerPlus installation package, the resulting installable package will be found in the `./releases/<version>/` directory.
 
 ## Changelog
 
