@@ -52,12 +52,14 @@ sudo dnf localinstall ./MusicPlayerPlus_3.0.2-1.rpm
 
 ### PKGBUILD Installation
 
-To build an Arch Linux package from sources, extract `MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz` and use the `makepkg` command to download the sources and create the installation package:
+To build an Arch Linux package from sources, see the
+[Building MusicPlayerPlus from source](#building-musicplayerplus-from-source)
+section below. On an Arch Linux system issue the following commands:
 
 ```
-tar xzf MusicPlayerPlus-pkgbuild-3.0.2-1.tar.gz
-cd musicplayerplus
-makepkg --force --log --cleanbuild --noconfirm --syncdeps
+git clone https://github.com/doctorfree/MusicPlayerPlus.git
+cd MusicPlayerPlus
+./mkpkg
 ```
 
 ## Configuration

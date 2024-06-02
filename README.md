@@ -18,13 +18,6 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Discogs user collection to markdown generator
 - ***plus*** Automated setup, import and organization, metadata, playlists, ...
 
-MusicPlayerPlus is one of the [Neoman](https://neoman.dev) managed projects:
-
-| **Neoman** | **Managed** | **Projects** |
-| ---------- | ----------- | ------------ |
-| [Asciiville](https://asciiville.dev) | [Lazyman](https://lazyman.dev) | [MirrorCommand](https://mirrorcommand.dev) |
-| [MusicPlayerPlus](https://musicplayerplus.dev) | [Neoman](https://neoman.dev) | [RoonCommandLine](https://rooncommand.dev) |
-
 ## Table of contents
 
 1. [Overview](#overview)
@@ -155,7 +148,8 @@ happen from the command-line in a character-based environment.
 
 ### Requirements
 
-MusicPlayerPlus is compiled and packaged for installation on any Linux platform. It has been tested on the following platforms:
+MusicPlayerPlus is compiled and packaged for installation on Linux platforms.
+It has been tested on the following platforms:
 
 - Arch Linux
 - CentOS Linux
@@ -792,15 +786,18 @@ https://beets.io/
 
 ### Additional metadata analysis and retrieval
 
-MusicPlayerPlus includes three methods for augmenting music library
-metadata through acoustic analysis. These three methods are:
+MusicPlayerPlus includes two supported methods for augmenting music
+library metadata through acoustic analysis. These two methods are:
+
+- Essentia acoustic analysis and Beets metadata retrieval
+    - initialized with `mppinit -e metadata`
+- Blissify acoustic analysis of the MPD music library
+    - initialized with `mppinit -b metadata`
+
+A third method using AcousticBrainz is no longer supported:
 
 - AcousticBrainz metadata retrieval (deprecated)
     - initialized with `mppinit -a metadata`
-- Blissify acoustic analysis of the MPD music library
-    - initialized with `mppinit -b metadata`
-- Essentia acoustic analysis and Beets metadata retrieval
-    - initialized with `mppinit -e metadata`
 
 #### Acoustic analysis with Blissify
 
@@ -865,7 +862,7 @@ instrumentation.
 
 This is the same sort of thing that
 [AcousticBrainz](https://acousticbrainz.org/) does but the AcousticBrainz
-project is no longer collecting data and will be withdrawn in 2023.
+project is no longer collecting data and was withdrawn in 2023.
 MusicPlayerPlus provides the same functionality using pre-compiled and
 packaged Essentia binaries and models.
 
@@ -876,6 +873,8 @@ manner and in the background so it can be left unattended if desired.
 
 #### Acoustic retrieval with AcousticBrainz
 
+**[No longer supported]**
+
 While it still exists the AcousticBrainz service can be queried to provide
 a relatively quick way to update the Beets library with additional
 acoustic metadata. The AcousticBrainz service has already analyzed the
@@ -883,7 +882,7 @@ acoustic characteristics of songs in the MusicBrainz catalog. To retrieve
 this metadata for songs in your music library, after Beets import is complete,
 run the command `mppinit -a metadata`. Or, at any time after Beets import
 run the command `beet acousticbrainz`. The AcousticBrainz service is no longer
-updated and will be retired in 2023.
+updated and was retired in 2023.
 
 The individual metadata retrieval steps performed automatically by
 `mppinit [-a|-b|-e] metadata` can be performed manually using the instructions in
@@ -2166,7 +2165,7 @@ https://wiki.archlinux.org/title/Music_Player_Daemon/Tips_and_tricks#Control_MPD
 
 ## Building MusicPlayerPlus from source
 
-MusicPlayerPlus can be compiled, packaged, and installed from the source code
+MusicPlayerPlus can be packaged and installed from the source code
 repository. This should be done as a normal user with `sudo` privileges:
 
 ```
@@ -2174,9 +2173,7 @@ repository. This should be done as a normal user with `sudo` privileges:
 git clone https://github.com/doctorfree/MusicPlayerPlus.git
 # Enter the MusicPlayerPlus source directory
 cd MusicPlayerPlus
-# Install the necessary build environment (not necessary on Arch Linux)
-scripts/install-dev-env.sh
-# Compile the MusicPlayerPlus components and create an installation package
+# Create an installation package
 ./mkpkg
 # Install MusicPlayerPlus and its dependencies
 ./Install
@@ -2195,74 +2192,6 @@ cd MusicPlayerPlus
 repository can be used to build an installation package on all supported
 platforms. After cloning, `cd MusicPlayerPlus` and `./mkpkg`. The resulting
 installation package(s) will be found in `./releases/<version>/`.
-
-### Install build dependencies
-
-MusicPlayerPlus components have build dependencies on the following:
-
-* libtool
-* automake
-* build-essentials
-* [Boost library](https://www.boost.org/)
-* [NCurses library](http://www.gnu.org/software/ncurses/ncurses.html)
-* [Readline library](https://tiswww.case.edu/php/chet/readline/rltop.html)
-* [Curl library](https://curl.haxx.se/)
-* [fftw library](http://www.fftw.org/)
-* [tag library](https://taglib.org/)
-* [iniparser](https://github.com/ndevilla/iniparser)
-* [ALSA dev files](http://alsa-project.org/)
-* [Pulseaudio dev files](http://freedesktop.org/software/pulseaudio/doxygen/)
-* [Eigen](http://eigen.tuxfamily.org/)
-* [Gaia](https://github.com/MTG/gaia)
-* [libavcodec/libavformat/libavutil/libswresample](http://ffmpeg.org/)
-* [libsamplerate](http://www.mega-nerd.com/SRC/)
-* [LibYAML](http://pyyaml.org/wiki/LibYAML)
-* [Chromaprint](https://github.com/acoustid/chromaprint)
-* [TensorFlow](https://tensorflow.org/)
-
-Install build dependencies via:
-
-```
-scripts/install-dev-env.sh
-```
-
-or manually with:
-
-```
-sudo apt-get install \
-    build-essential libeigen3-dev libfftw3-dev clang \
-    libavcodec-dev libavformat-dev libavutil-dev libswresample-dev \
-    libsamplerate0-dev libtag1-dev libchromaprint-dev libmpdclient-dev \
-    autotools-dev autoconf libtool libboost-all-dev fftw-dev \
-    libiniparser-dev libyaml-dev swig python3-dev pkg-config \
-    libncurses-dev libasound2-dev libreadline-dev libpulse-dev \
-    libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools \
-    libavfilter-dev libavdevice-dev libsqlite3-dev
-```
-
-On RPM based systems like Fedora Linux, manually install build dependencies via:
-
-```
-sudo dnf install alsa-lib-devel ncurses-devel fftw3-devel \
-     pulseaudio-libs-devel libtool automake iniparser-devel \
-     SDL2-devel eigen3-devel libyaml-devel clang-devel \
-     ffmpeg-devel libchromaprint-devel python-devel \
-     python3-devel python3-yaml python3-six sqlite-devel
-```
-
-On Arch Linux or other PKGBUILD based Linux systems, manually install build
-dependencies via:
-
-```
-sudo pacman -S --needed base-devel eigen fftw clang ffmpeg4.4 libsamplerate \
-     taglib chromaprint libmpdclient boost boost-libs iniparser libyaml swig \
-     alsa-lib ncurses readline libpulse libcurl-compat sqlite qt5-base \
-     qt5-tools python python-numpy python-six pandoc zip
-```
-
-**[Note:]** The MusicPlayerPlus `PKGBUILD` on Arch Linux defines build
-dependencies and these will be automatically installed when performing
-a `makepkg` build. It is not necessary to pre-install these packages.
 
 ### Install packaging dependencies
 
@@ -2299,8 +2228,8 @@ On PKGBUILD based systems like Arch Linux, the `mkpkg` scripts executes
 
 ### Install MusicPlayerPlus from source build
 
-After successfully building and packaging MusicPlayerPlus with either
-`./mkpkg`, install the MusicPlayerPlus package with the command:
+After successfully building and packaging MusicPlayerPlus with `./mkpkg`,
+install the MusicPlayerPlus package with the command:
 
 ```
 ./Install
@@ -2374,25 +2303,6 @@ package, and test MusicPlayerPlus components. These include:
     libncurses-dev libasound2-dev libreadline-dev libpulse-dev
     libcurl4-openssl-dev qtbase5-dev qtchooser qt5-qmake qtbase5-dev-tools
     libavfilter-dev libavdevice-dev libsqlite3-dev
-```
-
-Utilities and applications built from source in MusicPlayerPlus include:
-
-- mppcava character based spectrum visualizer
-
-The build scripts in the `scripts/` directory of the MusicPlayerPlus
-repository can be used to compile bliss-analyze, blissify, and mppcava.
-These are:
-
-- scripts/build-bliss-analyze.sh
-- scripts/build-blissify.sh
-- scripts/build-mppcava.sh
-
-Invoke the appropriate build script for the utility you wish to compile.
-For example, to compile the `mppcava` spectrum visualizer from source, run the command:
-
-```
-./scripts/build-mppcava.sh
 ```
 
 On Debian (e.g. Ubuntu), PKGBUILD (e.g. Arch) and RPM (e.g. Fedora) based
