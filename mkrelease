@@ -43,10 +43,6 @@ shift $(( OPTIND - 1 ))
 ANNO="MusicPlayerPlus Version ${VERSION} Release ${RELEASE}"
 gittag v${VERSION}r${RELEASE} ${ANNO}
 
-echo "Copy RPI Debian, Arch Linux package, and RPM to releases/${VERSION}"
-
-read -p "Press Enter to continue" answer
-
 echo "Creating release for version ${VERSION} release ${RELEASE}"
 
 gh release create v${VERSION}r${RELEASE} ${DRAFT} \

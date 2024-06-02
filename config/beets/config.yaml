@@ -28,7 +28,7 @@ import:
     log: ~/.config/beets/logs/import.log
 
 plugins:
-    - acousticbrainz
+#   - acousticbrainz
     - albumtypes
     - bandcamp
 #   - convert
@@ -55,10 +55,10 @@ plugins:
     - xtractor
     - yearfixer
 
-acousticbrainz:
-    auto: no
-    force: no
-    base_url: https://acousticbrainz.org
+#acousticbrainz:
+#   auto: no
+#   force: no
+#   base_url: https://acousticbrainz.org
 
 albumtypes:
     types:
@@ -349,8 +349,6 @@ musicbrainz:
     #searchlimit: 10
     extra_tags: [year, catalognum, country, media, label]
     #genres: yes
-#   Disable Musicbrainz: not in Beets 1.6.0, will be in 1.6.1
-#   enabled: no
 
 match:
     strong_rec_thresh: 0.10

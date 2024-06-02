@@ -74,7 +74,7 @@ usage() {
   printf " [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
   printf "mopidy|mpd|navidrome|soundcloud|sync|yams]"
   printf "\nWhere:"
-  printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis (deprecated)"
+  printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis [deprecated]"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
   printf "\n\t'-d' install latest Beets development branch rather than"
   printf "\n\t\tthe latest stable release (for testing purposes)"
@@ -1530,11 +1530,8 @@ argument=$(echo "$1" | tr '[:upper:]' '[:lower:]')
   exit 0
 }
 
-[ "${essentia}" ] && [ "${acbrainz}" ] && {
-  printf "\nOnly one of '-a' and '-e' can be specified."
-  printf "\nExiting."
-  usage
-}
+# Essentia overrides the deprecated AcousticBrainz
+[ "${essentia}" ] && [ "${acbrainz}" ] && acbrainz=
 
 # User needs to be in group adm for some systemctl actions
 id -nG | grep -qw adm || {
@@ -1748,8 +1745,6 @@ fi
     printf "\nAfter the Beets Import is complete, update metadata and perform"
     printf "\nacoustic analysis and extraction with Essentia by executing:"
     printf "\n\t${BOLD}mppinit metadata${NORM}\n"
-    printf "\nAlternatively, to use AcousticBrainz for metadata retrieval:"
-    printf "\n\t${BOLD}mppinit -a metadata${NORM}\n"
     [ "${have_bliss}" ] && {
       printf "\nTo use Blissify for acoustic metadata analysis:"
       printf "\n\t${BOLD}mppinit -b metadata${NORM}\n"

@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.2r1 (2024-06-01)
+* Add Python virtual environment and `pyenv` install
+* Move `fzf` and `figlet` out of dependencies into `mppinit`
+* Fix `JetBrains` URL
+* Disable `acousticbrainz` Beets plugin
+* Add `--no-confirm` to `bandcamp-download` for private release download
+* Install our fixed `cpe` script
+* Porting to Ubuntu 22.04 with Homebrew python
+* Install `JetBrains Mono` font and make it the default in Kitty config
+* Add default `ncmpcpp` configuration
+* Add man page for `mpprc`
+
 ## MusicPlayerPlus-3.0.1r3 (2023-01-20)
 * Add settings for cover art padding and font size in `mpprc`
 * Merge existing `mpprc` in initial `mppinit`

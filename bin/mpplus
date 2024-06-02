@@ -120,7 +120,7 @@ usage() {
   printf "\n\t-w indicates write metadata during beets import"
   printf "\n\t-W indicates do not write metadata during beets import"
   printf "\n\t-x 'query' uses AcousticBrainz to retrieve audio-based information"
-  printf "\n\t\tfor all music library media matching 'query'. A query"
+  printf "\n\t\tfor all music library media matching 'query' [deprecated]. A query"
   printf "\n\t\tof 'all' performs the retrieval on the entire music library."
   printf "\n\t-X 'query' performs an analysis and retrieval, using Essentia,"
   printf "\n\t\tof audio-based information for all music library media"
@@ -2807,7 +2807,6 @@ show_main_menu() {
     options+=("Import Music to Beets")
     options+=("Fetch Lyrics" "Blissify Audio Info Extraction")
     options+=("Essentia Audio Info Extraction")
-    options+=("AcousticBrainz Info Retrieval")
     options+=("Manage Downloads")
     options+=("Manage Services")
     options+=("View Music Service Logs")
@@ -2964,10 +2963,6 @@ show_main_menu() {
               ;;
           "Essentia"*,*|*,"Essentia"*)
               XTRACTOR="all"
-              break
-              ;;
-          "AcousticBrainz"*,*|*,"AcousticBrainz"*)
-              ACBRAINZ="all"
               break
               ;;
           "Fetch"*,*|*,"Fetch"*)

@@ -2,7 +2,7 @@
 title: MPPRC
 section: 5
 header: User Manual
-footer: musicplayerplus 3.0.1
+footer: musicplayerplus 3.0.2
 date: January 20, 2023
 ---
 ## NAME
