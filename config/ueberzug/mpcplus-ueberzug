@@ -1,14 +1,4 @@
 #!/bin/bash
-export FIFO_UEBERZUG="/tmp/mpd-ueberzug-${PPID}"
-
-cleanup() {
-    rm "$FIFO_UEBERZUG" 2>/dev/null
-    rm /tmp/mpd_cover.jpg 2>/dev/null
-    pkill -P $$ 2>/dev/null
-    pkill mpcplus_cover_art.sh
-}
-
-[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
 
 USE_MPCPLUS=1
 USE_NCMPCPP=
@@ -26,10 +16,25 @@ while getopts "c:" flag; do
 done
 
 pkill -P $$ 2>/dev/null
+
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
+export FIFO_UEBERZUG="/tmp/mpd-ueberzug-${PPID}"
+
 rm "$FIFO_UEBERZUG" 2>/dev/null
 mkfifo "$FIFO_UEBERZUG" >/dev/null
+
+cleanup() {
+    rm "$FIFO_UEBERZUG" 2>/dev/null
+    rm /tmp/mpd_cover.jpg 2>/dev/null
+    pkill -P $$ 2>/dev/null
+    pkill mpcplus_cover_art.sh
+}
+
 trap cleanup EXIT 2>/dev/null
-tail --follow "$FIFO_UEBERZUG" | ueberzug layer --silent --parser simple >/dev/null 2>&1 &
+# tail --follow "$FIFO_UEBERZUG" | ueberzug layer --silent --parser simple >/dev/null 2>&1 &
+tail --follow "$FIFO_UEBERZUG" | \
+  ueberzug layer --silent --parser simple --loader synchronous >/dev/null 2>&1 &
 
 if [ "${USE_MPCPLUS}" ]
 then

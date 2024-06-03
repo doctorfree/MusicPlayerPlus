@@ -389,10 +389,14 @@ paths:
     #
     # MusicPlayerPlus paths configuration
     #
-    default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
-    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}/$track - $title"
-    comp: Compilations/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
-    albumtype:soundtrack: Soundtracks/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+#   default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+#   singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}/$track - $title"
+#   comp: Compilations/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+#   albumtype:soundtrack: Soundtracks/[%if{$original_year,$original_year,%if{$year,$year,0000}}] %if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
+    default: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title"
+    singleton: "%if{$albumartist,%title{$albumartist},%if{$artist,%title{$artist},Unknown Artist}}/%if{$album,$album%aunique{},Unknown Album}/$track - $title"
+    comp: Compilations/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $artist - $title
+    albumtype:soundtrack: Soundtracks/%if{$album,$album%aunique{},Unknown Album}%if{$atypes, $atypes}/$track - $title
 
 ignore: ['.DS_Store', '.*', '*~', 'System Volume Information', 'lost+found']
 
