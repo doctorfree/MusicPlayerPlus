@@ -1643,7 +1643,7 @@ show_downloads_menu() {
     fi
     if [ "${dryrun}" ]
     then
-      usedrun="Dry Run ON"
+      usedrun="Dry Run ON "
     else
       usedrun="Dry Run OFF"
     fi
@@ -2481,13 +2481,14 @@ show_fzmp_menu() {
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
-    [ "${have_fzf}" ] && options+=("Search all songs in library")
-    [ "${have_fzf}" ] && options+=("Search artist/album with fzf")
-    [ "${have_dmenu}" ] && options+=("Search artist/album with dmenu")
-    [ "${have_fzf}" ] && options+=("List genres in library")
-    [ "${have_fzf}" ] && options+=("Search current playlist")
-    [ "${have_fzf}" ] && options+=("List saved playlists")
-    options+=("Main menu    [m]" "Quit         [q]")
+    [ "${have_fzf}" ] && options+=("Search all songs in library    [s]")
+    [ "${have_fzf}" ] && options+=("Search artist/album with fzf   [a]")
+    [ "${have_dmenu}" ] && options+=("Search artist/album with dmenu [d]")
+    [ "${have_fzf}" ] && options+=("List genres in library         [g]")
+    [ "${have_fzf}" ] && options+=("Search current playlist        [p]")
+    [ "${have_fzf}" ] && options+=("List saved playlists           [P]")
+    options+=("Main menu                      [m]")
+    options+=("Quit                           [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2504,27 +2505,27 @@ show_fzmp_menu() {
               show_main_menu
               break 2
               ;;
-          "Search artist/album with fzf",*|*,"Search artist/album with fzf")
+          "Search artist/album with fzf"*,*|*,"Search artist/album with fzf"*|"a",*|*,"a")
               fzmp -a
               break
               ;;
-          "Search artist/album with dmenu",*|*,"Search artist/album with dmenu")
+          "Search artist/album with dmenu"*,*|*,"Search artist/album with dmenu"*|"d",*|*,"d")
               [ -x ${SCRIPTS}/mpdmenu.sh ] && ${SCRIPTS}/mpdmenu.sh
               break
               ;;
-          "Search all"*,*|*,"Search all"*)
+          "Search all songs"*,*|*,"Search all songs"*|"s",*|*,"s")
               fzmp -A
               break
               ;;
-          "List genre"*,*|*,"List genre"*)
+          "List genre"*,*|*,"List genre"*|"g",*|*,"g")
               fzmp -g
               break
               ;;
-          "Search current"*,*|*,"Search current"*)
+          "Search current"*,*|*,"Search current"*|"p",*|*,"p")
               fzmp -p
               break
               ;;
-          "List saved"*,*|*,"List saved"*)
+          "List saved"*,*|*,"List saved"*|"P",*|*,"P")
               fzmp -P
               break
               ;;
@@ -2555,19 +2556,19 @@ show_ascii_menu() {
     SPLASH=1
     if [ "${AUDIO}" ]
     then
-      audiostat="ON"
+      audiostat="ON "
     else
       audiostat="OFF"
     fi
     if [ "${RECORD}" ]
     then
-      recordstat="ON"
+      recordstat="ON "
     else
       recordstat="OFF"
     fi
     if [ "${USE_TMUX}" ]
     then
-      usetmux="ON"
+      usetmux="ON "
     else
       usetmux="OFF"
     fi
@@ -2575,7 +2576,7 @@ show_ascii_menu() {
     save_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux (${recordstat})")
     options+=("Toggle Use Tmux (${usetmux})")
     [ "${have_ascii}" ] && options+=("Asciiville Menu [a]")
     options+=("Main menu       [m]" "Quit            [q]")
@@ -2784,27 +2785,27 @@ show_main_menu() {
     printf "\n"
     if [ "${FULLSCREEN}" ]
     then
-      fullstat="ON"
+      fullstat="(ON) "
     else
-      fullstat="OFF"
+      fullstat="(OFF)"
     fi
     if [ "${RECORD}" ]
     then
-      recordstat="ON"
+      recordstat="(ON) "
     else
-      recordstat="OFF"
+      recordstat="(OFF)"
     fi
     if [ "${COVER_ART}" ]
     then
-      coverstat="ON"
+      coverstat="(ON) "
     else
-      coverstat="OFF"
+      coverstat="(OFF)"
     fi
     if [ "${USE_TMUX}" ]
     then
-      usetmux="ON"
+      usetmux="(ON) "
     else
-      usetmux="OFF"
+      usetmux="(OFF)"
     fi
     skip_it_so=
     save_it_so=
@@ -2817,31 +2818,35 @@ show_main_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Launch ${MPD_CLIENT} in Current")
-    [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty")
-    [ "${have_gnome}" ] && options+=("Launch ${MPD_CLIENT} with Gnome")
-    [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro")
-    [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple")
-    [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix")
-    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus")
-    [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler")
-    options+=("ASCIImatics Animations")
-    options+=("Convert M4A files to MP3" "Convert WAV files to MP3")
-    options+=("Import Music to Beets")
-    options+=("Fetch Lyrics" "Blissify Audio Info Extraction")
-    options+=("Essentia Audio Info Extraction")
-    options+=("Manage Downloads")
-    options+=("Manage Services")
-    options+=("View Music Service Logs")
-    [ "${have_fzf}" ] && is_running mpd && options+=("List/Search/Select Media")
-    options+=("Select Music Directory")
-    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art (${coverstat})")
-    options+=("Toggle Use Tmux (${usetmux})")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux Session (${recordstat})")
-    options+=("Toggle Fullscreen (${fullstat})")
-    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu [m]")
-    [ "${have_roon}" ] && options+=("RoonCommandLine Menu     [r]")
-    options+=("Quit                     [q]")
+                            options=("Launch ${MPD_CLIENT} in Current     [lc]")
+    [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty     [lk]")
+    [ "${have_gnome}" ] && options+=("Launch ${MPD_CLIENT} with Gnome     [lg]")
+    [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro     [lr]")
+    [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple    [ls]")
+    [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix     [lt]")
+    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus      [C]")
+    [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler     [S]")
+    options+=("ASCIImatics Animations         [a]")
+    options+=("Convert M4A files to MP3       [c]")
+    options+=("Convert WAV files to MP3       [w]")
+    options+=("Import Music to Beets          [i]")
+    options+=("Fetch Lyrics                   [f]")
+    options+=("Blissify Audio Info Extraction [b]")
+    options+=("Essentia Audio Info Extraction [e]")
+    options+=("Manage Downloads               [d]")
+    options+=("Manage Services                [s]")
+    options+=("View Music Service Logs        [l]")
+    [ "${have_fzf}" ] && is_running mpd && {
+      options+=("List/Search/Select Media       [m]")
+    }
+      options+=("Select Music Directory         [M]")
+    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art ${coverstat}    [S]")
+    options+=("Toggle Use Tmux ${usetmux}          [t]")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux ${recordstat}       [R]")
+    options+=("Toggle Fullscreen ${fullstat}        [F]")
+    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu       [m]")
+    [ "${have_roon}" ] && options+=("RoonCommandLine Menu           [r]")
+    options+=("Quit                           [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2852,7 +2857,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Launch ${MPD_CLIENT} in Current",*|*,"Launch ${MPD_CLIENT} in Current")
+          "Launch ${MPD_CLIENT} in Current"*,*|*,"Launch ${MPD_CLIENT} in Current"*|"lc",*|*,"lc")
               MPCPLUS="${MPD_CLIENT}"
               USE_TMUX=1
               CURRENT=1
@@ -2864,7 +2869,7 @@ show_main_menu() {
               TILIX=
               break
               ;;
-          "Launch ${MPD_CLIENT} with Kitty",*|*,"Launch ${MPD_CLIENT} with Kitty")
+          "Launch ${MPD_CLIENT} with Kitty"*,*|*,"Launch ${MPD_CLIENT} with Kitty"*|"lk",*|*,"lk")
               MPCPLUS="${MPD_CLIENT}"
               KITTY=1
               MPP_MODE=kitty
@@ -2875,7 +2880,7 @@ show_main_menu() {
               TILIX=
               break
               ;;
-          "Launch ${MPD_CLIENT} with Gnome",*|*,"Launch ${MPD_CLIENT} with Gnome")
+          "Launch ${MPD_CLIENT} with Gnome"*,*|*,"Launch ${MPD_CLIENT} with Gnome"*|"lg",*|*,"lg")
               MPCPLUS="${MPD_CLIENT}"
               MPP_MODE=gnome
               GNOME=1
@@ -2886,7 +2891,7 @@ show_main_menu() {
               TILIX=
               break
               ;;
-          "Launch ${MPD_CLIENT} with Retro",*|*,"Launch ${MPD_CLIENT} with Retro")
+          "Launch ${MPD_CLIENT} with Retro"*,*|*,"Launch ${MPD_CLIENT} with Retro"*|"lr",*|*,"lr")
               MPCPLUS="${MPD_CLIENT}"
               RETRO=1
               MPP_MODE=retro
@@ -2897,7 +2902,7 @@ show_main_menu() {
               TILIX=
               break
               ;;
-          "Launch ${MPD_CLIENT} with Simple",*|*,"Launch ${MPD_CLIENT} with Simple")
+          "Launch ${MPD_CLIENT} with Simple"*,*|*,"Launch ${MPD_CLIENT} with Simple"*|"ls",*|*,"ls")
               MPCPLUS="${MPD_CLIENT}"
               SIMPLE=1
               MPP_MODE=simple
@@ -2908,7 +2913,7 @@ show_main_menu() {
               TILIX=
               break
               ;;
-          "Launch ${MPD_CLIENT} with Tilix",*|*,"Launch ${MPD_CLIENT} with Tilix")
+          "Launch ${MPD_CLIENT} with Tilix"*,*|*,"Launch ${MPD_CLIENT} with Tilix"*|"lt",*|*,"lt")
               MPCPLUS="${MPD_CLIENT}"
               TILIX=1
               MPP_MODE=tilix
@@ -2919,46 +2924,46 @@ show_main_menu() {
               SIMPLE=
               break
               ;;
-          "Cantata Music Player Plus",*|*,"Cantata Music Player Plus")
+          "Cantata Music Player Plus"*,*|*,"Cantata Music Player Plus"*|"C",*|*,"C")
               MPCPLUS="cantata"
               break
               ;;
-          "ASCIImatics Animations",*|*,"ASCIImatics Animations")
+          "ASCIImatics Animations"*,*|*,"ASCIImatics Animations"*|"a",*|*,"a")
               clear
               printf "\n"
               show_ascii_menu
               skip_it_so=1
               break
               ;;
-          "Manage Downloads"*,*|*,"Manage Downloads"*)
+          "Manage Downloads"*,*|*,"Manage Downloads"*|"d",*|*,"d")
               clear
               printf "\n"
               show_downloads_menu
               skip_it_so=1
               break
               ;;
-          "Manage Services"*,*|*,"Manage Services"*)
+          "Manage Services"*,*|*,"Manage Services"*|"s",*|*,"s")
               clear
               printf "\n"
               show_services_menu
               skip_it_so=1
               break
               ;;
-          "View Music Service Log"*,*|*,"View Music Service Log"*)
+          "View Music Service Log"*,*|*,"View Music Service Log"*|"l",*|*,"l")
               clear
               printf "\n"
               show_logs_menu
               skip_it_so=1
               break
               ;;
-          "List"*,*|*,"List"*)
+          "List"*,*|*,"List"*|"m",*|*,"m")
               clear
               printf "\n"
               show_fzmp_menu
               skip_it_so=1
               break
               ;;
-          "Select Music"*,*|*,"Select Music"*)
+          "Select Music"*,*|*,"Select Music"*|"M",*|*,"M")
               CUR_MUS_DIR="${MUSIC_DIR}"
               select_music_dir
               [ "${CUR_MUS_DIR}" == "${MUSIC_DIR}" ] || {
@@ -2968,35 +2973,35 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Convert M4A"*,*|*,"Convert M4A"*)
+          "Convert M4A"*,*|*,"Convert M4A"*|"c",*|*,"c")
               CONVERT_M4A=1
               break
               ;;
-          "Convert WAV"*,*|*,"Convert WAV"*)
+          "Convert WAV"*,*|*,"Convert WAV"*|"w",*|*,"w")
               CONVERT_WAV=1
               break
               ;;
-          "Activate"*,*|*,"Activate"*)
+          "Activate"*,*|*,"Activate"*|"S",*|*,"S")
               ACT_YAMS=1
               break
               ;;
-          "Blissify"*,*|*,"Blissify"*)
+          "Blissify"*,*|*,"Blissify"*|"b",*|*,"b")
               BLISSIFY=1
               break
               ;;
-          "Essentia"*,*|*,"Essentia"*)
+          "Essentia"*,*|*,"Essentia"*|"e",*|*,"e")
               XTRACTOR="all"
               break
               ;;
-          "Fetch"*,*|*,"Fetch"*)
+          "Fetch"*,*|*,"Fetch"*|"f",*|*,"f")
               FETCH_LYRICS=1
               break
               ;;
-          "Import"*,*|*,"Import"*)
+          "Import"*,*|*,"Import"*|"i",*|*,"i")
               BEETS_IMPORT=1
               break
               ;;
-          "Toggle Show Cover Art"*,*|*,"Toggle Show Cover Art"*)
+          "Toggle Show Cover Art"*,*|*,"Toggle Show Cover Art"*|"S",*|*,"S")
               if [ "${COVER_ART}" ]
               then
                 COVER_ART=
@@ -3015,7 +3020,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
+          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*|"t",*|*,"t")
               if [ "${USE_TMUX}" ]
               then
                 USE_TMUX=
@@ -3027,7 +3032,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Toggle Record Tmux Session"*,*|*,"Toggle Record Tmux Session"*)
+          "Toggle Record Tmux"*,*|*,"Toggle Record Tmux"*|"R",*|*,"R")
               if [ "${RECORD}" ]
               then
                 RECORD=
@@ -3044,7 +3049,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Toggle Fullscreen"*,*|*,"Toggle Fullscreen"*)
+          "Toggle Fullscreen"*,*|*,"Toggle Fullscreen"*|"F",*|*,"F")
               if [ "${FULLSCREEN}" ]
               then
                 FULLSCREEN=
@@ -3641,7 +3646,11 @@ else
   have_navi=
 fi
 have_uebz=`type -p ueberzug`
-have_dmenu=`type -p dmenu`
+if [ "${DISPLAY}" ]; then
+  have_dmenu=`type -p dmenu`
+else
+  have_dmenu=
+fi
 have_fzf=`type -p fzf`
 have_mpc=`type -p mpc`
 have_mopidy=`type -p mopidy`

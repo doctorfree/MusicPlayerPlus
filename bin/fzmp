@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
 # Written by Daniel F Gray
+# Modified for use with MusicPlayerPlus by Ronald Joe Record
 # See https://github.com/DanielFGray/fzf-scripts
 #
 # Interactive fuzzy finder, fzf, usage and doc at
@@ -214,7 +215,7 @@ parse_config_file() {
 filter_by_songs() {
   local choice
   mapfile -t choice < <(mpc search -f "%file%\t$track_format" filename '' |
-    fzf --prompt='songs > ' \
+    fzf --prompt=" 🎶 Songs ('Esc' to return)  " \
       --multi \
       --with-nth='2..' \
       --delimiter='\t' \
@@ -231,7 +232,7 @@ filter_by_genres() {
   local choice
   mapfile -t choice < <(mpc search -f '%genre%' genre '' |
     awk 'NF' | sort | uniq -c | sort -rn |
-    fzf --prompt='genres > ' \
+    fzf --prompt=" 🎶 Genres ('Esc' to return)  " \
       --preview='mpc find -f "%artist%" genre {2..} | sort -u' \
       --bind="${bindings[findadd]}:execute-silent:mpc findadd genre {2..}" \
       --expect="${key_bindings},enter" |
@@ -248,7 +249,7 @@ filter_by_artist_from_genre() {
   genre="$1"
   mapfile -t choice < <(mpc find -f '%artist%' genre "$genre" |
     sort -u | awk 'NF' | sort -u |
-    fzf --prompt="$genre > " \
+    fzf --prompt=" 🎶 $genre ('Esc' to return)  " \
       --preview="$album_listing" \
       --expect="${key_bindings},enter" \
       --bind="${bindings[findadd]}:execute-silent:mpc findadd artist {}")
@@ -262,7 +263,7 @@ filter_by_artist_from_genre() {
 filter_by_artists() {
   local choice
   mapfile -t choice < <(mpc list artist |
-    fzf --prompt='artists > ' \
+    fzf --prompt=" 🎶 Artists ('Esc' to return)  " \
       --preview="$album_listing" \
       --bind="${bindings[findadd]}:execute-silent:mpc findadd artist {}" \
       --expect="${key_bindings},enter")
@@ -280,7 +281,7 @@ filter_by_album_from_artist() {
   printf -v qartist '%q' "$1"
   mapfile -t choice < <(mpc find -f '[(%date%)]\t[%album%]' artist "$artist" |
     sort -h | uniq |
-    fzf --prompt="$artist > " \
+    fzf --prompt=" 🎶 $artist ('Esc' to return)  " \
       --preview="mpc find -f '[[[%track% - ][%title%]]|%file%]' artist ${qartist} album {2}" \
       --expect="${key_bindings},enter" \
       --bind="${bindings[findadd]}:execute-silent:mpc findadd album {2..} artist ${qartist}" \
@@ -298,7 +299,7 @@ filter_songs_from_album() {
   artist="$1"
   album="$2"
   mapfile -t choice < <(mpc find -f '%file%\t[[[%track% - ][%title%]]|%file%]' artist "${artist}" album "${album}" |
-    fzf --prompt="$artist - $album > " \
+    fzf --prompt=" 🎶 $artist - $album ('Esc' to return)  " \
       --multi \
       --with-nth='2..' \
       --delimiter='\t' \
@@ -314,7 +315,7 @@ filter_by_playlist() {
   local choice
   current_song=$(mpc current -f "$track_format")
   mapfile -t choice < <(mpc playlist -f "%position%\t$track_format" |
-    fzf --prompt='playlist > ' \
+    fzf --prompt=" 🎶 Playlist ('Esc' to return)  " \
       --multi \
       ${current_song:+--header="now playing: ${current_song}"} \
       --delimiter='\t' \
@@ -358,7 +359,7 @@ save_playlist() {
 pick_playlist() {
   local choice
   mapfile -t choice < <(mpc lsplaylists |
-    fzf --prompt='playlists > ' \
+    fzf --prompt=" 🎶 Playlists ('Esc' to return)  " \
       --multi \
       --preview='mpc playlist {1}' \
       --delimiter='\t' \
