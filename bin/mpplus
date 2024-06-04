@@ -1834,9 +1834,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${m_enabled}" == "enabled " ] || [ "${m_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Music Player Daemon[/]:    [${ecol}]${m_enabled}[/] and [${acol}]${m_active}[/]" -p
+      rich "[yellow]Music Player Daemon[/] (MPD):  [${ecol}]${m_enabled}[/] and [${acol}]${m_active}[/]" -p
     else
-      printf "\nMusic Player Daemon:    ${m_enabled} and ${m_active}"
+      printf "\nMusic Player Daemon:        ${m_enabled} and ${m_active}"
     fi
   }
   if [ "${i_enabled}" == "enabled " ]; then
@@ -1851,9 +1851,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${i_enabled}" == "enabled " ] || [ "${i_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]PipeWire[/]:               [${ecol}]${i_enabled}[/] and [${acol}]${i_active}[/]" -p
+      rich "[yellow]PipeWire[/]:                   [${ecol}]${i_enabled}[/] and [${acol}]${i_active}[/]" -p
     else
-      printf "\nPipeWire:               ${i_enabled} and ${i_active}"
+      printf "\nPipeWire:                   ${i_enabled} and ${i_active}"
     fi
   }
   if [ "${p_enabled}" == "enabled " ]; then
@@ -1868,9 +1868,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${p_enabled}" == "enabled " ] || [ "${p_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]PulseAudio[/]:             [${ecol}]${p_enabled}[/] and [${acol}]${p_active}[/]" -p
+      rich "[yellow]PulseAudio[/]:                 [${ecol}]${p_enabled}[/] and [${acol}]${p_active}[/]" -p
     else
-      printf "\nPulseAudio:             ${p_enabled} and ${p_active}"
+      printf "\nPulseAudio:                 ${p_enabled} and ${p_active}"
     fi
   }
   if [ "${s_enabled}" == "enabled " ]; then
@@ -1885,9 +1885,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${s_enabled}" == "enabled " ] || [ "${s_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Beets MPD Stats[/]:        [${ecol}]${s_enabled}[/] and [${acol}]${s_active}[/]" -p
+      rich "[yellow]Beets MPD Stats[/]:            [${ecol}]${s_enabled}[/] and [${acol}]${s_active}[/]" -p
     else
-      printf "\nBeets MPD Stats:        ${s_enabled} and ${s_active}"
+      printf "\nBeets MPD Stats:            ${s_enabled} and ${s_active}"
     fi
   }
   if [ "${w_enabled}" == "enabled " ]; then
@@ -1902,9 +1902,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${w_enabled}" == "enabled " ] || [ "${w_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Beets Web[/]:              [${ecol}]${w_enabled}[/] and [${acol}]${w_active}[/]" -p
+      rich "[yellow]Beets Web[/]:                  [${ecol}]${w_enabled}[/] and [${acol}]${w_active}[/]" -p
     else
-      printf "\nBeets Web:              ${w_enabled} and ${w_active}"
+      printf "\nBeets Web:                  ${w_enabled} and ${w_active}"
     fi
   }
   if [ "${y_enabled}" == "enabled " ]; then
@@ -1919,9 +1919,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${y_enabled}" == "enabled " ] || [ "${y_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Last.fm Scrobbler[/]:      [${ecol}]${y_enabled}[/] and [${acol}]${y_active}[/]" -p
+      rich "[yellow]Last.fm Scrobbler[/]:          [${ecol}]${y_enabled}[/] and [${acol}]${y_active}[/]" -p
     else
-      printf "\nLast.fm Scrobbler:      ${y_enabled} and ${y_active}"
+      printf "\nLast.fm Scrobbler:          ${y_enabled} and ${y_active}"
     fi
   }
   if [ "${z_enabled}" == "enabled " ]; then
@@ -1941,9 +1941,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${z_enabled}" == "enabled " ] || [ "${z_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Mopidy Server[/]:          [${ecol}]${z_enabled}[/] and [${acol}]${z_active}[/] ([${icol}]${z_inst})[/] " -p
+      rich "[yellow]Mopidy Server[/]:              [${ecol}]${z_enabled}[/] and [${acol}]${z_active}[/] ([${icol}]${z_inst})[/] " -p
     else
-      printf "\nMopidy Server:          ${z_enabled} and ${z_active} (${z_inst})"
+      printf "\nMopidy Server:              ${z_enabled} and ${z_active} (${z_inst})"
     fi
   }
   if [ "${n_enabled}" == "enabled " ]; then
@@ -1963,9 +1963,9 @@ show_system_status() {
   fi
   [ "${full}" ] || [ "${n_enabled}" == "enabled " ] || [ "${n_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Navidrome Server[/]:       [${ecol}]${n_enabled}[/] and [${acol}]${n_active}[/] ([${icol}]${n_inst})[/] " -p
+      rich "[yellow]Navidrome Server[/]:           [${ecol}]${n_enabled}[/] and [${acol}]${n_active}[/] ([${icol}]${n_inst})[/] " -p
     else
-      printf "\nNavidrome Server:       ${n_enabled} and ${n_active} (${n_inst})"
+      printf "\nNavidrome Server:           ${n_enabled} and ${n_active} (${n_inst})"
     fi
   }
   [ "${have_rich}" ] || printf "\n"
@@ -2086,155 +2086,155 @@ show_services_menu() {
     show_system_status
     heading "MusicPlayerPlus Services Menu" "Services Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Configure ALSA Sound System   [a]")
-    [ "${have_mopidy}" ] || options+=("Install Mopidy Server         [im]")
-    [ "${have_navi}" ] || options+=("Install Navidrome Server      [in]")
+    options=("Configure ALSA Sound      [a]")
+    [ "${have_mopidy}" ] || options+=("Install Mopidy Server        [im]")
+    [ "${have_navi}" ] || options+=("Install Navidrome Server     [in]")
     if [ "${w_enabled}" == "enabled" ]
     then
-      options+=("Disable Beets Web Service     [dw]")
+      options+=("Disable Beets Web Service [dw]")
     else
-      options+=("Enable Beets Web Service      [ew]")
+      options+=("Enable Beets Web Service  [ew]")
     fi
     if [ "${s_enabled}" == "enabled" ]
     then
-      options+=("Disable Beets MPD Stats       [ds]")
+      options+=("Disable Beets MPD Stats   [ds]")
     else
-      options+=("Enable Beets MPD Stats        [es]")
+      options+=("Enable Beets MPD Stats    [es]")
     fi
     if [ "${m_enabled}" == "enabled" ]
     then
-      options+=("Disable Music Player Daemon   [d]")
+      options+=("Disable MPD               [d]")
     else
-      options+=("Enable Music Player Daemon    [e]")
+      options+=("Enable MPD                [e]")
     fi
     [ "${have_mopidy}" ] && {
       if [ "${z_enabled}" == "enabled" ]
       then
-        options+=("Disable Mopidy Server         [dm]")
+        options+=("Disable Mopidy Server     [dm]")
       else
-        options+=("Enable Mopidy Server          [em]")
+        options+=("Enable Mopidy Server      [em]")
       fi
     }
     [ "${have_navi}" ] && {
       if [ "${n_enabled}" == "enabled" ]
       then
-        options+=("Disable Navidrome Server      [dn]")
+        options+=("Disable Navidrome Server  [dn]")
       else
-        options+=("Enable Navidrome Server       [en]")
+        options+=("Enable Navidrome Server   [en]")
       fi
     }
     if [ "${i_enabled}" == "enabled" ]
     then
-      options+=("Disable PipeWire              [dp]")
+      options+=("Disable PipeWire          [dp]")
     else
-      options+=("Enable PipeWire               [ep]")
+      options+=("Enable PipeWire           [ep]")
     fi
     if [ "${p_enabled}" == "enabled" ]
     then
-      options+=("Disable PulseAudio            [dP]")
+      options+=("Disable PulseAudio        [dP]")
     else
-      options+=("Enable PulseAudio             [eP]")
+      options+=("Enable PulseAudio         [eP]")
     fi
     if [ "${y_enabled}" == "enabled" ]
     then
-      options+=("Disable Last.FM Scrobbler     [df]")
+      options+=("Disable Last.FM Scrobbler [df]")
     else
-      options+=("Enable Last.FM Scrobbler      [ef]")
+      options+=("Enable Last.FM Scrobbler  [ef]")
     fi
     if [ "${s_active}" == "active" ]
     then
-      options+=("Stop Beets MPD Stats          [Ss]")
-      options+=("Restart Beets MPD Stats       [rs]")
+      options+=("Stop Beets MPD Stats      [Ss]")
+      options+=("Restart Beets MPD Stats   [rs]")
     else
-      options+=("Start Beets MPD Stats         [SS]")
+      options+=("Start Beets MPD Stats     [SS]")
     fi
     if [ "${w_active}" == "active" ]
     then
-      options+=("Stop Beets Web Service        [W]")
-      options+=("Restart Beets Web Service     [rw]")
+      options+=("Stop Beets Web Service    [W]")
+      options+=("Restart Beets Web Service [rw]")
     else
-      options+=("Start Beets Web Service       [w]")
+      options+=("Start Beets Web Service   [w]")
     fi
     if [ "${m_active}" == "active" ]
     then
-      options+=("Stop Music Player Daemon      [S]")
-      options+=("Restart Music Player Daemon   [r]")
+      options+=("Stop MPD                  [S]")
+      options+=("Restart MPD               [r]")
     else
-      options+=("Start Music Player Daemon     [s]")
+      options+=("Start MPD                 [s]")
     fi
     [ "${have_mopidy}" ] && {
       if [ "${z_active}" == "active" ]
       then
-        options+=("Stop Mopidy Server            [Sm]")
-        options+=("Restart Mopidy Server         [rm]")
+        options+=("Stop Mopidy Server        [Sm]")
+        options+=("Restart Mopidy Server     [rm]")
       else
-        options+=("Start Mopidy Server           [SM]")
+        options+=("Start Mopidy Server       [SM]")
       fi
     }
     [ "${have_navi}" ] && {
       if [ "${n_active}" == "active" ]
       then
-        options+=("Stop Navidrome Server         [N]")
-        options+=("Restart Navidrome Server      [rn]")
+        options+=("Stop Navidrome Server     [N]")
+        options+=("Restart Navidrome Server  [rn]")
       else
-        options+=("Start Navidrome Server        [n]")
+        options+=("Start Navidrome Server    [n]")
       fi
     }
     if [ "${i_active}" == "active" ]
     then
-      options+=("Stop PipeWire                 [Sp]")
-      options+=("Restart PipeWire              [rp]")
+      options+=("Stop PipeWire             [Sp]")
+      options+=("Restart PipeWire          [rp]")
     else
-      options+=("Start PipeWire                [p]")
+      options+=("Start PipeWire            [p]")
     fi
     if [ "${p_active}" == "active" ]
     then
-      options+=("Stop PulseAudio               [SP]")
-      options+=("Restart PulseAudio            [rP]")
+      options+=("Stop PulseAudio           [SP]")
+      options+=("Restart PulseAudio        [rP]")
     else
-      options+=("Start PulseAudio              [P]")
+      options+=("Start PulseAudio          [P]")
     fi
     if [ "${y_active}" == "active" ]
     then
-      options+=("Stop Last.FM Scrobbler        [Sf]")
-      options+=("Restart Last.FM Scrobbler     [rf]")
+      options+=("Stop Last.FM Scrobbler    [Sf]")
+      options+=("Restart Last.FM Scrobbler [rf]")
     else
-      options+=("Start Last.FM Scrobbler       [SF]")
+      options+=("Start Last.FM Scrobbler   [SF]")
     fi
     [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
-      options+=("Status of Music Player Daemon [sd]")
+      options+=("MPD Status                [sd]")
     }
     [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
-      options+=("Status of Beets MPD Stats     [ss]")
+      options+=("Beets MPD Stats Status    [ss]")
     }
     [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
-      options+=("Status of Beets Web Service   [sw]")
+      options+=("Beets Web Service Status  [sw]")
     }
     [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
-      [ "${have_mopidy}" ] && options+=("Status of Mopidy Server       [sm]")
+      [ "${have_mopidy}" ] && options+=("Mopidy Server Status      [sm]")
     }
     [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
-      [ "${have_navi}" ] && options+=("Status of Navidrome Server    [sn]")
+      [ "${have_navi}" ] && options+=("Navidrome Server Status   [sn]")
     }
     [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
-      options+=("Status of PipeWire            [sp]")
+      options+=("PipeWire Status           [sp]")
     }
     [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
-      options+=("Status of PulseAudio          [sP]")
+      options+=("PulseAudio Status         [sP]")
     }
     [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
-      options+=("Status of Last.FM Scrobbler   [sf]")
+      options+=("Last.FM Scrobbler Status  [sf]")
     }
-    options+=("Stop All Active Services      [X]")
+    options+=("Stop All Active Services  [X]")
     [ "${z_active}" == "active" ] && [ "${have_mopidy}" ] && {
-      options+=("Update/scan Mopidy library    [um]")
+      options+=("Scan Mopidy library       [um]")
     }
     [ "${m_active}" == "active" ] && [ "${have_mpc}" ] && {
-      options+=("Update/scan MPD music library [u]")
+      options+=("Scan MPD music library    [u]")
     }
-    options+=("View Music Service Logs       [l]")
-    options+=("Main menu                     [m]")
-    options+=("Quit                          [q]")
+    options+=("View Music Service Logs   [l]")
+    options+=("Main menu                 [m]")
+    options+=("Quit                      [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2298,7 +2298,7 @@ show_services_menu() {
               mpp_service restart mopidy
               break
               ;;
-          "Status of Mopidy Server"*,*|*,"Status of Mopidy Server"*|"sm",*|*,"sm")
+          "Mopidy Server Status"*,*|*,"Mopidy Server Status"*|"sm",*|*,"sm")
               mpp_service status mopidy
               break
               ;;
@@ -2332,11 +2332,11 @@ show_services_menu() {
               mpp_service restart navidrome
               break
               ;;
-          "Status of Navidrome Server"*,*|*,"Status of Navidrome Server"*|"sn",*|*,"sn")
+          "Navidrome Server Status"*,*|*,"Navidrome Server Status"*|"sn",*|*,"sn")
               mpp_service status navidrome
               break
               ;;
-          "Enable Music Player"*,*|*,"Enable Music Player"*|"e",*|*,"e")
+          "Enable MPD"*,*|*,"Enable MPD"*|"e",*|*,"e")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2344,11 +2344,11 @@ show_services_menu() {
               mpp_service enable mpd
               break
               ;;
-          "Disable Music Player"*,*|*,"Disable Music Player"*|"d",*|*,"d")
+          "Disable MPD"*,*|*,"Disable MPD"*|"d",*|*,"d")
               mpp_service disable mpd
               break
               ;;
-          "Start Music Player"*,*|*,"Start Music Player"*|"s",*|*,"s")
+          "Start MPD"*,*|*,"Start MPD"*|"s",*|*,"s")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2356,11 +2356,11 @@ show_services_menu() {
               mpp_service start mpd
               break
               ;;
-          "Stop Music Player"*,*|*,"Stop Music Player"*|"S",*|*,"S")
+          "Stop MPD"*,*|*,"Stop MPD"*|"S",*|*,"S")
               mpp_service stop mpd
               break
               ;;
-          "Restart Music Player"*,*|*,"Restart Music Player"*|"r",*|*,"r")
+          "Restart MPD"*,*|*,"Restart MPD"*|"r",*|*,"r")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2368,7 +2368,7 @@ show_services_menu() {
               mpp_service restart mpd
               break
               ;;
-          "Status of Music Player"*,*|*,"Status of Music Player"*|"sd",*|*,"sd")
+          "MPD Status"*,*|*,"MPD Status"*|"sd",*|*,"sd")
               if [ "${have_mpc}" ]
               then
                 { mpc stats && \
@@ -2400,7 +2400,7 @@ show_services_menu() {
               mpp_service restart pipewire
               break
               ;;
-          "Status of PipeWire"*,*|*,"Status of PipeWire"*|"sp",*|*,"sp")
+          "PipeWire Status"*,*|*,"PipeWire Status"*|"sp",*|*,"sp")
               mpp_service status pipewire
               break
               ;;
@@ -2426,7 +2426,7 @@ show_services_menu() {
               mpp_service restart pulseaudio
               break
               ;;
-          "Status of PulseAudio"*,*|*,"Status of PulseAudio"*|"sP",*|*,"sP")
+          "PulseAudio Status"*,*|*,"PulseAudio Status"*|"sP",*|*,"sP")
               mpp_service status pulseaudio
               break
               ;;
@@ -2474,7 +2474,7 @@ show_services_menu() {
               mpp_service restart mpdstats
               break
               ;;
-          "Status of Beets MPD Stats"*,*|*,"Status of Beets MPD Stats"*|"ss",*|*,"ss")
+          "Beets MPD Stats Status"*,*|*,"Beets MPD Stats Status"*|"ss",*|*,"ss")
               mpp_service status mpdstats
               break
               ;;
@@ -2516,7 +2516,7 @@ show_services_menu() {
               mpp_service restart webplugin
               break
               ;;
-          "Status of Beets Web Service"*,*|*,"Status of Beets Web Service"*|"sw",*|*,"sw")
+          "Beets Web Service Status"*,*|*,"Beets Web Service Status"*|"sw",*|*,"sw")
               mpp_service status webplugin
               break
               ;;
@@ -2564,7 +2564,7 @@ show_services_menu() {
               mpp_service restart yams
               break
               ;;
-          "Status of Last.FM Scrobbler"*,*|*,"Status of Last.FM Scrobbler"*|"sf",*|*,"sf")
+          "Last.FM Scrobbler Status"*,*|*,"Last.FM Scrobbler Status"*|"sf",*|*,"sf")
               mpp_service status yams
               break
               ;;
@@ -2572,11 +2572,11 @@ show_services_menu() {
               mpp_service stop ALL
               break
               ;;
-          "Update/scan Mopidy"*,*|*,"Update/scan Mopidy"*|"um",*|*,"um")
+          "Scan Mopidy"*,*|*,"Scan Mopidy"*|"um",*|*,"um")
               mopidy local scan > /dev/null 2>&1 &
               break
               ;;
-          "Update/scan MPD"*,*|*,"Update/scan MPD"*|"u",*|*,"u")
+          "Scan MPD"*,*|*,"Scan MPD"*|"u",*|*,"u")
               mpc update --quiet &
               break
               ;;
@@ -2931,36 +2931,36 @@ show_main_menu() {
     save_it_so=
     heading "MusicPlayerPlus Main Menu" "Main Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-                            options=("Launch ${MPD_CLIENT} in Current     [lc]")
-    [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty     [lk]")
-    [ "${have_gnome}" ] && options+=("Launch ${MPD_CLIENT} with Gnome     [lg]")
-    [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro     [lr]")
-    [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple    [ls]")
-    [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix     [lt]")
-    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus      [C]")
-    [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler     [S]")
-    options+=("ASCIImatics Animations         [a]")
-    options+=("Convert M4A files to MP3       [c]")
-    options+=("Convert WAV files to MP3       [w]")
-    options+=("Import Music to Beets          [i]")
-    options+=("Fetch Lyrics                   [f]")
-    options+=("Blissify Audio Info Extraction [b]")
-    options+=("Essentia Audio Info Extraction [e]")
-    options+=("Manage Downloads               [d]")
-    options+=("Manage Services                [s]")
-    options+=("View Services Status           [v]")
-    options+=("View Music Service Logs        [l]")
+                            options=("Launch ${MPD_CLIENT} in Current  [lc]")
+    [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty  [lk]")
+    [ "${have_gnome}" ] && options+=("Launch ${MPD_CLIENT} with Gnome  [lg]")
+    [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro  [lr]")
+    [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
+    [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
+    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
+    [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler  [S]")
+    options+=("ASCIImatics Animations      [a]")
+    options+=("Convert M4A files to MP3    [c]")
+    options+=("Convert WAV files to MP3    [w]")
+    options+=("Import Music to Beets       [i]")
+    options+=("Fetch Lyrics                [f]")
+    options+=("Blissify Audio Extraction   [b]")
+    options+=("Essentia Audio Extraction   [e]")
+    options+=("Manage Downloads            [d]")
+    options+=("Manage Services             [s]")
+    options+=("View Services Status        [v]")
+    options+=("View Music Service Logs     [l]")
     [ "${have_fzf}" ] && is_running mpd && {
-      options+=("List/Search/Select Media       [m]")
+      options+=("List/Search/Select Media    [m]")
     }
-      options+=("Select Music Directory         [M]")
-    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art    ${coverstat} [S]")
-    options+=("Toggle Use Tmux          ${usetmux} [t]")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux       ${recordstat} [R]")
-    options+=("Toggle Fullscreen        ${fullstat} [F]")
-    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu       [m]")
-    [ "${have_roon}" ] && options+=("RoonCommandLine Menu           [r]")
-    options+=("Quit                           [q]")
+      options+=("Select Music Directory      [M]")
+    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art ${coverstat} [S]")
+    options+=("Toggle Use Tmux       ${usetmux} [t]")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux    ${recordstat} [R]")
+    options+=("Toggle Fullscreen     ${fullstat} [F]")
+    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [m]")
+    [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [r]")
+    options+=("Quit                        [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -3066,7 +3066,8 @@ show_main_menu() {
           "View Services Status"*,*|*,"View Services Status"*|"v",*|*,"v")
               show_full_status
               PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-              options=("Main menu                   [m]")
+              options=("Manage Services             [s]")
+              options+=("Main menu                   [m]")
               options+=("Quit                        [q]")
               select opt in "${options[@]}"
               do
@@ -3075,6 +3076,12 @@ show_main_menu() {
                         clear_screen
                         printf "\n"
                         show_help_menu
+                        ;;
+                    "Manage Services"*,*|*,"Manage Services"*|"s",*|*,"s")
+                        clear_screen
+                        printf "\n"
+                        show_services_menu
+                        break
                         ;;
                     "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
                         clear_screen
