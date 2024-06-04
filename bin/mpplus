@@ -1384,6 +1384,8 @@ show_menu_title() {
 }
 
 show_figlet() {
+  FIG_TEXT="$1"
+  select_font small
   if [ "${have_lolcat}" ]
   then
     if [ "${USE_FONT}" == "Lean" ]
@@ -1402,19 +1404,25 @@ show_figlet() {
   fi
 }
 
+# Display a heading with rich-cli, figlet, or printf
+heading() {
+  if [ "${have_rich}" ]; then
+    rich "[cyan]$1[/cyan]" -p -a rounded -c -C
+  else
+    if [ "${use_figlet}" ]; then
+      show_figlet "$2"
+    else
+      show_menu_title "$1"
+    fi
+  fi
+}
+
 show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
     clear
-    FIG_TEXT="Help Menu"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Help Menu" "Help Menu"
     PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
     options=()
     options+=("MusicPlayerPlus README")
@@ -1633,14 +1641,7 @@ show_downloads_menu() {
   while true
   do
     clear
-    FIG_TEXT="Downloads"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Downloads Menu" "Downloads"
     if [ "${dryrun}" ]
     then
       usedrun="(ON) "
@@ -1834,14 +1835,7 @@ show_logs_menu() {
   do
     clear
     show_system_status
-    FIG_TEXT="Service Logs Menu"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Service Logs Menu" "Service Logs Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${have_alsa}" ] && options+=("ALSA Sound System Info")
@@ -1948,14 +1942,7 @@ show_services_menu() {
   do
     clear
     show_system_status
-    FIG_TEXT="Services Menu"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Services Menu" "Services Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound System   [a]")
     [ "${have_mopidy}" ] || options+=("Install Mopidy Server         [im]")
@@ -2475,14 +2462,7 @@ show_fzmp_menu() {
   while true
   do
     clear
-    FIG_TEXT="Fuzzy Search"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Fuzzy Search Menu" "Fuzzy Search"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
     [ "${have_fzf}" ] && options+=("Search all songs in library    [s]")
@@ -2549,14 +2529,7 @@ show_ascii_menu() {
   while true
   do
     clear
-    FIG_TEXT="Asciimatics"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Asciimatics Animations Menu" "Asciimatics"
     SPLASH=1
     if [ "${AUDIO}" ]
     then
@@ -2817,14 +2790,7 @@ show_main_menu() {
     fi
     skip_it_so=
     save_it_so=
-    FIG_TEXT="Main Menu"
-    if [ "${use_figlet}" ]
-    then
-      select_font small
-      show_figlet
-    else
-      show_menu_title "${FIG_TEXT}"
-    fi
+    heading "MusicPlayerPlus Main Menu" "Main Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
                             options=("Launch ${MPD_CLIENT} in Current     [lc]")
     [ "${have_kitty}" ] && options+=("Launch ${MPD_CLIENT} with Kitty     [lk]")
@@ -3070,14 +3036,6 @@ show_main_menu() {
               ;;
           "MagicMirror"*,*|*,"MagicMirror"*|"m",*|*,"m")
               clear
-              FIG_TEXT="Mirror Command"
-              if [ "${use_figlet}" ]
-              then
-                select_font small
-                show_figlet
-              else
-                show_menu_title "${FIG_TEXT}"
-              fi
               mirror
               clear
               skip_it_so=1
@@ -3085,14 +3043,6 @@ show_main_menu() {
               ;;
           "RoonCommandLine"*,*|*,"RoonCommandLine"*|"r",*|*,"r")
               clear
-              FIG_TEXT="Roon Command"
-              if [ "${use_figlet}" ]
-              then
-                select_font small
-                show_figlet
-              else
-                show_menu_title "${FIG_TEXT}"
-              fi
               roon
               clear
               skip_it_so=1
@@ -3668,6 +3618,7 @@ have_lolcat=`type -p lolcat`
 have_lynx=`type -p lynx`
 have_w3m=`type -p w3m`
 have_ranger=`type -p ranger`
+have_rich=`type -p rich`
 have_ascii=`type -p asciiville`
 if [ -d /usr/local/Roon ]
 then

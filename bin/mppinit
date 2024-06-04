@@ -379,7 +379,7 @@ init_mopidy() {
   fi
 
   # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
-  sudo ${PYTHON} -m pip install --upgrade mopidy >/dev/null 2>&1
+  ${PYTHON} -m pip install --upgrade mopidy >/dev/null 2>&1
 
   for extension in ${EXT_MOPIDY}; do
     printf "\n\tInstalling Mopidy extension ${extension}"
@@ -3126,7 +3126,7 @@ if [ "${PIP}" ]; then
   [ "${quiet}" ] || printf "\n\tModules:"
   for pkg in unidecode six PySocks asciimatics beautifulsoup4 ${BEETS} \
     iniparse pylast beets-describe beets-yearfixer beetcamp beets-xtractor \
-    PyYAML python-mpd2 requests sacad tmuxp ${YT_DLP} setuptools \
+    PyYAML python-mpd2 requests rich-cli sacad tmuxp ${YT_DLP} setuptools \
     calliope-music bandcamp-downloader scdl flask-cors click; do
     printf "  ${pkg}"
     ${PYTHON} -m pip install --upgrade ${pkg} >/dev/null 2>&1
