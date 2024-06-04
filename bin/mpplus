@@ -1643,28 +1643,31 @@ show_downloads_menu() {
     fi
     if [ "${dryrun}" ]
     then
-      usedrun="Dry Run ON "
+      usedrun="(ON) "
     else
-      usedrun="Dry Run OFF"
+      usedrun="(OFF)"
     fi
     skip_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Download Album Cover Art" "Download Bandcamp Songs")
-    options+=("Download Soundcloud Songs" "Download YouTube Songs")
-    options+=("Download Audio in URL")
-    options+=("List YouTube Playlists")
-    options+=("List YouTube Uploads")
-    options+=("List YouTube URL")
+     options=("Download Album Cover Art    [a]")
+    options+=("Download Bandcamp Songs     [b]")
+    options+=("Download Soundcloud Songs   [s]")
+    options+=("Download YouTube Songs      [y]")
+    options+=("Download Audio in URL       [A]")
+    options+=("List YouTube Playlists      [p]")
+    options+=("List YouTube Uploads        [u]")
+    options+=("List YouTube URL            [U]")
     [ "${DISCOGS_USER}" ] && [ "${DISCOGS_TOKEN}" ] && {
-      options+=("Markdown from Discogs")
-      options+=("Markdown from Local Library")
+      options+=("Markdown from Discogs       [d]")
+      options+=("Markdown from Local Library [l]")
       DISCOGS_DIR="${DISCOGS_DIR/#\~/$HOME}"
       [ -d "${DISCOGS_DIR}" ] && {
-        options+=("Discogs Collection from Markdown")
+        options+=("Discogs Collection Markdown [D]")
       }
-      options+=("Toggle Dry Run (${usedrun})")
+      options+=("Toggle Dry Run ${usedrun}        [t]")
     }
-    options+=("Main menu    [m]" "Quit         [q]")
+    options+=("Main menu                   [m]")
+    options+=("Quit                        [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -1681,51 +1684,51 @@ show_downloads_menu() {
               show_main_menu
               break 2
               ;;
-          "Download Album"*,*|*,"Download Album"*)
+          "Download Album"*,*|*,"Download Album"*|"a",*|*,"a")
               DOWNLOAD_ART=1
               break
               ;;
-          "Download Bandcamp"*,*|*,"Download Bandcamp"*)
+          "Download Bandcamp"*,*|*,"Download Bandcamp"*|"b",*|*,"b")
               DOWNLOAD_BANDCAMP=1
               break
               ;;
-          "Download Soundcloud"*,*|*,"Download Soundcloud"*)
+          "Download Soundcloud"*,*|*,"Download Soundcloud"*|"s",*|*,"s")
               DOWNLOAD_SOUNDCLOUD=1
               break
               ;;
-          "Download YouTube"*,*|*,"Download YouTube"*)
+          "Download YouTube"*,*|*,"Download YouTube"*|"y",*|*,"y")
               DOWNLOAD_YOUTUBE=1
               break
               ;;
-          "Download Audio"*,*|*,"Download Audio"*)
+          "Download Audio"*,*|*,"Download Audio"*|"A",*|*,"A")
               DOWNLOAD_YOUTUBE=1
               break
               ;;
-          "List YouTube Playlists"*,*|*,"List YouTube Playlists"*)
+          "List YouTube Playlists"*,*|*,"List YouTube Playlists"*|"p",*|*,"p")
               LIST_YT_PLAYLISTS=1
               break
               ;;
-          "List YouTube Uploads"*,*|*,"List YouTube Uploads"*)
+          "List YouTube Uploads"*,*|*,"List YouTube Uploads"*|"u",*|*,"u")
               LIST_YT_UPLOADS=1
               break
               ;;
-          "List YouTube URL"*,*|*,"List YouTube URL"*)
+          "List YouTube URL"*,*|*,"List YouTube URL"*|"U",*|*,"U")
               LIST_YT_URL=1
               break
               ;;
-          "Markdown from Discogs"*,*|*,"Markdown from Discogs"*)
+          "Markdown from Discogs"*,*|*,"Markdown from Discogs"*|"d",*|*,"d")
               DOWNLOAD_DISCOGS=1
               break
               ;;
-          "Markdown from Local"*,*|*,"Markdown from Local"*)
+          "Markdown from Local"*,*|*,"Markdown from Local"*|"l",*|*,"l")
               DOWNLOAD_LOCAL=1
               break
               ;;
-          "Discogs Collection from Markdown",*|*,"Discogs Collection from Markdown")
+          "Discogs Collection"*,*|*,"Discogs Collection"*|"D",*|*,"D")
               select_vault_dir
               break
               ;;
-          "Toggle Dry Run"*,*|*,"Toggle Dry Run"*)
+          "Toggle Dry Run"*,*|*,"Toggle Dry Run"*|"t",*|*,"t")
               if [ "${dryrun}" ]
               then
                 dryrun=
@@ -1954,154 +1957,155 @@ show_services_menu() {
       show_menu_title "${FIG_TEXT}"
     fi
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Configure ALSA Sound System")
-    [ "${have_mopidy}" ] || options+=("Install Mopidy Server")
-    [ "${have_navi}" ] || options+=("Install Navidrome Server")
+    options=("Configure ALSA Sound System   [a]")
+    [ "${have_mopidy}" ] || options+=("Install Mopidy Server         [im]")
+    [ "${have_navi}" ] || options+=("Install Navidrome Server      [in]")
     if [ "${w_enabled}" == "enabled" ]
     then
-      options+=("Disable Beets Web Service")
+      options+=("Disable Beets Web Service     [dw]")
     else
-      options+=("Enable Beets Web Service")
+      options+=("Enable Beets Web Service      [ew]")
     fi
     if [ "${s_enabled}" == "enabled" ]
     then
-      options+=("Disable Beets MPD Stats")
+      options+=("Disable Beets MPD Stats       [ds]")
     else
-      options+=("Enable Beets MPD Stats")
+      options+=("Enable Beets MPD Stats        [es]")
     fi
     if [ "${m_enabled}" == "enabled" ]
     then
-      options+=("Disable Music Player Daemon")
+      options+=("Disable Music Player Daemon   [d]")
     else
-      options+=("Enable Music Player Daemon")
+      options+=("Enable Music Player Daemon    [e]")
     fi
     [ "${have_mopidy}" ] && {
       if [ "${z_enabled}" == "enabled" ]
       then
-        options+=("Disable Mopidy Server")
+        options+=("Disable Mopidy Server         [dm]")
       else
-        options+=("Enable Mopidy Server")
+        options+=("Enable Mopidy Server          [em]")
       fi
     }
     [ "${have_navi}" ] && {
       if [ "${n_enabled}" == "enabled" ]
       then
-        options+=("Disable Navidrome Server")
+        options+=("Disable Navidrome Server      [dn]")
       else
-        options+=("Enable Navidrome Server")
+        options+=("Enable Navidrome Server       [en]")
       fi
     }
     if [ "${i_enabled}" == "enabled" ]
     then
-      options+=("Disable PipeWire")
+      options+=("Disable PipeWire              [dp]")
     else
-      options+=("Enable PipeWire")
+      options+=("Enable PipeWire               [ep]")
     fi
     if [ "${p_enabled}" == "enabled" ]
     then
-      options+=("Disable PulseAudio")
+      options+=("Disable PulseAudio            [dP]")
     else
-      options+=("Enable PulseAudio")
+      options+=("Enable PulseAudio             [eP]")
     fi
     if [ "${y_enabled}" == "enabled" ]
     then
-      options+=("Disable Last.FM Scrobbler")
+      options+=("Disable Last.FM Scrobbler     [df]")
     else
-      options+=("Enable Last.FM Scrobbler")
+      options+=("Enable Last.FM Scrobbler      [ef]")
     fi
     if [ "${s_active}" == "active" ]
     then
-      options+=("Stop Beets MPD Stats")
-      options+=("Restart Beets MPD Stats")
+      options+=("Stop Beets MPD Stats          [Ss]")
+      options+=("Restart Beets MPD Stats       [rs]")
     else
-      options+=("Start Beets MPD Stats")
+      options+=("Start Beets MPD Stats         [SS]")
     fi
     if [ "${w_active}" == "active" ]
     then
-      options+=("Stop Beets Web Service")
-      options+=("Restart Beets Web Service")
+      options+=("Stop Beets Web Service        [W]")
+      options+=("Restart Beets Web Service     [rw]")
     else
-      options+=("Start Beets Web Service")
+      options+=("Start Beets Web Service       [w]")
     fi
     if [ "${m_active}" == "active" ]
     then
-      options+=("Stop Music Player Daemon")
-      options+=("Restart Music Player Daemon")
+      options+=("Stop Music Player Daemon      [S]")
+      options+=("Restart Music Player Daemon   [r]")
     else
-      options+=("Start Music Player Daemon")
+      options+=("Start Music Player Daemon     [s]")
     fi
     [ "${have_mopidy}" ] && {
       if [ "${z_active}" == "active" ]
       then
-        options+=("Stop Mopidy Server")
-        options+=("Restart Mopidy Server")
+        options+=("Stop Mopidy Server            [Sm]")
+        options+=("Restart Mopidy Server         [rm]")
       else
-        options+=("Start Mopidy Server")
+        options+=("Start Mopidy Server           [SM]")
       fi
     }
     [ "${have_navi}" ] && {
       if [ "${n_active}" == "active" ]
       then
-        options+=("Stop Navidrome Server")
-        options+=("Restart Navidrome Server")
+        options+=("Stop Navidrome Server         [N]")
+        options+=("Restart Navidrome Server      [rn]")
       else
-        options+=("Start Navidrome Server")
+        options+=("Start Navidrome Server        [n]")
       fi
     }
     if [ "${i_active}" == "active" ]
     then
-      options+=("Stop PipeWire")
-      options+=("Restart PipeWire")
+      options+=("Stop PipeWire                 [Sp]")
+      options+=("Restart PipeWire              [rp]")
     else
-      options+=("Start PipeWire")
+      options+=("Start PipeWire                [p]")
     fi
     if [ "${p_active}" == "active" ]
     then
-      options+=("Stop PulseAudio")
-      options+=("Restart PulseAudio")
+      options+=("Stop PulseAudio               [SP]")
+      options+=("Restart PulseAudio            [rP]")
     else
-      options+=("Start PulseAudio")
+      options+=("Start PulseAudio              [P]")
     fi
     if [ "${y_active}" == "active" ]
     then
-      options+=("Stop Last.FM Scrobbler")
-      options+=("Restart Last.FM Scrobbler")
+      options+=("Stop Last.FM Scrobbler        [Sf]")
+      options+=("Restart Last.FM Scrobbler     [rf]")
     else
-      options+=("Start Last.FM Scrobbler")
+      options+=("Start Last.FM Scrobbler       [SF]")
     fi
     [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
-      options+=("Status of Music Player Daemon")
+      options+=("Status of Music Player Daemon [sd]")
     }
     [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
-      options+=("Status of Beets MPD Stats")
+      options+=("Status of Beets MPD Stats     [ss]")
     }
     [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
-      options+=("Status of Beets Web Service")
+      options+=("Status of Beets Web Service   [sw]")
     }
     [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
-      [ "${have_mopidy}" ] && options+=("Status of Mopidy Server")
+      [ "${have_mopidy}" ] && options+=("Status of Mopidy Server       [sm]")
     }
     [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
-      [ "${have_navi}" ] && options+=("Status of Navidrome Server")
+      [ "${have_navi}" ] && options+=("Status of Navidrome Server    [sn]")
     }
     [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
-      options+=("Status of PipeWire")
+      options+=("Status of PipeWire            [sp]")
     }
     [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
-      options+=("Status of PulseAudio")
+      options+=("Status of PulseAudio          [sP]")
     }
     [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
-      options+=("Status of Last.FM Scrobbler")
+      options+=("Status of Last.FM Scrobbler   [sf]")
     }
-    options+=("Stop All Active Services")
+    options+=("Stop All Active Services      [X]")
     [ "${z_active}" == "active" ] && [ "${have_mopidy}" ] && {
-      options+=("Update/scan Mopidy music library")
+      options+=("Update/scan Mopidy library    [um]")
     }
     [ "${m_active}" == "active" ] && [ "${have_mpc}" ] && {
-      options+=("Update/scan MPD music library")
+      options+=("Update/scan MPD music library [u]")
     }
-    options+=("View Music Service Logs")
-    options+=("Main menu    [m]" "Quit         [q]")
+    options+=("View Music Service Logs       [l]")
+    options+=("Main menu                     [m]")
+    options+=("Quit                          [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2118,16 +2122,16 @@ show_services_menu() {
               show_main_menu
               break 2
               ;;
-          "Configure ALSA Sound System",*|*,"Configure ALSA Sound System")
+          "Configure ALSA Sound"*,*|*,"Configure ALSA Sound"*|"a",*|*,"a")
               mpp_service alsaconf
               break
               ;;
-          "Install Mopidy Server",*|*,"Install Mopidy Server")
+          "Install Mopidy Server"*,*|*,"Install Mopidy Server"*|"im",*|*,"im")
               mppinit mopidy
               have_mopidy=`type -p mopidy`
               break
               ;;
-          "Enable Mopidy Server",*|*,"Enable Mopidy Server")
+          "Enable Mopidy Server"*,*|*,"Enable Mopidy Server"*|"em",*|*,"em")
               mpp_service disable mpdstats
               mpp_service stop mpdstats
               mpp_service disable yams
@@ -2137,11 +2141,11 @@ show_services_menu() {
               mpp_service enable mopidy
               break
               ;;
-          "Disable Mopidy Server",*|*,"Disable Mopidy Server")
+          "Disable Mopidy Server"*,*|*,"Disable Mopidy Server"*|"dm",*|*,"dm")
               mpp_service disable mopidy
               break
               ;;
-          "Start Mopidy Server",*|*,"Start Mopidy Server")
+          "Start Mopidy Server"*,*|*,"Start Mopidy Server"*|"SM",*|*,"SM")
               mpp_service disable mpdstats
               mpp_service stop mpdstats
               mpp_service disable yams
@@ -2151,11 +2155,11 @@ show_services_menu() {
               mpp_service start mopidy
               break
               ;;
-          "Stop Mopidy Server",*|*,"Stop Mopidy Server")
+          "Stop Mopidy Server"*,*|*,"Stop Mopidy Server"*|"Sm",*|*,"Sm")
               mpp_service stop mopidy
               break
               ;;
-          "Restart Mopidy Server",*|*,"Restart Mopidy Server")
+          "Restart Mopidy Server"*,*|*,"Restart Mopidy Server"*|"rm",*|*,"rm")
               mpp_service disable mpdstats
               mpp_service stop mpdstats
               mpp_service disable yams
@@ -2165,11 +2169,11 @@ show_services_menu() {
               mpp_service restart mopidy
               break
               ;;
-          "Status of Mopidy Server",*|*,"Status of Mopidy Server")
+          "Status of Mopidy Server"*,*|*,"Status of Mopidy Server"*|"sm",*|*,"sm")
               mpp_service status mopidy
               break
               ;;
-          "Install Navidrome Server",*|*,"Install Navidrome Server")
+          "Install Navidrome Server"*,*|*,"Install Navidrome Server"*|"in",*|*,"in")
               mppinit navidrome
               if [ -x /opt/navidrome/navidrome ]
               then
@@ -2179,31 +2183,31 @@ show_services_menu() {
               fi
               break
               ;;
-          "Enable Navidrome Server",*|*,"Enable Navidrome Server")
+          "Enable Navidrome Server"*,*|*,"Enable Navidrome Server"*|"en",*|*,"en")
               mpp_service enable navidrome
               break
               ;;
-          "Disable Navidrome Server",*|*,"Disable Navidrome Server")
+          "Disable Navidrome Server"*,*|*,"Disable Navidrome Server"*|"dn",*|*,"dn")
               mpp_service disable navidrome
               break
               ;;
-          "Start Navidrome Server",*|*,"Start Navidrome Server")
+          "Start Navidrome Server"*,*|*,"Start Navidrome Server"*|"n",*|*,"n")
               mpp_service start navidrome
               break
               ;;
-          "Stop Navidrome Server",*|*,"Stop Navidrome Server")
+          "Stop Navidrome Server"*,*|*,"Stop Navidrome Server"*|"N",*|*,"N")
               mpp_service stop navidrome
               break
               ;;
-          "Restart Navidrome Server",*|*,"Restart Navidrome Server")
+          "Restart Navidrome Server"*,*|*,"Restart Navidrome Server"*|"rn",*|*,"rn")
               mpp_service restart navidrome
               break
               ;;
-          "Status of Navidrome Server",*|*,"Status of Navidrome Server")
+          "Status of Navidrome Server"*,*|*,"Status of Navidrome Server"*|"sn",*|*,"sn")
               mpp_service status navidrome
               break
               ;;
-          "Enable Music Player Daemon",*|*,"Enable Music Player Daemon")
+          "Enable Music Player"*,*|*,"Enable Music Player"*|"e",*|*,"e")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2211,11 +2215,11 @@ show_services_menu() {
               mpp_service enable mpd
               break
               ;;
-          "Disable Music Player Daemon",*|*,"Disable Music Player Daemon")
+          "Disable Music Player"*,*|*,"Disable Music Player"*|"d",*|*,"d")
               mpp_service disable mpd
               break
               ;;
-          "Start Music Player Daemon",*|*,"Start Music Player Daemon")
+          "Start Music Player"*,*|*,"Start Music Player"*|"s",*|*,"s")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2223,11 +2227,11 @@ show_services_menu() {
               mpp_service start mpd
               break
               ;;
-          "Stop Music Player Daemon",*|*,"Stop Music Player Daemon")
+          "Stop Music Player"*,*|*,"Stop Music Player"*|"S",*|*,"S")
               mpp_service stop mpd
               break
               ;;
-          "Restart Music Player Daemon",*|*,"Restart Music Player Daemon")
+          "Restart Music Player"*,*|*,"Restart Music Player"*|"r",*|*,"r")
               [ "${have_mopidy}" ] && {
                 mpp_service disable mopidy
                 mpp_service stop mopidy
@@ -2235,7 +2239,7 @@ show_services_menu() {
               mpp_service restart mpd
               break
               ;;
-          "Status of Music Player Daemon",*|*,"Status of Music Player Daemon")
+          "Status of Music Player"*,*|*,"Status of Music Player"*|"sd",*|*,"sd")
               if [ "${have_mpc}" ]
               then
                 { mpc stats && \
@@ -2245,59 +2249,59 @@ show_services_menu() {
               fi
               break
               ;;
-          "Enable PipeWire",*|*,"Enable PipeWire")
+          "Enable PipeWire"*,*|*,"Enable PipeWire"*|"ep",*|*,"ep")
               mpp_service disable pulseaudio
               mpp_service enable pipewire
               break
               ;;
-          "Disable PipeWire",*|*,"Disable PipeWire")
+          "Disable PipeWire"*,*|*,"Disable PipeWire"*|"dp",*|*,"dp")
               mpp_service disable pipewire
               break
               ;;
-          "Start PipeWire",*|*,"Start PipeWire")
+          "Start PipeWire"*,*|*,"Start PipeWire"*|"p",*|*,"p")
               mpp_service stop pulseaudio
               mpp_service start pipewire
               break
               ;;
-          "Stop PipeWire",*|*,"Stop PipeWire")
+          "Stop PipeWire"*,*|*,"Stop PipeWire"*|"Sp",*|*,"Sp")
               mpp_service stop pipewire
               break
               ;;
-          "Restart PipeWire",*|*,"Restart PipeWire")
+          "Restart PipeWire"*,*|*,"Restart PipeWire"*|"rp",*|*,"rp")
               mpp_service restart pipewire
               break
               ;;
-          "Status of PipeWire",*|*,"Status of PipeWire")
+          "Status of PipeWire"*,*|*,"Status of PipeWire"*|"sp",*|*,"sp")
               mpp_service status pipewire
               break
               ;;
-          "Enable PulseAudio",*|*,"Enable PulseAudio")
+          "Enable PulseAudio"*,*|*,"Enable PulseAudio"*|"eP",*|*,"eP")
               mpp_service disable pipewire
               mpp_service enable pulseaudio
               break
               ;;
-          "Disable PulseAudio",*|*,"Disable PulseAudio")
+          "Disable PulseAudio"*,*|*,"Disable PulseAudio"*|"dP",*|*,"dP")
               mpp_service disable pulseaudio
               break
               ;;
-          "Start PulseAudio",*|*,"Start PulseAudio")
+          "Start PulseAudio"*,*|*,"Start PulseAudio"*|"P",*|*,"P")
               mpp_service stop pipewire
               mpp_service start pulseaudio
               break
               ;;
-          "Stop PulseAudio",*|*,"Stop PulseAudio")
+          "Stop PulseAudio"*,*|*,"Stop PulseAudio"*|"SP",*|*,"SP")
               mpp_service stop pulseaudio
               break
               ;;
-          "Restart PulseAudio",*|*,"Restart PulseAudio")
+          "Restart PulseAudio"*,*|*,"Restart PulseAudio"*|"rP",*|*,"rP")
               mpp_service restart pulseaudio
               break
               ;;
-          "Status of PulseAudio",*|*,"Status of PulseAudio")
+          "Status of PulseAudio"*,*|*,"Status of PulseAudio"*|"sP",*|*,"sP")
               mpp_service status pulseaudio
               break
               ;;
-          "Enable Beets MPD Stats",*|*,"Enable Beets MPD Stats")
+          "Enable Beets MPD Stats"*,*|*,"Enable Beets MPD Stats"*|"es",*|*,"es")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2309,11 +2313,11 @@ show_services_menu() {
               mpp_service enable mpdstats
               break
               ;;
-          "Disable Beets MPD Stats",*|*,"Disable Beets MPD Stats")
+          "Disable Beets MPD Stats"*,*|*,"Disable Beets MPD Stats"*|"ds",*|*,"ds")
               mpp_service disable mpdstats
               break
               ;;
-          "Start Beets MPD Stats",*|*,"Start Beets MPD Stats")
+          "Start Beets MPD Stats"*,*|*,"Start Beets MPD Stats"*|"SS",*|*,"SS")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2325,11 +2329,11 @@ show_services_menu() {
               mpp_service start mpdstats
               break
               ;;
-          "Stop Beets MPD Stats",*|*,"Stop Beets MPD Stats")
+          "Stop Beets MPD Stats"*,*|*,"Stop Beets MPD Stats"*|"Ss",*|*,"Ss")
               mpp_service stop mpdstats
               break
               ;;
-          "Restart Beets MPD Stats",*|*,"Restart Beets MPD Stats")
+          "Restart Beets MPD Stats"*,*|*,"Restart Beets MPD Stats"*|"rs",*|*,"rs")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2341,15 +2345,15 @@ show_services_menu() {
               mpp_service restart mpdstats
               break
               ;;
-          "Status of Beets MPD Stats",*|*,"Status of Beets MPD Stats")
+          "Status of Beets MPD Stats"*,*|*,"Status of Beets MPD Stats"*|"ss",*|*,"ss")
               mpp_service status mpdstats
               break
               ;;
-          "Enable Beets Web Service",*|*,"Enable Beets Web Service")
+          "Enable Beets Web Service"*,*|*,"Enable Beets Web Service"*|"ew",*|*,"ew")
               mpp_service enable webplugin
               break
               ;;
-          "Disable Beets Web Service",*|*,"Disable Beets Web Service")
+          "Disable Beets Web Service"*,*|*,"Disable Beets Web Service"*|"dw",*|*,"dw")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2362,11 +2366,11 @@ show_services_menu() {
               mpp_service disable webplugin
               break
               ;;
-          "Start Beets Web Service",*|*,"Start Beets Web Service")
+          "Start Beets Web Service"*,*|*,"Start Beets Web Service"*|"w",*|*,"w")
               mpp_service start webplugin
               break
               ;;
-          "Stop Beets Web Service",*|*,"Stop Beets Web Service")
+          "Stop Beets Web Service"*,*|*,"Stop Beets Web Service"*|"W",*|*,"W")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2379,15 +2383,15 @@ show_services_menu() {
               mpp_service stop webplugin
               break
               ;;
-          "Restart Beets Web Service",*|*,"Restart Beets Web Service")
+          "Restart Beets Web Service"*,*|*,"Restart Beets Web Service"*|"rw",*|*,"rw")
               mpp_service restart webplugin
               break
               ;;
-          "Status of Beets Web Service",*|*,"Status of Beets Web Service")
+          "Status of Beets Web Service"*,*|*,"Status of Beets Web Service"*|"sw",*|*,"sw")
               mpp_service status webplugin
               break
               ;;
-          "Enable Last.FM Scrobbler",*|*,"Enable Last.FM Scrobbler")
+          "Enable Last.FM Scrobbler"*,*|*,"Enable Last.FM Scrobbler"*|"ef",*|*,"ef")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2399,11 +2403,11 @@ show_services_menu() {
               mpp_service enable yams
               break
               ;;
-          "Disable Last.FM Scrobbler",*|*,"Disable Last.FM Scrobbler")
+          "Disable Last.FM Scrobbler"*,*|*,"Disable Last.FM Scrobbler"*|"df",*|*,"df")
               mpp_service disable yams
               break
               ;;
-          "Start Last.FM Scrobbler",*|*,"Start Last.FM Scrobbler")
+          "Start Last.FM Scrobbler"*,*|*,"Start Last.FM Scrobbler"*|"SF",*|*,"SF")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2415,11 +2419,11 @@ show_services_menu() {
               mpp_service start yams
               break
               ;;
-          "Stop Last.FM Scrobbler",*|*,"Stop Last.FM Scrobbler")
+          "Stop Last.FM Scrobbler"*,*|*,"Stop Last.FM Scrobbler"*|"Sf",*|*,"Sf")
               mpp_service stop yams
               break
               ;;
-          "Restart Last.FM Scrobbler",*|*,"Restart Last.FM Scrobbler")
+          "Restart Last.FM Scrobbler"*,*|*,"Restart Last.FM Scrobbler"*|"rf",*|*,"rf")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2431,23 +2435,23 @@ show_services_menu() {
               mpp_service restart yams
               break
               ;;
-          "Status of Last.FM Scrobbler",*|*,"Status of Last.FM Scrobbler")
+          "Status of Last.FM Scrobbler"*,*|*,"Status of Last.FM Scrobbler"*|"sf",*|*,"sf")
               mpp_service status yams
               break
               ;;
-          "Stop All"*,*|*,"Stop All"*)
+          "Stop All"*,*|*,"Stop All"*|"X",*|*,"X")
               mpp_service stop ALL
               break
               ;;
-          "Update/scan Mopidy"*,*|*,"Update/scan Mopidy"*)
+          "Update/scan Mopidy"*,*|*,"Update/scan Mopidy"*|"um",*|*,"um")
               mopidy local scan > /dev/null 2>&1 &
               break
               ;;
-          "Update/scan MPD"*,*|*,"Update/scan MPD"*)
+          "Update/scan MPD"*,*|*,"Update/scan MPD"*|"u",*|*,"u")
               mpc update --quiet &
               break
               ;;
-          "View Music Service Log"*,*|*,"View Music Service Log"*)
+          "View Music Service Log"*,*|*,"View Music Service Log"*|"l",*|*,"l")
               clear
               printf "\n"
               show_logs_menu
@@ -2556,30 +2560,34 @@ show_ascii_menu() {
     SPLASH=1
     if [ "${AUDIO}" ]
     then
-      audiostat="ON "
+      audiostat="(ON) "
     else
-      audiostat="OFF"
+      audiostat="(OFF)"
     fi
     if [ "${RECORD}" ]
     then
-      recordstat="ON "
+      recordstat="(ON) "
     else
-      recordstat="OFF"
+      recordstat="(OFF)"
     fi
     if [ "${USE_TMUX}" ]
     then
-      usetmux="ON "
+      usetmux="(ON) "
     else
-      usetmux="OFF"
+      usetmux="(OFF)"
     fi
     skip_it_so=
     save_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-    options=("Julia Set ASCIImatics Animation" "MPPlus ASCIImatics Animation" "Plasma ASCIImatics Animation" "Toggle Audio (${audiostat})")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux (${recordstat})")
-    options+=("Toggle Use Tmux (${usetmux})")
-    [ "${have_ascii}" ] && options+=("Asciiville Menu [a]")
-    options+=("Main menu       [m]" "Quit            [q]")
+     options=("Julia Set ASCIImatics Animation [j]")
+    options+=("MPPlus ASCIImatics Animation    [s]")
+    options+=("Plasma ASCIImatics Animation    [p]")
+    options+=("Toggle Audio ${audiostat}              [a]")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux ${recordstat}        [r]")
+    options+=("Toggle Use Tmux ${usetmux}       [t]")
+    [ "${have_ascii}" ] && options+=("Asciiville Menu             [A]")
+    options+=("Main menu                   [m]")
+    options+=("Quit                        [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2597,22 +2605,22 @@ show_ascii_menu() {
               show_main_menu
               break 2
               ;;
-          "Julia Set ASCIImatics Animation",*|*,"Julia Set ASCIImatics Animation")
+          "Julia Set ASCIImatics Animation"*,*|*,"Julia Set ASCIImatics Animation"*|"j",*|*,"j")
               MPPSPLASH="${MPPSPLASH} -j"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
               break
               ;;
-          "MPPlus ASCIImatics Animation",*|*,"MPPlus ASCIImatics Animation")
+          "MPPlus ASCIImatics Animation"*,*|*,"MPPlus ASCIImatics Animation"*|"s",*|*,"s")
               MPPSPLASH="${MPPSPLASH} -m"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l rocks"
               break
               ;;
-          "Plasma ASCIImatics Animation",*|*,"Plasma ASCIImatics Animation")
+          "Plasma ASCIImatics Animation"*,*|*,"Plasma ASCIImatics Animation"*|"p",*|*,"p")
               MPPSPLASH="${MPPSPLASH} -p"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
               break
               ;;
-          "Toggle Audio"*,*|*,"Toggle Audio"*)
+          "Toggle Audio"*,*|*,"Toggle Audio"*|"a",*|*,"a")
               if [ "${AUDIO}" ]
               then
                 AUDIO=
@@ -2631,7 +2639,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "Toggle Record Tmux Session"*,*|*,"Toggle Record Tmux Session"*)
+          "Toggle Record Tmux"*,*|*,"Toggle Record Tmux"*|"r",*|*,"r")
               if [ "${RECORD}" ]
               then
                 RECORD=
@@ -2648,7 +2656,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*)
+          "Toggle Use Tmux"*,*|*,"Toggle Use Tmux"*|"t",*|*,"t")
               if [ "${USE_TMUX}" ]
               then
                 USE_TMUX=
@@ -2660,7 +2668,7 @@ show_ascii_menu() {
               skip_it_so=1
               break
               ;;
-          "Asciiville"*,*|*,"Asciiville"*|"a",*|*,"a")
+          "Asciiville"*,*|*,"Asciiville"*|"A",*|*,"A")
               clear
               asciiville
               clear
