@@ -138,6 +138,11 @@ usage() {
   exit 1
 }
 
+# Use 'mpplus -V ...' to disable clearing the screen
+clear_screen() {
+  [ "${debug}" ] || tput clear
+}
+
 is_running() {
   svc=$1
   [ "${svc}" ] || return 1
@@ -403,6 +408,7 @@ make_it_so() {
   }
 
   [ "${ACT_YAMS}" ] && {
+    [ -d ${HOME}/.config/yams ] || mkdir -p ${HOME}/.config/yams
     if [ "${need_yams}" ]
     then
       YAMSCOMM=
@@ -1421,7 +1427,7 @@ show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
   do
-    clear
+    clear_screen
     heading "MusicPlayerPlus Help Menu" "Help Menu"
     PS3="${BOLD}${PLEASE} choice (numeric or text): ${NORM}"
     options=()
@@ -1467,7 +1473,7 @@ show_help_menu() {
     do
       case "$opt,$REPLY" in
         "Done"*,*|*,"Done"*|"done"*,*|*,"done"*|"Back"*,*|*,"Back"*|"back"*,*|*,"back"*|"b",*|*,"b")
-          clear
+          clear_screen
           printf "\n"
           break 2
           ;;
@@ -1633,14 +1639,14 @@ show_help_menu() {
       REPLY=
     done
   done
-  clear
+  clear_screen
   printf "\n"
 }
 
 show_downloads_menu() {
   while true
   do
-    clear
+    clear_screen
     heading "MusicPlayerPlus Downloads Menu" "Downloads"
     if [ "${dryrun}" ]
     then
@@ -1673,13 +1679,13 @@ show_downloads_menu() {
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               break
               ;;
           "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               init_vars
               show_main_menu
@@ -1803,122 +1809,235 @@ show_system_status() {
     z_inst="not installed"
   fi
   [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
-    printf "\nMusic Player Daemon service is ${m_enabled} and ${m_active}"
+    if [ "${m_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${m_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Music Player Daemon[/] service is [${ecol}]${m_enabled}[/] and [${acol}]${m_active}[/]" -p
+    else
+      printf "\nMusic Player Daemon service is ${m_enabled} and ${m_active}"
+    fi
   }
   [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
-    printf "\nPipeWire service is ${i_enabled} and ${i_active}"
+    if [ "${i_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${i_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]PipeWire[/] service is [${ecol}]${i_enabled}[/] and [${acol}]${i_active}[/]" -p
+    else
+      printf "\nPipeWire service is ${i_enabled} and ${i_active}"
+    fi
   }
   [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
-    printf "\nPulseAudio service is ${p_enabled} and ${p_active}"
+    if [ "${p_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${p_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]PulseAudio[/] service is [${ecol}]${p_enabled}[/] and [${acol}]${p_active}[/]" -p
+    else
+      printf "\nPulseAudio service is ${p_enabled} and ${p_active}"
+    fi
   }
   [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
-    printf "\nBeets MPD Stats service is ${s_enabled} and ${s_active}"
+    if [ "${s_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${s_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Beets MPD Stats[/] service is [${ecol}]${s_enabled}[/] and [${acol}]${s_active}[/]" -p
+    else
+      printf "\nBeets MPD Stats service is ${s_enabled} and ${s_active}"
+    fi
   }
   [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
-    printf "\nBeets Web service is ${w_enabled} and ${w_active}"
+    if [ "${w_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${w_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Beets Web[/] service is [${ecol}]${w_enabled}[/] and [${acol}]${w_active}[/]" -p
+    else
+      printf "\nBeets Web service is ${w_enabled} and ${w_active}"
+    fi
   }
   [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
-    printf "\nLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
+    if [ "${y_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${y_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Last.fm Scrobbler[/] service is [${ecol}]${y_enabled}[/] and [${acol}]${y_active}[/]" -p
+    else
+      printf "\nLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
+    fi
   }
   [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
-    printf "\nMopidy Server is ${z_inst}, ${z_enabled} and ${z_active}"
+    if [ "${z_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${z_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Mopidy Server[/] is [${ecol}]${z_enabled}[/] and [${acol}]${z_active}[/]" -p
+    else
+      printf "\nMopidy Server is ${z_inst}, ${z_enabled} and ${z_active}"
+    fi
   }
   [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
-    printf "\nNavidrome Server is ${n_inst}, ${n_enabled} and ${n_active}"
+    if [ "${n_enabled}" == "enabled" ]; then
+      ecol="green"
+    else
+      ecol="red"
+    fi
+    if [ "${n_active}" == "active" ]; then
+      acol="green"
+    else
+      acol="red"
+    fi
+    if [ "${have_rich}" ]; then
+      rich "[yellow]Navidrome Server[/] is [${ecol}]${n_enabled}[/] and [${acol}]${n_active}[/]" -p
+    else
+      printf "\nNavidrome Server is ${n_inst}, ${n_enabled} and ${n_active}"
+    fi
   }
-  printf "\n"
+  [ "${have_rich}" ] || printf "\n"
 }
 
 show_logs_menu() {
   have_alsa=`type -p alsa-info`
   while true
   do
-    clear
+    clear_screen
     show_system_status
     heading "MusicPlayerPlus Service Logs Menu" "Service Logs Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
-    [ "${have_alsa}" ] && options+=("ALSA Sound System Info")
+    [ "${have_alsa}" ] && options+=("ALSA Sound System Info       [a]")
     [ "${s_active}" == "active" ] || [ "${s_enabled}" == "enabled" ] && {
-      options+=("View Beets MPD Stats Log")
+      options+=("View Beets MPD Stats Log     [b]")
     }
     [ "${w_active}" == "active" ] || [ "${w_enabled}" == "enabled" ] && {
-      options+=("View Beets Web Service Log")
+      options+=("View Beets Web Service Log   [w]")
     }
     [ "${m_active}" == "active" ] || [ "${m_enabled}" == "enabled" ] && {
-      options+=("View Music Player Daemon Log")
+      options+=("View Music Player Daemon Log [d]")
     }
     [ "${z_active}" == "active" ] || [ "${z_enabled}" == "enabled" ] && {
-      options+=("View Mopidy Server Log")
+      options+=("View Mopidy Server Log       [M]")
     }
     [ "${n_active}" == "active" ] || [ "${n_enabled}" == "enabled" ] && {
-      options+=("View Navidrome Server Log")
+      options+=("View Navidrome Server Log    [n]")
     }
     [ "${i_active}" == "active" ] || [ "${i_enabled}" == "enabled" ] && {
-      options+=("View PipeWire Server Log")
+      options+=("View PipeWire Server Log     [p]")
     }
     [ "${p_active}" == "active" ] || [ "${p_enabled}" == "enabled" ] && {
-      options+=("View PulseAudio Server Log")
+      options+=("View PulseAudio Server Log   [P]")
     }
     [ "${y_active}" == "active" ] || [ "${y_enabled}" == "enabled" ] && {
-      options+=("View Last.FM Scrobbler Log")
+      options+=("View Last.FM Scrobbler Log   [l]")
     }
-    options+=("Manage Services")
-    options+=("Main menu    [m]" "Quit         [q]")
+    options+=("Manage Services              [s]")
+    options+=("Main menu                    [m]")
+    options+=("Quit                         [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               break
               ;;
           "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               init_vars
               show_main_menu
               break 2
               ;;
-          "ALSA Sound System Info",*|*,"ALSA Sound System Info")
+          "ALSA Sound System Info"*,*|*,"ALSA Sound System Info"*|"a",*|*,"a")
               alsa-info --stdout | less
               break
               ;;
-          "View Beets MPD Stats Log",*|*,"View Beets MPD Stats Log")
+          "View Beets MPD Stats Log"*,*|*,"View Beets MPD Stats Log"*|"b",*|*,"b")
               journalctl --user-unit=mpdstats.service --since yesterday
               break
               ;;
-          "View Beets Web Service Log",*|*,"View Beets Web Service Log")
+          "View Beets Web Service Log"*,*|*,"View Beets Web Service Log"*|"w",*|*,"w")
               journalctl --user-unit=webplugin.service --since yesterday
               break
               ;;
-          "View Music Player Daemon Log",*|*,"View Music Player Daemon Log")
+          "View Music Player Daemon Log"*,*|*,"View Music Player Daemon Log"*|"d",*|*,"d")
               journalctl --user-unit=mpd.service --since yesterday
               break
               ;;
-          "View Mopidy Server Log",*|*,"View Mopidy Server Log")
+          "View Mopidy Server Log"*,*|*,"View Mopidy Server Log"*|"M",*|*,"M")
               journalctl --user-unit=mopidy.service --since yesterday
               break
               ;;
-          "View Navidrome Server Log",*|*,"View Navidrome Server Log")
+          "View Navidrome Server Log"*,*|*,"View Navidrome Server Log"*|"n",*|*,"n")
               journalctl --user-unit=navidrome.service --since yesterday
               break
               ;;
-          "View PipeWire Server Log",*|*,"View PipeWire Server Log")
+          "View PipeWire Server Log"*,*|*,"View PipeWire Server Log"*|"p",*|*,"p")
               journalctl --user-unit=pipewire.service --since yesterday
               break
               ;;
-          "View PulseAudio Server Log",*|*,"View PulseAudio Server Log")
+          "View PulseAudio Server Log"*,*|*,"View PulseAudio Server Log"*|"P",*|*,"P")
               journalctl --user-unit=pulseaudio.service --since yesterday
               break
               ;;
-          "View Last.FM Scrobbler Log",*|*,"View Last.FM Scrobbler Log")
+          "View Last.FM Scrobbler Log"*,*|*,"View Last.FM Scrobbler Log"*|"l",*|*,"l")
               journalctl --user-unit=yams.service --since yesterday
               break
               ;;
-          "Manage Services"*,*|*,"Manage Services"*)
-              clear
+          "Manage Services"*,*|*,"Manage Services"*|"s",*|*,"s")
+              clear_screen
               printf "\n"
               show_services_menu
               break
@@ -1940,7 +2059,7 @@ show_logs_menu() {
 show_services_menu() {
   while true
   do
-    clear
+    clear_screen
     show_system_status
     heading "MusicPlayerPlus Services Menu" "Services Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
@@ -2097,13 +2216,13 @@ show_services_menu() {
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               break
               ;;
           "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               init_vars
               show_main_menu
@@ -2439,7 +2558,7 @@ show_services_menu() {
               break
               ;;
           "View Music Service Log"*,*|*,"View Music Service Log"*|"l",*|*,"l")
-              clear
+              clear_screen
               printf "\n"
               show_logs_menu
               break
@@ -2461,7 +2580,7 @@ show_services_menu() {
 show_fzmp_menu() {
   while true
   do
-    clear
+    clear_screen
     heading "MusicPlayerPlus Fuzzy Search Menu" "Fuzzy Search"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=()
@@ -2477,13 +2596,13 @@ show_fzmp_menu() {
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               break
               ;;
           "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               init_vars
               show_main_menu
@@ -2528,7 +2647,7 @@ show_fzmp_menu() {
 show_ascii_menu() {
   while true
   do
-    clear
+    clear_screen
     heading "MusicPlayerPlus Asciimatics Animations Menu" "Asciimatics"
     SPLASH=1
     if [ "${AUDIO}" ]
@@ -2565,14 +2684,14 @@ show_ascii_menu() {
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               skip_it_so=1
               break
               ;;
           "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               init_vars
               show_main_menu
@@ -2642,9 +2761,9 @@ show_ascii_menu() {
               break
               ;;
           "Asciiville"*,*|*,"Asciiville"*|"A",*|*,"A")
-              clear
+              clear_screen
               asciiville
-              clear
+              clear_screen
               skip_it_so=1
               break
               ;;
@@ -2762,7 +2881,7 @@ select_music_dir() {
 show_main_menu() {
   while true
   do
-    clear
+    clear_screen
     printf "\n"
     if [ "${FULLSCREEN}" ]
     then
@@ -2825,7 +2944,7 @@ show_main_menu() {
     do
       case "$opt,$REPLY" in
           "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
-              clear
+              clear_screen
               printf "\n"
               show_help_menu
               skip_it_so=1
@@ -2903,35 +3022,35 @@ show_main_menu() {
               break
               ;;
           "ASCIImatics Animations"*,*|*,"ASCIImatics Animations"*|"a",*|*,"a")
-              clear
+              clear_screen
               printf "\n"
               show_ascii_menu
               skip_it_so=1
               break
               ;;
           "Manage Downloads"*,*|*,"Manage Downloads"*|"d",*|*,"d")
-              clear
+              clear_screen
               printf "\n"
               show_downloads_menu
               skip_it_so=1
               break
               ;;
           "Manage Services"*,*|*,"Manage Services"*|"s",*|*,"s")
-              clear
+              clear_screen
               printf "\n"
               show_services_menu
               skip_it_so=1
               break
               ;;
           "View Music Service Log"*,*|*,"View Music Service Log"*|"l",*|*,"l")
-              clear
+              clear_screen
               printf "\n"
               show_logs_menu
               skip_it_so=1
               break
               ;;
           "List"*,*|*,"List"*|"m",*|*,"m")
-              clear
+              clear_screen
               printf "\n"
               show_fzmp_menu
               skip_it_so=1
@@ -3035,16 +3154,16 @@ show_main_menu() {
               break
               ;;
           "MagicMirror"*,*|*,"MagicMirror"*|"m",*|*,"m")
-              clear
+              clear_screen
               mirror
-              clear
+              clear_screen
               skip_it_so=1
               break
               ;;
           "RoonCommandLine"*,*|*,"RoonCommandLine"*|"r",*|*,"r")
-              clear
+              clear_screen
               roon
-              clear
+              clear_screen
               skip_it_so=1
               break
               ;;
@@ -3656,9 +3775,10 @@ fi
 
 USE_MPCPLUS=1
 KITTY_SOCKET="/tmp/__mppkitty__"
-vault=
+debug=
 dryrun=
-while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:U:v:wWx:X:yYZz:u" flag
+vault=
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:U:v:VwWx:X:yYZz:u" flag
 do
   case $flag in
     a)
@@ -3977,6 +4097,9 @@ do
         echo "Specified visualizer ${OPTARG} not found."
         echo "Using ${VISUALIZER} visualizer"
       fi
+      ;;
+    V)
+      debug=1
       ;;
     w)
       writeflag="-w"

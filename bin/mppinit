@@ -3272,6 +3272,8 @@ disable_sys_mpd
 }
 sync_music_dir
 
+[ -d ${HOME}/.config/yams ] || mkdir -p ${HOME}/.config/yams
+
 printf " done.\n"
 
 [ -f "${MPPCONF}" ] && {
