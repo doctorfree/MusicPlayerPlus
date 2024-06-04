@@ -143,6 +143,12 @@ clear_screen() {
   [ "${debug}" ] || tput clear
 }
 
+farewell_exit() {
+  heading "$1" "Farewell"
+  printf "\n"
+  exit 0
+}
+
 is_running() {
   svc=$1
   [ "${svc}" ] || return 1
@@ -297,7 +303,7 @@ make_it_so() {
       echo ""
       echo "Manual media file conversion may be required"
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
   [ "${CONVERT_WAV}" ] && {
@@ -316,7 +322,7 @@ make_it_so() {
       echo ""
       echo "Manual media file conversion may be required"
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -343,38 +349,38 @@ make_it_so() {
       echo "Check your MusicPlayerPlus installation"
       echo ""
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${DOWNLOAD_BANDCAMP}" ] && {
     mppinit bandcamp
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${DOWNLOAD_SOUNDCLOUD}" ] && {
     mppinit soundcloud
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${DOWNLOAD_DISCOGS}" ] && {
     mppinit discogs
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${DOWNLOAD_LOCAL}" ] && {
     mppinit discogs Local
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${vault}" ] && {
     vault=`basename "${vault}"`
     mppinit ${dryrun} discogs upload ${vault} ${vault}
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     vault=
     return
   }
@@ -382,28 +388,28 @@ make_it_so() {
   [ "${DOWNLOAD_YOUTUBE}" ] && {
     [ "${DL_URL}" ] || prompt_for_url
     [ "${DL_URL}" ] && mppdl "${DL_URL}"
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${LIST_YT_PLAYLISTS}" ] && {
     [ "${YT_USER}" ] || prompt_for_user
     [ "${YT_USER}" ] && listyt -p "${YT_USER}" | less
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${LIST_YT_UPLOADS}" ] && {
     [ "${YT_USER}" ] || prompt_for_user
     [ "${YT_USER}" ] && listyt -v "${YT_USER}" | less
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
   [ "${LIST_YT_URL}" ] && {
     [ "${DL_URL}" ] || prompt_for_url youtube
     [ "${DL_URL}" ] && listyt "${DL_URL}" | less
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -465,7 +471,7 @@ make_it_so() {
         echo "    python3 -m pip install YAMScrobbler"
         echo ""
       fi
-      [ "${DO_NOT_EXIT}" ] || exit 0
+      [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
       return
     else
       echo "A YAMS service has been detected."
@@ -474,7 +480,7 @@ make_it_so() {
       echo "    systemctl --user disable yams.service"
       echo "    systemctl --user stop yams.service"
       echo "and re-run the command 'mpplus -Y'"
-      [ "${DO_NOT_EXIT}" ] || exit 0
+      [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
       return
     fi
   }
@@ -493,12 +499,12 @@ make_it_so() {
               rm -rf ${HOME}/.config/yams
               printf "\n\nYAMS disabled and configuration removed."
               printf "\nTo re-enable YAMS run the command 'mpplus -Y'.\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
         [Nn]* )
               printf "\n\nYAMS service left as-is, no changes made."
               printf "\nExiting.\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
             * ) echo "Please answer yes or no."
               ;;
@@ -544,7 +550,7 @@ make_it_so() {
       echo "Once the 'beet' command is executable and in the execution PATH,"
       echo "Re-run this command."
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -608,7 +614,7 @@ make_it_so() {
       echo "Once the 'beet' command is executable and in the execution PATH,"
       echo "Re-run this command."
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -682,7 +688,7 @@ make_it_so() {
       echo "Once the 'blissify' command is executable and in the execution PATH,"
       echo "Re-run this command."
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -735,7 +741,7 @@ make_it_so() {
       echo "Once the 'beet' command is executable and in the execution PATH,"
       echo "Re-run this command."
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -803,7 +809,7 @@ make_it_so() {
       printf "\nWhere <MUSIC_DIRECTORY> is the full pathname to your music library,"
       printf "\n-w indicates write metadata, -W indicates do not write metadata\n"
     fi
-    [ "${DO_NOT_EXIT}" ] || exit 0
+    [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     return
   }
 
@@ -1423,6 +1429,14 @@ heading() {
   fi
 }
 
+show_full_status() {
+  clear_screen
+  printf "\n"
+  heading "MusicPlayerPlus Services Status" "Services Status"
+  show_system_status full
+  printf "\n"
+}
+
 show_help_menu() {
   MTITLE="MusicPlayerPlus Help"
   while true
@@ -1628,8 +1642,7 @@ show_help_menu() {
           break
           ;;
         "Quit",*|*,"Quit"|"quit",*|*,"quit"|"q",*|*,"q")
-          printf "\nExiting MusicPlayerPlus\n"
-          exit 0
+          farewell_exit "Exiting MusicPlayerPlus"
           ;;
         *,*|*,*)
           printf "\nCould not match '${REPLY}' with a menu entry."
@@ -1746,8 +1759,7 @@ show_downloads_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               skip_it_so=1
@@ -1764,38 +1776,40 @@ show_downloads_menu() {
 }
 
 show_system_status() {
+  full=
+  [ "$1" == "full" ] && full=1
   systemctl --user is-active mpd.service >/dev/null 2>&1 && \
     m_active="active" || m_active="inactive"
   systemctl --user is-enabled mpd.service >/dev/null 2>&1 && \
-    m_enabled="enabled" || m_enabled="disabled"
+    m_enabled="enabled " || m_enabled="disabled"
   systemctl --user is-active pipewire.service >/dev/null 2>&1 && \
     i_active="active" || i_active="inactive"
   systemctl --user is-enabled pipewire.service >/dev/null 2>&1 && \
-    i_enabled="enabled" || i_enabled="disabled"
+    i_enabled="enabled " || i_enabled="disabled"
   systemctl --user is-active pulseaudio.service >/dev/null 2>&1 && \
     p_active="active" || p_active="inactive"
   systemctl --user is-enabled pulseaudio.service >/dev/null 2>&1 && \
-    p_enabled="enabled" || p_enabled="disabled"
+    p_enabled="enabled " || p_enabled="disabled"
   systemctl --user is-active mpdstats.service >/dev/null 2>&1 && \
     s_active="active" || s_active="inactive"
   systemctl --user is-enabled mpdstats.service >/dev/null 2>&1 && \
-    s_enabled="enabled" || s_enabled="disabled"
+    s_enabled="enabled " || s_enabled="disabled"
   systemctl --user is-active webplugin.service >/dev/null 2>&1 && \
     w_active="active" || w_active="inactive"
   systemctl --user is-enabled webplugin.service >/dev/null 2>&1 && \
-    w_enabled="enabled" || w_enabled="disabled"
+    w_enabled="enabled " || w_enabled="disabled"
   systemctl --user is-active yams.service >/dev/null 2>&1 && \
     y_active="active" || y_active="inactive"
   systemctl --user is-enabled yams.service >/dev/null 2>&1 && \
-    y_enabled="enabled" || y_enabled="disabled"
+    y_enabled="enabled " || y_enabled="disabled"
   systemctl --user is-active mopidy.service >/dev/null 2>&1 && \
     z_active="active" || z_active="inactive"
   systemctl --user is-enabled mopidy.service >/dev/null 2>&1 && \
-    z_enabled="enabled" || z_enabled="disabled"
+    z_enabled="enabled " || z_enabled="disabled"
   systemctl --user is-active navidrome.service >/dev/null 2>&1 && \
     n_active="active" || n_active="inactive"
   systemctl --user is-enabled navidrome.service >/dev/null 2>&1 && \
-    n_enabled="enabled" || n_enabled="disabled"
+    n_enabled="enabled " || n_enabled="disabled"
   if [ "${have_navi}" ]
   then
     n_inst="installed"
@@ -1808,140 +1822,150 @@ show_system_status() {
   else
     z_inst="not installed"
   fi
-  [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
-    if [ "${m_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${m_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${m_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${m_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${m_enabled}" == "enabled " ] || [ "${m_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Music Player Daemon[/] service is [${ecol}]${m_enabled}[/] and [${acol}]${m_active}[/]" -p
+      rich "[yellow]Music Player Daemon[/]:    [${ecol}]${m_enabled}[/] and [${acol}]${m_active}[/]" -p
     else
-      printf "\nMusic Player Daemon service is ${m_enabled} and ${m_active}"
+      printf "\nMusic Player Daemon:    ${m_enabled} and ${m_active}"
     fi
   }
-  [ "${i_enabled}" == "enabled" ] || [ "${i_active}" == "active" ] && {
-    if [ "${i_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${i_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${i_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${i_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${i_enabled}" == "enabled " ] || [ "${i_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]PipeWire[/] service is [${ecol}]${i_enabled}[/] and [${acol}]${i_active}[/]" -p
+      rich "[yellow]PipeWire[/]:               [${ecol}]${i_enabled}[/] and [${acol}]${i_active}[/]" -p
     else
-      printf "\nPipeWire service is ${i_enabled} and ${i_active}"
+      printf "\nPipeWire:               ${i_enabled} and ${i_active}"
     fi
   }
-  [ "${p_enabled}" == "enabled" ] || [ "${p_active}" == "active" ] && {
-    if [ "${p_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${p_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${p_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${p_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${p_enabled}" == "enabled " ] || [ "${p_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]PulseAudio[/] service is [${ecol}]${p_enabled}[/] and [${acol}]${p_active}[/]" -p
+      rich "[yellow]PulseAudio[/]:             [${ecol}]${p_enabled}[/] and [${acol}]${p_active}[/]" -p
     else
-      printf "\nPulseAudio service is ${p_enabled} and ${p_active}"
+      printf "\nPulseAudio:             ${p_enabled} and ${p_active}"
     fi
   }
-  [ "${s_enabled}" == "enabled" ] || [ "${s_active}" == "active" ] && {
-    if [ "${s_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${s_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${s_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${s_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${s_enabled}" == "enabled " ] || [ "${s_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Beets MPD Stats[/] service is [${ecol}]${s_enabled}[/] and [${acol}]${s_active}[/]" -p
+      rich "[yellow]Beets MPD Stats[/]:        [${ecol}]${s_enabled}[/] and [${acol}]${s_active}[/]" -p
     else
-      printf "\nBeets MPD Stats service is ${s_enabled} and ${s_active}"
+      printf "\nBeets MPD Stats:        ${s_enabled} and ${s_active}"
     fi
   }
-  [ "${w_enabled}" == "enabled" ] || [ "${w_active}" == "active" ] && {
-    if [ "${w_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${w_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${w_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${w_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${w_enabled}" == "enabled " ] || [ "${w_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Beets Web[/] service is [${ecol}]${w_enabled}[/] and [${acol}]${w_active}[/]" -p
+      rich "[yellow]Beets Web[/]:              [${ecol}]${w_enabled}[/] and [${acol}]${w_active}[/]" -p
     else
-      printf "\nBeets Web service is ${w_enabled} and ${w_active}"
+      printf "\nBeets Web:              ${w_enabled} and ${w_active}"
     fi
   }
-  [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
-    if [ "${y_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${y_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${y_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${y_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  [ "${full}" ] || [ "${y_enabled}" == "enabled " ] || [ "${y_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Last.fm Scrobbler[/] service is [${ecol}]${y_enabled}[/] and [${acol}]${y_active}[/]" -p
+      rich "[yellow]Last.fm Scrobbler[/]:      [${ecol}]${y_enabled}[/] and [${acol}]${y_active}[/]" -p
     else
-      printf "\nLast.fm Scrobbler service is ${y_enabled} and ${y_active}"
+      printf "\nLast.fm Scrobbler:      ${y_enabled} and ${y_active}"
     fi
   }
-  [ "${z_enabled}" == "enabled" ] || [ "${z_active}" == "active" ] && {
-    if [ "${z_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${z_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${z_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${z_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  if [ "${z_inst}" == "installed" ]; then
+    icol="green"
+  else
+    icol="red"
+  fi
+  [ "${full}" ] || [ "${z_enabled}" == "enabled " ] || [ "${z_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Mopidy Server[/] is [${ecol}]${z_enabled}[/] and [${acol}]${z_active}[/]" -p
+      rich "[yellow]Mopidy Server[/]:          [${ecol}]${z_enabled}[/] and [${acol}]${z_active}[/] ([${icol}]${z_inst})[/] " -p
     else
-      printf "\nMopidy Server is ${z_inst}, ${z_enabled} and ${z_active}"
+      printf "\nMopidy Server:          ${z_enabled} and ${z_active} (${z_inst})"
     fi
   }
-  [ "${n_enabled}" == "enabled" ] || [ "${n_active}" == "active" ] && {
-    if [ "${n_enabled}" == "enabled" ]; then
-      ecol="green"
-    else
-      ecol="red"
-    fi
-    if [ "${n_active}" == "active" ]; then
-      acol="green"
-    else
-      acol="red"
-    fi
+  if [ "${n_enabled}" == "enabled " ]; then
+    ecol="green"
+  else
+    ecol="red"
+  fi
+  if [ "${n_active}" == "active" ]; then
+    acol="green"
+  else
+    acol="red"
+  fi
+  if [ "${n_inst}" == "installed" ]; then
+    icol="green"
+  else
+    icol="red"
+  fi
+  [ "${full}" ] || [ "${n_enabled}" == "enabled " ] || [ "${n_active}" == "active" ] && {
     if [ "${have_rich}" ]; then
-      rich "[yellow]Navidrome Server[/] is [${ecol}]${n_enabled}[/] and [${acol}]${n_active}[/]" -p
+      rich "[yellow]Navidrome Server[/]:       [${ecol}]${n_enabled}[/] and [${acol}]${n_active}[/] ([${icol}]${n_inst})[/] " -p
     else
-      printf "\nNavidrome Server is ${n_inst}, ${n_enabled} and ${n_active}"
+      printf "\nNavidrome Server:       ${n_enabled} and ${n_active} (${n_inst})"
     fi
   }
   [ "${have_rich}" ] || printf "\n"
@@ -2043,8 +2067,7 @@ show_logs_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               break
@@ -2564,8 +2587,7 @@ show_services_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               break
@@ -2633,8 +2655,7 @@ show_fzmp_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               break
@@ -2768,8 +2789,7 @@ show_ascii_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               skip_it_so=1
@@ -2928,6 +2948,7 @@ show_main_menu() {
     options+=("Essentia Audio Info Extraction [e]")
     options+=("Manage Downloads               [d]")
     options+=("Manage Services                [s]")
+    options+=("View Services Status           [v]")
     options+=("View Music Service Logs        [l]")
     [ "${have_fzf}" ] && is_running mpd && {
       options+=("List/Search/Select Media       [m]")
@@ -3039,6 +3060,35 @@ show_main_menu() {
               clear_screen
               printf "\n"
               show_services_menu
+              skip_it_so=1
+              break
+              ;;
+          "View Services Status"*,*|*,"View Services Status"*|"v",*|*,"v")
+              show_full_status
+              PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
+              options=("Main menu                   [m]")
+              options+=("Quit                        [q]")
+              select opt in "${options[@]}"
+              do
+                case "$opt,$REPLY" in
+                    "h",*|*,"h"|"H",*|*,"H"|"help",*|*,"help"|"Help",*|*,"Help")
+                        clear_screen
+                        printf "\n"
+                        show_help_menu
+                        ;;
+                    "Main menu"*,*|*,"Main menu"*|"Back",*|*,"Back"|"back",*|*,"back"|"m",*|*,"m")
+                        clear_screen
+                        break
+                        ;;
+                    "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
+                        farewell_exit "Exiting MusicPlayerPlus"
+                        ;;
+                    *,*|*,*)
+                        break
+                        ;;
+                esac
+                REPLY=
+              done
               skip_it_so=1
               break
               ;;
@@ -3168,8 +3218,7 @@ show_main_menu() {
               break
               ;;
           "Quit"*,*|*,"Quit"*|"quit",*|*,"quit"|"q",*|*,"q")
-              printf "\nExiting\n"
-              exit 0
+              farewell_exit "Exiting MusicPlayerPlus"
               ;;
           *,*|*,*)
               skip_it_so=1
@@ -3778,7 +3827,7 @@ KITTY_SOCKET="/tmp/__mppkitty__"
 debug=
 dryrun=
 vault=
-while getopts "A:abBcC:D:d:eEFfGghHiIjJkKLmM:n:NpP:qrRSs:tT:U:v:VwWx:X:yYZz:u" flag
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKlLmM:n:NpP:qrRSs:tT:U:v:VwWx:X:yYZz:u" flag
 do
   case $flag in
     a)
@@ -3960,7 +4009,7 @@ do
       ;;
     K)
       kill_tmux_sessions
-      exit 0
+      farewell_exit "Exiting MusicPlayerPlus"
       ;;
     k)
       KITTY=1
@@ -3980,6 +4029,10 @@ do
         USE_TMUX=1
       }
       ;;
+    l)
+      show_full_status
+      farewell_exit "Exiting MusicPlayerPlus"
+      ;;
     L)
       FETCH_LYRICS=1
       ;;
@@ -3989,8 +4042,7 @@ do
       ;;
     M)
       mpp_service ${OPTARG} mpd
-      echo "Exiting"
-      exit 0
+      farewell_exit "Exiting MusicPlayerPlus"
       ;;
     n)
       MPPSPLASH="${MPPSPLASH} -c ${OPTARG}"
