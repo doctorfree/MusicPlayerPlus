@@ -1671,7 +1671,7 @@ show_downloads_menu() {
       [ -d "${DISCOGS_DIR}" ] && {
         options+=("Discogs Collection Markdown [D]")
       }
-      options+=("Toggle Dry Run ${usedrun}        [t]")
+      options+=("Toggle Dry Run        ${usedrun} [t]")
     }
     options+=("Main menu                   [m]")
     options+=("Quit                        [q]")
@@ -2674,9 +2674,9 @@ show_ascii_menu() {
      options=("Julia Set ASCIImatics Animation [j]")
     options+=("MPPlus ASCIImatics Animation    [s]")
     options+=("Plasma ASCIImatics Animation    [p]")
-    options+=("Toggle Audio ${audiostat}              [a]")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux ${recordstat}        [r]")
-    options+=("Toggle Use Tmux ${usetmux}       [t]")
+    options+=("Toggle Audio              ${audiostat} [a]")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux        ${recordstat} [r]")
+    options+=("Toggle Use Tmux       ${usetmux} [t]")
     [ "${have_ascii}" ] && options+=("Asciiville Menu             [A]")
     options+=("Main menu                   [m]")
     options+=("Quit                        [q]")
@@ -2933,10 +2933,10 @@ show_main_menu() {
       options+=("List/Search/Select Media       [m]")
     }
       options+=("Select Music Directory         [M]")
-    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art ${coverstat}    [S]")
-    options+=("Toggle Use Tmux ${usetmux}          [t]")
-    [ "${have_nema}" ] && options+=("Toggle Record Tmux ${recordstat}       [R]")
-    options+=("Toggle Fullscreen ${fullstat}        [F]")
+    [ "${have_uebz}" ] && options+=("Toggle Show Cover Art    ${coverstat} [S]")
+    options+=("Toggle Use Tmux          ${usetmux} [t]")
+    [ "${have_nema}" ] && options+=("Toggle Record Tmux       ${recordstat} [R]")
+    options+=("Toggle Fullscreen        ${fullstat} [F]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu       [m]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu           [r]")
     options+=("Quit                           [q]")
@@ -3501,6 +3501,8 @@ export PATH
   done
 }
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 have_beet=`type -p beet`
 have_wmctrl=`type -p wmctrl`
 have_xprop=`type -p xprop`
@@ -3770,8 +3772,6 @@ then
 else
   use_figlet=
 fi
-
-[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
 
 USE_MPCPLUS=1
 KITTY_SOCKET="/tmp/__mppkitty__"
