@@ -211,7 +211,7 @@ kill_tmux_sessions() {
     ps -ef | grep -v grep | grep ${ascii} > /dev/null && {
       ps -ef | grep -v grep | grep ${ascii} | while IFS= read -r line
       do
-        pid=`echo "$line" | awk ' { print $2 } '`
+        pid=$(echo "$line" | awk ' { print $2 } ')
         kill ${pid}
       done 
     }
@@ -378,7 +378,7 @@ make_it_so() {
   }
 
   [ "${vault}" ] && {
-    vault=`basename "${vault}"`
+    vault=$(basename "${vault}")
     mppinit ${dryrun} discogs upload ${vault} ${vault}
     [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
     vault=
@@ -418,7 +418,7 @@ make_it_so() {
     if [ "${need_yams}" ]
     then
       YAMSCOMM=
-      have_yams=`type -p yams`
+      have_yams=$(type -p yams)
       if [ "${have_yams}" ]
       then
         YAMSCOMM=yams
@@ -619,7 +619,7 @@ make_it_so() {
   }
 
   [ "${BLISSIFY}" ] && {
-    have_bliss=`type -p blissify`
+    have_bliss=$(type -p blissify)
     if [ "${have_bliss}" ]
     then
       echo ""
@@ -639,21 +639,21 @@ make_it_so() {
       XLOG="${MPDLOGDIR}/blissify.log"
 
       MPD_CONF="${MPDLOGDIR}/mpd.conf"
-      mpd_music=`grep ^music_directory ${MPD_CONF}`
-      mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+      mpd_music=$(grep ^music_directory ${MPD_CONF})
+      mpd_music=$(echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g")
       [ "${mpd_music}" ] || mpd_music="${HOME}/Music"
       # Need to expand the tilda to $HOME
       mpd_music="${mpd_music/#\~/$HOME}"
 
       [ "${MPD_HOST}" ] || {
-        mpd_host=`grep ^bind_to_address ${MPD_CONF}`
-        mpd_host=`echo ${mpd_host} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+        mpd_host=$(grep ^bind_to_address ${MPD_CONF})
+        mpd_host=$(echo ${mpd_host} | awk ' { print $2 } ' | sed -e "s/\"//g")
         [ "${mpd_host}" ] || mpd_host="localhost"
         MPD_HOST="${mpd_host}"
       }
       [ "${MPD_PORT}" ] || {
-        mpd_port=`grep ^port ${MPD_CONF}`
-        mpd_port=`echo ${mpd_port} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+        mpd_port=$(grep ^port ${MPD_CONF})
+        mpd_port=$(echo ${mpd_port} | awk ' { print $2 } ' | sed -e "s/\"//g")
         [ "${mpd_port}" ] || mpd_port="6600"
         MPD_PORT="${mpd_port}"
       }
@@ -782,15 +782,15 @@ make_it_so() {
         kitty --title="Beets Import Log" \
               tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
       fi
-      have_ip=`type -p ip`
+      have_ip=$(type -p ip)
       if [ "${have_ip}" ]
       then
-        IP=`ip route get 1.2.3.4 | head -1 | awk '{print $7}'`
+        IP=$(ip route get 1.2.3.4 | head -1 | awk '{print $7}')
       else
-        have_hostname=`type -p hostname`
+        have_hostname=$(type -p hostname)
         if [ "${have_hostname}" ]
         then
-          IP=`hostname -I | awk '{print $1}'`
+          IP=$(hostname -I | awk '{print $1}')
         else
           IP="<ip address>"
         fi
@@ -890,22 +890,18 @@ make_it_so() {
           sleep 1
           if [ "${KITTY}" ]
           then
-            viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
-              grep "${VTITLE}"`
+            viz_win=$(wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}")
           else
             if [ "${TILIX}" ]
             then
-              viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-                grep "${VTITLE}"`
+              viz_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}")
             else
               if [ "${GNOME}" ]
               then
-                viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                  grep "${VTITLE}"`
+                viz_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}")
               else
                 [ "${SIMPLE}" ] && {
-                  viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                    grep "${VTITLE}"`
+                  viz_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep "${VTITLE}")
                 }
               fi
             fi
@@ -913,22 +909,18 @@ make_it_so() {
           [ "${viz_win}" ] || {
             if [ "${KITTY}" ]
             then
-              viz_win=`wmctrl -l -G -x | grep kitty.kitty | \
-                grep "${VISUALIZER}"`
+              viz_win=$(wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}")
             else
               if [ "${TILIX}" ]
               then
-                viz_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-                  grep "${VISUALIZER}"`
+                viz_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}")
               else
                 if [ "${GNOME}" ]
                 then
-                  viz_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                    grep "${VISUALIZER}"`
+                  viz_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep "${VISUALIZER}")
                 else
                   [ "${SIMPLE}" ] && {
-                    viz_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                      grep "${VISUALIZER}"`
+                    viz_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep "${VISUALIZER}")
                   }
                 fi
               fi
@@ -973,9 +965,9 @@ make_it_so() {
               ${VISUALIZER} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
           sleep 1
-          kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}"`
+          kit_win=$(wmctrl -l -G -x | grep kitty.kitty | grep "${VTITLE}")
           [ "${kit_win}" ] || {
-            kit_win=`wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}"`
+            kit_win=$(wmctrl -l -G -x | grep kitty.kitty | grep "${VISUALIZER}")
           }
           [ "${kit_win}" ] && center_window "${kit_win}" bottom
         }
@@ -989,9 +981,9 @@ make_it_so() {
                 --command="${VISUALIZER}" 2> /dev/null &
           [ "${USE_EWMH}" ] && {
             sleep 1
-            til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}"`
+            til_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep "${VTITLE}")
             [ "${til_win}" ] || {
-              til_win=`wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}"`
+              til_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep "${VISUALIZER}")
             }
             [ "${til_win}" ] && center_window "${til_win}" bottom
           }
@@ -1005,11 +997,9 @@ make_it_so() {
                   -- ${VISUALIZER} &
             [ "${USE_EWMH}" ] && {
               sleep 1
-              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep "${VTITLE}"`
+              gno_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep "${VTITLE}")
               [ "${gno_win}" ] || {
-                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                  grep "${VISUALIZER}"`
+                gno_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep "${VISUALIZER}")
               }
               [ "${gno_win}" ] && center_window "${gno_win}" bottom
             }
@@ -1022,11 +1012,9 @@ make_it_so() {
                  ${VISUALIZER} 2> /dev/null &
               [ "${USE_EWMH}" ] && {
                 sleep 1
-                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                                           grep "${VTITLE}"`
+                stl_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep "${VTITLE}")
                 [ "${stl_win}" ] || {
-                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                                             grep "${VISUALIZER}"`
+                  stl_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep "${VISUALIZER}")
                 }
                 [ "${stl_win}" ] && center_window "${stl_win}" bottom
               }
@@ -1141,11 +1129,9 @@ make_it_so() {
               ${MPCOMM} 2> /dev/null &
         [ "${USE_EWMH}" ] && {
           sleep 1
-          mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-            grep -v "${VTITLE}" | grep "${MTITLE}"`
+          mpc_win=$(wmctrl -l -G -x | grep kitty.kitty | grep -v "${VTITLE}" | grep "${MTITLE}")
           [ "${mpc_win}" ] || {
-            mpc_win=`wmctrl -l -G -x | grep kitty.kitty | \
-              grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+            mpc_win=$(wmctrl -l -G -x | grep kitty.kitty | grep -v "${VISUALIZER}" | grep "${MPCOMM}")
           }
           [ "${mpc_win}" ] && center_window "${mpc_win}" "${vhit}"
         }
@@ -1159,11 +1145,9 @@ make_it_so() {
                 --command="${MPCOMM}" 2> /dev/null &
           [ "${USE_EWMH}" ] && {
             sleep 1
-            til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-              grep -v "${VTITLE}" | grep "${MTITLE}"`
+            til_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep -v "${VTITLE}" | grep "${MTITLE}")
             [ "${til_win}" ] || {
-              til_win=`wmctrl -l -G -x | grep tilix.Tilix | \
-                grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+              til_win=$(wmctrl -l -G -x | grep tilix.Tilix | grep -v "${VISUALIZER}" | grep "${MPCOMM}")
             }
             [ "${til_win}" ] && center_window "${til_win}" "${vhit}"
           }
@@ -1177,11 +1161,9 @@ make_it_so() {
                   -- ${MPCOMM} &
             [ "${USE_EWMH}" ] && {
               sleep 1
-              gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                grep -v "${VTITLE}" | grep "${MTITLE}"`
+              gno_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep -v "${VTITLE}" | grep "${MTITLE}")
               [ "${gno_win}" ] || {
-                gno_win=`wmctrl -l -G -x | grep gnome-terminal-server | \
-                  grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                gno_win=$(wmctrl -l -G -x | grep gnome-terminal-server | grep -v "${VISUALIZER}" | grep "${MPCOMM}")
               }
               [ "${gno_win}" ] && center_window "${gno_win}" "${vhit}"
             }
@@ -1194,11 +1176,9 @@ make_it_so() {
                  ${MPCOMM} 2> /dev/null &
               [ "${USE_EWMH}" ] && {
                 sleep 1
-                stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                  grep -v "${VTITLE}" | grep "${MTITLE}"`
+                stl_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep -v "${VTITLE}" | grep "${MTITLE}")
                 [ "${stl_win}" ] || {
-                  stl_win=`wmctrl -l -G -x | grep st-256color.st-256color | \
-                    grep -v "${VISUALIZER}" | grep "${MPCOMM}"`
+                  stl_win=$(wmctrl -l -G -x | grep st-256color.st-256color | grep -v "${VISUALIZER}" | grep "${MPCOMM}")
                 }
                 [ "${stl_win}" ] && center_window "${stl_win}" "${vhit}"
               }
@@ -1211,13 +1191,19 @@ make_it_so() {
                 # TODO: handle other graphical mpd clients
                 [ "${MPCOMM}" == "cantata" ] && [ "${USE_EWMH}" ] && {
                   sleep 1
-                  can_win=`wmctrl -l -G -x | grep cantata.cantata | \
-                    grep "Cantata"`
+                  can_win=$(wmctrl -l -G -x | grep cantata.cantata | grep "Cantata")
                   [ "${can_win}" ] || {
-                    can_win=`wmctrl -l -G -x | grep cantata.cantata | \
-                      grep -i "cantata"`
+                    can_win=$(wmctrl -l -G -x | grep cantata.cantata | grep -i "cantata")
                   }
                   [ "${can_win}" ] && center_window "${can_win}" "top"
+                }
+                [ "${MPCOMM}" == "ymuse" ] && [ "${USE_EWMH}" ] && {
+                  sleep 1
+                  ymu_win=$(wmctrl -l -G -x | grep ymuse.ymuse | grep "Ymuse")
+                  [ "${ymu_win}" ] || {
+                    ymu_win=$(wmctrl -l -G -x | grep ymuse.ymuse | grep -i "ymuse")
+                  }
+                  [ "${ymu_win}" ] && center_window "${ymu_win}" "top"
                 }
               fi
             fi
@@ -1274,7 +1260,7 @@ do_service_action() {
       }
       [ "${service}" == "mopidy.service" ] && {
         # Perform a local scan of the music library
-        have_mopidy=`type -p mopidy`
+        have_mopidy=$(type -p mopidy)
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
         # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
@@ -1335,7 +1321,7 @@ do_service_action() {
       }
       [ "${service}" == "mopidy.service" ] && {
         # Perform a local scan of the music library
-        have_mopidy=`type -p mopidy`
+        have_mopidy=$(type -p mopidy)
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
         # Reconfigure mpcplus/mppcava with Mopidy visualizer data source
         [ -x ${SCRIPTS}/viz_data_src.sh ] && ${SCRIPTS}/viz_data_src.sh mopidy
@@ -1351,7 +1337,7 @@ do_service_action() {
       systemctl --user ${action} ${service}
       [ "${service}" == "mopidy.service" ] && {
         # Perform a local scan of the music library
-        have_mopidy=`type -p mopidy`
+        have_mopidy=$(type -p mopidy)
         [ "${have_mopidy}" ] && mopidy local scan > /dev/null 2>&1 &
       }
       [ "${service}" == "mpd.service" ] && {
@@ -1972,7 +1958,7 @@ show_system_status() {
 }
 
 show_logs_menu() {
-  have_alsa=`type -p alsa-info`
+  have_alsa=$(type -p alsa-info)
   while true
   do
     clear_screen
@@ -2257,7 +2243,7 @@ show_services_menu() {
               ;;
           "Install Mopidy Server"*,*|*,"Install Mopidy Server"*|"im",*|*,"im")
               mppinit mopidy
-              have_mopidy=`type -p mopidy`
+              have_mopidy=$(type -p mopidy)
               break
               ;;
           "Enable Mopidy Server"*,*|*,"Enable Mopidy Server"*|"em",*|*,"em")
@@ -2745,8 +2731,8 @@ show_ascii_menu() {
                 MPPSPLASH="${MPPSPLASH} -a"
                 MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -a"
               else
-                MPPSPLASH=`echo ${MPPSPLASH} | sed -e "s/ -a//"`
-                MPPSPLASH_TMUX=`echo ${MPPSPLASH_TMUX} | sed -e "s/ -a//"`
+                MPPSPLASH=$(echo ${MPPSPLASH} | sed -e "s/ -a//")
+                MPPSPLASH_TMUX=$(echo ${MPPSPLASH_TMUX} | sed -e "s/ -a//")
               fi
               save_it_so=1
               skip_it_so=1
@@ -2764,7 +2750,7 @@ show_ascii_menu() {
               then
                 MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -R"
               else
-                MPPSPLASH_TMUX=`echo ${MPPSPLASH_TMUX} | sed -e "s/ -R//"`
+                MPPSPLASH_TMUX=$(echo ${MPPSPLASH_TMUX} | sed -e "s/ -R//")
               fi
               skip_it_so=1
               break
@@ -2938,6 +2924,8 @@ show_main_menu() {
     [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
+    [ "${have_ymuse}" ] && options+=("YMuse Music Player Plus     [Y]")
+    [ "${have_ytm}" ] && options+=("YouTube Music Player Plus   [y]")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler  [S]")
     options+=("ASCIImatics Animations      [a]")
     options+=("Convert M4A files to MP3    [c]")
@@ -2958,6 +2946,9 @@ show_main_menu() {
     options+=("Toggle Use Tmux       ${usetmux} [t]")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux    ${recordstat} [R]")
     options+=("Toggle Fullscreen     ${fullstat} [F]")
+    [ "${have_cantata}" ] || options+=("Install Cantata MPD client  [ic]")
+    [ "${have_ymuse}" ] || options+=("Install YMuse MPD client    [im]")
+    [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [m]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [r]")
     options+=("Quit                        [q]")
@@ -3038,8 +3029,37 @@ show_main_menu() {
               SIMPLE=
               break
               ;;
+          "Install Cantata"*,*|*,"Install Cantata"*|"ic",*|*,"ic")
+              mppinit cantata
+              have_cantata=$(type -p cantata)
+              skip_it_so=1
+              break
+              ;;
           "Cantata Music Player Plus"*,*|*,"Cantata Music Player Plus"*|"C",*|*,"C")
-              MPCPLUS="cantata"
+              cantata >/dev/null 2>&1 &
+              skip_it_so=1
+              break
+              ;;
+          "Install YMuse"*,*|*,"Install YMuse"*|"im",*|*,"im")
+              mppinit ymuse
+              have_ymuse=$(type -p ymuse)
+              skip_it_so=1
+              break
+              ;;
+          "YMuse Music Player Plus"*,*|*,"YMuse Music Player Plus"*|"Y",*|*,"Y")
+              ymuse >/dev/null 2>&1 &
+              skip_it_so=1
+              break
+              ;;
+          "Install YouTube"*,*|*,"Install YouTube"*|"iy",*|*,"iy")
+              mppinit youtube
+              have_ytm=$(type -p youtube-music)
+              skip_it_so=1
+              break
+              ;;
+          "YouTube Music Player Plus"*,*|*,"YouTube Music Player Plus"*|"y",*|*,"y")
+              youtube-music >/dev/null 2>&1 &
+              skip_it_so=1
               break
               ;;
           "ASCIImatics Animations"*,*|*,"ASCIImatics Animations"*|"a",*|*,"a")
@@ -3161,7 +3181,7 @@ show_main_menu() {
               if [ "${COVER_ART}" ]
               then
                 USE_TMUX=1
-                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -A//"`
+                MPCPLUS_TMUX=$(echo ${MPCPLUS_TMUX} | sed -e "s/ -A//")
               else
                 USE_TMUX=
                 MPCPLUS_TMUX="${MPCPLUS_TMUX} -A"
@@ -3194,7 +3214,7 @@ show_main_menu() {
               then
                 MPCPLUS_TMUX="${MPCPLUS_TMUX} -r"
               else
-                MPCPLUS_TMUX=`echo ${MPCPLUS_TMUX} | sed -e "s/ -r//"`
+                MPCPLUS_TMUX=$(echo ${MPCPLUS_TMUX} | sed -e "s/ -r//")
               fi
               skip_it_so=1
               break
@@ -3248,7 +3268,7 @@ init_vars() {
   if [ "${MPD_CLIENT}" ]
   then
     MPCPLUS="${MPD_CLIENT}"
-    mpcbase=`basename ${MPCPLUS}`
+    mpcbase=$(basename ${MPCPLUS})
     type -p ${mpcbase} > /dev/null || {
       [ -x "${MPCPLUS}" ] || {
         MPCPLUS=mpcplus
@@ -3559,17 +3579,19 @@ export PATH
 
 [ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
 
-have_beet=`type -p beet`
-have_wmctrl=`type -p wmctrl`
-have_xprop=`type -p xprop`
-have_xrandr=`type -p xrandr`
-have_xdpy=`type -p xdpyinfo`
-have_cantata=`type -p cantata`
-have_gnome=`type -p gnome-terminal`
-have_retro=`type -p cool-retro-term`
-have_simple=`type -p st`
-have_tilix=`type -p tilix`
-have_kitty=`type -p kitty`
+have_beet=$(type -p beet)
+have_wmctrl=$(type -p wmctrl)
+have_xprop=$(type -p xprop)
+have_xrandr=$(type -p xrandr)
+have_xdpy=$(type -p xdpyinfo)
+have_cantata=$(type -p cantata)
+have_ymuse=$(type -p ymuse)
+have_ytm=$(type -p youtube-music)
+have_gnome=$(type -p gnome-terminal)
+have_retro=$(type -p cool-retro-term)
+have_simple=$(type -p st)
+have_tilix=$(type -p tilix)
+have_kitty=$(type -p kitty)
 
 init_vars
 AUDIO=
@@ -3591,7 +3613,7 @@ case "${MPP_MODE}" in
     then
       consolemode=
       # Check if on a console screen
-      have_tty=`type -p tty`
+      have_tty=$(type -p tty)
       [ "${have_tty}" ] && {
         tty=$(tty)
         echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
@@ -3663,7 +3685,7 @@ then
   hasopacity=
   consolemode=
   # First check if on a console screen
-  have_tty=`type -p tty`
+  have_tty=$(type -p tty)
   [ "${have_tty}" ] && {
     tty=$(tty)
     echo "${tty}" | grep /dev/tty > /dev/null && consolemode=1
@@ -3684,7 +3706,7 @@ then
     # Check window manager's supported hints
     if [ "${have_xprop}" ]
     then
-      hints=`xprop -root -notype | grep ^_NET_SUPPORTED`
+      hints=$(xprop -root -notype | grep ^_NET_SUPPORTED)
       echo "${hints}" | grep _NET_MOVERESIZE_WINDOW > /dev/null && movewindow=1
       echo "${hints}" | grep _NET_WM_WINDOW_OPACITY > /dev/null && hasopacity=1
       if [ "${movewindow}" ]
@@ -3761,6 +3783,8 @@ fi
 if [ "${CONSOLE_MODE}" ]
 then
   have_cantata=
+  have_ymuse=
+  have_ytm=
   have_gnome=
   have_retro=
   have_tilix=
@@ -3780,32 +3804,32 @@ then
 else
   have_navi=
 fi
-have_uebz=`type -p ueberzug`
+have_uebz=$(type -p ueberzug)
 if [ "${DISPLAY}" ]; then
-  have_dmenu=`type -p dmenu`
+  have_dmenu=$(type -p dmenu)
 else
   have_dmenu=
 fi
-have_fzf=`type -p fzf`
-have_mpc=`type -p mpc`
-have_mopidy=`type -p mopidy`
-have_nema=`type -p asciinema`
-have_figlet=`type -p figlet`
-have_lolcat=`type -p lolcat`
-have_lynx=`type -p lynx`
-have_w3m=`type -p w3m`
-have_ranger=`type -p ranger`
-have_rich=`type -p rich`
-have_ascii=`type -p asciiville`
+have_fzf=$(type -p fzf)
+have_mpc=$(type -p mpc)
+have_mopidy=$(type -p mopidy)
+have_nema=$(type -p asciinema)
+have_figlet=$(type -p figlet)
+have_lolcat=$(type -p lolcat)
+have_lynx=$(type -p lynx)
+have_w3m=$(type -p w3m)
+have_ranger=$(type -p ranger)
+have_rich=$(type -p rich)
+have_ascii=$(type -p asciiville)
 if [ -d /usr/local/Roon ]
 then
-  have_roon=`type -p roon`
+  have_roon=$(type -p roon)
 else
   have_roon=
 fi
 if [ -d /usr/local/MirrorCommand ]
 then
-  have_mirror=`type -p mirror`
+  have_mirror=$(type -p mirror)
 else
   have_mirror=
 fi
@@ -3817,7 +3841,7 @@ if [ "${have_figlet}" ]
 then
   use_figlet=1
   [ -d "${FIG_FONTS}" ] || {
-    DEF_FIG_FONTS=`figlet -I2`
+    DEF_FIG_FONTS=$(figlet -I2)
     if [ -d "${DEF_FIG_FONTS}" ]
     then
       FIG_FONTS="${DEF_FIG_FONTS}"
@@ -3844,7 +3868,7 @@ do
       tagflag="-a"
       ;;
     A)
-      art_onoff=`echo "${OPTARG}" | tr '[:upper:]' '[:lower:]'`
+      art_onoff=$(echo "${OPTARG}" | tr '[:upper:]' '[:lower:]')
       if [ "${art_onoff}" == "on" ]
       then
         [ "${have_uebz}" ] && COVER_ART=1
@@ -3885,27 +3909,30 @@ do
         printf "\n\n\tsudo apt install ${CLIENT}\nor"
         printf "\n\tsudo pacman -S ${CLIENT}\nor"
         printf "\n\tsudo dnf install ${CLIENT}\n\n"
-        if [ "${have_cantata}" ]
-        then
+        if [ "${have_cantata}" ]; then
           echo "Continuing, using cantata rather than ${CLIENT}."
           CLIENT=cantata
         else
-          CLIENT=
-          if [ "${MPD_CLIENT}" ]
-          then
-            MPCPLUS="${MPD_CLIENT}"
-            mpcbase=`basename ${MPCPLUS}`
-            type -p ${mpcbase} > /dev/null || {
-              [ -x "${MPCPLUS}" ] || {
-                MPCPLUS=mpcplus
-              }
-            }
-            echo "Continuing, using ${MPCPLUS} rather than ${CLIENT}."
+          if [ "${have_ymuse}" ]; then
+            echo "Continuing, using ymuse rather than ${CLIENT}."
+            CLIENT=ymuse
           else
-            MPCPLUS="mpcplus"
-            echo "Continuing, using mpcplus rather than ${CLIENT}."
+            CLIENT=
+            if [ "${MPD_CLIENT}" ]; then
+              MPCPLUS="${MPD_CLIENT}"
+              mpcbase=$(basename ${MPCPLUS})
+              type -p ${mpcbase} > /dev/null || {
+                [ -x "${MPCPLUS}" ] || {
+                  MPCPLUS=mpcplus
+                }
+              }
+              echo "Continuing, using ${MPCPLUS} rather than ${CLIENT}."
+            else
+              MPCPLUS="mpcplus"
+              echo "Continuing, using mpcplus rather than ${CLIENT}."
+            fi
+            MPD_CLIENT="${MPCPLUS}"
           fi
-          MPD_CLIENT="${MPCPLUS}"
         fi
       }
       [ "${CLIENT}" ] && {
@@ -4128,7 +4155,7 @@ do
       }
       ;;
     T)
-      tmux_onoff=`echo "${OPTARG}" | tr '[:upper:]' '[:lower:]'`
+      tmux_onoff=$(echo "${OPTARG}" | tr '[:upper:]' '[:lower:]')
       if [ "${tmux_onoff}" == "on" ]
       then
         USE_TMUX=1
@@ -4147,8 +4174,8 @@ do
       vault="${OPTARG}"
       ;;
     v)
-      viz_com=`echo "${OPTARG}" | awk ' { print $1 } '`
-      have_viz=`type -p ${viz_com}`
+      viz_com=$(echo "${OPTARG}" | awk ' { print $1 } ')
+      have_viz=$(type -p ${viz_com})
       if [ "${have_viz}" ]
       then
         VISUALIZER="${OPTARG}"

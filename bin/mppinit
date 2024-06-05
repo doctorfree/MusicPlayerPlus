@@ -71,7 +71,7 @@ exp_music="${HOME}/Music"
 
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r]"
-  printf " [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
+  printf " [-U] [-y] [-u] [bandcamp|cantata|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
   printf "mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis [deprecated]"
@@ -89,6 +89,7 @@ usage() {
   printf "\n\t'-y' indicates answer 'yes' to all and proceed"
   printf "\n\t'-u' displays this usage message and exits\n"
   printf "\n\t'bandcamp' downloads all albums in your Bandcamp collections"
+  printf "\n\t'cantata' installs the Cantata MPD graphical client"
   printf "\n\t'discogs' generates an Obsidian vault from your Discogs user collection"
   printf "\n\t'discogs local' generates an Obsidian vault from your local music library"
   printf "\n\t'discogs upload vault folder' adds the releases in 'vault' to"
@@ -2473,6 +2474,16 @@ remove_kitty() {
 [ "${argument}" == "profiles" ] && {
   create_profiles
   exit 0
+}
+
+[ "${argument}" == "cantata" ] && {
+  if [ -x ${SCPTDIR}/install-cantata.sh ]; then
+    ${SCPTDIR}/install-cantata.sh
+    exit 0
+  else
+    printf "\nERROR: ${SCPTDIR}/install-cantata.sh not found or not executable\n"
+    exit 1
+  fi
 }
 
 [ "${argument}" == "yams" ] && {
