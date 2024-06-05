@@ -72,7 +72,7 @@ exp_music="${HOME}/Music"
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r]"
   printf " [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
-  printf "mopidy|mpd|navidrome|soundcloud|sync|yams]"
+  printf "mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis [deprecated]"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -105,7 +105,9 @@ usage() {
   printf "\n\t\tan alternate version of Navidrome to download and install"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
   printf "\n\t'sync' synchronizes MusicPlayerPlus configuration across configs"
-  printf "\n\t'yams' activates the YAMS Last.fm scrobbler service\n"
+  printf "\n\t'yams' activates the YAMS Last.fm scrobbler service"
+  printf "\n\t'ymuse' installs the Ymuse MPD graphical client"
+  printf "\n\t'youtube' installs the YouTube Music client youtube-music\n"
   printf "\n\n'mppinit' must be run as the MusicPlayerPlus user, not root."
   printf "\n'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',"
   printf "\n\t'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',"
@@ -2481,6 +2483,26 @@ remove_kitty() {
     init_warn yams
   fi
   exit 0
+}
+
+[ "${argument}" == "ymuse" ] && {
+  if [ -x ${SCPTDIR}/install-ymuse.sh ]; then
+    ${SCPTDIR}/install-ymuse.sh
+    exit 0
+  else
+    printf "\nERROR: ${SCPTDIR}/install-ymuse.sh not found or not executable\n"
+    exit 1
+  fi
+}
+
+[ "${argument}" == "youtube" ] && {
+  if [ -x ${SCPTDIR}/install-youtube-music.sh ]; then
+    ${SCPTDIR}/install-youtube-music.sh
+    exit 0
+  else
+    printf "\nERROR: ${SCPTDIR}/install-youtube-music.sh not found or not executable\n"
+    exit 1
+  fi
 }
 
 save_mpp_conf

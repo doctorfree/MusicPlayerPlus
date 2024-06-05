@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams]
+**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -67,6 +67,12 @@ is activated. To install a specified version of Navidrome, use the command
 
 Invoked with the `sync` argument, *mppinit sync* synchronizes
 MusicPlayerPlus configuration across all configuration files.
+
+Invoked with the **yams** argument, *mppinit yams* activates the YAMS Last.fm scrobbler service.
+
+Invoked with the **ymuse** argument, *mppinit ymuse* installs the Ymuse MPD graphical client.
+
+Invoked with the **youtube** argument, *mppinit youtube* installs the YouTube Music client youtube-music.
 
 ## COMMAND LINE OPTIONS
 
@@ -126,6 +132,15 @@ MusicPlayerPlus configuration across all configuration files.
 
 **sync**
 : synchronizes MusicPlayerPlus configuration across configs
+
+**yams**
+: activates the YAMS Last.fm scrobbler service
+
+**ymuse**
+: installs the Ymuse MPD graphical client
+
+**youtube**
+: installs the YouTube Music client youtube-music
 
 *mppinit* must be performed before a *sync*, *kitty*, *metadata*, *mopidy*, *mpd*, *navidrome*, *bandcamp*, *soundcloud*, or *import*
 

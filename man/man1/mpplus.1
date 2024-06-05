@@ -21,12 +21,13 @@
 mpplus - Launch an MPD music player client and spectrum visualizer
 .SS SYNOPSIS
 .PP
-\f[B]mpplus\f[R] [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-D
-art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-E] [-e]
-[-F] [-f] [-G] [-g] [-h] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num]
-[-M alsaconf|enable|disable|restart|start|stop|status] [-N] [-p] [-P
-script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-U] [-v
-viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+\f[B]mpplus\f[R] [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e]
+[-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d
+music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num]
+[-N] [-U vault] [-Z] [-M
+alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q]
+[-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x
+query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SS DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -231,8 +232,8 @@ apt install asciinema)
 \f[B]-T \[aq]on|off\[aq]\f[R]
 Specifies whether to use a tmux session
 .TP
-\f[B]-U\f[R]
-Use \f[V]tmuxp\f[R] to manage \f[V]tmux\f[R] sessions
+\f[B]-U \[aq]vault\[aq]\f[R]
+Indicates upload releases in \[aq]vault\[aq] to Discogs collection
 .TP
 \f[B]-w\f[R]
 Indicates write metadata during Beets import
@@ -263,6 +264,9 @@ Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
 list/search/select MPD media.
 Valid values for \f[V]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
 \[aq]g\[aq], \[aq]p\[aq], or \[aq]P\[aq]
+.TP
+\f[B]-Z\f[R]
+Performs a dry run of a Discogs collection upload
 .TP
 \f[B]-u\f[R]
 Displays this usage message and exits
