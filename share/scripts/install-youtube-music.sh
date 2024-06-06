@@ -68,6 +68,19 @@ remove_youtube_music() {
   fi
 }
 
+platform=$(uname -s)
+[ "${platform}" == "Darwin" ] && {
+  have_brew=$(type -p brew)
+  if [ "${have_brew}" ]; then
+    printf "\nInstalling youtube-music with Homebrew ..."
+    brew install th-ch/youtube-music/youtube-music >/dev/null 2>&1
+    printf " done\n"
+  else
+    printf "\nHomebrew not found. Exiting without installing.\n"
+  fi
+  exit 0
+}
+
 # Use a Github API token if one is set
 [ "${GITHUB_TOKEN}" ] || {
   [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"

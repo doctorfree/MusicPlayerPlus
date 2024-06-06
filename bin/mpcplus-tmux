@@ -68,6 +68,8 @@ start_tmux_session() {
   tmux a #
 }
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 MPP_ENV_MODE=
 USE_GRAD=1
 USE_ART=1
@@ -115,8 +117,6 @@ while getopts "aAc:gm:p:ru" flag; do
     esac
 done
 shift $(( OPTIND - 1 ))
-
-[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
 
 have_tmuxp=`type -p tmuxp`
 [ "${have_tmuxp}" ] || USE_TMUXP=
