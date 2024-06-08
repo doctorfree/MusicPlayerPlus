@@ -3215,6 +3215,17 @@ else
   echo "rerun the 'mppinit' MusicPlayer initialization."
 fi
 
+# mpcplus needs to find ueberzug in PATH for artwork display
+[ -f ${HOME}/.local/bin/ueberzug ] || {
+  [ -d ${HOME}/.local/bin ] || mkdir -p ${HOME}/.local/bin
+  if [ -f ${HOME}/.venv/bin/ueberzug ]; then
+    ln -s ${HOME}/.venv/bin/ueberzug ${HOME}/.local/bin/ueberzug
+  else
+    have_ueb=$(command -v ueberzug)
+    [ "${have_ueb}" ] && ln -s ${have_ueb} ${HOME}/.local/bin/ueberzug
+  fi
+}
+
 [ "${quiet}" ] || {
   printf "\n\tPatching Beets plugins ..."
 }

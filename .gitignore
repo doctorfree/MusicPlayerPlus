@@ -32,9 +32,10 @@ pkg/dist/centos/*
 pkg/dist/fedora/*
 pkg/dist/rpi/*
 releases/*
-tmp/*
+timg
+tmp
 config/mpd/tmp
-tools/*
+tools
 # vim files
 .*.sw[a-z]
 *.un~
