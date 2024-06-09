@@ -301,6 +301,38 @@ install_fzf() {
   fi
 }
 
+install_timg() {
+  have_curl=$(type -p curl)
+  [ "${have_curl}" ] || {
+    install_package curl
+    have_curl=$(type -p curl)
+  }
+  have_jq=$(type -p jq)
+  [ "${have_jq}" ] || {
+    install_package jq
+    have_jq=$(type -p jq)
+  }
+  have_wget=$(type -p wget)
+  [ "${have_wget}" ] || {
+    install_package wget
+    have_wget=$(type -p wget)
+  }
+  DL_URL=
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_URL=$(curl --silent "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "x86_64\.AppImage$" | head -1)
+  }
+
+  [ "${DL_URL}" ] && {
+    printf "\n\tInstalling ${PROJECT} ..."
+    [ "${have_wget}" ] && {
+      sudo wget --quiet -O /usr/local/bin/timg "${DL_URL}" >/dev/null 2>&1
+      sudo chmod 755 /usr/local/bin/timg
+    }
+  }
+}
+
 install_ueberzug() {
   have_curl=$(type -p curl)
   [ "${have_curl}" ] || {
@@ -2579,6 +2611,22 @@ have_figlet=$(type -p figlet)
       install_external_package
       ;;
   esac
+}
+
+# Download timg AppImage and install it as /usr/local/bin/timg
+case "${mach}" in
+  arm*)
+    inst_timg=
+    ;;
+  *)
+    inst_timg=1
+    ;;
+esac
+[ "${inst_timg}" ] && {
+  OWNER="hzeller"
+  PROJECT="timg"
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  install_timg
 }
 
 [ "${MUSIC_DIRECTORY}" ] || {
