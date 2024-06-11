@@ -2,8 +2,8 @@
 #
 # Install youtube-music client
 #
-# https://github.com/th-ch/youtube-music/releases/download/v3.3.10/youtube-music_3.3.10_amd64.deb
-# https://github.com/th-ch/youtube-music/releases/download/v3.3.10/youtube-music-3.3.10.x86_64.rpm
+# Debian format, RPM, and DMG available at:
+# https://github.com/th-ch/youtube-music/releases
 
 set_download_url() {
   API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"

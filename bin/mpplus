@@ -4291,6 +4291,16 @@ if [ "${INTERACTIVE}" ]
 then
   DO_NOT_EXIT=1
   trap 'set_user_conf' SIGINT SIGTERM SIGHUP EXIT
+  clear
+  have_gum=$(type -p gum)
+  have_figlet=$(type -p figlet)
+  [ "${have_gum}" ] && [ "${have_figlet}" ] && {
+    have_mppanim=$(type -p mppanim)
+    [ "${have_mppanim}" ] && {
+      mppanim -a -q
+      [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+    }
+  }
   show_main_menu
 else
   if [ "${FZMPOPT}" ]
