@@ -2,7 +2,7 @@
 
 All notable changes to this project will be documented in this file.
 
-## MusicPlayerPlus-3.0.2r1 (2024-06-01)
+## MusicPlayerPlus-3.0.2r1 (2024-06-30)
 * Add Python virtual environment and `pyenv` install
 * Move `fzf` and `figlet` out of dependencies into `mppinit`
 * Fix `JetBrains` URL

@@ -50,6 +50,12 @@ Install the package on RPM based systems by executing the command.
 sudo dnf localinstall ./MusicPlayerPlus_3.0.2-1.rpm
 ```
 
+Install the package on Arch Linux based systems by executing the command:
+
+```bash
+sudo pacman -U ./MusicPlayerPlus-v3.0.2r1-1-any.pkg.tar.zst
+```
+
 ### PKGBUILD Installation
 
 To build an Arch Linux package from sources, see the

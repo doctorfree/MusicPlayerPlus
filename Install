@@ -195,7 +195,7 @@ do
   then
     if [ "${have_apt}" ]
     then
-      sudo apt install "${PKG}"
+      sudo apt install "${PKG}" -y -q
     else
       if [ "${have_dpkg}" ]
       then
