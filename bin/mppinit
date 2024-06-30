@@ -3212,6 +3212,10 @@ if [ "${PIP}" ]; then
     printf "  ${pkg}"
     ${PYTHON} -m pip install --upgrade ${pkg} >/dev/null 2>&1
   done
+  ${PYTHON} -m pip install 'calliope-music[bandcamp]' >/dev/null 2>&1
+  ${PYTHON} -m pip install 'calliope-music[spotify]' >/dev/null 2>&1
+  ${PYTHON} -m pip install 'calliope-music[select]' >/dev/null 2>&1
+  ${PYTHON} -m pip install 'calliope-music[youtube]' >/dev/null 2>&1
   # Install fixed cpe script
   [ -f ${CCPTDIR}/cpe ] && {
     cp ${CCPTDIR}/cpe ${HOME}/.local/bin/cpe

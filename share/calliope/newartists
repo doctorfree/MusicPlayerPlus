@@ -7,6 +7,8 @@
 # You may want to add `--min-listens=3` to filter out
 # things you only played once or twice.
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 numyears=1
 
 [ "$1" ] && numyears=$1

@@ -1,5 +1,8 @@
 #!/bin/bash
 set -e
+
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 # Music which you haven't listened to this year.
 #
 # We filter out things that you never listened to much (less than 5 times

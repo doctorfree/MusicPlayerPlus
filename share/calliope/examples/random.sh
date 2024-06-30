@@ -1,6 +1,8 @@
 #!/bin/bash
 set -e
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 # Generate a random playlist from local music collection that lasts for
 # $duration.
 

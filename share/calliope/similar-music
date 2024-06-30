@@ -5,6 +5,9 @@
 # arguments specify artist name (e.g. 'similar-music Beach Boys')
 #
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
+
 artist="Cake"
 
 [ "$1" ] && artist="$*"

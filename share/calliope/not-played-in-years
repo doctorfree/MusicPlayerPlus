@@ -7,6 +7,8 @@
 #
 # Filter out things that you never listened to much (less than 5 times total)
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 numyears=1
 
 [ "$1" ] && numyears=$1

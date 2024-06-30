@@ -16,8 +16,10 @@ else
   USEROPT=
 fi
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
 # Make sure we have the required utilities
-have_bdl=`type -p bandcamp-dl`
+have_bdl=$(type -p bandcamp-dl)
 [ "${have_bdl}" ] || {
   echo "Required download utility, bandcamp-dl, not found."
   echo "Install the bandcamp-download Python module with:"
@@ -25,7 +27,7 @@ have_bdl=`type -p bandcamp-dl`
   echo "Exiting"
   exit 1
 }
-have_cpe=`type -p cpe`
+have_cpe=$(type -p cpe)
 [ "${have_cpe}" ] || {
   echo "Required utility, Calliope, not found."
   echo "Install the Calliope Python module with:"
@@ -33,7 +35,7 @@ have_cpe=`type -p cpe`
   echo "Exiting"
   exit 1
 }
-have_jq=`type -p jq`
+have_jq=$(type -p jq)
 [ "${have_jq}" ] || {
   echo "Required utility, jq, not found."
   echo "Install the jq json processor with:"
@@ -50,8 +52,8 @@ have_jq=`type -p jq`
 
 # Try to download in the MPD music_directory
 MPD_CONF="${HOME}/.config/mpd/mpd.conf"
-mpd_music=`grep ^music_directory ${MPD_CONF}`
-mpd_music=`echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g"`
+mpd_music=$(grep ^music_directory ${MPD_CONF})
+mpd_music=$(echo ${mpd_music} | awk ' { print $2 } ' | sed -e "s/\"//g")
 [ "${mpd_music}" ] || mpd_music="${HOME}/Music"
 # Need to expand the tilda to $HOME
 mpd_music="${mpd_music/#\~/$HOME}"
@@ -59,13 +61,11 @@ mpd_music="${mpd_music/#\~/$HOME}"
 MUSIC_DIR="${mpd_music}/Bandcamp"
 [ -d "${MUSIC_DIR}" ] || mkdir -p "${MUSIC_DIR}"
 
-[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
-
 printf "\nBandcamp collections will be downloaded to ${MUSIC_DIR}\n"
 cpe bandcamp ${USEROPT} collection | jq .location | while read url
 do
   # Remove quotes from URL
-  url=`echo ${url} | sed -e "s/\"//g"`
+  url=$(echo ${url} | sed -e "s/\"//g")
   printf "\nDownloading ${url} ... "
   bandcamp-dl --base-dir="${MUSIC_DIR}" \
               --keep-spaces \

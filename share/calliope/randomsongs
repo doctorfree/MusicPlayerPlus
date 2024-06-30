@@ -4,6 +4,9 @@
 # First argument can be used to specify number of tracks
 # Default number of tracks without arguments is 10
 
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
+
 numtracks=10
 
 [ "$1" ] && numtracks=$1
