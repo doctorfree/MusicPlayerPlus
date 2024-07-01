@@ -480,6 +480,7 @@ make_it_so() {
         echo ""
       fi
       [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
+      set_need_yams
       return
     else
       echo "A YAMS service has been detected."
@@ -489,6 +490,7 @@ make_it_so() {
       echo "    systemctl --user stop yams.service"
       echo "and re-run the command 'mpplus -Y'"
       [ "${DO_NOT_EXIT}" ] || farewell_exit "Exiting MusicPlayerPlus"
+      set_need_yams
       return
     fi
   }
@@ -544,11 +546,22 @@ make_it_so() {
         echo ""
         echo "tail -f ${LLOG}"
       else
-        echo "A terminal window will be opened to monitor the progress."
-        echo ""
-        # gnome-terminal --title="Beets Lyrics Log" --geometry=90x25+50+25 \
-        #                -- tail --pid=${beetpid} -f ${LLOG} &
-        kitty --title="Beets Lyrics Log" tail --pid=${beetpid} -f ${LLOG} &
+        [ "${have_kitty}" ] || [ "${have_gnome}" ] && {
+          echo "A terminal window will be opened to monitor the progress."
+          echo ""
+        }
+        if [ "${have_kitty}" ]; then
+          kitty --title="Beets Lyrics Log" tail --pid=${beetpid} -f ${LLOG} &
+        else
+          if [ "${have_gnome}" ]; then
+            gnome-terminal --title="Beets Lyrics Log" --geometry=90x25+50+25 \
+                           -- tail --pid=${beetpid} -f ${LLOG} &
+          else
+            echo "To monitor the progress of the lyrics downloads, examine the log:"
+            echo ""
+            echo "tail -f ${LLOG}"
+          fi
+        fi
       fi
       echo "===================================================================="
       echo ""
@@ -605,11 +618,23 @@ make_it_so() {
         echo ""
         echo "tail -f ${XLOG}"
       else
-        echo "A terminal window will be opened to monitor the progress"
-        echo "of the acoustic metadata retrieval."
-        # gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
-        #                -- tail --pid=${beetpid} -f ${XLOG} &
-        kitty --title="AcousticBrainz Log" tail --pid=${beetpid} -f ${XLOG} &
+        [ "${have_kitty}" ] || [ "${have_gnome}" ] && {
+          echo "A terminal window will be opened to monitor the progress"
+          echo "of the acoustic metadata retrieval."
+        }
+        if [ "${have_kitty}" ]; then
+          kitty --title="AcousticBrainz Log" tail --pid=${beetpid} -f ${XLOG} &
+        else
+          if [ "${have_gnome}" ]; then
+            gnome-terminal --title="AcousticBrainz Log" --geometry=90x25+50+25 \
+                           -- tail --pid=${beetpid} -f ${XLOG} &
+          else
+            echo "To monitor the progress of the acoustic metadata retrieval,"
+            echo "examine the extraction log:"
+            echo ""
+            echo "tail -f ${XLOG}"
+          fi
+        fi
       fi
       echo ""
       echo "The AcousticBrainz service is depracated and no longer updated."
@@ -681,12 +706,23 @@ make_it_so() {
         echo ""
         echo "tail -f ${XLOG}"
       else
-        echo "A terminal window will be opened to monitor the progress of the extraction."
-        # gnome-terminal --title="Blissify Extraction Log" \
-        #                --geometry=90x25+50+25 \
-        #                -- tail --pid=${blisspid} -f ${XLOG} &
-        kitty --title="Blissify Extraction Log" \
-                       tail --pid=${blisspid} -f ${XLOG} &
+        [ "${have_kitty}" ] || [ "${have_gnome}" ] && {
+          echo "A terminal window will be opened to monitor the progress of the extraction."
+        }
+        if [ "${have_kitty}" ]; then
+          kitty --title="Blissify Extraction Log" \
+                         tail --pid=${blisspid} -f ${XLOG} &
+        else
+          if [ "${have_gnome}" ]; then
+            gnome-terminal --title="Blissify Extraction Log" \
+                           --geometry=90x25+50+25 \
+                           -- tail --pid=${blisspid} -f ${XLOG} &
+          else
+            echo "To monitor the progress of the extraction, examine the extraction log:"
+            echo ""
+            echo "tail -f ${XLOG}"
+          fi
+        fi
       fi
       echo "==========================================================================="
     else
@@ -737,10 +773,21 @@ make_it_so() {
         echo ""
         echo "tail -f ${XLOG}"
       else
-        echo "A terminal window will be opened to monitor the progress of the extraction."
-        # gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
-        #                -- tail --pid=${beetpid} -f ${XLOG} &
-        kitty --title="Beets Extraction Log" tail --pid=${beetpid} -f ${XLOG} &
+        [ "${have_kitty}" ] || [ "${have_gnome}" ] && {
+          echo "A terminal window will be opened to monitor the progress of the extraction."
+        }
+        if [ "${have_kitty}" ]; then
+          kitty --title="Beets Extraction Log" tail --pid=${beetpid} -f ${XLOG} &
+        else
+          if [ "${have_gnome}" ]; then
+            gnome-terminal --title="Beets Extraction Log" --geometry=90x25+50+25 \
+                           -- tail --pid=${beetpid} -f ${XLOG} &
+          else
+            echo "To monitor the progress of the extraction, examine the extraction log:"
+            echo ""
+            echo "tail -f ${XLOG}"
+          fi
+        fi
       fi
       echo "==========================================================================="
     else
@@ -782,13 +829,24 @@ make_it_so() {
         echo ""
         echo "tail -f $BEETSLOGDIR/import_time.log"
       else
-        echo "A terminal window will be opened to monitor the progress of the import."
-        echo ""
-        echo "Beets log files can be found in $BEETSLOGDIR"
-        # gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
-        #        -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
-        kitty --title="Beets Import Log" \
-              tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
+        [ "${have_kitty}" ] || [ "${have_gnome}" ] && {
+          echo "A terminal window will be opened to monitor the progress of the import."
+          echo ""
+          echo "Beets log files can be found in $BEETSLOGDIR"
+        }
+        if [ "${have_kitty}" ]; then
+          kitty --title="Beets Import Log" \
+                tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
+        else
+          if [ "${have_gnome}" ]; then
+            gnome-terminal --title="Beets Import Log" --geometry=90x25+50+25 \
+                   -- tail --pid=${beetpid} -f ${BEETSLOGDIR}/import_time.log &
+          else
+            echo "To monitor the progress of the import, examine the import log:"
+            echo ""
+            echo "tail -f $BEETSLOGDIR/import_time.log"
+          fi
+        fi
       fi
       have_ip=$(type -p ip)
       if [ "${have_ip}" ]
@@ -1964,6 +2022,48 @@ show_system_status() {
   [ "${have_rich}" ] || printf "\n"
 }
 
+show_about() {
+  [ "${have_gum}" ] && [ "${have_figlet}" ] && {
+    have_mppanim=$(type -p mppanim)
+    [ "${have_mppanim}" ] && {
+      mppanim -a -q
+      [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+      sleep 3
+    }
+  }
+  if [ -f "${MPP_DIR}/VERSION" ]; then
+    . "${MPP_DIR}/VERSION"
+    MPP_VER=${VERSION}
+    MPP_REL=${RELEASE}
+    mp_versrel="Version ${MPP_VER} Release ${MPP_REL}"
+  else
+    mp_versrel="Unknown Version"
+  fi
+  [ -f "${MPPCONF}" ] && . "${MPPCONF}"
+  clear_screen
+  R_URL="https://github.com/doctorfree/MusicPlayerPlus"
+  W_URL="https://github.com/doctorfree/MusicPlayerPlus/wiki"
+  heading "About MusicPlayerPlus ${mp_versrel}" "About ${mp_versrel}"
+  printf "\n"
+  if [ "${have_rich}" ]; then
+    rich "[cyan]MusicPlayerPlus[/] is an open source command line suite of utilities to manage" -p
+    rich "a character-based console and terminal window music player, music library," -p
+    rich "and services including MPD, Beets, Mopidy, Navidrome, Yams, and YouTube." -p
+    printf "\n"
+    rich "[cyan]MusicPlayerPlus[/] is written in [yellow]Bash[/] and [yellow]Python[/] by Ronald Record." -p
+    printf "\n"
+    rich "[magenta]MusicPlayerPlus Repo[/]: [link=${R_URL}#readme][yellow]${R_URL}[/yellow][/link]" -p
+    rich "[magenta]MusicPlayerPlus Wiki[/]: [link=${W_URL}][yellow]${W_URL}[/yellow][/link]" -p
+  else
+    printf "\n'MusicPlayerPlus' is an open source command line suite of utilities to manage"
+    printf "\na character-based console and terminal window music player, music library,"
+    printf "\nand services including MPD, Beets, Mopidy, Navidrome, Yams, and YouTube.\n"
+    printf "\n'MusicPlayerPlus' is written in 'Bash' and 'Python' by Ronald Record.\n"
+    printf "\nMusicPlayerPlus Repo: ${R_URL}"
+    printf "\nMusicPlayerPlus Wiki: ${W_URL}\n"
+  fi
+}
+
 show_info() {
   if [ -f "${MPP_DIR}/VERSION" ]; then
     . "${MPP_DIR}/VERSION"
@@ -2145,7 +2245,7 @@ show_logs_menu() {
       options+=("View PulseAudio Server Log   [P]")
     }
     [ "${y_active}" == "active" ] || [ "${y_enabled}" == "enabled" ] && {
-      options+=("View Last.FM Scrobbler Log   [l]")
+      options+=("View Last.fm Scrobbler Log   [l]")
     }
     options+=("Manage Services              [s]")
     options+=("Main menu                    [m]")
@@ -2198,7 +2298,7 @@ show_logs_menu() {
               journalctl --user-unit=pulseaudio.service --since yesterday
               break
               ;;
-          "View Last.FM Scrobbler Log"*,*|*,"View Last.FM Scrobbler Log"*|"l",*|*,"l")
+          "View Last.fm Scrobbler Log"*,*|*,"View Last.fm Scrobbler Log"*|"l",*|*,"l")
               journalctl --user-unit=yams.service --since yesterday
               break
               ;;
@@ -2279,9 +2379,9 @@ show_services_menu() {
     fi
     if [ "${y_enabled}" == "enabled" ]
     then
-      options+=("Disable Last.FM Scrobbler [df]")
+      options+=("Disable Last.fm Scrobbler [df]")
     else
-      options+=("Enable Last.FM Scrobbler  [ef]")
+      options+=("Enable Last.fm Scrobbler  [ef]")
     fi
     if [ "${s_active}" == "active" ]
     then
@@ -2338,10 +2438,14 @@ show_services_menu() {
     fi
     if [ "${y_active}" == "active" ]
     then
-      options+=("Stop Last.FM Scrobbler    [Sf]")
-      options+=("Restart Last.FM Scrobbler [rf]")
+      options+=("Stop Last.fm Scrobbler    [Sf]")
+      options+=("Restart Last.fm Scrobbler [rf]")
     else
-      options+=("Start Last.FM Scrobbler   [SF]")
+      if [ -f ${HOME}/.config/yams/.lastfm_session ]; then
+        options+=("Start Last.fm Scrobbler   [SF]")
+      else
+        options+=("Activate Last.fm Scrobble [af]")
+      fi
     fi
     [ "${m_enabled}" == "enabled" ] || [ "${m_active}" == "active" ] && {
       options+=("MPD Status                [sd]")
@@ -2365,7 +2469,7 @@ show_services_menu() {
       options+=("PulseAudio Status         [sP]")
     }
     [ "${y_enabled}" == "enabled" ] || [ "${y_active}" == "active" ] && {
-      options+=("Last.FM Scrobbler Status  [sf]")
+      options+=("Last.fm Scrobbler Status  [sf]")
     }
     options+=("Stop All Active Services  [X]")
     [ "${z_active}" == "active" ] && [ "${have_mopidy}" ] && {
@@ -2662,7 +2766,7 @@ show_services_menu() {
               mpp_service status webplugin
               break
               ;;
-          "Enable Last.FM Scrobbler"*,*|*,"Enable Last.FM Scrobbler"*|"ef",*|*,"ef")
+          "Enable Last.fm Scrobbler"*,*|*,"Enable Last.fm Scrobbler"*|"ef",*|*,"ef")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2674,11 +2778,24 @@ show_services_menu() {
               mpp_service enable yams
               break
               ;;
-          "Disable Last.FM Scrobbler"*,*|*,"Disable Last.FM Scrobbler"*|"df",*|*,"df")
+          "Disable Last.fm Scrobbler"*,*|*,"Disable Last.fm Scrobbler"*|"df",*|*,"df")
               mpp_service disable yams
               break
               ;;
-          "Start Last.FM Scrobbler"*,*|*,"Start Last.FM Scrobbler"*|"SF",*|*,"SF")
+          "Activate Last.fm Scrobble"*,*|*,"Activate Last.fm Scrobble"*|"af",*|*,"af")
+              [ "${have_mopidy}" ] && {
+                [ "${z_active}" == "active" ] || \
+                [ "${z_enabled}" == "enabled" ] && {
+                  echo "MPD Scrobbler not compatible with Mopidy"
+                  echo "Enable MPD to use MPD Scrobbler"
+                  break
+                }
+              }
+              mpplus -Y
+              set_need_yams
+              break
+              ;;
+          "Start Last.fm Scrobbler"*,*|*,"Start Last.fm Scrobbler"*|"SF",*|*,"SF")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2690,11 +2807,11 @@ show_services_menu() {
               mpp_service start yams
               break
               ;;
-          "Stop Last.FM Scrobbler"*,*|*,"Stop Last.FM Scrobbler"*|"Sf",*|*,"Sf")
+          "Stop Last.fm Scrobbler"*,*|*,"Stop Last.fm Scrobbler"*|"Sf",*|*,"Sf")
               mpp_service stop yams
               break
               ;;
-          "Restart Last.FM Scrobbler"*,*|*,"Restart Last.FM Scrobbler"*|"rf",*|*,"rf")
+          "Restart Last.fm Scrobbler"*,*|*,"Restart Last.fm Scrobbler"*|"rf",*|*,"rf")
               [ "${have_mopidy}" ] && {
                 [ "${z_active}" == "active" ] || \
                 [ "${z_enabled}" == "enabled" ] && {
@@ -2706,7 +2823,7 @@ show_services_menu() {
               mpp_service restart yams
               break
               ;;
-          "Last.FM Scrobbler Status"*,*|*,"Last.FM Scrobbler Status"*|"sf",*|*,"sf")
+          "Last.fm Scrobbler Status"*,*|*,"Last.fm Scrobbler Status"*|"sf",*|*,"sf")
               mpp_service status yams
               break
               ;;
@@ -3107,6 +3224,7 @@ show_main_menu() {
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [m]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [r]")
+    options+=("About                       [A]")
     options+=("Info                        [i]")
     options+=("Quit                        [q]")
     select opt in "${options[@]}"
@@ -3326,6 +3444,12 @@ show_main_menu() {
               ;;
           "Import"*,*|*,"Import"*|"I",*|*,"I")
               BEETS_IMPORT=1
+              break
+              ;;
+          "About"*,* | *,"About"* | "about"*,* | *,"about"* | "A",* | *,"A")
+              show_about
+              prompt_continue
+              skip_it_so=1
               break
               ;;
           "Info"*,*|*,"Info"*|"i",*|*,"i")
@@ -3700,6 +3824,26 @@ pathadd() {
   fi
 }
 
+set_need_yams() {
+  systemctl --user is-active --quiet yams.service
+  if [ $? -eq 0 ]
+  then
+    need_yams=
+  else
+    systemctl --user is-enabled --quiet yams.service
+    if [ $? -eq 0 ]
+    then
+      if [ -f ${HOME}/.config/yams/.lastfm_session ]; then
+        need_yams=
+      else
+        need_yams=1
+      fi
+    else
+      need_yams=1
+    fi
+  fi
+}
+
 pathadd "/usr/local/bin"
 pathadd "${HOME}/.local/bin"
 export PATH
@@ -3929,19 +4073,8 @@ else
   USE_TMUX=1
 fi
 
-systemctl --user is-active --quiet yams.service
-if [ $? -eq 0 ]
-then
-  need_yams=
-else
-  systemctl --user is-enabled --quiet yams.service
-  if [ $? -eq 0 ]
-  then
-    need_yams=
-  else
-    need_yams=1
-  fi
-fi
+need_yams=1
+set_need_yams
 
 if [ "${CONSOLE_MODE}" ]
 then

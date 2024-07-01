@@ -3,7 +3,7 @@
 
 MPD_CONF=${HOME}/.config/mpd/mpd.conf
 BEETSLOGDIR="${HOME}/.config/beets/logs"
-LOGTEMP="${BEETSLOGDIR}/import.log"
+LOGTEMP="${BEETSLOGDIR}/import_tmp.log"
 LOGFILE="${BEETSLOGDIR}/import.log"
 LOGTIME="${BEETSLOGDIR}/import_time.log"
 SINGLE_LOG="${BEETSLOGDIR}/import_singletons.log"
