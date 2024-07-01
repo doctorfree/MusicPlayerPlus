@@ -125,6 +125,7 @@ ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 
 ${SUDO} cp -a share/scripts ${OUT_DIR}/${DESTDIR}/share/${PKG}/scripts
 ${SUDO} cp -a share/calliope ${OUT_DIR}/${DESTDIR}/share/${PKG}/calliope
+${SUDO} cp -a share/figlet-fonts ${OUT_DIR}/${DESTDIR}/share/${PKG}/figlet-fonts
 
 ${SUDO} cp config/xterm-24bit.src ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp config/tmux.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}

@@ -134,7 +134,7 @@ do
       if [ -d "${album}" ]
       then
         echo "# Importing ${album}" >> "${LOGTIME}"
-        ${BEET} import -q ${impflags} -l "${LOGFILE}" "${album}"
+        ${BEET} import -q ${impflags} -l "${LOGFILE}" "${album}" 2>/dev/null
       else
         echo "# Importing singleton ${album}" >> "${LOGTIME}"
         ${BEET} import -q ${impflags} -s -l "${SINGLE_LOG}" "${album}" >> "${SINGLE_LOG}" 2>&1
@@ -200,6 +200,6 @@ find "${mpd_music}" -depth -type d -empty -delete
 [ -d "${mpd_music}/Playlists" ] || mkdir -p "${mpd_music}/Playlists"
 
 # Update smart playlists
-${BEET} splupdate
+${BEET} splupdate 2>/dev/null
 
 exit 0

@@ -79,6 +79,7 @@ package() {
 
   cp -a share/scripts ${pkgdir}/${destdir}/share/${pkgname}/scripts
   cp -a share/calliope ${pkgdir}/${destdir}/share/${pkgname}/calliope
+  cp -a share/figlet-fonts ${pkgdir}/${destdir}/share/${pkgname}/figlet-fonts
 
   cp config/xterm-24bit.src ${pkgdir}/${destdir}/share/${pkgname}
   cp config/tmux.conf ${pkgdir}/${destdir}/share/${pkgname}

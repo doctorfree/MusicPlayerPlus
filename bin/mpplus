@@ -15,7 +15,7 @@
 # If the "-t" option is specified then only a single terminal
 # emulator is used, tilix. Tilix is invoked twice with different
 # profiles, one for an MPD client and another for the visualizer.
-# The profiles are named "MusicPlayer" and "Visualizer". 
+# The profiles are named "MusicPlayer" and "Visualizer".
 #
 # In both types of invocations, with or without "-t", the terminal
 # profiles used have font size settings of 32 and 8 for the MPD client and
@@ -38,11 +38,11 @@ MTITLE="MusicPlayerPlus"
 VISUALIZER=mppcava
 CONSOLE_MODE=
 DO_NOT_EXIT=
-FIG_FONTS="/usr/share/figlet-fonts"
+MPP_DIR="/usr/share/musicplayerplus"
+FIG_FONTS="${MPP_DIR}/figlet-fonts"
 FIG_TEXT="MusicPlayerPlus"
 USE_FONT="Standard"
 USE_GRAD=1
-MPP_DIR="/usr/share/musicplayerplus"
 DOC_DIR="/usr/share/doc/musicplayerplus"
 SCRIPTS="${MPP_DIR}/scripts"
 BEETSLOGDIR="${HOME}/.config/beets/logs"
@@ -213,7 +213,7 @@ kill_tmux_sessions() {
       do
         pid=$(echo "$line" | awk ' { print $2 } ')
         kill ${pid}
-      done 
+      done
     }
   done
 }
@@ -797,7 +797,7 @@ make_it_so() {
       fi
       printf "\n\nWhen the import has completed, "
       printf "visit the Beets web interface at:"
-      printf "\n\thttp://${IP}:8337\n" 
+      printf "\n\thttp://${IP}:8337\n"
       echo "===================================================================="
     else
       echo "${SCRIPTS}/beet_import.sh not found or not executable"
@@ -1217,15 +1217,14 @@ make_it_so() {
 
 select_font() {
   # Array with font names
-  fonts=("Bolger" "Lean" "sblood" "Slant" "Shadow" "Speed" "Varsity" "Small" "Small Script" "Small Shadow" "Small Slant")
-  smallfonts=("Small" "Small Script" "Small Shadow" "Small Slant")
+  fonts=("Bolger" "Graceful" "Lean" "Shadow" "Slant" "Small" "Speed" "Standard" "Varsity")
 
   # Seed random generator
   RANDOM=$$$(date +%s)
 
   if [ "$1" == "small" ]
   then
-    USE_FONT=${smallfonts[ $RANDOM % ${#smallfonts[@]} ]}
+    USE_FONT=Small
   else
     USE_FONT=${fonts[ $RANDOM % ${#fonts[@]} ]}
   fi

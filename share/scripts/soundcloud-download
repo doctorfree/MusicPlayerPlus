@@ -11,20 +11,28 @@
 SOUNDCLOUD_SLUG=
 
 # Make sure we have the required utilities
+activated=
 have_scdl=`type -p scdl`
 [ "${have_scdl}" ] || {
-  echo "Required download utility, scdl, not found."
-  echo "Install the Soundcloud download Python module with:"
-  echo "    python3 -m pip install scdl"
-  echo "Exiting"
-  exit 1
+  [ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+  have_scdl=`type -p scdl`
+  [ "${have_scdl}" ] || {
+    echo "Required download utility, scdl, not found."
+    echo "Install the Soundcloud download Python module with:"
+    echo "    python3 -m pip install scdl"
+    echo "Exiting"
+    exit 1
+  }
+  activated=1
 }
 
 # Source in the MusicPlayerPlus configuration to get any slug setting
 MPPCONF="${HOME}/.config/mpprc"
 [ -f "${MPPCONF}" ] && . "${MPPCONF}"
 
-[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+[ "${activated}" ] || {
+  [ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+}
 
 [ "${SOUNDCLOUD_SLUG}" ] || {
   echo "Enter your Soundcloud account 'user slug' at the prompt."

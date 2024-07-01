@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source "`ueberzug library`"
+source "$(ueberzug library)"
 
 function add_cover {
   ImageLayer::add [identifier]="img" [x]="1" [y]="${YOFF}" [path]="${COVER}"

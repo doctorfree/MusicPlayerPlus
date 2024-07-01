@@ -69,7 +69,7 @@ do
   printf "\nDownloading ${url} ... "
   bandcamp-dl --base-dir="${MUSIC_DIR}" \
               --keep-spaces \
-              --no-confirm \
-              --no-slugify ${url} > /dev/null 2>&1
+              --keep-upper \
+              --no-confirm ${url} > /dev/null 2>&1
 done
 printf "\n\nBandcamp collections downloads complete\n"

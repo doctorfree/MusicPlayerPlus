@@ -240,7 +240,7 @@ fullscreen=normal
 keepalive=
 quick=
 zoom=
-fig_dir="/usr/share/figlet-fonts"
+fig_dir="/usr/share/musicplayerplus/figlet-fonts"
 while getopts "ad:fkqzu" flag; do
   case $flag in
     a)
