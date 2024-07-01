@@ -742,7 +742,7 @@ init_mpp_conf() {
     echo "# Play audio during asciimatics animations" >>${MPPCONF}
     echo "AUDIO=1" >>${MPPCONF}
     echo "# Display cover art in tmux sessions" >>${MPPCONF}
-    echo "COVER_ART=1" >>${MPPCONF}
+    echo "COVER_ART=" >>${MPPCONF}
     echo "# Display mpcplus and mppcava in a tmux session" >>${MPPCONF}
     echo "USE_TMUX=" >>${MPPCONF}
     echo "" >>${MPPCONF}

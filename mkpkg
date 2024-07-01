@@ -119,6 +119,7 @@ ${SUDO} gzip -9 ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/CHANGELOG.md
 
 ${SUDO} cp -a share/alsa-capabilities ${OUT_DIR}/${DESTDIR}/share/doc/${PKG}/alsa-capabilities
 
+${SUDO} cp VERSION ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp asound.conf.tmpl ${OUT_DIR}/${DESTDIR}/share/${PKG}
 ${SUDO} cp config/default_cover.png ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus
 ${SUDO} cp config/fzmp.conf ${OUT_DIR}/${DESTDIR}/share/${PKG}/mpcplus

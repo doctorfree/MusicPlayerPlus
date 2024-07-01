@@ -21,7 +21,7 @@ MPPINIT=
 # Play audio during asciimatics animations
 AUDIO=1
 # Display cover art in tmux sessions
-COVER_ART=1
+COVER_ART=
 # Display mpcplus and mppcava in a tmux session
 USE_TMUX=1
 

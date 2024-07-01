@@ -55,6 +55,7 @@ package() {
 
   cp -a share/alsa-capabilities ${pkgdir}/${destdir}/share/doc/${pkgname}/alsa-capabilities
 
+  cp VERSION ${pkgdir}/${destdir}/share/${pkgname}
   cp asound.conf.tmpl ${pkgdir}/${destdir}/share/${pkgname}
   cp config/default_cover.png ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
   cp config/fzmp.conf ${pkgdir}/${destdir}/share/${pkgname}/mpcplus
