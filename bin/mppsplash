@@ -7,10 +7,15 @@ SONG="${MUSEDIR}/Epic_Dramatic-Yuriy_Bespalov.wav"
 PLASMA_SONG="${MUSEDIR}/Chronos.mp3"
 ALTSONG="${MUSEDIR}/Kevin_MacLeod_-_Also_Sprach_Zarathustra.ogg"
 MPDCONF=~/.config/mpd/mpd.conf
+have_ascii=$(type -p asciiart)
 
 usage() {
   printf "\nUsage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] "
-  printf "[-m] [-p] [-s song] [-u]"
+  if [ "${have_ascii}" ]; then
+    printf "[-i] [-m] [-p] [-s song] [-u]"
+  else
+    printf "[-m] [-p] [-s song] [-u]"
+  fi
   printf "\nWhere:"
   printf "\n\t-A indicates use all effects"
   printf "\n\t-a indicates play audio during ASCIImatics display"
@@ -18,6 +23,7 @@ usage() {
   printf "\n\t-C indicates use alternate comments in Plasma effect"
   printf "\n\t-c num specifies the number of times to cycle"
   printf "\n\t-d indicates enable debug mode"
+  [ "${have_ascii}" ] && printf "\n\t-i indicates use Ascii Art effect"
   printf "\n\t-j indicates use Julia Set effect"
   printf "\n\t-J indicates Julia Set with several runs using different parameters"
   printf "\n\t-m indicates use MusicPlayerPlus effect"
@@ -31,6 +37,10 @@ usage() {
   printf "\nWithout any options the MusicPlayerPlus effect will repeat"
   printf "\nType 'man mppsplash' for more detailed usage info\n"
   exit 1
+}
+
+mppart() {
+  [ "${have_ascii}" ] && asciiart $*
 }
 
 set_cycles() {
@@ -65,7 +75,7 @@ debug=
 longjulia=
 script="rocks"
 switch_comments=
-while getopts "AabCc:djJmps:u" flag; do
+while getopts "AabCc:dijJmps:u" flag; do
   case $flag in
       A)
         all=1
@@ -87,6 +97,9 @@ while getopts "AabCc:djJmps:u" flag; do
         ;;
       d)
         debug="--debug"
+        ;;
+      i)
+        script="art"
         ;;
       j)
         script="julia"
@@ -172,7 +185,12 @@ if [ "${all}" ]
 then
   [ "${cycle}" ] || cycle="-c 1"
   numcycles=`echo ${cycle} | awk ' { print $2 } '`
-  for script in julia rocks plasma
+  if [ "${have_ascii}" ]; then
+    anims="art julia rocks plasma"
+  else
+    anims="julia rocks plasma"
+  fi
+  for script in ${anims}
   do
     set_cycles ${script} ${numcycles}
     mpp${script} -c ${usecycle} ${script_args}

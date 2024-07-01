@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# asciifetch - display, animate, zoom MusicPlayerPlus splash screen using Kitty
+# mppanim - display, animate, zoom MusicPlayerPlus splash screen using Kitty
 #
 # Written by Ronald Joe Record <ronaldrecord@gmail.com>
 #
@@ -31,7 +31,7 @@ else
 fi
 
 usage() {
-  printf "\nUsage: asciifetch [-a] [-f] [-k] [-q] [-z] [-u]"
+  printf "\nUsage: mppanim [-a] [-f] [-k] [-q] [-z] [-u]"
   printf "\nWhere:"
   printf "\n\t-a indicates animate display"
   printf "\n\t-f indicates fullscreen mode"
@@ -74,7 +74,7 @@ cleanup() {
   tput cnorm
   tput cup ${terminal_height} 0
   parent_name=$(ps -p ${PPID} -o comm=)
-  if [ "${parent_name}" == "asciifetch" ]
+  if [ "${parent_name}" == "mppanim" ]
   then
     exit 2
   else
@@ -151,7 +151,7 @@ zoom() {
         --override startup_session=none \
         ${KITTY_QUIT_OPT} \
         --listen-on unix:${sock_name} \
-        asciifetch -k 2> /dev/null &
+        mppanim -k 2> /dev/null &
   kitty_pid=$!
   trap 'cleanup' USR1
   wait_for_pid ${kitty_pid} > /dev/null 2>&1 &

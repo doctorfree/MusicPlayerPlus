@@ -140,6 +140,8 @@ script_args="${script_args} ${CYCLE}"
 
 if [ "${DUDE}" ]
 then
+  [ "${PYLEFT}" == "art" ] && left_script_args="${left_script_args} -i -C"
+  [ "${PYRIGHT}" == "art" ] && right_script_args="${right_script_args} -i -C"
   [ "${PYLEFT}" == "rocks" ] && left_script_args="${left_script_args} -m -C"
   [ "${PYRIGHT}" == "rocks" ] && right_script_args="${right_script_args} -m -C"
   [ "${PYLEFT}" == "plasma" ] && left_script_args="${left_script_args} -p -C"
@@ -147,6 +149,8 @@ then
   [ "${PYLEFT}" == "julia" ] && left_script_args="${left_script_args} -j -C"
   [ "${PYRIGHT}" == "julia" ] && right_script_args="${right_script_args} -j -C"
 else
+  [ "${PYLEFT}" == "art" ] && left_script_args="${left_script_args} -i"
+  [ "${PYRIGHT}" == "art" ] && right_script_args="${right_script_args} -i"
   [ "${PYLEFT}" == "rocks" ] && left_script_args="${left_script_args} -m"
   [ "${PYRIGHT}" == "rocks" ] && right_script_args="${right_script_args} -m"
   [ "${PYLEFT}" == "plasma" ] && left_script_args="${left_script_args} -p"
@@ -155,10 +159,21 @@ else
   [ "${PYRIGHT}" == "julia" ] && right_script_args="${right_script_args} -j"
 fi
 
-have_left=`type -p mpp${PYLEFT}`
-[ "${have_left}" ] && PYLEFT="mpp${PYLEFT}"
-have_right=`type -p mpp${PYRIGHT}`
-[ "${have_right}" ] && PYRIGHT="mpp${PYRIGHT}"
+if [ "${PYLEFT}" == "art" ]; then
+  have_left=`type -p asciiart`
+  [ "${have_left}" ] && PYLEFT="asciiart"
+else
+  have_left=`type -p mpp${PYLEFT}`
+  [ "${have_left}" ] && PYLEFT="mpp${PYLEFT}"
+fi
+
+if [ "${PYRIGHT}" == "art" ]; then
+  have_right=`type -p asciiart`
+  [ "${have_right}" ] && PYRIGHT="asciiart"
+else
+  have_right=`type -p mpp${PYRIGHT}`
+  [ "${have_right}" ] && PYRIGHT="mpp${PYRIGHT}"
+fi
 
 [ "${USAGE}" ] && usage
 

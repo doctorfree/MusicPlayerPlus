@@ -2023,13 +2023,10 @@ show_system_status() {
 }
 
 show_about() {
-  [ "${have_gum}" ] && [ "${have_figlet}" ] && {
-    have_mppanim=$(type -p mppanim)
-    [ "${have_mppanim}" ] && {
-      mppanim -a -q
-      [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
-      sleep 3
-    }
+  [ "${have_gum}" ] && [ "${have_figlet}" ] && [ "${have_mppanim}" ] && {
+    mppanim -a -q
+    [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+    sleep 3
   }
   if [ -f "${MPP_DIR}/VERSION" ]; then
     . "${MPP_DIR}/VERSION"
@@ -2932,34 +2929,37 @@ show_ascii_menu() {
     SPLASH=1
     if [ "${AUDIO}" ]
     then
-      audiostat="(ON) "
+      audiostat="[ON] "
     else
-      audiostat="(OFF)"
+      audiostat="[OFF]"
     fi
     if [ "${RECORD}" ]
     then
-      recordstat="(ON) "
+      recordstat="[ON] "
     else
-      recordstat="(OFF)"
+      recordstat="[OFF]"
     fi
     if [ "${USE_TMUX}" ]
     then
-      usetmux="(ON) "
+      usetmux="[ON] "
     else
-      usetmux="(OFF)"
+      usetmux="[OFF]"
     fi
     skip_it_so=
     save_it_so=
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
-     options=("Julia Set ASCIImatics Animation [j]")
-    options+=("MPPlus ASCIImatics Animation    [s]")
-    options+=("Plasma ASCIImatics Animation    [p]")
+    options=("Julia Set ASCIImatics Animation [J]")
+    options+=("MPPlus ASCIImatics Animation    [M]")
+    options+=("Plasma ASCIImatics Animation    [P]")
+    [ "${have_asciiart}" ] && options+=("Asciiville Animation            [A]")
+    [ "${have_gum}" ] && [ "${have_figlet}" ] && [ "${have_mppanim}" ] && {
+      options+=("MusicPlayerPlus Splashscreen    [S]")
+    }
     options+=("Toggle Audio              ${audiostat} [a]")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux        ${recordstat} [r]")
-    options+=("Toggle Use Tmux       ${usetmux} [t]")
-    [ "${have_ascii}" ] && options+=("Asciiville Menu             [A]")
-    options+=("Main menu                   [m]")
-    options+=("Quit                        [q]")
+    options+=("Toggle Use Tmux           ${usetmux} [t]")
+    options+=("Main menu                       [m]")
+    options+=("Quit                            [q]")
     select opt in "${options[@]}"
     do
       case "$opt,$REPLY" in
@@ -2977,17 +2977,33 @@ show_ascii_menu() {
               show_main_menu
               break 2
               ;;
-          "Julia Set ASCIImatics Animation"*,*|*,"Julia Set ASCIImatics Animation"*|"j",*|*,"j")
+          "MusicPlayerPlus Splash"*,* | *,"MusicPlayerPlus Splash"* | "S",* | *,"S")
+              tput clear
+              mppanim -a
+              [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+              mppanim -a -z
+              [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+              mppanim -a
+              [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
+              skip_it_so=1
+              break
+              ;;
+          "Asciiville Anim"*,* | *,"Asciiville Anim"* | "A",* | *,"A")
+              MPPSPLASH="${MPPSPLASH} -i"
+              MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l art"
+              break
+              ;;
+          "Julia Set ASCIImatics Animation"*,*|*,"Julia Set ASCIImatics Animation"*|"J",*|*,"J")
               MPPSPLASH="${MPPSPLASH} -j"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
               break
               ;;
-          "MPPlus ASCIImatics Animation"*,*|*,"MPPlus ASCIImatics Animation"*|"s",*|*,"s")
+          "MPPlus ASCIImatics Animation"*,*|*,"MPPlus ASCIImatics Animation"*|"M",*|*,"M")
               MPPSPLASH="${MPPSPLASH} -m"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l rocks"
               break
               ;;
-          "Plasma ASCIImatics Animation"*,*|*,"Plasma ASCIImatics Animation"*|"p",*|*,"p")
+          "Plasma ASCIImatics Animation"*,*|*,"Plasma ASCIImatics Animation"*|"P",*|*,"P")
               MPPSPLASH="${MPPSPLASH} -p"
               MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l plasma"
               break
@@ -3037,13 +3053,6 @@ show_ascii_menu() {
                 USE_TMUX=1
               fi
               save_it_so=1
-              skip_it_so=1
-              break
-              ;;
-          "Asciiville"*,*|*,"Asciiville"*|"A",*|*,"A")
-              clear_screen
-              asciiville
-              clear_screen
               skip_it_so=1
               break
               ;;
@@ -3222,8 +3231,9 @@ show_main_menu() {
     [ "${have_cantata}" ] || options+=("Install Cantata MPD client  [ic]")
     [ "${have_ymuse}" ] || options+=("Install YMuse MPD client    [im]")
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
-    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [m]")
-    [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [r]")
+    [ "${have_ascii}" ] && options+=("Asciiville Menu             [am]")
+    [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [mm]")
+    [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [rm]")
     options+=("About                       [A]")
     options+=("Info                        [i]")
     options+=("Quit                        [q]")
@@ -3517,14 +3527,21 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "MagicMirror"*,*|*,"MagicMirror"*|"m",*|*,"m")
+          "Asciiville"*,*|*,"Asciiville"*|"am",*|*,"am")
+              clear_screen
+              asciiville
+              clear_screen
+              skip_it_so=1
+              break
+              ;;
+          "MagicMirror"*,*|*,"MagicMirror"*|"mm",*|*,"mm")
               clear_screen
               mirror
               clear_screen
               skip_it_so=1
               break
               ;;
-          "RoonCommandLine"*,*|*,"RoonCommandLine"*|"r",*|*,"r")
+          "RoonCommandLine"*,*|*,"RoonCommandLine"*|"rm",*|*,"rm")
               clear_screen
               roon
               clear_screen
@@ -4117,6 +4134,7 @@ have_w3m=$(type -p w3m)
 have_ranger=$(type -p ranger)
 have_rich=$(type -p rich)
 have_ascii=$(type -p asciiville)
+have_asciiart=$(type -p asciiart)
 if [ -d /usr/local/Roon ]
 then
   have_roon=$(type -p roon)
@@ -4595,12 +4613,10 @@ then
   clear
   have_gum=$(type -p gum)
   have_figlet=$(type -p figlet)
-  [ "${have_gum}" ] && [ "${have_figlet}" ] && {
-    have_mppanim=$(type -p mppanim)
-    [ "${have_mppanim}" ] && {
-      mppanim -a -q
-      [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
-    }
+  have_mppanim=$(type -p mppanim)
+  [ "${have_gum}" ] && [ "${have_figlet}" ] && [ "${have_mppanim}" ] && {
+    mppanim -a -q
+    [ $? -eq 0 ] || tput cup 0 0 2>/dev/null
   }
   show_main_menu
 else
