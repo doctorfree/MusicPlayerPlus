@@ -26,8 +26,8 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num]
 [-N] [-U vault] [-Z] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q]
-[-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x
-query] [-X query] [-y] [-Y] [-z fzmpopt]
+[-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W]
+[-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SS DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -221,6 +221,9 @@ Indicates download lyrics to the Beets library and exit
 \f[B]-M \[aq]enable|disable|start|stop|restart|status\[aq]\f[R]
 Enable, disable, start, stop, restart, or get the status of the MPD and
 MPD socket system services
+.TP
+\f[B]-Q\f[R]
+Indicates display MusicPlayerPlus info and exit
 .TP
 \f[B]-R\f[R]
 Indicates record tmux session with asciinema.

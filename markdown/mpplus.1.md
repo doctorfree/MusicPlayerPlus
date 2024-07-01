@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -155,6 +155,9 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-M 'enable|disable|start|stop|restart|status'**
 : Enable, disable, start, stop, restart, or get the status of the MPD and MPD socket system services 
+
+**-Q**
+: Indicates display MusicPlayerPlus info and exit
 
 **-R**
 : Indicates record tmux session with asciinema. Asciinema is not installed by MusicPlayerPlus. To record tmux sessions with asciinema, use your system's package manager to install it (e.g. apt install asciinema)

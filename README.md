@@ -1559,7 +1559,13 @@ to play where 'QUERY' is a Beets query matching songs in the music library.
 The usage messages for `mppinit`, `mpplus`, `mpcplus`, and `mppcava`
 provide a brief summary of the command line options.
 
-The `mppinit` performs one-time initializations:
+`mppinit` performs one-time initializations.
+
+<details><summary>Click here to view the
+
+**mppinit usage message**
+
+</summary>
 
 ```text
 Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]
@@ -1607,99 +1613,117 @@ Where:
   'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'
 ```
 
+</details>
+
 The `mpplus` command serves as a general user interface for all of the
-MusicPlayerPlus capabilities:
+MusicPlayerPlus capabilities.
+
+<details><summary>Click here to view the
+
+**mpplus usage message**
+
+</summary>
 
 ```text
 Usage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]
-  [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]
-  [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z]
-  [-M alsaconf|enable|disable|restart|start|stop|status] [-p]
-  [-P script] [-q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
-  [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+	[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]
+	[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z]
+	[-M alsaconf|enable|disable|restart|start|stop|status] [-p]
+	[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
+	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 MPCplus/Visualizer options:
-  -A 'on|off' specifies whether to display album cover art
-  -C 'client' indicates use 'client' MPD client rather than mpcplus
-  -E indicates do not use gradient colors for spectrum visualizer
-  -f indicates fullscreen display
-  -h indicates half-height for visualizer window (with -f only)
-  -H indicates disable use of extended window manager hints
-  -P script specifies the ASCIImatics script to run in visualizer pane
-  -q indicates quarter-height for visualizer window (with -f only)
-  -c indicates use current terminal emulator / console mode
-  -e indicates use simple terminal emulator
-  -g indicates use gnome terminal emulator
-  -k indicates use kitty terminal emulator
-  -r indicates use retro terminal emulator
-  -t indicates use tilix terminal emulator
-  -v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
+	-A 'on|off' specifies whether to display album cover art
+	-C 'client' indicates use 'client' MPD client rather than mpcplus
+	-E indicates do not use gradient colors for spectrum visualizer
+	-f indicates fullscreen display
+	-h indicates half-height for visualizer window (with -f only)
+	-H indicates disable use of extended window manager hints
+	-P script specifies the ASCIImatics script to run in visualizer pane
+	-q indicates quarter-height for visualizer window (with -f only)
+	-c indicates use current terminal emulator / console mode
+	-e indicates use simple terminal emulator
+	-g indicates use gnome terminal emulator
+	-k indicates use kitty terminal emulator
+	-r indicates use retro terminal emulator
+	-t indicates use tilix terminal emulator
+	-v 'viz_comm' indicates use visualizer 'viz_comm' rather than mppcava
 ASCIImatics animation options:
-  -a indicates play audio during ASCIImatics display
-  -b indicates use backup audio during ASCIImatics display
-  -j indicates use Julia Set scenes in ASCIImatics display
-  -J indicates Julia Set with several runs using different parameters
-  -m indicates use MusicPlayerPlus scenes in ASCIImatics display
-  -n num specifies the number of times to cycle ASCIImatics scenes
-  -N indicates use alternate comments in Plasma ASCIImatics scenes
-  -p indicates use Plasma scenes in ASCIImatics display
-  -s song specifies a song to accompany an ASCIImatics animation
-    'song' can be the full pathname to an audio file or a
-    relative pathname to an audio file in the MPD music library or ~/Music/
-  -S indicates display ASCIImatics splash animation
+	-a indicates play audio during ASCIImatics display
+	-b indicates use backup audio during ASCIImatics display
+	-j indicates use Julia Set scenes in ASCIImatics display
+	-J indicates Julia Set with several runs using different parameters
+	-m indicates use MusicPlayerPlus scenes in ASCIImatics display
+	-n num specifies the number of times to cycle ASCIImatics scenes
+	-N indicates use alternate comments in Plasma ASCIImatics scenes
+	-p indicates use Plasma scenes in ASCIImatics display
+	-s song specifies a song to accompany an ASCIImatics animation
+		'song' can be the full pathname to an audio file or a
+		relative pathname to an audio file in the MPD music library
+		or /home/ronnie/Music/
+	-S indicates display ASCIImatics splash animation
 General options:
-  -B indicates analyze MPD music dir with Blissify and exit
-  -D 'art' indicates download album cover art and exit
-  -D 'bandcamp' indicates download Bandcamp songs and exit
-  -D 'soundcloud' indicates download Soundcloud songs and exit
-  -D 'discogs' generate markdown from Discogs collection
-  -D 'local' generate markdown from local music library
-  -U 'vault' indicates upload releases in 'vault' to Discogs collection
-  -Z performs a dry run of a Discogs collection upload
-  -d 'music_directory' specifies the music directory to use for
-    downloaded album cover art. Without this option -D will use
-    the 'MUSIC_DIR' setting in '~/.config/mpprc'
-  -F indicates convert WAV format files in the music library
-    to MP3 format files and exit. A subsequent 'mpplus -I' import
-    will be necessary to import these newly converted music files.
-  -G indicates convert M4A format files in the music library
-    to MP3 format files and exit. A subsequent 'mpplus -I' import
-    will be necessary to import these newly converted music files.
-  -I indicates import albums and songs from 'music_directory' to beets and exit
-    In conjunction with '-I', the '-A on' option disables auto-tagging
-  -i indicates start mpplus in interactive mode
-  -K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
-  -L indicates download lyrics to the Beets library and exit
-  -M 'action' can be used to control the Music Player Daemon (MPD)
-      or configure the ALSA sound system
-    ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
-  -R indicates record tmux session with asciinema
-    Asciinema is not installed by MusicPlayerPlus
-    To record tmux sessions with asciinema, use your system's
-    package manager to install it (e.g. apt install asciinema)
-  -T 'on|off' specifies whether to use a tmux session
-  -w indicates write metadata during beets import
-  -W indicates do not write metadata during beets import
-  -x 'query' uses AcousticBrainz to retrieve audio-based information
-    for all music library media matching 'query' [deprecated]. A query
-    of 'all' performs the retrieval on the entire music library.
-  -X 'query' performs an analysis and retrieval, using Essentia,
-    of audio-based information for all music library media
-    matching 'query'. A query of 'all' performs the analysis
-    and retrieval on the entire music library.
-  -Y initializes the YAMS last.fm scrobbler service
-  -y disables the YAMS last.fm scrobbler service
-  -z fzmpopt specifies the fzmp option and invokes fzmp to
-    list/search/select media in the MPD library.
-    Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
-  -u displays this usage message and exits
+	-B indicates analyze MPD music dir with Blissify and exit
+	-D 'art' indicates download album cover art and exit
+	-D 'bandcamp' indicates download Bandcamp songs and exit
+	-D 'soundcloud' indicates download Soundcloud songs and exit
+	-D 'discogs' generate markdown from Discogs collection
+	-D 'local' generate markdown from local music library
+	-Q indicates display MusicPlayerPlus info and exit
+	-U 'vault' indicates upload releases in 'vault' to Discogs collection
+	-Z performs a dry run of a Discogs collection upload
+	-d 'music_directory' specifies the music directory to use for
+		downloaded album cover art. Without this option -D will use
+		the 'MUSIC_DIR' setting in '~/.config/mpprc'
+	-F indicates convert WAV format files in the music library
+		to MP3 format files and exit. A subsequent 'mpplus -I' import
+		will be necessary to import these newly converted music files.
+	-G indicates convert M4A format files in the music library
+		to MP3 format files and exit. A subsequent 'mpplus -I' import
+		will be necessary to import these newly converted music files.
+	-I indicates import albums and songs from 'music_directory' to beets and exit
+		In conjunction with '-I', the '-A on' option disables auto-tagging
+	-i indicates start mpplus in interactive mode
+	-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+	-L indicates download lyrics to the Beets library and exit
+	-M 'action' can be used to control the Music Player Daemon (MPD)
+	    or configure the ALSA sound system
+		ALSA configuration will update the ALSA configuration in '/etc/asound.conf'
+	-R indicates record tmux session with asciinema
+		Asciinema is not installed by MusicPlayerPlus
+		To record tmux sessions with asciinema, use your system's
+		package manager to install it (e.g. apt install asciinema)
+	-T 'on|off' specifies whether to use a tmux session
+	-w indicates write metadata during beets import
+	-W indicates do not write metadata during beets import
+	-x 'query' uses AcousticBrainz to retrieve audio-based information
+		for all music library media matching 'query' [deprecated]. A query
+		of 'all' performs the retrieval on the entire music library.
+	-X 'query' performs an analysis and retrieval, using Essentia,
+		of audio-based information for all music library media
+		matching 'query'. A query of 'all' performs the analysis
+		and retrieval on the entire music library.
+	-Y initializes the YAMS last.fm scrobbler service
+	-y disables the YAMS last.fm scrobbler service
+	-z fzmpopt specifies the fzmp option and invokes fzmp to
+		list/search/select media in the MPD library.
+		Valid values for fzmpopt are 'a', 'A', 'g', 'p', or 'P'
+	-u displays this usage message and exits
 
 Type 'man mpplus' for detailed usage info on mpplus
 Type 'man mpcplus' for detailed usage info on the mpcplus MPD client
 Type 'man mppsplash' for detailed usage info on the mppsplash command
 ```
 
+</details>
+
 The `mpcplus` command is an MPD client and acts as the primary
-MusicPlayerPlus music player:
+MusicPlayerPlus music player.
+
+<details><summary>Click here to view the
+
+**mpclus usage message**
+
+</summary>
 
 ```text
 Usage: mpcplus [options]...
@@ -1723,6 +1747,8 @@ Options:
   -q [ --quiet ]                        suppress logs and excess output
 ```
 
+</details>
+
 The mpcplus MPD client has a customized set of key bindings that allow
 quick and easy control of MPD, searches, lyrics display, client navigation,
 and much more via the keyboard. View the
@@ -1730,7 +1756,13 @@ and much more via the keyboard. View the
 `man mpcpluskeys`.
 
 The `mppsplash` command can be used to display a variety of character
-based animations optionally accompanied by audio:
+based animations optionally accompanied by audio.
+
+<details><summary>Click here to view the
+
+**mppsplash usage message**
+
+</summary>
 
 ```text
 Usage: mppsplash [-A] [-a] [-b] [-C] [-c num] [-d] [-jJ] [-m] [-p] [-s song] [-u]
@@ -1752,8 +1784,16 @@ Where:
   -u displays this usage message and exits
 ```
 
+</details>
+
 The `mppcava` command is the MusicPlayerPlus custom character based
-audio spectrum visualizer:
+audio spectrum visualizer.
+
+<details><summary>Click here to view the
+
+**mppcava usage message**
+
+</summary>
 
 ```text
 Usage : mppcava [options]
@@ -1776,6 +1816,8 @@ Keys:
 
 All options are specified in a config file. See `$HOME/.config/mppcava/config`
 ```
+
+</details>
 
 ### Example client invocations
 The `mpplus` command is intended to serve as the primary interface to invoke
