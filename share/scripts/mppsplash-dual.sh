@@ -166,6 +166,7 @@ tmux new-session -d -x "$(tput cols)" -y "$(tput lines)" -s ${SESSION}
 tmux set -g status off
 
 tmux send-keys "stty -echo" C-m
+sleep 2
 tmux send-keys "tput civis -- invisible" C-m
 [ -f ${HOME}/.venv/bin/activate ] && {
   tmux send-keys "source ${HOME}/.venv/bin/activate" C-m
