@@ -3232,6 +3232,7 @@ show_main_menu() {
     [ "${have_ymuse}" ] || options+=("Install YMuse MPD client    [im]")
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_ascii}" ] && options+=("Asciiville Menu             [am]")
+    [ "${have_kc}" ] && options+=("Kitty Control Menu          [km]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [mm]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [rm]")
     options+=("About                       [A]")
@@ -3530,6 +3531,13 @@ show_main_menu() {
           "Asciiville"*,*|*,"Asciiville"*|"am",*|*,"am")
               clear_screen
               asciiville
+              clear_screen
+              skip_it_so=1
+              break
+              ;;
+          "Kitty Control"*,*|*,"Kitty Control"*|"km",*|*,"km")
+              clear_screen
+              kitty-control
               clear_screen
               skip_it_so=1
               break
@@ -4135,6 +4143,7 @@ have_ranger=$(type -p ranger)
 have_rich=$(type -p rich)
 have_ascii=$(type -p asciiville)
 have_asciiart=$(type -p asciiart)
+have_kc=$(type -p kitty-control)
 if [ -d /usr/local/Roon ]
 then
   have_roon=$(type -p roon)
