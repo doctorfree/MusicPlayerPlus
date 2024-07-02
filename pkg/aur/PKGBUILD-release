@@ -2,7 +2,7 @@
 # shellcheck shell=bash disable=SC2034,SC2154
 
 pkgname=musicplayerplus
-pkgver=v3.0.2r1
+pkgver=v3.0.2r2
 pkgrel=1
 pkgdesc="Character based MPD client, spectrum visualizer, Beets library management, Mopidy and Navidrome servers, plus more"
 arch=('any')

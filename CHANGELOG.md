@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.2r2 (2024-07-02)
+* Debian package dependency fix for `libavfilter`
+
 ## MusicPlayerPlus-3.0.2r1 (2024-07-01)
 * Disable album cover art by default - it's flaky at best
 * Add Python virtual environment and `pyenv` install
