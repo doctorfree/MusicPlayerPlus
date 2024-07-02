@@ -80,7 +80,7 @@ Version: ${PKG_VER}-${PKG_REL}
 Section: sound
 Priority: optional
 Architecture: all
-Depends: alsa-utils, bc, coreutils, curl, dialog, flac, jq, libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mediainfo, mpd (>= 0.21.20), tmux, ffmpeg, inotify-tools, mpc, python3-dev, python3-pip, mplayer, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3-dev, libfftw3-dev, libsamplerate0, libiniparser-dev, libyaml-dev, libsdl2-dev, libasound2, libpulse-dev, libcurl4-openssl-dev, libsqlite3-0 (>= 3.6.0), libavformat-dev, libavfilter7 (>= 7:4.0), libswresample-dev, libavcodec-dev, libswscale-dev, libavdevice-dev, libavutil-dev, wget, wmctrl, x11-utils, x11-xserver-utils, imagemagick
+Depends: alsa-utils, bc, coreutils, curl, dialog, flac, jq, libboost-all-dev (>= 1.71.0), libcurl4 (>= 7.68.0), libmpdclient2 (>= 2.9), libncursesw6 (>= 6), libreadline8 (>= 6.0), libtag1v5 (>= 1.11), libtinfo6 (>= 6), mediainfo, mpd (>= 0.21.20), tmux, ffmpeg, inotify-tools, mpc, python3-dev, python3-pip, mplayer, libchromaprint-dev, dconf-cli, uuid-runtime, libeigen3-dev, libfftw3-dev, libsamplerate0, libiniparser-dev, libyaml-dev, libsdl2-dev, libasound2, libpulse-dev, libcurl4-openssl-dev, libsqlite3-0 (>= 3.6.0), libavformat-dev, libavfilter-dev, libswresample-dev, libavcodec-dev, libswscale-dev, libavdevice-dev, libavutil-dev, wget, wmctrl, x11-utils, x11-xserver-utils, imagemagick
 Maintainer: ${DEBFULLNAME} <${DEBEMAIL}>
 Installed-Size: 34728
 Build-Depends: debhelper (>= 11)
