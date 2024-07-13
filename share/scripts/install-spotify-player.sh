@@ -7,6 +7,15 @@ SED="sed"
 have_gsed=$(type -p gsed)
 [ "${have_gsed}" ] && SED="gsed"
 
+[ "$1" == "remove" ] && {
+  printf "\nRemoving spotify_player ..."
+  rm -rf ${HOME}/.config/spotify-player
+  rm -rf ${HOME}/.cache/spotify-player
+  rm -f ${HOME}/.cargo/bin/spotify_player
+  printf " done\n"
+  exit 0
+}
+
 if command -v spotify_player >/dev/null 2>&1; then
   printf "\n\tUsing existing spotify_player installation.\n"
   exit 0
