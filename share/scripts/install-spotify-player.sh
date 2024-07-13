@@ -40,8 +40,9 @@ while true; do
 done
 
 auth_spotify() {
-  printf "\n\nAuthenticating with Spotify"
-  printf "\nYou can find your Spotify username in Account -> Edit profile in Spotify\n\n"
+  printf "\nAuthenticating with Spotify"
+  printf "\nYou can find your Spotify username in 'Account -> Edit profile' in Spotify"
+  printf "\nOr use your email address as the username\n\n"
   spotify_player authenticate
 }
 
