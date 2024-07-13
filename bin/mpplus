@@ -3336,8 +3336,14 @@ show_main_menu() {
               break
               ;;
           "Spotify Music Player Plus"*,*|*,"Spotify Music Player Plus"*|"sp",*|*,"sp")
-              spotify_player
-              skip_it_so=1
+              MPCPLUS="spotify_player"
+              MPCPLUS_TMUX="${MPCPLUS}"
+              MTITLE="Spotify Player"
+              USE_MPCPLUS=1
+              USE_TMUX=1
+              SPLASH=
+              CURRENT=
+              pick_terminal || CONSOLE_MODE=1
               break
               ;;
           "Install YMuse"*,*|*,"Install YMuse"*|"im",*|*,"im")
