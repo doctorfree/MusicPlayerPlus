@@ -2,6 +2,7 @@
 
 This major new release of MusicPlayerPlus adds support for many new features and components including:
 
+* Installation, configuration, and execution of command line `spotify_player`
 * A Python virtual environment is used to provide support for Ubuntu 24.04 and others
 * MusicPlayerPlus package is now architecture independent
 * Auto-generation of Obsidian markdown vault from Discogs collection
@@ -41,19 +42,19 @@ Download the [latest Debian or RPM package format release](https://github.com/do
 Install the package on Debian based systems by executing the command:
 
 ```bash
-sudo apt install ./MusicPlayerPlus_3.0.2-2.deb
+sudo apt install ./MusicPlayerPlus_3.0.2-3.deb
 ```
 
 Install the package on RPM based systems by executing the command.
 
 ```bash
-sudo dnf localinstall ./MusicPlayerPlus_3.0.2-2.rpm
+sudo dnf localinstall ./MusicPlayerPlus_3.0.2-3.rpm
 ```
 
 Install the package on Arch Linux based systems by executing the command:
 
 ```bash
-sudo pacman -U ./MusicPlayerPlus-v3.0.2r2-1-any.pkg.tar.zst
+sudo pacman -U ./MusicPlayerPlus-v3.0.2r3-1-any.pkg.tar.zst
 ```
 
 ### PKGBUILD Installation
@@ -132,6 +133,6 @@ The `mkpkg` script detects the platform and creates an installable package in th
 
 ## Changelog
 
-View the full changelog for this release at https://github.com/doctorfree/MusicPlayerPlus/blob/v3.0.2r2/CHANGELOG.md
+View the full changelog for this release at https://github.com/doctorfree/MusicPlayerPlus/blob/v3.0.2r3/CHANGELOG.md
 
 See [CHANGELOG.md](https://github.com/doctorfree/MusicPlayerPlus/blob/master/CHANGELOG.md) for a full list of changes in every MusicPlayerPlus release

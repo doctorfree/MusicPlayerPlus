@@ -2,6 +2,9 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.2r3 (2024-07-13)
+* Add support for installing, configuring, and running `spotify_player`
+
 ## MusicPlayerPlus-3.0.2r2 (2024-07-02)
 * Debian package dependency fix for `libavfilter`
 

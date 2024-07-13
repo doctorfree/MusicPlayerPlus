@@ -36,7 +36,9 @@ auth_spotify() {
   spotify_player authenticate
 }
 
-have_brew=$(type -p brew)
+have_brew=
+platform=$(uname -s)
+[ "${platform}" == "Darwin" ] && have_brew=$(type -p brew)
 have_curl=$(type -p curl)
 [ "${have_brew}" ] && {
   brew update --quiet >/dev/null 2>&1
