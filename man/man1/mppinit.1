@@ -23,7 +23,7 @@ mppinit - performs one-time MusicPlayerPlus initialization
 .PP
 \f[B]mppinit\f[R] [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r]
 [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault
-folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]
+folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|spotify|sync|yams|youtube]
 .SS DESCRIPTION
 .PP
 The \f[I]mppinit\f[R] command copies and configures default
@@ -102,9 +102,6 @@ files.
 Invoked with the \f[B]yams\f[R] argument, \f[I]mppinit yams\f[R]
 activates the YAMS Last.fm scrobbler service.
 .PP
-Invoked with the \f[B]ymuse\f[R] argument, \f[I]mppinit ymuse\f[R]
-installs the Ymuse MPD graphical client.
-.PP
 Invoked with the \f[B]youtube\f[R] argument, \f[I]mppinit youtube\f[R]
 installs the YouTube Music client youtube-music.
 .SS COMMAND LINE OPTIONS
@@ -168,14 +165,14 @@ Activates MPD, deactivates Mopidy
 \f[B]navidrome [version]\f[R]
 Installs, configures, and activates Navidrome music server/streamer
 .TP
+\f[B]spotify\f[R]
+installs the Spotify Music client \[aq]spotify_player\[aq]
+.TP
 \f[B]sync\f[R]
 synchronizes MusicPlayerPlus configuration across configs
 .TP
 \f[B]yams\f[R]
 activates the YAMS Last.fm scrobbler service
-.TP
-\f[B]ymuse\f[R]
-installs the Ymuse MPD graphical client
 .TP
 \f[B]youtube\f[R]
 installs the YouTube Music client youtube-music

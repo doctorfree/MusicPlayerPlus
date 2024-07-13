@@ -9,7 +9,7 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
 The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
@@ -149,6 +149,15 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 
 **-K**
 : Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+
+**-l config**
+: launches an editor in a terminal window to configure MusicPlayerPlus"
+
+**-l spotify**
+: launches the Spotify Player 'spotify_player' in a terminal window"
+
+**-l status**
+: displays MusicPlayerPlus services status and exits"
 
 **-L**
 : Indicates download lyrics to the Beets library and exit

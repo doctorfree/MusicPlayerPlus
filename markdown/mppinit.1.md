@@ -9,7 +9,7 @@ date: March 24, 2022
 mppinit - performs one-time MusicPlayerPlus initialization
 
 ## SYNOPSIS
-**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]
+**mppinit** [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|spotify|sync|yams|youtube]
 
 ## DESCRIPTION
 The *mppinit* command copies and configures default MusicPlayerPlus
@@ -70,8 +70,6 @@ MusicPlayerPlus configuration across all configuration files.
 
 Invoked with the **yams** argument, *mppinit yams* activates the YAMS Last.fm scrobbler service.
 
-Invoked with the **ymuse** argument, *mppinit ymuse* installs the Ymuse MPD graphical client.
-
 Invoked with the **youtube** argument, *mppinit youtube* installs the YouTube Music client youtube-music.
 
 ## COMMAND LINE OPTIONS
@@ -130,14 +128,14 @@ Invoked with the **youtube** argument, *mppinit youtube* installs the YouTube Mu
 **navidrome [version]**
 : Installs, configures, and activates Navidrome music server/streamer
 
+**spotify**
+: installs the Spotify Music client 'spotify_player'
+
 **sync**
 : synchronizes MusicPlayerPlus configuration across configs
 
 **yams**
 : activates the YAMS Last.fm scrobbler service
-
-**ymuse**
-: installs the Ymuse MPD graphical client
 
 **youtube**
 : installs the YouTube Music client youtube-music

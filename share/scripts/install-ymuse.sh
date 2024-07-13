@@ -88,9 +88,6 @@ mach=$(uname -m)
   exit 1
 }
 
-install_ymuse
-}
-
 install_package() {
   if [ "${pkg}" == "deb" ]; then
     if [ "${have_apt}" ]; then

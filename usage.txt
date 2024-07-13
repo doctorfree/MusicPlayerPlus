@@ -1,11 +1,11 @@
 =============================================================================
 
 Usage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]
-	[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]
-	[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z]
-	[-M alsaconf|enable|disable|restart|start|stop|status] [-p]
-	[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]
-	[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+	[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory]
+	[-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m]
+	[-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status] [-p]
+	[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]
+	[-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt] [-Z]
 MPCplus/Visualizer options:
 	-A 'on|off' specifies whether to display album cover art
 	-C 'client' indicates use 'client' MPD client rather than mpcplus
@@ -59,6 +59,9 @@ General options:
 		In conjunction with '-I', the '-A on' option disables auto-tagging
 	-i indicates start mpplus in interactive mode
 	-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+	-l 'config' launches an editor in a terminal window to configure MusicPlayerPlus
+	-l 'spotify' launches the Spotify Player in a terminal window
+	-l 'status' displays services status and exits
 	-L indicates download lyrics to the Beets library and exit
 	-M 'action' can be used to control the Music Player Daemon (MPD)
 	    or configure the ALSA sound system
@@ -90,48 +93,51 @@ Type 'man mppsplash' for detailed usage info on the mppsplash command
 
 =============================================================================
 
-Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]
+Usage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r] [-U] [-y] [-u] [bandcamp|cantata|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|mopidy|mpd|navidrome|soundcloud|spotify|sync|yams|youtube]
 Where:
-  '-a' use AcousticBrainz for acoustic audio analysis [deprecated]
-  '-b' use Blissify for MPD acoustic audio analysis
-  '-d' install latest Beets development branch rather than
-    the latest stable release (for testing purposes)
-  '-e' use Essentia for Beets acoustic audio analysis (default)
-  '-l music_dir' specifies the location of the music library
-  '-n' indicates perform a dry run, don't do anything just tell me
-  '-o' indicates overwrite any pre-existing configuration
-  '-q' indicates quiet execution, no status messages
-  '-r' indicates remove service
-    supported service removals: mopidy navidrome
-  '-U' indicates do not upgrade installed Python modules
-  '-y' indicates answer 'yes' to all and proceed
-  '-u' displays this usage message and exits
+	'-a' use AcousticBrainz for acoustic audio analysis [deprecated]
+	'-b' use Blissify for MPD acoustic audio analysis
+	'-d' install latest Beets development branch rather than
+		the latest stable release (for testing purposes)
+	'-e' use Essentia for Beets acoustic audio analysis (default)
+	'-l music_dir' specifies the location of the music library
+	'-n' indicates perform a dry run, don't do anything just tell me
+	'-o' indicates overwrite any pre-existing configuration
+	'-q' indicates quiet execution, no status messages
+	'-r' indicates remove service
+		supported service removals: mopidy navidrome
+	'-U' indicates do not upgrade installed Python modules
+	'-y' indicates answer 'yes' to all and proceed
+	'-u' displays this usage message and exits
 
-  'bandcamp' downloads all albums in your Bandcamp collections
-  'discogs' generates an Obsidian vault from your Discogs user collection
-  'discogs local' generates an Obsidian vault from your local music library
-  'discogs upload vault folder' adds the releases in 'vault' to
-  Discogs user collection folder 'folder'
-    (DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)
-  'import' performs a Beets music library import
-  'kitty' installs the Kitty terminal emulator
-  'metadata' performs a library metadata update
-  'mopidy' installs and configures Mopidy extensible music server
-    Note: activating Mopidy deactivates MPD
-  'mpd' activates the MPD music server and deactivates Mopidy
-  'navidrome' installs and configures Navidrome music server
-    Note: 'mppinit navidrome <version>' can be used to specify
-    an alternate version of Navidrome to download and install
-  'soundcloud' downloads all favorites in your Soundcloud account
-  'sync' synchronizes MusicPlayerPlus configuration across configs
-  'yams' activates the YAMS Last.fm scrobbler service
-  'ymuse' installs the Ymuse MPD graphical client
-  'youtube' installs the YouTube Music client youtube-music
+	'bandcamp' downloads all albums in your Bandcamp collections
+	'cantata' installs the Cantata MPD graphical client
+	'discogs' generates an Obsidian vault from your Discogs user collection
+	'discogs local' generates an Obsidian vault from your local music library
+	'discogs upload vault folder' adds the releases in 'vault' to
+	Discogs user collection folder 'folder'
+		(DISCOGS_USER and DISCOGS_TOKEN in '~/.config/mpprc must be set)
+	'import' performs a Beets music library import
+	'kitty' installs the Kitty terminal emulator
+	'metadata' performs a library metadata update
+	'mopidy' installs and configures Mopidy extensible music server
+		Note: activating Mopidy deactivates MPD
+	'mpd' activates the MPD music server and deactivates Mopidy
+	'navidrome' installs and configures Navidrome music server
+		Note: 'mppinit navidrome <version>' can be used to specify
+		an alternate version of Navidrome to download and install
+	'soundcloud' downloads all favorites in your Soundcloud account
+	'spotify' installs the Spotify Music client spotify_player
+
+	'sync' synchronizes MusicPlayerPlus configuration across configs
+	'yams' activates the YAMS Last.fm scrobbler service
+	'youtube' installs the YouTube Music client youtube-music
+
 
 'mppinit' must be run as the MusicPlayerPlus user, not root.
 'mppinit' must be run prior to 'mppinit sync', 'mppinit kitty',
-  'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',
-  'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'
+	'mppinit metadata', 'mppinit bandcamp', 'mppinit mopidy',
+	'mppinit navidrome', 'mppinit soundcloud', or 'mppinit import'
 
 =============================================================================
 

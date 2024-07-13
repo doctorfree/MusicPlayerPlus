@@ -23,8 +23,8 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .PP
 \f[B]mpplus\f[R] [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e]
 [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d
-music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num]
-[-N] [-U vault] [-Z] [-M
+music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l
+config|spotify|status] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M
 alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q]
 [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W]
 [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
@@ -214,6 +214,17 @@ Indicates interactive mode with selection menus
 .TP
 \f[B]-K\f[R]
 Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
+.TP
+\f[B]-l config\f[R]
+launches an editor in a terminal window to configure
+MusicPlayerPlus\[dq]
+.TP
+\f[B]-l spotify\f[R]
+launches the Spotify Player \[aq]spotify_player\[aq] in a terminal
+window\[dq]
+.TP
+\f[B]-l status\f[R]
+displays MusicPlayerPlus services status and exits\[dq]
 .TP
 \f[B]-L\f[R]
 Indicates download lyrics to the Beets library and exit

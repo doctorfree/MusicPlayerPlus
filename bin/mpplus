@@ -51,11 +51,11 @@ MPPCONF="${HOME}/.config/mpprc"
 
 usage() {
   printf "\nUsage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]"
-  printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h]"
-  printf "\n\t[-H] [-I] [-i] [-jJ] [-k] [-K] [-L] [-m] [-n num] [-N] [-U vault] [-Z]"
-  printf "\n\t[-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
-  printf "\n\t[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u]"
-  printf "\n\t[-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]"
+  printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory]"
+  printf "\n\t[-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m]"
+  printf "\n\t[-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
+  printf "\n\t[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]"
+  printf "\n\t[-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt] [-Z]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A 'on|off' specifies whether to display album cover art"
   printf "\n\t-C 'client' indicates use 'client' MPD client rather than mpcplus"
@@ -109,6 +109,9 @@ usage() {
   printf "\n\t\tIn conjunction with '-I', the '-A on' option disables auto-tagging"
   printf "\n\t-i indicates start mpplus in interactive mode"
   printf "\n\t-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
+  printf "\n\t-l 'config' launches an editor in a terminal window to configure MusicPlayerPlus"
+  printf "\n\t-l 'spotify' launches the Spotify Player in a terminal window"
+  printf "\n\t-l 'status' displays services status and exits"
   printf "\n\t-L indicates download lyrics to the Beets library and exit"
   printf "\n\t-M 'action' can be used to control the Music Player Daemon (MPD)"
   printf "\n\t    or configure the ALSA sound system"
@@ -261,30 +264,24 @@ center_window() {
 pick_terminal() {
   if [ "${have_kitty}" ]
   then
-    echo "Continuing with Kitty as the terminal emulator."
     KITTY=1
   else
     if [ "${have_gnome}" ]
     then
-      echo "Continuing with gnome-terminal as the terminal emulator."
       GNOME=1
     else
       if [ "${have_tilix}" ]
       then
-        echo "Continuing with tilix as the terminal emulator."
         TILIX=1
       else
         if [ "${have_retro}" ]
         then
-          echo "Continuing with cool-retro-term as the terminal emulator."
           RETRO=1
         else
           if [ "${have_simple}" ]
           then
-            echo "Continuing with st as the terminal emulator."
             SIMPLE=1
           else
-            echo "No supported terminal emulator located."
             return 1
           fi
         fi
@@ -1262,14 +1259,6 @@ make_it_so() {
                     can_win=$(wmctrl -l -G -x | grep cantata.cantata | grep -i "cantata")
                   }
                   [ "${can_win}" ] && center_window "${can_win}" "top"
-                }
-                [ "${MPCOMM}" == "ymuse" ] && [ "${USE_EWMH}" ] && {
-                  sleep 1
-                  ymu_win=$(wmctrl -l -G -x | grep ymuse.ymuse | grep "Ymuse")
-                  [ "${ymu_win}" ] || {
-                    ymu_win=$(wmctrl -l -G -x | grep ymuse.ymuse | grep -i "ymuse")
-                  }
-                  [ "${ymu_win}" ] && center_window "${ymu_win}" "top"
                 }
               fi
             fi
@@ -3207,7 +3196,6 @@ show_main_menu() {
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
     [ "${have_spot}" ] && options+=("Spotify Music Player Plus  [sp]")
-    [ "${have_ymuse}" ] && options+=("YMuse Music Player Plus     [Y]")
     [ "${have_ytm}" ] && options+=("YouTube Music Player Plus   [y]")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler  [S]")
     options+=("ASCIImatics Animations      [a]")
@@ -3231,12 +3219,12 @@ show_main_menu() {
     options+=("Toggle Fullscreen     ${fullstat} [F]")
     [ "${have_cantata}" ] || options+=("Install Cantata MPD client  [ic]")
     [ "${have_spot}" ] || options+=("Install Spotify Player      [is]")
-    [ "${have_ymuse}" ] || options+=("Install YMuse MPD client    [im]")
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_ascii}" ] && options+=("Asciiville Menu             [am]")
     [ "${have_kc}" ] && options+=("Kitty Control Menu          [km]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [mm]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [rm]")
+    options+=("Configure MusicPlayerPlus   [E]")
     options+=("About                       [A]")
     options+=("Info                        [i]")
     options+=("Quit                        [q]")
@@ -3336,24 +3324,7 @@ show_main_menu() {
               break
               ;;
           "Spotify Music Player Plus"*,*|*,"Spotify Music Player Plus"*|"sp",*|*,"sp")
-              MPCPLUS="spotify_player"
-              MPCPLUS_TMUX="${MPCPLUS}"
-              MTITLE="Spotify Player"
-              USE_MPCPLUS=1
-              USE_TMUX=1
-              SPLASH=
-              CURRENT=
-              pick_terminal || CONSOLE_MODE=1
-              break
-              ;;
-          "Install YMuse"*,*|*,"Install YMuse"*|"im",*|*,"im")
-              mppinit ymuse
-              have_ymuse=$(type -p ymuse)
-              skip_it_so=1
-              break
-              ;;
-          "YMuse Music Player Plus"*,*|*,"YMuse Music Player Plus"*|"Y",*|*,"Y")
-              ymuse >/dev/null 2>&1 &
+              mpplus -l spotify &
               skip_it_so=1
               break
               ;;
@@ -3480,6 +3451,11 @@ show_main_menu() {
           "About"*,* | *,"About"* | "about"*,* | *,"about"* | "A",* | *,"A")
               show_about
               prompt_continue
+              skip_it_so=1
+              break
+              ;;
+          "Configure"*,* | *,"Configure"* | "configure"*,* | *,"configure"* | "E",* | *,"E")
+              mpplus -l config &
               skip_it_so=1
               break
               ;;
@@ -3939,7 +3915,6 @@ have_xrandr=$(type -p xrandr)
 have_xdpy=$(type -p xdpyinfo)
 have_cantata=$(type -p cantata)
 have_spot=$(type -p spotify_player)
-have_ymuse=$(type -p ymuse)
 have_ytm=$(type -p youtube-music)
 have_gnome=$(type -p gnome-terminal)
 have_retro=$(type -p cool-retro-term)
@@ -4126,7 +4101,6 @@ set_need_yams
 if [ "${CONSOLE_MODE}" ]
 then
   have_cantata=
-  have_ymuse=
   have_ytm=
   have_gnome=
   have_retro=
@@ -4203,7 +4177,7 @@ KITTY_SOCKET="/tmp/__mppkitty__"
 debug=
 dryrun=
 vault=
-while getopts "A:abBcC:D:d:eEFfGghHiIjJkKlLmM:n:NpP:qQrRSs:tT:U:v:VwWx:X:yYZz:u" flag
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKl:LmM:n:NpP:qQrRSs:tT:U:v:VwWx:X:yYZz:u" flag
 do
   case $flag in
     a)
@@ -4258,26 +4232,21 @@ do
           echo "Continuing, using cantata rather than ${CLIENT}."
           CLIENT=cantata
         else
-          if [ "${have_ymuse}" ]; then
-            echo "Continuing, using ymuse rather than ${CLIENT}."
-            CLIENT=ymuse
-          else
-            CLIENT=
-            if [ "${MPD_CLIENT}" ]; then
-              MPCPLUS="${MPD_CLIENT}"
-              mpcbase=$(basename ${MPCPLUS})
-              type -p ${mpcbase} > /dev/null || {
-                [ -x "${MPCPLUS}" ] || {
-                  MPCPLUS=mpcplus
-                }
+          CLIENT=
+          if [ "${MPD_CLIENT}" ]; then
+            MPCPLUS="${MPD_CLIENT}"
+            mpcbase=$(basename ${MPCPLUS})
+            type -p ${mpcbase} > /dev/null || {
+              [ -x "${MPCPLUS}" ] || {
+                MPCPLUS=mpcplus
               }
-              echo "Continuing, using ${MPCPLUS} rather than ${CLIENT}."
-            else
-              MPCPLUS="mpcplus"
-              echo "Continuing, using mpcplus rather than ${CLIENT}."
-            fi
-            MPD_CLIENT="${MPCPLUS}"
+            }
+            echo "Continuing, using ${MPCPLUS} rather than ${CLIENT}."
+          else
+            MPCPLUS="mpcplus"
+            echo "Continuing, using mpcplus rather than ${CLIENT}."
           fi
+          MPD_CLIENT="${MPCPLUS}"
         fi
       }
       [ "${CLIENT}" ] && {
@@ -4409,8 +4378,38 @@ do
       }
       ;;
     l)
-      show_full_status
-      farewell_exit "Exiting MusicPlayerPlus"
+      case "${OPTARG}" in
+        config*|Config*)
+          MPCPLUS="vi ${HOME}/.config/mpprc"
+          MPCPLUS_TMUX="${MPCPLUS}"
+          MTITLE="Configure MusicPlayerPlus"
+          USE_MPCPLUS=1
+          USE_TMUX=1
+          SPLASH=
+          CURRENT=
+          USE_EWMH=
+          pick_terminal || CONSOLE_MODE=1
+          make_it_so
+          exit 0
+          ;;
+        Spotify*|spotify*)
+          MPCPLUS="spotify_player"
+          MPCPLUS_TMUX="${MPCPLUS}"
+          MTITLE="Spotify Player"
+          USE_MPCPLUS=1
+          USE_TMUX=1
+          SPLASH=
+          CURRENT=
+          USE_EWMH=
+          pick_terminal || CONSOLE_MODE=1
+          make_it_so
+          exit 0
+          ;;
+        status|Status)
+          show_full_status
+          farewell_exit "Exiting MusicPlayerPlus"
+          ;;
+      esac
       ;;
     L)
       FETCH_LYRICS=1
