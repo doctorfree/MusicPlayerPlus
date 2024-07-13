@@ -8,6 +8,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
 - ***plus*** Music Player Daemon and ALSA configuration management
 - ***plus*** Mopidy Music Server with preconfigured extensions
 - ***plus*** Navidrome Music Server/Streamer automated install/config/service
+- ***plus*** Spotify and YouTube Music players
 - ***plus*** Bliss acoustic analysis and song similarity database
 - ***plus*** Essentia acoustic analysis and metadata extraction
 - ***plus*** YAMS MPD Last.fm scrobbler running as a service
@@ -49,6 +50,7 @@ MusicPlayerPlus is a character-based console and terminal window music player
     1. [Installing Mopidy](#installing-mopidy)
     1. [Installing Navidrome](#installing-navidrome)
         1. [Navidrome clients](#navidrome-clients)
+    1. [Spotify and YouTube Music players](#spotify-and-youtube-music-players)
     1. [Terminal Emulator Support](#terminal-emulator-support)
     1. [Discogs User Collection](#discogs-user-collection)
 1. [MusicPlayerPlus Services and Clients](#musicplayerplus-services-and-clients)
@@ -1261,6 +1263,25 @@ brew install --cask sonixd
 native Subsonic client compatible with Navidrome for the Linux Desktop.
 See https://sublime-music.gitlab.io/sublime-music/index.html to install
 Sublime on a variety of Linux distributions.
+
+### Spotify and YouTube Music players
+
+`Spotify` and `YouTube Music` players can be installed, configured, and launched
+via either the `mpplus` menu system or `mppinit`.
+
+The `Spotify` player is the character-based `spotify_player` available at
+https://github.com/aome510/spotify-player and can be installed via the main menu
+(`mpplus -i`) or with the command `mppinit spotify`. This `Spotify` player runs
+in a terminal window or on the console and has full-feature parity with `Spotify`.
+
+Configuration of the `Spotify` player is located in `~/.config/spotify-player/app.toml`.
+
+The `YouTube Music` player is a `YouTube Music` desktop app available at
+https://github.com/th-ch/youtube-music and bundled with custom plugins and
+built-in ad blocker/downloader. The `YouTube Music` player can be installed
+via the main menu (`mpplus -i`) or with the command `mppinit youtube`.
+
+Configuration of the `YouTube Music` player is located in `~/.config/YouTube Music/config.json`.
 
 ### Terminal Emulator Support
 
