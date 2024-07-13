@@ -36,6 +36,8 @@ MOPIDCONFDIR="${USERCONF}/mopidy"
 MOPIDCONF="${MOPIDCONFDIR}/mopidy.conf"
 NAVIDCONFDIR="${USERCONF}/navidrome"
 NAVIDCONF="${NAVIDCONFDIR}/navidrome.toml"
+SPOTCONFDIR="${USERCONF}/spotify-player"
+SPOTCONF="${SPOTCONFDIR}/app.toml"
 YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="default_cover.png fzmp.conf"
@@ -72,7 +74,7 @@ exp_music="${HOME}/Music"
 usage() {
   printf "\nUsage: mppinit [-a] [-b] [-d] [-e] [-l music_dir] [-n] [-o] [-q] [-r]"
   printf " [-U] [-y] [-u] [bandcamp|cantata|discogs|discogs local|discogs upload vault folder|import|kitty|metadata|"
-  printf "mopidy|mpd|navidrome|soundcloud|sync|yams|ymuse|youtube]"
+  printf "mopidy|mpd|navidrome|soundcloud|spotify|sync|yams|ymuse|youtube]"
   printf "\nWhere:"
   printf "\n\t'-a' use AcousticBrainz for acoustic audio analysis [deprecated]"
   printf "\n\t'-b' use Blissify for MPD acoustic audio analysis"
@@ -105,6 +107,7 @@ usage() {
   printf "\n\t\tNote: 'mppinit navidrome <version>' can be used to specify"
   printf "\n\t\tan alternate version of Navidrome to download and install"
   printf "\n\t'soundcloud' downloads all favorites in your Soundcloud account"
+  printf "\n\t'spotify' installs the Spotify Music client spotify_player\n"
   printf "\n\t'sync' synchronizes MusicPlayerPlus configuration across configs"
   printf "\n\t'yams' activates the YAMS Last.fm scrobbler service"
   printf "\n\t'ymuse' installs the Ymuse MPD graphical client"
@@ -373,6 +376,17 @@ install_ueberzug() {
       chmod 644 "${TEMP_WHL}"
       ${PYTHON} -m pip install --upgrade "${TEMP_WHL}" >/dev/null 2>&1
       rm -f "${TEMP_WHL}"
+    }
+  }
+}
+
+sync_spotify() {
+  [ -f "${SPOTCONF}" ] && {
+    [ "${SPOTIFY_CLIENT}" ] && {
+      cat "${SPOTCONF}" | \
+        sed -e "s/client_id = .*/client_id = \"${SPOTIFY_CLIENT}\"/" > /tmp/toml$$
+      cp /tmp/toml$$ "${SPOTCONF}"
+      rm -f /tmp/toml$$
     }
   }
 }
@@ -1113,6 +1127,9 @@ sync_music_dir() {
       cp /tmp/ytd$$ ${YTDLPCONF}
       rm -f /tmp/ytd$$
     }
+
+    # Sync Spotify Player config
+    sync_spotify
 
     # Sync Calliope config
     [ "${CRUDINI}" ] && {
@@ -2514,6 +2531,17 @@ remove_kitty() {
     exit 0
   else
     printf "\nERROR: ${SCPTDIR}/install-cantata.sh not found or not executable\n"
+    exit 1
+  fi
+}
+
+[ "${argument}" == "spotify" ] && {
+  if [ -x ${SCPTDIR}/install-spotify-player.sh ]; then
+    ${SCPTDIR}/install-spotify-player.sh
+    sync_spotify
+    exit 0
+  else
+    printf "\nERROR: ${SCPTDIR}/install-spotify-player.sh not found or not executable\n"
     exit 1
   fi
 }

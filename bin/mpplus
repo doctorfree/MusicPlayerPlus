@@ -3206,6 +3206,7 @@ show_main_menu() {
     [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
+    [ "${have_spot}" ] && options+=("Spotify Music Player Plus  [sp]")
     [ "${have_ymuse}" ] && options+=("YMuse Music Player Plus     [Y]")
     [ "${have_ytm}" ] && options+=("YouTube Music Player Plus   [y]")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler  [S]")
@@ -3229,6 +3230,7 @@ show_main_menu() {
     [ "${have_nema}" ] && options+=("Toggle Record Tmux    ${recordstat} [R]")
     options+=("Toggle Fullscreen     ${fullstat} [F]")
     [ "${have_cantata}" ] || options+=("Install Cantata MPD client  [ic]")
+    [ "${have_spot}" ] || options+=("Install Spotify Player      [is]")
     [ "${have_ymuse}" ] || options+=("Install YMuse MPD client    [im]")
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_ascii}" ] && options+=("Asciiville Menu             [am]")
@@ -3323,6 +3325,18 @@ show_main_menu() {
               ;;
           "Cantata Music Player Plus"*,*|*,"Cantata Music Player Plus"*|"C",*|*,"C")
               cantata >/dev/null 2>&1 &
+              skip_it_so=1
+              break
+              ;;
+          "Install Spotify"*,*|*,"Install Spotify"*|"is",*|*,"is")
+              mppinit spotify
+              pathadd "${HOME}/.cargo/bin"
+              have_spot=$(type -p spotify_player)
+              skip_it_so=1
+              break
+              ;;
+          "Spotify Music Player Plus"*,*|*,"Spotify Music Player Plus"*|"sp",*|*,"sp")
+              spotify_player
               skip_it_so=1
               break
               ;;
@@ -3871,6 +3885,7 @@ set_need_yams() {
 
 pathadd "/usr/local/bin"
 pathadd "${HOME}/.local/bin"
+pathadd "${HOME}/.cargo/bin"
 export PATH
 
 [ -f "${MPPCONF}" ] || save_config
@@ -3917,6 +3932,7 @@ have_xprop=$(type -p xprop)
 have_xrandr=$(type -p xrandr)
 have_xdpy=$(type -p xdpyinfo)
 have_cantata=$(type -p cantata)
+have_spot=$(type -p spotify_player)
 have_ymuse=$(type -p ymuse)
 have_ytm=$(type -p youtube-music)
 have_gnome=$(type -p gnome-terminal)
