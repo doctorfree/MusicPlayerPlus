@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file.
 
+## MusicPlayerPlus-3.0.2r4 (2024-07-14)
+* Update `Mopidy` and `Navidrome` installation and configuration for latest releases
+* Sync `Navidrome` settings for `Last.FM` and `Spotify` with those in `~/.config/mpprc`
+* Remove `YMuse` install/launch from menu
+* Add `Configure MusicPlayerPlus` to menu
+* Launch `spotify_player` in a terminal window
+
 ## MusicPlayerPlus-3.0.2r3 (2024-07-13)
 * Add support for installing, configuring, and running `spotify_player`
 

@@ -11,7 +11,7 @@ After=sound.target
 
 [Service]
 Type=simple
-ExecStart=mopidy
+ExecStart=/usr/share/musicplayerplus/scripts/start-mopidy.sh
 StandardOutput=file:%h/.config/mopidy/mopidy.log
 StandardError=inherit
 

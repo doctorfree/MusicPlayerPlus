@@ -1,0 +1,17 @@
+#!/bin/bash
+#
+# Mopidy front-end for use with a Python virtual environment
+
+[ -f ${HOME}/.venv/bin/activate ] && source ${HOME}/.venv/bin/activate
+
+if [ -x ${HOME}/.venv/bin/mopidy ]; then
+  if echo "$*" | grep -- --config >/dev/null
+  then
+    ${HOME}/.venv/bin/mopidy $*
+  else
+    ${HOME}/.venv/bin/mopidy --config ${HOME}/.config/mopidy/mopidy.conf $*
+  fi
+else
+  echo "Cannot locate ${HOME}/.venv/bin/mopidy"
+  exit 1
+fi

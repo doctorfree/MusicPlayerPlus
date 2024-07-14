@@ -2315,8 +2315,15 @@ show_services_menu() {
     heading "MusicPlayerPlus Services Menu" "Services Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound      [a]")
-    [ "${have_mopidy}" ] || options+=("Install Mopidy Server        [im]")
-    [ "${have_navi}" ] || options+=("Install Navidrome Server     [in]")
+    [ "${have_mopidy}" ] || options+=("Install Mopidy Server     [im]")
+    if [ "${have_navi}" ]; then
+      if systemctl --user is-active navidrome.service >/dev/null 2>&1
+      then
+        options+=("Open Navidrome in Browser [on]")
+      fi
+    else
+      options+=("Install Navidrome Server  [in]")
+    fi
     if [ "${w_enabled}" == "enabled" ]
     then
       options+=("Disable Beets Web Service [dw]")
@@ -2532,6 +2539,14 @@ show_services_menu() {
               ;;
           "Mopidy Server Status"*,*|*,"Mopidy Server Status"*|"sm",*|*,"sm")
               mpp_service status mopidy
+              break
+              ;;
+          "Open Navidrome"*,*|*,"Open Navidrome"*|"on",*|*,"on")
+              if [ "${have_gio}" ]; then
+                gio open 'http://localhost:4533' >/dev/null 2>&1
+              else
+                xdg-open 'http://localhost:4533' >/dev/null 2>&1
+              fi
               break
               ;;
           "Install Navidrome Server"*,*|*,"Install Navidrome Server"*|"in",*|*,"in")
@@ -3195,6 +3210,10 @@ show_main_menu() {
     [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
+    if systemctl --user is-active navidrome.service >/dev/null 2>&1
+    then
+      options+=("Open Navidrome in Browser  [on]")
+    fi
     [ "${have_spot}" ] && options+=("Spotify Music Player Plus  [sp]")
     [ "${have_ytm}" ] && options+=("YouTube Music Player Plus   [y]")
     [ "${need_yams}" ] && options+=("Activate Last.fm Scrobbler  [S]")
@@ -3357,6 +3376,15 @@ show_main_menu() {
               clear_screen
               printf "\n"
               show_services_menu
+              skip_it_so=1
+              break
+              ;;
+          "Open Navidrome"*,*|*,"Open Navidrome"*|"on",*|*,"on")
+              if [ "${have_gio}" ]; then
+                gio open 'http://localhost:4533' >/dev/null 2>&1
+              else
+                xdg-open 'http://localhost:4533' >/dev/null 2>&1
+              fi
               skip_it_so=1
               break
               ;;
@@ -3921,6 +3949,7 @@ have_retro=$(type -p cool-retro-term)
 have_simple=$(type -p st)
 have_tilix=$(type -p tilix)
 have_kitty=$(type -p kitty)
+have_gio=$(type -p gio)
 
 init_vars
 AUDIO=

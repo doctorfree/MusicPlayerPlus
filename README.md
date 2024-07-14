@@ -1154,6 +1154,16 @@ Additional Mopidy extensions can be installed and configured. For example,
 to stream Spotify with Mopidy, install and configure the Mopidy-Spotify
 extension. Learn more at https://mopidy.com/ext/
 
+**[Note:]** MusicPlayerPlus uses a Python virtual environment and Mopidy
+extensions are Python modules. In order to install a Mopidy extension it
+must be installed in the MusicPlayerPlus Python virtual environment. For
+example, to install the Mopidy Spotify extension run the following commands:
+
+```bash
+source ~/.venv/bin/activate
+python3 -m pip install Mopidy-Spotify
+```
+
 To view the effective Mopidy configuration run the command `mopidy config`.
 This will display the full Mopidy configuration with passwords masked out
 so that you can safely share the output with others for debugging.

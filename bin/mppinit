@@ -42,7 +42,7 @@ YTDLPCONFDIR="${USERCONF}/yt-dlp"
 YTDLPCONF="${YTDLPCONFDIR}/config"
 CFGS="default_cover.png fzmp.conf"
 SCPS="album_cover.sh cover_obs.sh mppsplash-dual.sh"
-EXT_MOPIDY="Mopidy-Beets Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
+EXT_MOPIDY="Mopidy-Beets Mopidy-Local Mopidy-TuneIn Mopidy-Podcast Mopidy-Iris \
             Mopidy-Podcast-iTunes Mopidy-Mobile Mopidy-MPD Mopidy-Scrobbler"
 
 BOLD=$(tput bold 2>/dev/null)
@@ -321,7 +321,7 @@ install_timg() {
   }
   DL_URL=
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
-    DL_URL=$(curl --silent "${API_URL}" \
+    DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
       | jq --raw-output '.assets | .[]?.browser_download_url' \
       | grep "x86_64\.AppImage$" | head -1)
   }
@@ -361,7 +361,7 @@ install_ueberzug() {
   esac
   DL_URL=
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
-    DL_URL=$(curl --silent "${API_URL}" \
+    DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
       | jq --raw-output '.assets | .[]?.browser_download_url' \
       | grep "cp${pyc}.*${mach}\.whl" | head -1)
   }
@@ -375,6 +375,44 @@ install_ueberzug() {
       chmod 644 "${TEMP_WHL}"
       ${PYTHON} -m pip install --upgrade "${TEMP_WHL}" >/dev/null 2>&1
       rm -f "${TEMP_WHL}"
+    }
+  }
+}
+
+sync_mopi_ext_services() {
+  [ -f "${MOPIDCONF}" ] && {
+    [ "${LASTFM_USER}" ] && {
+      cat "${MOPIDCONF}" | sed -e "s/Your Last.FM username/${LASTFM_USER}/" > /tmp/last$$
+      cp /tmp/last$$ "${MOPIDCONF}"
+      rm -f /tmp/last$$
+    }
+    [ "${SPOTIFY_CLIENT}" ] && [ "${SPOTIFY_SECRET}" ] && {
+      cat "${MOPIDCONF}" | \
+        sed -e "s/^#client_id = .*/client_id = ${SPOTIFY_CLIENT}/" \
+            -e "s/^#client_secret = .*/client_secret = ${SPOTIFY_SECRET}/" \
+            -e "s/^#\[spotify\]/\[spotify\]/" > /tmp/spot$$
+      cp /tmp/spot$$ "${MOPIDCONF}"
+      rm -f /tmp/spot$$
+    }
+  }
+}
+
+sync_navi_ext_services() {
+  [ -f "${NAVIDCONF}" ] && {
+    [ "${LASTFM_APIKEY}" ] && [ "${LASTFM_SECRET}" ] && {
+      cat "${NAVIDCONF}" | \
+        sed -e "s/^# LastFM.Enabled = .*/LastFM.Enabled = true/" \
+            -e "s/^# LastFM.ApiKey = .*/LastFM.ApiKey = \"${LASTFM_APIKEY}\"/" \
+            -e "s/^# LastFM.Secret = .*/LastFM.Secret = \"${LASTFM_SECRET}\"/" > /tmp/last$$
+      cp /tmp/last$$ "${NAVIDCONF}"
+      rm -f /tmp/last$$
+    }
+    [ "${SPOTIFY_CLIENT}" ] && [ "${SPOTIFY_SECRET}" ] && {
+      cat "${NAVIDCONF}" | \
+        sed -e "s/^# Spotify.ID = .*/Spotify.ID = \"${SPOTIFY_CLIENT}\"/" \
+            -e "s/^# Spotify.Secret = .*/Spotify.Secret = \"${SPOTIFY_SECRET}\"/" > /tmp/spot$$
+      cp /tmp/spot$$ "${NAVIDCONF}"
+      rm -f /tmp/spot$$
     }
   }
 }
@@ -403,23 +441,32 @@ init_mopidy() {
   # The spectrum visualizer with Mopidy requires PulseAudio
   if [ "${debian}" ]; then
     [ "${APT}" ] && {
-      sudo ${APT} install pulseaudio python3-gst-1.0 \
-        gir1.2-gstreamer-1.0 \
+      sudo ${APT} install pulseaudio \
         gir1.2-gst-plugins-base-1.0 \
+        gir1.2-gstreamer-1.0 \
         gstreamer1.0-plugins-good \
+        gstreamer1.0-plugins-bad \
         gstreamer1.0-plugins-ugly \
-        gstreamer1.0-tools
+        gstreamer1.0-tools \
+        gstreamer1.0-libav \
+        libcairo2-dev \
+        libgirepository1.0-dev \
+        python3-gst-1.0
     }
   else
     if [ "${arch}" ]; then
       sudo pacman -S --needed --noconfirm gst-python \
         gst-plugins-good \
         gst-plugins-ugly \
+        cairo \
+        gobject-introspection \
         pulseaudio \
         pulseaudio-alsa
     else
       [ "${DNF}" ] && {
         sudo ${DNF} install pulseaudio python3-gstreamer1 \
+          cairo-devel \
+          gobject-introspection-devel \
           gstreamer1-plugins-good \
           gstreamer1-plugins-ugly-free
       }
@@ -427,6 +474,7 @@ init_mopidy() {
   fi
 
   # Install Mopidy from PyPi to get latest release (Mopidy-MPD needs >= 3.3.0)
+  ${PYTHON} -m pip install --upgrade PyGObject >/dev/null 2>&1
   ${PYTHON} -m pip install --upgrade mopidy >/dev/null 2>&1
 
   for extension in ${EXT_MOPIDY}; do
@@ -529,7 +577,7 @@ remove_mopidy() {
     ${PYTHON} -m pip uninstall -y ${extension}
   done
 
-  sudo ${PYTHHON} -m pip uninstall -y Mopidy
+  sudo ${PYTHON} -m pip uninstall -y mopidy
   have_mopidy=
 }
 
@@ -1091,19 +1139,22 @@ sync_music_dir() {
       rm -f /tmp/bts$$
     }
     # Sync music dir in mopidy.conf
-    mop_music=$(grep ^base_dir ${MOPIDCONF})
-    mop_music=$(echo ${mop_music} | awk ' { print $3 } ')
-    [ "${mpd_music}" == "${mop_music}" ] || {
-      cat ${MOPIDCONF} \
-        | sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
-          -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
-          -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
-          -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" \
-          -e "s%^media_dir = .*%media_dir = ${mpd_music}%" >/tmp/mop$$
-      cp /tmp/mop$$ ${MOPIDCONF}
-      rm -f /tmp/mop$$
+    [ -f "${MOPIDCONF}" ] && {
+      mop_music=$(grep ^base_dir ${MOPIDCONF})
+      mop_music=$(echo ${mop_music} | awk ' { print $3 } ')
+      [ "${mpd_music}" == "${mop_music}" ] || {
+        cat ${MOPIDCONF} \
+          | sed -e "s%^base_dir = .*%base_dir = ${mpd_music}%" \
+            -e "s%^base_dirs = .*%base_dirs = ${mpd_music}%" \
+            -e "s%^playlists_dir = .*%playlists_dir = ${mpd_music}/Playlists%" \
+            -e "s%^media_dirs = .*%media_dir = ${mpd_music}%" \
+            -e "s%^media_dir = .*%media_dir = ${mpd_music}%" >/tmp/mop$$
+        cp /tmp/mop$$ ${MOPIDCONF}
+        rm -f /tmp/mop$$
+      }
+      sync_mopi_ext_services
     }
-    # Sync music dir in navidrome.toml
+    # Sync music dir, last.fm, and spotify settings in navidrome.toml
     [ -f "${NAVIDCONF}" ] && {
       nav_music=$(grep ^MusicFolder ${NAVIDCONF})
       nav_music=$(echo ${nav_music} | awk ' { print $3 } ')
@@ -1114,6 +1165,7 @@ sync_music_dir() {
         cp /tmp/nav$$ ${NAVIDCONF}
         rm -f /tmp/nav$$
       }
+      sync_navi_ext_services
     }
     # Sync music dir in yt-dlp.conf
     ytd_music=$(grep ^-o ${YTDLPCONF} | grep /Downloads/)
@@ -1231,27 +1283,27 @@ install_external_package() {
   DL_URL=
   [ "${have_curl}" ] && [ "${have_jq}" ] && {
     if [ "${arch}" ]; then
-      DL_URL=$(curl --silent "${API_URL}" \
+      DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
         | jq --raw-output '.assets | .[]?.browser_download_url' \
         | grep "\.pkg\.tar\.zst")
     else
       if [ "${centos}" ]; then
-        DL_URL=$(curl --silent "${API_URL}" \
+        DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
           | jq --raw-output '.assets | .[]?.browser_download_url' \
           | grep "\.el.*x86_64\.rpm")
       else
         if [ "${fedora}" ]; then
-          DL_URL=$(curl --silent "${API_URL}" \
+          DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
             | jq --raw-output '.assets | .[]?.browser_download_url' \
             | grep "\.fc.*x86_64\.rpm")
         else
           if [ "${debian}" ]; then
             if [ "${mach}" == "x86_64" ]; then
-              DL_URL=$(curl --silent "${API_URL}" \
+              DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
                 | jq --raw-output '.assets | .[]?.browser_download_url' \
                 | grep "\.amd64\.deb")
             else
-              DL_URL=$(curl --silent "${API_URL}" \
+              DL_URL=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
                 | jq --raw-output '.assets | .[]?.browser_download_url' \
                 | grep "\.arm.*\.deb")
             fi
@@ -1485,6 +1537,19 @@ then
   export PYTHON="python3"
 else
   export PYTHON="python"
+fi
+
+# Use a Github API token if one is set
+[ "${GITHUB_TOKEN}" ] || {
+  [ "${GH_API_TOKEN}" ] && export GITHUB_TOKEN="${GH_API_TOKEN}"
+  [ "${GITHUB_TOKEN}" ] || {
+    [ "${GH_TOKEN}" ] && export GITHUB_TOKEN="${GH_TOKEN}"
+  }
+}
+if [ "${GITHUB_TOKEN}" ]; then
+  AUTH_HEADER="-H \"Authorization: Bearer ${GITHUB_TOKEN}\""
+else
+  AUTH_HEADER=
 fi
 
 MUSIC_DIRECTORY=
@@ -2002,7 +2067,11 @@ init_navidrome() {
         have_wget=$(type -p wget)
       }
       NAVI_URL="https://github.com/navidrome/navidrome/releases/download"
-      NAVI_NAM="v${navi_version}/navidrome_${navi_version}_Linux_${mach}.tar.gz"
+      if [ "${mach}" == "x86_64" ]; then
+        NAVI_NAM="v${navi_version}/navidrome_${navi_version}_linux_amd64.tar.gz"
+      else
+        NAVI_NAM="v${navi_version}/navidrome_${navi_version}_linux_${mach}.tar.gz"
+      fi
       [ "${have_wget}" ] && {
         wget --quiet -O ${navivar}/Navidrome.tar.gz ${NAVI_URL}/${NAVI_NAM}
       }
@@ -2042,9 +2111,11 @@ init_navidrome() {
   }
 
   [ -f "${NAVIDCONF}" ] || {
+    [ -d ${NAVIDCONFDIR} ] || mkdir -p ${NAVIDCONFDIR}
     [ -f "${MPPCDIR}/navidrome/navidrome.toml" ] && {
       cat "${MPPCDIR}/navidrome/navidrome.toml" \
         | sed -e "s%__HOME__%${HOME}%" >"${NAVIDCONF}"
+      sync_navi_ext_services
     }
   }
 
@@ -2337,6 +2408,21 @@ remove_kitty() {
   exit 0
 }
 
+get_navi_version() {
+  OWNER=navidrome
+  PROJECT=navidrome
+  DEF_VER="0.52.5"
+  API_URL="https://api.github.com/repos/${OWNER}/${PROJECT}/releases/latest"
+  DL_VER=
+  [ "${have_curl}" ] && [ "${have_jq}" ] && {
+    DL_VER=$(curl --silent ${AUTH_HEADER} "${API_URL}" \
+      | jq --raw-output '.assets | .[]?.browser_download_url' \
+      | grep "linux_amd64" | awk -F '/' '{ print $8 }' | sed -e "s/v//")
+  }
+  [ "${DL_VER}" ] || DL_VER="${DEF_VER}"
+  echo "${DL_VER}"
+}
+
 [ "${argument}" == "navidrome" ] && {
   [ "${remove}" ] && {
     printf "\nRemoving Navidrome service.\n\n"
@@ -2364,8 +2450,9 @@ remove_kitty() {
   if [ "${initialized}" ]; then
     if [ "$2" ]; then
       navi_version="$2"
+      navi_version=$(echo "${navi_version}" | sed -e "s/v//")
     else
-      navi_version="0.47.5"
+      navi_version="$(get_navi_version)"
     fi
     printf "\nInstalling and configuring Navidrome version ${navi_version}.\n\n"
     while true; do
@@ -2937,6 +3024,7 @@ else
   [ -d ${MOPIDCONFDIR} ] || mkdir -p ${MOPIDCONFDIR}
   cp ${MPPCDIR}/mopidy/mopidy.conf ${MOPIDCONFDIR}
 fi
+sync_mopi_ext_services
 [ -d ${MOPIDCONFDIR}/cache ] || mkdir -p ${MOPIDCONFDIR}/cache
 [ -d ${MOPIDCONFDIR}/data ] || mkdir -p ${MOPIDCONFDIR}/data
 
@@ -2955,6 +3043,7 @@ else
   cat "${MPPCDIR}/navidrome/navidrome.toml" \
     | sed -e "s%__HOME__%${HOME}%" >"${NAVIDCONF}"
 fi
+sync_navi_ext_services
 
 [ "${quiet}" ] || {
   printf "\n\tInstalling yt-dlp configuration in ${YTDLPCONFDIR} ..."
