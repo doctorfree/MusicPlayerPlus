@@ -1390,6 +1390,7 @@ The following services are included with MusicPlayerPlus:
     - Installed, configured, and activated by default
 - **Beets Web Plugin Service**
     - Installed, configured, and activated by default
+    - Beets queries can be performed at http://localhost:8337
     - Can be queried via API endpoints. For example:
         - `curl -s http://localhost:8337/album/ | jq -r .`
 - **Mopidy Music Server**
