@@ -2130,8 +2130,17 @@ init_navidrome() {
 
 remove_navidrome() {
   mppuser="${MPP_USER}"
-  varuser=$(stat -c '%U' /var/lib/navidrome)
+  if [ -d /var/lib/navidrome ]; then
+    varuser=$(stat -c '%U' /var/lib/navidrome)
+  else
+    varuser="${mppuser}"
+  fi
   optuser=$(stat -c '%U' /opt/navidrome)
+  if [ -d /opt/navidrome ]; then
+    optuser=$(stat -c '%U' /opt/navidrome)
+  else
+    optuser="${mppuser}"
+  fi
 
   [ "${mppuser}" == "${varuser}" ] || {
     echo "The mppinit user: ${mppuser} does now own /var/lib/navidrome"

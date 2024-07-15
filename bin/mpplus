@@ -2315,7 +2315,14 @@ show_services_menu() {
     heading "MusicPlayerPlus Services Menu" "Services Menu"
     PS3="${BOLD}${PLEASE} command choice (numeric or text, 'h' for help): ${NORM}"
     options=("Configure ALSA Sound      [a]")
-    [ "${have_mopidy}" ] || options+=("Install Mopidy Server     [im]")
+    if [ "${have_mopidy}" ]; then
+      if systemctl --user is-active mopidy.service >/dev/null 2>&1
+      then
+        options+=("Open Mopidy in Browser    [om]")
+      fi
+    else
+      options+=("Install Mopidy Server     [im]")
+    fi
     if [ "${have_navi}" ]; then
       if systemctl --user is-active navidrome.service >/dev/null 2>&1
       then
@@ -2539,6 +2546,14 @@ show_services_menu() {
               ;;
           "Mopidy Server Status"*,*|*,"Mopidy Server Status"*|"sm",*|*,"sm")
               mpp_service status mopidy
+              break
+              ;;
+          "Open Mopidy"*,*|*,"Open Mopidy"*|"om",*|*,"om")
+              if [ "${have_gio}" ]; then
+                gio open 'http://localhost:6680' >/dev/null 2>&1
+              else
+                xdg-open 'http://localhost:6680' >/dev/null 2>&1
+              fi
               break
               ;;
           "Open Navidrome"*,*|*,"Open Navidrome"*|"on",*|*,"on")
@@ -3210,6 +3225,10 @@ show_main_menu() {
     [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
     [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
+    if systemctl --user is-active mopidy.service >/dev/null 2>&1
+    then
+      options+=("Open Mopidy in Browser     [om]")
+    fi
     if systemctl --user is-active navidrome.service >/dev/null 2>&1
     then
       options+=("Open Navidrome in Browser  [on]")
@@ -3376,6 +3395,15 @@ show_main_menu() {
               clear_screen
               printf "\n"
               show_services_menu
+              skip_it_so=1
+              break
+              ;;
+          "Open Mopidy"*,*|*,"Open Mopidy"*|"om",*|*,"om")
+              if [ "${have_gio}" ]; then
+                gio open 'http://localhost:6680' >/dev/null 2>&1
+              else
+                xdg-open 'http://localhost:6680' >/dev/null 2>&1
+              fi
               skip_it_so=1
               break
               ;;
