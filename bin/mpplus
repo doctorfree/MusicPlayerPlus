@@ -52,9 +52,9 @@ MPPCONF="${HOME}/.config/mpprc"
 usage() {
   printf "\nUsage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]"
   printf "\n\t[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory]"
-  printf "\n\t[-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m]"
-  printf "\n\t[-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status] [-p]"
-  printf "\n\t[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]"
+  printf "\n\t[-h] [-H] [-I] [-i|-o] [-jJ] [-k] [-K] [-l config|mopidy|navidrome|spotify|status]"
+  printf "\n\t[-L] [-m] [-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status]"
+  printf "\n\t[-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]"
   printf "\n\t[-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt] [-Z]"
   printf "\nMPCplus/Visualizer options:"
   printf "\n\t-A 'on|off' specifies whether to display album cover art"
@@ -107,9 +107,12 @@ usage() {
   printf "\n\t\twill be necessary to import these newly converted music files."
   printf "\n\t-I indicates import albums and songs from 'music_directory' to beets and exit"
   printf "\n\t\tIn conjunction with '-I', the '-A on' option disables auto-tagging"
-  printf "\n\t-i indicates start mpplus in interactive mode"
+  printf "\n\t-i indicates start mpplus in interactive mode (display the menu system)"
+  printf "\n\t-o indicates start mpplus in non-interactive mode (no menu system)"
   printf "\n\t-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts"
   printf "\n\t-l 'config' launches an editor in a terminal window to configure MusicPlayerPlus"
+  printf "\n\t-l 'mopidy' opens Mopidy in the default browser if the Mopidy service is active"
+  printf "\n\t-l 'navidrome' opens Navidrome in the default browser if the Navidrome service is active"
   printf "\n\t-l 'spotify' launches the Spotify Player in a terminal window"
   printf "\n\t-l 'status' displays services status and exits"
   printf "\n\t-L indicates download lyrics to the Beets library and exit"
@@ -3224,7 +3227,6 @@ show_main_menu() {
     [ "${have_retro}" ] && options+=("Launch ${MPD_CLIENT} with Retro  [lr]")
     [ "${have_simple}" ] && options+=("Launch ${MPD_CLIENT} with Simple [ls]")
     [ "${have_tilix}" ] && options+=("Launch ${MPD_CLIENT} with Tilix  [lt]")
-    [ "${have_cantata}" ] && options+=("Cantata Music Player Plus   [C]")
     if systemctl --user is-active mopidy.service >/dev/null 2>&1
     then
       options+=("Open Mopidy in Browser     [om]")
@@ -3255,14 +3257,13 @@ show_main_menu() {
     options+=("Toggle Use Tmux       ${usetmux} [t]")
     [ "${have_nema}" ] && options+=("Toggle Record Tmux    ${recordstat} [R]")
     options+=("Toggle Fullscreen     ${fullstat} [F]")
-    [ "${have_cantata}" ] || options+=("Install Cantata MPD client  [ic]")
     [ "${have_spot}" ] || options+=("Install Spotify Player      [is]")
     [ "${have_ytm}" ] || options+=("Install YouTubeMusic Player [iy]")
     [ "${have_ascii}" ] && options+=("Asciiville Menu             [am]")
     [ "${have_kc}" ] && options+=("Kitty Control Menu          [km]")
     [ "${have_mirror}" ] && options+=("MagicMirror Command Menu    [mm]")
     [ "${have_roon}" ] && options+=("RoonCommandLine Menu        [rm]")
-    options+=("Configure MusicPlayerPlus   [E]")
+    options+=("Configure MusicPlayerPlus   [C]")
     options+=("About                       [A]")
     options+=("Info                        [i]")
     options+=("Quit                        [q]")
@@ -3341,17 +3342,6 @@ show_main_menu() {
               KITTY=
               RETRO=
               SIMPLE=
-              break
-              ;;
-          "Install Cantata"*,*|*,"Install Cantata"*|"ic",*|*,"ic")
-              mppinit cantata
-              have_cantata=$(type -p cantata)
-              skip_it_so=1
-              break
-              ;;
-          "Cantata Music Player Plus"*,*|*,"Cantata Music Player Plus"*|"C",*|*,"C")
-              cantata >/dev/null 2>&1 &
-              skip_it_so=1
               break
               ;;
           "Install Spotify"*,*|*,"Install Spotify"*|"is",*|*,"is")
@@ -3510,7 +3500,7 @@ show_main_menu() {
               skip_it_so=1
               break
               ;;
-          "Configure"*,* | *,"Configure"* | "configure"*,* | *,"configure"* | "E",* | *,"E")
+          "Configure"*,* | *,"Configure"* | "configure"*,* | *,"configure"* | "C",* | *,"C")
               mpplus -l config &
               skip_it_so=1
               break
@@ -4229,12 +4219,15 @@ else
   use_figlet=
 fi
 
+INTERACTIVE=
+# Without arguments display the MusicPlayerPlus menu system
+[ $# -eq 0 ] && INTERACTIVE=1
 USE_MPCPLUS=1
 KITTY_SOCKET="/tmp/__mppkitty__"
 debug=
 dryrun=
 vault=
-while getopts "A:abBcC:D:d:eEFfGghHiIjJkKl:LmM:n:NpP:qQrRSs:tT:U:v:VwWx:X:yYZz:u" flag
+while getopts "A:abBcC:D:d:eEFfGghHiIjJkKl:LmM:n:NopP:qQrRSs:tT:U:v:VwWx:X:yYZz:u" flag
 do
   case $flag in
     a)
@@ -4404,6 +4397,9 @@ do
     i)
       INTERACTIVE=1
       ;;
+    o)
+      INTERACTIVE=
+      ;;
     j)
       MPPSPLASH="${MPPSPLASH} -j"
       MPPSPLASH_TMUX="${MPPSPLASH_TMUX} -l julia"
@@ -4446,10 +4442,37 @@ do
           CURRENT=
           USE_EWMH=
           pick_terminal || CONSOLE_MODE=1
+          heading "Editing MusicPlayerPlus Configuration" "Edit Config"
           make_it_so
           exit 0
           ;;
-        Spotify*|spotify*)
+        mopi*|Mopi*)
+          if systemctl --user is-active mopidy.service >/dev/null 2>&1
+          then
+            if [ "${have_gio}" ]; then
+              gio open 'http://localhost:6680' >/dev/null 2>&1
+            else
+              xdg-open 'http://localhost:6680' >/dev/null 2>&1
+            fi
+            farewell_exit "Opening Mopidy in Browser"
+          else
+            farewell_exit "Mopidy service is not active"
+          fi
+          ;;
+        navi*|Navi*)
+          if systemctl --user is-active navidrome.service >/dev/null 2>&1
+          then
+            if [ "${have_gio}" ]; then
+              gio open 'http://localhost:4533' >/dev/null 2>&1
+            else
+              xdg-open 'http://localhost:4533' >/dev/null 2>&1
+            fi
+            farewell_exit "Opening Navidrome in Browser"
+          else
+            farewell_exit "Navidrome service is not active"
+          fi
+          ;;
+        spotify*|Spotify*)
           MPCPLUS="spotify_player"
           MPCPLUS_TMUX="${MPCPLUS}"
           MTITLE="Spotify Player"
@@ -4459,6 +4482,7 @@ do
           CURRENT=
           USE_EWMH=
           pick_terminal || CONSOLE_MODE=1
+          heading "Launching Spotify Player" "Spotify Player"
           make_it_so
           exit 0
           ;;

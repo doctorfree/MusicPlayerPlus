@@ -9,30 +9,30 @@ date: December 05, 2021
 mpplus - Launch an MPD music player client and spectrum visualizer
 
 ## SYNOPSIS
-**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+**mpplus** [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory] [-h] [-H] [-I] [-i|-o] [-jJ] [-k] [-K] [-l config|mopidy|navidrome|spotify|status] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 
 ## DESCRIPTION
-The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (`mppcava` spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
+The *mpplus* command acts as a front-end for launching the mpcplus music player client and a spectrum visualizer in various terminal emulators and window placements. It can be used to display these utilities juxtaposed in separate windows or fullscreen overlayed with transparency. Alternately, mpplus can launch any specified MPD client along with a specified spectrum visualizer (*mppcava* spectrum visualizer is used by default). Command line options also support running the *mpplus* windows in a tmux session and recording that session using *asciinema*.
 
-The *mpplus* command can be used to control the *mpd* and *mpd.socket* system services when invoked with the `-M action` command line option. The Music Player Daemon (MPD) can be started, stopped, enabled, disabled, restarted, and status queried.
+The *mpplus* command can be used to control the *mpd* and *mpd.socket* system services when invoked with the *-M action* command line option. The Music Player Daemon (MPD) can be started, stopped, enabled, disabled, restarted, and status queried.
 
-The *mpplus* command can also act as a front-end to the *mppsplash* and *mppsplash-tmux* commands when invoked with the `-S` and `-T on` command line options.
+The *mpplus* command can also act as a front-end to the *mppsplash* and *mppsplash-tmux* commands when invoked with the *-S* and *-T on* command line options.
 
 The *mpplus* command can be used in conjunction with the Beets music library management system:
 
-- When invoked as `mpplus -D art` it will downlad album cover art for all albums in the music library
-- When invoked as `mpplus -D bandcamp` it will downlad songs from Bandcamp
-- When invoked as `mpplus -D discogs` it will generate markdown from a Discogs collection
-- When invoked as `mpplus -D local` it will generate markdown from a local music library
-- When invoked as `mpplus -D soundcloud` it will downlad songs from Soundcloud
-- When invoked as `mpplus -F` it will convert WAV format files in the music library to MP3 format files
-- When invoked as `mpplus -G` it will convert M4A format files in the music library to MP3 format files
-- When invoked as `mpplus -I` it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
-- When invoked as `mpplus -L` it will downlad lyrics for all songs in the music library that do not already have lyrics
+- When invoked as *mpplus -D art* it will downlad album cover art for all albums in the music library
+- When invoked as *mpplus -D bandcamp* it will downlad songs from Bandcamp
+- When invoked as *mpplus -D discogs* it will generate markdown from a Discogs collection
+- When invoked as *mpplus -D local* it will generate markdown from a local music library
+- When invoked as *mpplus -D soundcloud* it will downlad songs from Soundcloud
+- When invoked as *mpplus -F* it will convert WAV format files in the music library to MP3 format files
+- When invoked as *mpplus -G* it will convert M4A format files in the music library to MP3 format files
+- When invoked as *mpplus -I* it will perform a Beets library import of all songs and albums in the music library. If a previous import has been performed it will import any new songs or albums it finds in the music library.
+- When invoked as *mpplus -L* it will downlad lyrics for all songs in the music library that do not already have lyrics
 
-When invoked with the `-i` option, `mpplus` presents a selection menu and operates in interactive mode.
+When invoked without arguments or with the *-i* option, *mpplus* presents a selection menu and operates in interactive mode.
 
-Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the `mpplus -K` command.
+Occasionally a tmux session or asciimatics script will hang. Previously started tmux sessions and asciimatics scripts can be quickly and easily killed by executing the *mpplus -K* command.
 
 ## COMMAND LINE OPTIONS
 
@@ -133,7 +133,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : Indicates download songs from Soundcloud and exit
 
 **-d 'music_directory'**
-: Specifies the music directory to use for downloaded album cover art (without this option -D will use the `MUSIC_DIR` setting in `~/.config/mpprc`
+: Specifies the music directory to use for downloaded album cover art (without this option -D will use the *MUSIC_DIR* setting in *~/.config/mpprc*
 
 **-F**
 : Indicates convert all WAV format files in the music library to MP3 format files and exit. A subsequent 'mpplus -I' import will be necessary to import these newly converted music files.
@@ -147,17 +147,26 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 **-i**
 : Indicates interactive mode with selection menus
 
+**-o**
+: Indicates non-interactive mode without selection menus, by default open *mpcplus* and *mppcava*
+
 **-K**
 : Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 
 **-l config**
-: launches an editor in a terminal window to configure MusicPlayerPlus"
+: launches an editor in a terminal window to configure MusicPlayerPlus
+
+**-l mopidy**
+: Opens Mopidy in the default browser if the Mopidy service is running
+
+**-l navidrome**
+: Opens Navidrome in the default browser if the Navidrome service is running
 
 **-l spotify**
-: launches the Spotify Player 'spotify_player' in a terminal window"
+: launches the Spotify Player 'spotify_player' in a terminal window
 
 **-l status**
-: displays MusicPlayerPlus services status and exits"
+: displays MusicPlayerPlus services status and exits
 
 **-L**
 : Indicates download lyrics to the Beets library and exit
@@ -196,7 +205,7 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : Disables the YAMS last.fm scrobbler service
 
 **-z opt**
-: Specifies an `fzmp` option and invokes `fzmp` to list/search/select MPD media. Valid values for `opt` are 'a', 'A', 'g', 'p', or 'P'
+: Specifies an *fzmp* option and invokes *fzmp* to list/search/select MPD media. Valid values for *opt* are 'a', 'A', 'g', 'p', or 'P'
 
 **-Z**
 : Performs a dry run of a Discogs collection upload
@@ -205,41 +214,41 @@ Occasionally a tmux session or asciimatics script will hang. Previously started 
 : Displays this usage message and exits
 
 ## CONFIGURATION
-See `man mpprc` for a detailed description of each of the `mpplus` configuration options in `~/.config/mpprc`.
+See *man mpprc* for a detailed description of each of the *mpplus* configuration options in *~/.config/mpprc*.
 
 ## EXAMPLES
 **mpplus**
-: Launches `mpcplus` music player client running in the kitty terminal emulator with mppcava spectrum visualizer running in another kitty window. 
+: Launches *mpplus* in interactive mode with menu selections controlling actions rather than command line arguments
 
-**mpplus -i**
-: Launches `mpplus` in interactive mode with menu selections controlling actions rather than command line arguments
+**mpplus -o**
+: Launches *mpcplus* music player client and *mppcava* spectrum visualizer running in a terminal window
 
 **mpplus -r**
-: Launches `mpcplus` music player client running in cool-retro-term terminal emulator with mppcava spectrum visualizer running in a kitty terminal emulator window. 
+: Launches *mpcplus* music player client running in cool-retro-term terminal emulator with mppcava spectrum visualizer running in a terminal emulator window. 
 
 **mpplus -C cantata**
-: Launches `cantata` music player client running in a separate window with mppcava spectrum visualizer running in a kitty terminal emulator window. 
+: Launches *cantata* music player client running in a separate window with mppcava spectrum visualizer running in a terminal emulator window. 
 
 **mpplus -C cmus**
-: Launches the `cmus` music player client with mppcava spectrum visualizer running in a kitty terminal emulator window. 
+: Launches the *cmus* music player client with mppcava spectrum visualizer running in a terminal emulator window. 
 
 **mpplus -C mcg**
-: Launches the CoverGrid music player client (`mcg`) running in a separate window with mppcava spectrum visualizer running in a kitty terminal emulator window. 
+: Launches the CoverGrid music player client (*mcg*) running in a separate window with mppcava spectrum visualizer running in a terminal emulator window. 
 
 **mpplus -f -q -t**
-: Launches `mpcplus` music player client in fullscreen mode with mppcava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 
+: Launches *mpcplus* music player client in fullscreen mode with mppcava spectrum visualizer in quarter-screen mode, both running in a tilix terminal emulator window. 
 
 **mpplus -a -T on**
-: Launches `mpcplus` music player client and visualizer running in a tmux session displaying album cover art. 
+: Launches *mpcplus* music player client and visualizer running in a tmux session displaying album cover art. 
 
 **mpplus -M stop**
 : Stops the Music Player Daemon service and the associated MPD socket service
 
 **mpplus -R -T on**
-: Creates an asciinema recording of `mpcplus` music player client and visualizer running in a tmux session
+: Creates an asciinema recording of *mpcplus* music player client and visualizer running in a tmux session
 
 **mpplus -S -j -a**
-: Launch `mppsplash` displaying the Julia Set asciimatics animation with audio
+: Launch *mppsplash* displaying the Julia Set asciimatics animation with audio
 
 **mpplus -D art**
 : Download album cover art for any albums in the music library that do not already have cover art 

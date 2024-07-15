@@ -2,9 +2,9 @@
 
 Usage: mpplus [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e] [-F]
 	[-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d music_directory]
-	[-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l config|spotify|status] [-L] [-m]
-	[-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status] [-p]
-	[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]
+	[-h] [-H] [-I] [-i|-o] [-jJ] [-k] [-K] [-l config|mopidy|navidrome|spotify|status]
+	[-L] [-m] [-n num] [-N] [-M alsaconf|enable|disable|restart|start|stop|status]
+	[-p] [-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-U vault]
 	[-u] [-v viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt] [-Z]
 MPCplus/Visualizer options:
 	-A 'on|off' specifies whether to display album cover art
@@ -57,9 +57,12 @@ General options:
 		will be necessary to import these newly converted music files.
 	-I indicates import albums and songs from 'music_directory' to beets and exit
 		In conjunction with '-I', the '-A on' option disables auto-tagging
-	-i indicates start mpplus in interactive mode
+	-i indicates start mpplus in interactive mode (display the menu system)
+	-o indicates start mpplus in non-interactive mode (no menu system)
 	-K indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 	-l 'config' launches an editor in a terminal window to configure MusicPlayerPlus
+	-l 'mopidy' opens Mopidy in the default browser if the Mopidy service is active
+	-l 'navidrome' opens Navidrome in the default browser if the Navidrome service is active
 	-l 'spotify' launches the Spotify Player in a terminal window
 	-l 'status' displays services status and exits
 	-L indicates download lyrics to the Beets library and exit

@@ -23,11 +23,11 @@ mpplus - Launch an MPD music player client and spectrum visualizer
 .PP
 \f[B]mpplus\f[R] [-A on|off] [-a] [-b] [-B] [-c] [-C client] [-E] [-e]
 [-F] [-f] [-G] [-g] [-D art|bandcamp|discogs|local|soundcloud] [-d
-music_directory] [-h] [-H] [-I] [-i] [-jJ] [-k] [-K] [-l
-config|spotify|status] [-L] [-m] [-n num] [-N] [-U vault] [-Z] [-M
-alsaconf|enable|disable|restart|start|stop|status] [-p] [-P script] [-q]
-[-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v viz_comm] [-w|W]
-[-x query] [-X query] [-y] [-Y] [-z fzmpopt]
+music_directory] [-h] [-H] [-I] [-i|-o] [-jJ] [-k] [-K] [-l
+config|mopidy|navidrome|spotify|status] [-L] [-m] [-n num] [-N] [-U
+vault] [-Z] [-M alsaconf|enable|disable|restart|start|stop|status] [-p]
+[-P script] [-q] [-Q] [-r] [-R] [-s song] [-S] [-t] [-T on|off] [-u] [-v
+viz_comm] [-w|W] [-x query] [-X query] [-y] [-Y] [-z fzmpopt]
 .SS DESCRIPTION
 .PP
 The \f[I]mpplus\f[R] command acts as a front-end for launching the
@@ -36,59 +36,60 @@ terminal emulators and window placements.
 It can be used to display these utilities juxtaposed in separate windows
 or fullscreen overlayed with transparency.
 Alternately, mpplus can launch any specified MPD client along with a
-specified spectrum visualizer (\f[V]mppcava\f[R] spectrum visualizer is
+specified spectrum visualizer (\f[I]mppcava\f[R] spectrum visualizer is
 used by default).
 Command line options also support running the \f[I]mpplus\f[R] windows
 in a tmux session and recording that session using \f[I]asciinema\f[R].
 .PP
 The \f[I]mpplus\f[R] command can be used to control the \f[I]mpd\f[R]
-and \f[I]mpd.socket\f[R] system services when invoked with the
-\f[V]-M action\f[R] command line option.
+and \f[I]mpd.socket\f[R] system services when invoked with the \f[I]-M
+action\f[R] command line option.
 The Music Player Daemon (MPD) can be started, stopped, enabled,
 disabled, restarted, and status queried.
 .PP
 The \f[I]mpplus\f[R] command can also act as a front-end to the
 \f[I]mppsplash\f[R] and \f[I]mppsplash-tmux\f[R] commands when invoked
-with the \f[V]-S\f[R] and \f[V]-T on\f[R] command line options.
+with the \f[I]-S\f[R] and \f[I]-T on\f[R] command line options.
 .PP
 The \f[I]mpplus\f[R] command can be used in conjunction with the Beets
 music library management system:
 .IP \[bu] 2
-When invoked as \f[V]mpplus -D art\f[R] it will downlad album cover art
+When invoked as \f[I]mpplus -D art\f[R] it will downlad album cover art
 for all albums in the music library
 .IP \[bu] 2
-When invoked as \f[V]mpplus -D bandcamp\f[R] it will downlad songs from
+When invoked as \f[I]mpplus -D bandcamp\f[R] it will downlad songs from
 Bandcamp
 .IP \[bu] 2
-When invoked as \f[V]mpplus -D discogs\f[R] it will generate markdown
+When invoked as \f[I]mpplus -D discogs\f[R] it will generate markdown
 from a Discogs collection
 .IP \[bu] 2
-When invoked as \f[V]mpplus -D local\f[R] it will generate markdown from
+When invoked as \f[I]mpplus -D local\f[R] it will generate markdown from
 a local music library
 .IP \[bu] 2
-When invoked as \f[V]mpplus -D soundcloud\f[R] it will downlad songs
+When invoked as \f[I]mpplus -D soundcloud\f[R] it will downlad songs
 from Soundcloud
 .IP \[bu] 2
-When invoked as \f[V]mpplus -F\f[R] it will convert WAV format files in
+When invoked as \f[I]mpplus -F\f[R] it will convert WAV format files in
 the music library to MP3 format files
 .IP \[bu] 2
-When invoked as \f[V]mpplus -G\f[R] it will convert M4A format files in
+When invoked as \f[I]mpplus -G\f[R] it will convert M4A format files in
 the music library to MP3 format files
 .IP \[bu] 2
-When invoked as \f[V]mpplus -I\f[R] it will perform a Beets library
+When invoked as \f[I]mpplus -I\f[R] it will perform a Beets library
 import of all songs and albums in the music library.
 If a previous import has been performed it will import any new songs or
 albums it finds in the music library.
 .IP \[bu] 2
-When invoked as \f[V]mpplus -L\f[R] it will downlad lyrics for all songs
+When invoked as \f[I]mpplus -L\f[R] it will downlad lyrics for all songs
 in the music library that do not already have lyrics
 .PP
-When invoked with the \f[V]-i\f[R] option, \f[V]mpplus\f[R] presents a
-selection menu and operates in interactive mode.
+When invoked without arguments or with the \f[I]-i\f[R] option,
+\f[I]mpplus\f[R] presents a selection menu and operates in interactive
+mode.
 .PP
 Occasionally a tmux session or asciimatics script will hang.
 Previously started tmux sessions and asciimatics scripts can be quickly
-and easily killed by executing the \f[V]mpplus -K\f[R] command.
+and easily killed by executing the \f[I]mpplus -K\f[R] command.
 .SS COMMAND LINE OPTIONS
 .PP
 \f[I]MPCplus/Visualizer options:\f[R]
@@ -190,8 +191,8 @@ Indicates download songs from Soundcloud and exit
 .TP
 \f[B]-d \[aq]music_directory\[aq]\f[R]
 Specifies the music directory to use for downloaded album cover art
-(without this option -D will use the \f[V]MUSIC_DIR\f[R] setting in
-\f[V]\[ti]/.config/mpprc\f[R]
+(without this option -D will use the \f[I]MUSIC_DIR\f[R] setting in
+\f[I]\[ti]/.config/mpprc\f[R]
 .TP
 \f[B]-F\f[R]
 Indicates convert all WAV format files in the music library to MP3
@@ -212,19 +213,29 @@ Beets and exit
 \f[B]-i\f[R]
 Indicates interactive mode with selection menus
 .TP
+\f[B]-o\f[R]
+Indicates non-interactive mode without selection menus, by default open
+\f[I]mpcplus\f[R] and \f[I]mppcava\f[R]
+.TP
 \f[B]-K\f[R]
 Indicates kill MusicPlayerPlus tmux sessions and ASCIImatics scripts
 .TP
 \f[B]-l config\f[R]
-launches an editor in a terminal window to configure
-MusicPlayerPlus\[dq]
+launches an editor in a terminal window to configure MusicPlayerPlus
+.TP
+\f[B]-l mopidy\f[R]
+Opens Mopidy in the default browser if the Mopidy service is running
+.TP
+\f[B]-l navidrome\f[R]
+Opens Navidrome in the default browser if the Navidrome service is
+running
 .TP
 \f[B]-l spotify\f[R]
 launches the Spotify Player \[aq]spotify_player\[aq] in a terminal
-window\[dq]
+window
 .TP
 \f[B]-l status\f[R]
-displays MusicPlayerPlus services status and exits\[dq]
+displays MusicPlayerPlus services status and exits
 .TP
 \f[B]-L\f[R]
 Indicates download lyrics to the Beets library and exit
@@ -274,9 +285,9 @@ Initializes the YAMS last.fm scrobbler service
 Disables the YAMS last.fm scrobbler service
 .TP
 \f[B]-z opt\f[R]
-Specifies an \f[V]fzmp\f[R] option and invokes \f[V]fzmp\f[R] to
+Specifies an \f[I]fzmp\f[R] option and invokes \f[I]fzmp\f[R] to
 list/search/select MPD media.
-Valid values for \f[V]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
+Valid values for \f[I]opt\f[R] are \[aq]a\[aq], \[aq]A\[aq],
 \[aq]g\[aq], \[aq]p\[aq], or \[aq]P\[aq]
 .TP
 \f[B]-Z\f[R]
@@ -286,45 +297,44 @@ Performs a dry run of a Discogs collection upload
 Displays this usage message and exits
 .SS CONFIGURATION
 .PP
-See \f[V]man mpprc\f[R] for a detailed description of each of the
-\f[V]mpplus\f[R] configuration options in \f[V]\[ti]/.config/mpprc\f[R].
+See \f[I]man mpprc\f[R] for a detailed description of each of the
+\f[I]mpplus\f[R] configuration options in \f[I]\[ti]/.config/mpprc\f[R].
 .SS EXAMPLES
 .TP
 \f[B]mpplus\f[R]
-Launches \f[V]mpcplus\f[R] music player client running in the kitty
-terminal emulator with mppcava spectrum visualizer running in another
-kitty window.
-.TP
-\f[B]mpplus -i\f[R]
-Launches \f[V]mpplus\f[R] in interactive mode with menu selections
+Launches \f[I]mpplus\f[R] in interactive mode with menu selections
 controlling actions rather than command line arguments
 .TP
+\f[B]mpplus -o\f[R]
+Launches \f[I]mpcplus\f[R] music player client and \f[I]mppcava\f[R]
+spectrum visualizer running in a terminal window
+.TP
 \f[B]mpplus -r\f[R]
-Launches \f[V]mpcplus\f[R] music player client running in
+Launches \f[I]mpcplus\f[R] music player client running in
 cool-retro-term terminal emulator with mppcava spectrum visualizer
-running in a kitty terminal emulator window.
+running in a terminal emulator window.
 .TP
 \f[B]mpplus -C cantata\f[R]
-Launches \f[V]cantata\f[R] music player client running in a separate
-window with mppcava spectrum visualizer running in a kitty terminal
-emulator window.
+Launches \f[I]cantata\f[R] music player client running in a separate
+window with mppcava spectrum visualizer running in a terminal emulator
+window.
 .TP
 \f[B]mpplus -C cmus\f[R]
-Launches the \f[V]cmus\f[R] music player client with mppcava spectrum
-visualizer running in a kitty terminal emulator window.
+Launches the \f[I]cmus\f[R] music player client with mppcava spectrum
+visualizer running in a terminal emulator window.
 .TP
 \f[B]mpplus -C mcg\f[R]
-Launches the CoverGrid music player client (\f[V]mcg\f[R]) running in a
-separate window with mppcava spectrum visualizer running in a kitty
-terminal emulator window.
+Launches the CoverGrid music player client (\f[I]mcg\f[R]) running in a
+separate window with mppcava spectrum visualizer running in a terminal
+emulator window.
 .TP
 \f[B]mpplus -f -q -t\f[R]
-Launches \f[V]mpcplus\f[R] music player client in fullscreen mode with
+Launches \f[I]mpcplus\f[R] music player client in fullscreen mode with
 mppcava spectrum visualizer in quarter-screen mode, both running in a
 tilix terminal emulator window.
 .TP
 \f[B]mpplus -a -T on\f[R]
-Launches \f[V]mpcplus\f[R] music player client and visualizer running in
+Launches \f[I]mpcplus\f[R] music player client and visualizer running in
 a tmux session displaying album cover art.
 .TP
 \f[B]mpplus -M stop\f[R]
@@ -332,11 +342,11 @@ Stops the Music Player Daemon service and the associated MPD socket
 service
 .TP
 \f[B]mpplus -R -T on\f[R]
-Creates an asciinema recording of \f[V]mpcplus\f[R] music player client
+Creates an asciinema recording of \f[I]mpcplus\f[R] music player client
 and visualizer running in a tmux session
 .TP
 \f[B]mpplus -S -j -a\f[R]
-Launch \f[V]mppsplash\f[R] displaying the Julia Set asciimatics
+Launch \f[I]mppsplash\f[R] displaying the Julia Set asciimatics
 animation with audio
 .TP
 \f[B]mpplus -D art\f[R]
